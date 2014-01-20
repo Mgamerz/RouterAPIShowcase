@@ -1,13 +1,13 @@
 __author__ = 'Mgamerz'
 
-import tkinter as tk
-import random
+from tkinter import *
+from tkinter import Canvas
+from tkinter import ttk
 import requests
 from requests.auth import HTTPDigestAuth
 import getpass
 
 class ServoDrive(object):
-    # simulate values
 
     def get_userpass(self):
         print('Username:', end=' ')
@@ -21,10 +21,12 @@ class ServoDrive(object):
 
     def read_login(self):
         with open('local_credentials') as f:
-            user = f.readline()
-            passw = f.readline()
+            user = f.readline().rstrip('\n')
+            passw = f.readline().rstrip('\n')
             self.userpass = (user, passw)
-            self.routerip = f.readline()
+            self.routerip = f.readline().rstrip('\n')
+
+            print('{} {} {}'.format(user, passw, self.routerip))
 
     def __init__(self):
         #self.userpass = self.get_userpass()
@@ -34,46 +36,70 @@ class ServoDrive(object):
 
 
     def getLoad(self):
-        subtree = '/api/status/system/cpu'
-        cpudata = requests.get('http://{}{}'.format(self.routerip, subtree), auth=self.auth)
-        '''if cpudata.status_code == 200:
-            print(cpudata.json())
-        else:
-            print(cpudata.status_code)'''
+        subtree = '/api/status/system/cpu/'
+        try:
+            cpudata = requests.get('http://{}{}'.format(self.routerip, subtree), auth=self.auth)
+            data = cpudata.json()['data']
+            userload = round(data['user']*100)
+            systemload = round(data['system']*100)
+            return (userload, systemload)
 
-#{"data": {"system": 0.0024232633279483038, "user": 0.045234248788368332, "nice": 0.0}, "success": true}'
+        except Exception as e:
+            print(e)
 
-        return random.randint(0, 50)
-
-class Example(tk.Frame):
+class CPULoad(ttk.Frame):
     def __init__(self, *args, **kwargs):
-        tk.Frame.__init__(self, *args, **kwargs)
+        ttk.Frame.__init__(self, *args, **kwargs)
         self.servo = ServoDrive()
-        self.canvas = tk.Canvas(self, background="black")
+        self.canvas = Canvas(self, background="black")
         self.canvas.pack(side="bottom", fill="both", expand=True)
 
         # create line for load
-        self.load_line = self.canvas.create_line(0, 0, 0, 0, fill="red")
+        self.user_line = self.canvas.create_line(0, 100, 0, 100, fill="green")
+        self.system_line = self.canvas.create_line(0, 100, 0, 100, fill='orange')
+        self.total_line = self.canvas.create_line(0, 100, 0, 100, fill='red')
 
         # start the update process
         self.update_graph()
 
     def update_graph(self):
-        v = self.servo.getLoad()
-        self.add_point(self.load_line, v)
+        load = self.servo.getLoad()
+        self.add_point(self.user_line, load[0])
+        self.add_point(self.system_line, load[1])
+        total_time = load[0] + load[1]
+        if total_time > 100:
+            total_time = 100
+        self.add_point(self.total_line, total_time)
         self.canvas.xview_moveto(1.0)
-        self.after(1000, self.update_graph)
+        self.after(150, self.update_graph)
 
     def add_point(self, line, y):
         coords = self.canvas.coords(line)
-        x = coords[-2] + 20
+        y = 150 - y*1.5
+        x = coords[-2] + 10
         coords.append(x)
-        coords.append(y)
-        coords = coords[-20:] # keep # of points to a manageable size
+        coords.append(y*2)
+        coords = coords[-80:] # keep # of points to a manageable size
         self.canvas.coords(line, *coords)
         self.canvas.configure(scrollregion=self.canvas.bbox("all"))
 
 if __name__ == "__main__":
-    root = tk.Tk()
-    Example(root).pack(side="bottom", fill="both", expand=True)
+    root = Tk()
+    root.title('Router CPU Monitor')
+    root.minsize(400, 240)
+    cpuframe = ttk.Frame(root)
+    cpuframe.pack(side='right', expand=True, fill='both')
+    CPULoad(cpuframe).pack(fill='both', expand=True)
+    ttk.Label(cpuframe, text='Time').pack(side='bottom')
+
+    loadframe = ttk.Frame(root)
+    loadframe.pack(side='left', expand=False, fill='none')
+    ttk.Label(loadframe, text='Load').pack(side='top', fill=Y)
+    ttk.Label(loadframe, text='User', foreground='green').pack(side='bottom', fill=Y)
+    ttk.Label(loadframe, text='Total', foreground='red').pack(side='bottom', fill=Y)
+    ttk.Label(loadframe, text='System', foreground='orange').pack(side='bottom', fill=Y)
+
+
+    root.resizable(0,0)
+    root.config(background='grey')
     root.mainloop()

@@ -1,5 +1,5 @@
 *.py[cod]
-local_*
+
 
 # C extensions
 *.so
@@ -35,3 +35,5 @@ nosetests.xml
 .mr.developer.cfg
 .project
 .pydevproject
+
+local_credentials
