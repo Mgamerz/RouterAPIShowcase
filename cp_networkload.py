@@ -7,13 +7,16 @@ import requests
 from requests.auth import HTTPDigestAuth
 import getpass
 
+#Uncomment this to make the username/password/ip prompt appear in the terminal.
+#Make a file called local_credentials with your username password routerip in it, all on separate lines, in that order.
+read_config = True
+
 class ServoDrive(object):
 
     def get_userpass(self):
-        print('Username:', end=' ')
         username = input()
         password = getpass.getpass()
-        return (username, password)
+        return username, password
 
     def get_routerip(self):
         print('Router IP:', end=' ')
@@ -29,11 +32,12 @@ class ServoDrive(object):
             print('{} {} {}'.format(user, passw, self.routerip))
 
     def __init__(self):
-        #self.userpass = self.get_userpass()
-        self.read_login()
+        if read_config:
+            self.read_login()
+        else:
+            self.userpass = self.get_userpass()
+            self.routerip = self.get_routerip()
         self.auth = HTTPDigestAuth(self.userpass[0], self.userpass[1])
-        #self.routerip = self.get_routerip()
-
 
     def getLoad(self):
         subtree = '/api/status/system/cpu/'
