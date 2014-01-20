@@ -29,8 +29,6 @@ class ServoDrive(object):
             self.userpass = (user, passw)
             self.routerip = f.readline().rstrip('\n')
 
-            print('{} {} {}'.format(user, passw, self.routerip))
-
     def __init__(self):
         if read_config:
             self.read_login()
