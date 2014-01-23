@@ -36,4 +36,7 @@ nosetests.xml
 .project
 .pydevproject
 
+#local stuff
+.idea/*
+.idea/
 local_credentials
