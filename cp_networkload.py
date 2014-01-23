@@ -81,7 +81,7 @@ class CPULoad(ttk.Frame):
         x = coords[-2] + 10
         coords.append(x)
         coords.append(y*2)
-        coords = coords[-80:] # keep # of points to a manageable size
+        coords = coords[-150:] # keep # of points to a manageable size
         self.canvas.coords(line, *coords)
         self.canvas.configure(scrollregion=self.canvas.bbox("all"))
 
