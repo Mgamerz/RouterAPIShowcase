@@ -3,6 +3,7 @@ package com.cs481.mobilemapper;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -22,6 +23,7 @@ import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 
 public class MappingFragment extends Fragment implements
@@ -73,7 +75,7 @@ public class MappingFragment extends Fragment implements
 				R.id.trackmap)).getMap();
 		map.setMyLocationEnabled(true);
 		// CameraUpdate cam = CameraUpdateFactory.;
-		Log.i(Mapper.TAG, "Finished setting up map");
+		Log.i(CommandCenter.TAG, "Finished setting up map");
 	}
 
 	@Override
@@ -161,6 +163,18 @@ public class MappingFragment extends Fragment implements
 			}
 
 		}
+	}
+
+	
+	public void onDestroy(){
+	//somewhere in your onDestroy(){
+	CameraPosition mMyCam = map.getCameraPosition();
+	double longitude = mMyCam.target.longitude;
+	//boolean is
+	//SharedPreferences settings = getActivity().getSharedPreferences("SOME_NAME", 0);
+	//SharedPreferences.Editor editor = settings.edit();
+	//editor.putFloat("longitude", longitude);
+	//editor.commit();
 	}
 
 	private boolean isGooglePlayServicesAvailable() {

@@ -9,14 +9,18 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.Menu;
 
+
+
+//This is leftover code from the original implementation. It is not in use anymore but exists in the event it is needed.
 public class Mapper extends FragmentActivity implements
 		ActionBar.TabListener {
 
-	public static final String TAG = "MobileMapper";
+	public static final String TAG = "CommandCenter";
 
 	private static int num = 0;
 	
@@ -111,7 +115,7 @@ public class Mapper extends FragmentActivity implements
 	 * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
 	 * one of the sections/tabs/pages.
 	 */
-	public class SectionsPagerAdapter extends FragmentPagerAdapter {
+	public class SectionsPagerAdapter extends FragmentStatePagerAdapter {
 
 		public SectionsPagerAdapter(FragmentManager fm) {
 			super(fm);
@@ -125,11 +129,32 @@ public class Mapper extends FragmentActivity implements
 			// Return a DummySectionFragment (defined as a static inner class
 			// below) with the page number as its lone argument.
 			Log.i("com.cs481.mobilemapper","get item: "+position);
+
+		    FragmentManager fm = getSupportFragmentManager();
+
 			switch(position){
 			//These are reversed for some reason. Don't understand why.
 			case 1:
-				return new SettingsFragment();
+			    Fragment settingsFragment = fm.findFragmentByTag("settingsfrag");
+
+			    // If the Fragment is non-null, then it is currently being
+			    // retained across a configuration change.
+			    if (settingsFragment == null) {
+			    	
+			      settingsFragment = new SettingsFragment();
+			    //  fm.beginTransaction().add(settingsFragment, "settingsfrag").commit();
+			    }
+			    return settingsFragment;
 			default:
+			    Fragment mapFragment = fm.findFragmentByTag("mapfrag");
+
+			    // If the Fragment is non-null, then it is currently being
+			    // retained across a configuration change.
+			    if (mapFragment == null) {
+			    	
+			      mapFragment = new SettingsFragment();
+			    //  fm.beginTransaction().add(settingsFragment, "settingsfrag").commit();
+			    }
 				return new MappingFragment();
 			}
 		}

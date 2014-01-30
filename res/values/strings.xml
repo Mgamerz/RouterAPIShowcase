@@ -9,5 +9,6 @@
     <string name="tabSettings">Settings</string>
     <string name="tabMapping">Mapping</string>
     <string name="status">Status:</string>
+    <string name="password_hint">Router Admin Password</string>
 
 </resources>
