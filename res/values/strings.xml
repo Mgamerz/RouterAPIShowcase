@@ -13,5 +13,8 @@
     <string name="default_gateway">Use Default Gateway</string>
     <string name="connect">Connect</string>
     <string name="routerip_hint">Router IP</string>
+    <string name="commandHeader">Command Center</string>
+    <string name="debugHeader">CC Debugging</string>
+    <string name="firstrunHeader">Router Login</string>
 
 </resources>

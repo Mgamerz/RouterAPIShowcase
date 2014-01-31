@@ -5,6 +5,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Switch;
 
 import com.cs481.mobilemapper.R;
 
@@ -17,5 +18,8 @@ public class DebugFragment extends Fragment {
 		return rootView;
 	}
 	
-	
+	@Override
+	public void onStart(){
+		super.onStart();
+	}
 }

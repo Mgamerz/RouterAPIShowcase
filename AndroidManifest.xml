@@ -48,15 +48,15 @@
             android:name="com.google.android.maps.v2.API_KEY"
             android:value="AIzaSyBbZPcGXcIiuYuMWtjf6brmf7qV1_jO5-I" />
 
-        <activity android:name=".FirstRunActivity" >
+        <activity android:name=".FirstRunActivity" android:label="@string/commandHeader">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".debug.DebugActivity"></activity>
-        <activity android:name="CommandCenter"></activity>
+        <activity android:name=".debug.DebugActivity" android:label="@string/debugHeader" />
+        <activity android:name="CommandCenter" android:label="@string/commandHeader"/>
     </application>
 
 </manifest>
