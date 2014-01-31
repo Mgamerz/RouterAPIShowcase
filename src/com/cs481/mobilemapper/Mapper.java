@@ -1,5 +1,5 @@
 package com.cs481.mobilemapper;
-
+/*
 import java.util.Locale;
 
 import android.app.ActionBar;
@@ -24,25 +24,14 @@ public class Mapper extends FragmentActivity implements
 
 	private static int num = 0;
 	
-	/**
-	 * The {@link android.support.v4.view.PagerAdapter} that will provide
-	 * fragments for each of the sections. We use a
-	 * {@link android.support.v4.app.FragmentPagerAdapter} derivative, which
-	 * will keep every loaded fragment in memory. If this becomes too memory
-	 * intensive, it may be best to switch to a
-	 * {@link android.support.v4.app.FragmentStatePagerAdapter}.
-	 */
 	SectionsPagerAdapter mSectionsPagerAdapter;
 
-	/**
-	 * The {@link ViewPager} that will host the section contents.
-	 */
 	ViewPager mViewPager;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_mapping);
+		//setContentView(R.layout.activity_mapping);
 
 		// Set up the action bar.
 		final ActionBar actionBar = getActionBar();
@@ -54,7 +43,7 @@ public class Mapper extends FragmentActivity implements
 				getSupportFragmentManager());
 
 		// Set up the ViewPager with the sections adapter.
-		mViewPager = (ViewPager) findViewById(R.id.pager);
+		mViewPager = (ViewPager) findViewById(R.id.firstrun_frag);
 		mViewPager.setAdapter(mSectionsPagerAdapter);
 
 		// When swiping between different sections, select the corresponding
@@ -83,7 +72,7 @@ public class Mapper extends FragmentActivity implements
 			actionBar.addTab(actionBar.newTab()
 					.setText(mSectionsPagerAdapter.getPageTitle(i))
 					.setTabListener(this));
-		} */
+		}
 	}
 
 	@Override
@@ -114,7 +103,7 @@ public class Mapper extends FragmentActivity implements
 	/**
 	 * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
 	 * one of the sections/tabs/pages.
-	 */
+	 *
 	public class SectionsPagerAdapter extends FragmentStatePagerAdapter {
 
 		public SectionsPagerAdapter(FragmentManager fm) {
@@ -177,4 +166,4 @@ public class Mapper extends FragmentActivity implements
 			return null;
 		}
 	}
-}
+}*/

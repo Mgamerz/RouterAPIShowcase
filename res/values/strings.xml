@@ -10,5 +10,8 @@
     <string name="tabMapping">Mapping</string>
     <string name="status">Status:</string>
     <string name="password_hint">Router Admin Password</string>
+    <string name="default_gateway">Use Default Gateway</string>
+    <string name="connect">Connect</string>
+    <string name="routerip_hint">Router IP</string>
 
 </resources>
