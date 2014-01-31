@@ -100,6 +100,10 @@ public class FirstTimeFragment extends Fragment {
 	    	  intent.putExtra("password", password);
 	    	  startActivity(intent);
 	         return true;
+	      case R.id.fr_strp:
+	    	  EditText rp = (EditText) getView().findViewById(R.id.router_password);
+	    	  rp.setText("PLAINTEXT");
+	    	  return true;
 	      default:
 	         return super.onOptionsItemSelected(item);
 	   }
