@@ -1,29 +1,29 @@
 package com.cs481.mobilemapper.debug;
 
+import android.content.Context;
+import android.content.Intent;
+import android.net.DhcpInfo;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.format.Formatter;
+import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.Switch;
 
+import com.cs481.mobilemapper.CommandCenter;
 import com.cs481.mobilemapper.R;
 
-public class DebugFragment extends Fragment {
-	
-	@Override
-	public void onCreate(Bundle savedInstancedState){
-		super.onCreate(savedInstancedState);
-		setHasOptionsMenu (true);
-	}
-	
-	
+public class DebugGPIOFragment extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		View rootView = inflater.inflate(R.layout.fragment_debug, container,
+		View rootView = inflater.inflate(R.layout.fragment_gpio, container,
 				false);
 		return rootView;
 	}
@@ -33,9 +33,4 @@ public class DebugFragment extends Fragment {
 		super.onStart();
 	}
 	
-	@Override
-	public void onCreateOptionsMenu(
-	      Menu menu, MenuInflater inflater) {
-	   inflater.inflate(R.menu.debug_menu, menu);
-	}
 }

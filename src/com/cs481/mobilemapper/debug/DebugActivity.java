@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -95,6 +96,8 @@ public class DebugActivity extends SpiceActivity {
 			progressDialog.dismiss();
 			Log.i(CommandCenter.TAG, "Get GPIO Object: " + gpio);
 			setGPIO(gpio);
+			TextView rail = (TextView) findViewById(R.id.gpio_power);
+			rail.setText(Integer.toString(gpio.getData().getLed_power()));
 		}
 	}
 	
@@ -122,4 +125,16 @@ public class DebugActivity extends SpiceActivity {
 			}
 		}
 	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		   // handle item selection
+		   switch (item.getItemId()) {
+		      case R.id.debug_refresh:
+		    	  readGPIOConfig();
+		         return true;
+		      default:
+		    	  return super.onOptionsItemSelected(item);
+		   }
+		}
 }

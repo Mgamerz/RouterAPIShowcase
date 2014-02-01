@@ -9,6 +9,7 @@ import android.support.v4.app.Fragment;
 import android.text.InputFilter;
 import android.text.Spanned;
 import android.text.format.Formatter;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -78,6 +79,7 @@ public class FirstRunFragment extends Fragment {
 	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
+		Log.w(CommandCenter.TAG, "Item was clicked.");
 	   // handle item selection
 	   switch (item.getItemId()) {
 	      case R.id.fr_debug:
