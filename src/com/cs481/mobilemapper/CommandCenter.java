@@ -1,11 +1,7 @@
 package com.cs481.mobilemapper;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
-
-import com.octo.android.robospice.persistence.exception.SpiceException;
-import com.octo.android.robospice.request.listener.RequestListener;
 
 public class CommandCenter extends SpiceActivity {
 

@@ -20,7 +20,7 @@ import android.widget.EditText;
 
 import com.cs481.mobilemapper.debug.DebugActivity;
 
-public class FirstTimeFragment extends Fragment {
+public class FirstRunFragment extends Fragment {
 	@Override
 	public void onCreate(Bundle savedInstancedState){
 		super.onCreate(savedInstancedState);

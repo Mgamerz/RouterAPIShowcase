@@ -22,7 +22,7 @@ public class GetRequest extends SpringAndroidSpiceRequest<GPIO> {
 	  @Override
 	  public GPIO loadDataFromNetwork() throws Exception {
 
-	    String url = String.format("http://%s/api/control/GPIO", routerip);
+	    String url = String.format("http://%s/api/control/gpio", routerip);
 	    RestTemplate rt = getRestTemplate();
 	    DefaultHttpClient client = new DefaultHttpClient();
 	    Credentials defaultcreds = new UsernamePasswordCredentials("admin", routerpass);

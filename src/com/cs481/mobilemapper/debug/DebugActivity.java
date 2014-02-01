@@ -4,6 +4,8 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -57,6 +59,15 @@ public class DebugActivity extends SpiceActivity {
 		
 		spiceManager.execute(request, lastRequestCacheKey,
 				DurationInMillis.ONE_MINUTE, new GPIOGetRequestListener());
+	}
+	
+	public void onLED1Switch(View v){
+		boolean on = ((Switch) v).isChecked();
+		if (on){
+			//spiceManager.execute();
+		} else {
+			
+		}
 	}
 	
 	// inner class of your spiced Activity

@@ -1,7 +1,6 @@
 
 package com.cs481.mobilemapper.responses.control.gpio;
 
-import java.util.List;
 
 public class Data{
    	private Number bPF_DISABLE;

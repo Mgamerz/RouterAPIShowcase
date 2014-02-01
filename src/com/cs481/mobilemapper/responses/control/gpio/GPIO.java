@@ -1,7 +1,6 @@
 
 package com.cs481.mobilemapper.responses.control.gpio;
 
-import java.util.List;
 
 public class GPIO{
    	private Data data;
@@ -22,6 +21,7 @@ public class GPIO{
 	
 	public String toString(){
 		StringBuilder sb = new StringBuilder();
+		if (data != null) {
 		sb.append("LED EX1_G: "+data.getLED_EX1_G());
 		sb.append("\n");
 		sb.append("LED EX1_R: "+data.getLED_EX1_R());
@@ -37,6 +37,9 @@ public class GPIO{
 		sb.append("LED SS_1: "+data.getLED_SS_1());
 		sb.append("\n");
 		sb.append("LED SS_2: "+data.getLED_SS_2());
+		}
+		
+		sb.append("Command status: "+success);
 	   	
 		/*lED_SS_3;
 	   	lED_USB1_G;
