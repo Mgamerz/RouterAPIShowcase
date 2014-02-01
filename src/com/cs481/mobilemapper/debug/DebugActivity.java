@@ -61,12 +61,20 @@ public class DebugActivity extends SpiceActivity {
 				DurationInMillis.ONE_MINUTE, new GPIOGetRequestListener());
 	}
 	
-	public void onLED1Switch(View v){
+	public void onLED1GSwitch(View v){
+		Log.i(CommandCenter.TAG, "LED1 SWITCH");
 		boolean on = ((Switch) v).isChecked();
-		if (on){
-			//spiceManager.execute();
-		} else {
+		if (gpio!=null){
+			//int current_state = gpio.getData().getLed_ex1_g();
+			gpio.getData().setLed_power((on) ? 1 :0);
 			
+			// perform the request.
+			com.cs481.mobilemapper.responses.control.gpio.PutRequest request = new com.cs481.mobilemapper.responses.control.gpio.PutRequest(
+					ip, password, gpio);
+			String lastRequestCacheKey = request.createCacheKey();
+	
+			spiceManager.execute(request, lastRequestCacheKey,
+					DurationInMillis.ALWAYS_EXPIRED, new GPIOPutRequestListener());
 		}
 	}
 	
@@ -106,8 +114,12 @@ public class DebugActivity extends SpiceActivity {
 		@Override
 		public void onRequestSuccess(GPIO gpio) {
 			// update your UI
-			Log.i(CommandCenter.TAG, "Command success!");
-			Log.i(CommandCenter.TAG, "Put to GPIO: " + gpio);
+			if (gpio.getData().getException() == null){
+				Log.i(CommandCenter.TAG, "Command success!");
+				Log.i(CommandCenter.TAG, "Put to GPIO: " + gpio);
+			} else {
+				Toast.makeText(DebugActivity.this, "GPIO: Server returned exception.", Toast.LENGTH_LONG).show();
+			}
 		}
 	}
 }
