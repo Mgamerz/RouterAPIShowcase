@@ -1,5 +1,6 @@
-package com.cs481.mobilemapper;
+ package com.cs481.mobilemapper;
 
+import android.content.Intent;
 import android.net.DhcpInfo;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
@@ -9,6 +10,7 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
 
+import com.cs481.mobilemapper.debug.DebugActivity;
 import com.cs481.mobilemapper.responses.status.wlan.Wlan;
 import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
@@ -59,6 +61,12 @@ public class FirstRunActivity extends SpiceActivity {
 	 *            View that called this (the fragment)
 	 */
 	public void connectClick(View v) {
+	  	Intent intent = new Intent(this, CommandCenter.class);
+	  	startActivity(intent);
+	  	finish();
+		
+		//Debugging stuff
+		/*
 		CheckBox gateway = (CheckBox) findViewById(R.id.use_default_gateway);
 		if (gateway != null){
 			String routerip = "";
@@ -82,7 +90,7 @@ public class FirstRunActivity extends SpiceActivity {
 			String lastRequestCacheKey = request.createCacheKey();
 	
 			spiceManager.execute(request, lastRequestCacheKey,
-					DurationInMillis.ONE_MINUTE, new GetRequestListener());
-		}
+					DurationInMillis.ONE_MINUTE, new GetRequestListener()); 
+		} */
 	}
 }
