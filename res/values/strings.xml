@@ -3,7 +3,8 @@
 
     <string name="app_name">Mobile Mapper</string>
     <string name="action_settings">App Settings</string>
-    <string name="title_section1">Section 1</string>
+    <string name="search_hint">Search for stuff</string>
+    <string name="action_logout">Logout</string>
     <string name="title_section2">Section 2</string>
     <string name="title_section3">Section 3</string>
     <string name="tabSettings">Settings</string>
@@ -16,5 +17,8 @@
     <string name="commandHeader">Command Center</string>
     <string name="debugHeader">CC Debugging</string>
     <string name="firstrunHeader">Router Login</string>
+    <string name="search_title">Search</string>
+    <string name="search_hint">Search for stuff</string>
+    <string name="action_mapper">Mapper</string>
 
 </resources>

@@ -1,0 +1,28 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/search"
+        android:actionViewClass="android.widget.SearchView"
+        android:icon="@drawable/ic_search"
+        android:queryHint="@string/search_hint"
+        android:showAsAction="collapseActionView|ifRoom"
+        android:title="@string/search_title"/>
+    
+    <item
+        android:id="@+id/action_mapper"
+        android:orderInCategory="100"
+        android:showAsAction="never"
+        android:title="@string/action_mapper"/>
+    
+    <item
+        android:id="@+id/action_settings"
+        android:orderInCategory="120"
+        android:showAsAction="never"
+        android:title="@string/action_settings"/>
+    <item
+        android:id="@+id/action_logout"
+        android:orderInCategory="1000"
+        android:showAsAction="never"
+        android:title="@string/action_logout"/>
+
+</menu>

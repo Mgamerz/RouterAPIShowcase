@@ -1,9 +1,12 @@
 package com.cs481.mobilemapper;
 
+import android.app.SearchManager;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.view.Menu;
+import android.widget.SearchView;
 
 public class CommandCenter extends SpiceActivity {
 
@@ -31,13 +34,20 @@ public class CommandCenter extends SpiceActivity {
 
 		//finish transaction
 		ft.commit();
-		
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.mapping, menu);
+		getMenuInflater().inflate(R.menu.commandcenter_menu, menu);
+
+	    // Associate searchable configuration with the SearchView
+	    SearchManager searchManager =
+	           (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+	    SearchView searchView =
+	            (SearchView) menu.findItem(R.id.search).getActionView();
+	    searchView.setSearchableInfo(
+	            searchManager.getSearchableInfo(getComponentName()));
 		return true;
 	}
 }
