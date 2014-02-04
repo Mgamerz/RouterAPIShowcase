@@ -18,7 +18,7 @@ public class SpiceActivity extends FragmentActivity {
 
 	//if you use a pre-set service, 
 	//use JacksonSpringAndroidSpiceService.class instead of JsonSpiceService.class
-	protected SpiceManager spiceManager = new SpiceManager(Jackson2SpringAndroidSpiceService.class);
+	protected SpiceManager spiceManager = new SpiceManager(SpiceService.class);
 
 
 	@Override

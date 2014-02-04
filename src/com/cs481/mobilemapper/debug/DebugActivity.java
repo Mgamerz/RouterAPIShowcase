@@ -13,6 +13,7 @@ import android.widget.Toast;
 import com.cs481.mobilemapper.CommandCenter;
 import com.cs481.mobilemapper.R;
 import com.cs481.mobilemapper.SpiceActivity;
+import com.cs481.mobilemapper.responses.control.gpio.Data;
 import com.cs481.mobilemapper.responses.control.gpio.GPIO;
 import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
@@ -52,6 +53,7 @@ public class DebugActivity extends SpiceActivity {
 				ip, password);
 		String lastRequestCacheKey = request.createCacheKey();
 
+		
         progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("Reading GPIO Configuration");
         progressDialog.show();
@@ -60,6 +62,10 @@ public class DebugActivity extends SpiceActivity {
 		
 		spiceManager.execute(request, lastRequestCacheKey,
 				DurationInMillis.ONE_MINUTE, new GPIOGetRequestListener());
+				
+		//gpio=new GPIO();
+		//gpio.setData(new Data());
+		//gpio.getData().setLed_power(1);
 	}
 	
 	public void onLED1GSwitch(View v){
