@@ -3,6 +3,7 @@ package com.cs481.mobilemapper.responses.control.gpio;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.Credentials;
 import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.springframework.http.ContentCodingType;
 import org.springframework.http.HttpEntity;
@@ -48,23 +49,11 @@ public class PutRequest extends SpringAndroidSpiceRequest<GPIO> {
 		HttpHeaders requestHeaders = new HttpHeaders(); 
 		requestHeaders.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 		//requestHeaders.setContentEncoding(ContentCodingType.GZIP);
-		//requestHeaders.setContentType(new MediaType("application/json;charset=UTF-8"));
+		requestHeaders.setContentType(new MediaType("application/x-www-form-urlencoded;charset=UTF-8"));
 
 		HttpEntity<GPIO> request = new HttpEntity<GPIO>(data, requestHeaders);
-		request.
 		//request.
 		
-		//wrequest.
-		//List<HttpMessageConverter<?>> messageConverters = new ArrayList<HttpMessageConverter<?>>();
-		//MappingJackson2HttpMessageConverter map = new MappingJackson2HttpMessageConverter();
-		//ArrayList<MediaType> smt = new ArrayList<MediaType>();
-		//smt.add(MediaType.APPLICATION_FORM_URLENCODED);
-		//map.setSupportedMediaTypes(smt);
-		//messageConverters.add(map);
-		//messageConverters.add(new FormHttpMessageConverter());
-		//messageConverters.add(new FormHttpMessageConverter());
-		//messageConverters.add(new StringHttpMessageConverter());
-		//rt.setMessageConverters(messageConverters);
 		Log.i(CommandCenter.TAG, "Sending request.");
 		ResponseEntity<GPIO> r = rt.exchange(url, HttpMethod.PUT, request, GPIO.class);
 		return r.getBody();
