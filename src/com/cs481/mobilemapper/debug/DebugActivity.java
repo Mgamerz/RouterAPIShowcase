@@ -1,5 +1,8 @@
 package com.cs481.mobilemapper.debug;
 
+import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
+import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
+import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -19,8 +22,9 @@ import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
 
-public class DebugActivity extends SpiceActivity {
+public class DebugActivity extends SpiceActivity implements OnRefreshListener {
 	
+	private PullToRefreshLayout mPullToRefreshLayout;
 	private String password, ip;
 	private GPIO gpio;
 	ProgressDialog progressDialog;
@@ -29,6 +33,17 @@ public class DebugActivity extends SpiceActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_debug);
+	    // Now find the PullToRefreshLayout to setup
+	    mPullToRefreshLayout = (PullToRefreshLayout) findViewById(R.id.ptr_layout);
+
+	    // Now setup the PullToRefreshLayout
+	    ActionBarPullToRefresh.from(this)
+	            // Mark All Children as pullable
+	            .allChildrenArePullable()
+	            // Set the OnRefreshListener
+	            .listener(this)
+	            // Finally commit the setup to our PullToRefreshLayout
+	            .setup(mPullToRefreshLayout);
 	}
 
 	@Override
@@ -53,7 +68,7 @@ public class DebugActivity extends SpiceActivity {
 				ip, password);
 		String lastRequestCacheKey = request.createCacheKey();
 
-		
+		/*
         progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("Reading GPIO Configuration");
         progressDialog.show();
@@ -62,10 +77,10 @@ public class DebugActivity extends SpiceActivity {
 		
 		spiceManager.execute(request, lastRequestCacheKey,
 				DurationInMillis.ONE_MINUTE, new GPIOGetRequestListener());
-				
-		//gpio=new GPIO();
-		//gpio.setData(new Data());
-		//gpio.getData().setLed_power(1);
+				*/
+		gpio=new GPIO();
+		gpio.setData(new Data());
+		gpio.getData().setLed_power(1);
 	}
 	
 	public void onLED1GSwitch(View v){
@@ -143,4 +158,10 @@ public class DebugActivity extends SpiceActivity {
 		    	  return super.onOptionsItemSelected(item);
 		   }
 		}
+
+	@Override
+	public void onRefreshStarted(View view) {
+		// TODO Auto-generated method stub
+		
+	}
 }

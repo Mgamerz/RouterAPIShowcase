@@ -3,9 +3,7 @@ package com.cs481.mobilemapper.responses.control.gpio;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.Credentials;
 import org.apache.http.auth.UsernamePasswordCredentials;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.springframework.http.ContentCodingType;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -17,6 +15,7 @@ import org.springframework.web.client.RestTemplate;
 import android.util.Log;
 
 import com.cs481.mobilemapper.CommandCenter;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.octo.android.robospice.request.springandroid.SpringAndroidSpiceRequest;
 
 public class PutRequest extends SpringAndroidSpiceRequest<GPIO> {
@@ -45,14 +44,20 @@ public class PutRequest extends SpringAndroidSpiceRequest<GPIO> {
 		// The HttpComponentsClientHttpRequestFactory uses the
 		// org.apache.http package to make network requests
 		rt.setRequestFactory(new HttpComponentsClientHttpRequestFactory(client));
-		//rt.exchange(url, HttpMethod.PUT, data, GPIO.class);
 		HttpHeaders requestHeaders = new HttpHeaders(); 
 		requestHeaders.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-		//requestHeaders.setContentEncoding(ContentCodingType.GZIP);
-		requestHeaders.setContentType(new MediaType("application/x-www-form-urlencoded;charset=UTF-8"));
+		//requestHeaders.setContentType(new MediaType("application,/x-www-form-urlencoded;charset=UTF-8"));
 
+		//convert to string.
+		ObjectMapper mapper = new ObjectMapper();
+		String req = mapper.writeValueAsString(data);
+		Log.i(CommandCenter.TAG, "mapper str: "+req);
+		
+		
 		HttpEntity<GPIO> request = new HttpEntity<GPIO>(data, requestHeaders);
-		//request.
+		
+		
+		
 		
 		Log.i(CommandCenter.TAG, "Sending request.");
 		ResponseEntity<GPIO> r = rt.exchange(url, HttpMethod.PUT, request, GPIO.class);
