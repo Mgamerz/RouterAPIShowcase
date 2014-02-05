@@ -67,6 +67,7 @@ public class DashboardFragment extends ListFragment implements OnRefreshListener
     	rows.add(new ListRow("Wireless", "2 CLIENTS"));
     	rows.add(new ListRow("LAN", "DHCP - 2 Clients"));
     	rows.add(new ListRow("WAN", "3 Forwarded ports"));
+    	rows.add(new ListRow("GPIO", "Dimmed Mode"));
     	setListAdapter(new DashboardAdapter(getActivity(), rows));
     }
    
