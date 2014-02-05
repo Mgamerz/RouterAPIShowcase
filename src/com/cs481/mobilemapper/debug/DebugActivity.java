@@ -117,8 +117,8 @@ public class DebugActivity extends SpiceActivity implements OnRefreshListener {
 			progressDialog.dismiss();
 			Log.i(CommandCenter.TAG, "Get GPIO Object: " + gpio);
 			setGPIO(gpio);
-			TextView rail = (TextView) findViewById(R.id.gpio_power);
-			rail.setText(Integer.toString(gpio.getData().getLed_power()));
+			Switch powerswitch = (Switch) findViewById(R.id.powerled_state);
+			powerswitch.setChecked((gpio.getData().getLed_power() == 1) ? true : false);
 		}
 	}
 	

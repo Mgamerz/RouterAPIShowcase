@@ -13,13 +13,6 @@
         android:text="Placeholder Text"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
-    <Switch
-        android:id="@+id/usbled1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:onClick="onLED1GSwitch"
-        android:text="POWER NONRAIL LED" />
-
     <fragment
         android:id="@+id/gpio_frag"
         android:name="com.cs481.mobilemapper.debug.DebugGPIOFragment"
