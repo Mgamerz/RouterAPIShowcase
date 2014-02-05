@@ -1,5 +1,9 @@
 package com.cs481.mobilemapper.responses.control.gpio;
 
+import java.net.URLEncoder;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.Credentials;
 import org.apache.http.auth.UsernamePasswordCredentials;
@@ -15,6 +19,7 @@ import org.springframework.web.client.RestTemplate;
 import android.util.Log;
 
 import com.cs481.mobilemapper.CommandCenter;
+import com.cs481.mobilemapper.Utility;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.octo.android.robospice.request.springandroid.SpringAndroidSpiceRequest;
 
@@ -45,18 +50,24 @@ public class PutRequest extends SpringAndroidSpiceRequest<GPIO> {
 		// org.apache.http package to make network requests
 		rt.setRequestFactory(new HttpComponentsClientHttpRequestFactory(client));
 		HttpHeaders requestHeaders = new HttpHeaders(); 
-		requestHeaders.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-		//requestHeaders.setContentType(new MediaType("application,/x-www-form-urlencoded;charset=UTF-8"));
+		//requestHeaders.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+		final Map<String, String> parameterMap = new HashMap<String, String>(4);
+		parameterMap.put("charset", "utf-8");
+		requestHeaders.setContentType(
+		    new MediaType("application","x-www-form-urlencoded", parameterMap));
 
+		
 		//convert to string.
 		ObjectMapper mapper = new ObjectMapper();
 		String req = mapper.writeValueAsString(data);
+		req = Utility.convertToDataSegment(req);
+		req = URLEncoder.encode(req, "UTF-8");
+		req = "data="+req;
+		//"Hack" the string to follow the put format. There seems to be no convenient way to do this
+		
 		Log.i(CommandCenter.TAG, "mapper str: "+req);
-		
-		
-		HttpEntity<GPIO> request = new HttpEntity<GPIO>(data, requestHeaders);
-		
-		
+		//Log.i(CommandCenter.TAG,"Mapper str as ASCII: "+)
+		HttpEntity<?> request = new HttpEntity<Object>(req, requestHeaders); //sends unformatted json string
 		
 		
 		Log.i(CommandCenter.TAG, "Sending request.");

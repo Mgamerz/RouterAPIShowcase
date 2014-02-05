@@ -68,7 +68,7 @@ public class DebugActivity extends SpiceActivity implements OnRefreshListener {
 				ip, password);
 		String lastRequestCacheKey = request.createCacheKey();
 
-		/*
+		
         progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("Reading GPIO Configuration");
         progressDialog.show();
@@ -77,10 +77,10 @@ public class DebugActivity extends SpiceActivity implements OnRefreshListener {
 		
 		spiceManager.execute(request, lastRequestCacheKey,
 				DurationInMillis.ONE_MINUTE, new GPIOGetRequestListener());
-				*/
+		/*
 		gpio=new GPIO();
 		gpio.setData(new Data());
-		gpio.getData().setLed_power(1);
+		gpio.getData().setLed_power(1);*/
 	}
 	
 	public void onLED1GSwitch(View v){
@@ -142,7 +142,7 @@ public class DebugActivity extends SpiceActivity implements OnRefreshListener {
 				Log.i(CommandCenter.TAG, "Command success!");
 				Log.i(CommandCenter.TAG, "Put to GPIO: " + gpio);
 			} else {
-				Toast.makeText(DebugActivity.this, "GPIO: Server returned exception.", Toast.LENGTH_LONG).show();
+				Toast.makeText(DebugActivity.this, "GPIO: Server returned exception: "+gpio.getData().getException(), Toast.LENGTH_LONG).show();
 			}
 		}
 	}
