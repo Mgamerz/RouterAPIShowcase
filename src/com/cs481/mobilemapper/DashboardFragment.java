@@ -8,12 +8,14 @@ import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 
@@ -53,7 +55,8 @@ public class DashboardFragment extends ListFragment implements OnRefreshListener
     @Override
     public void onStart(){
     	super.onStart();
-    	
+    	Toast.makeText(getActivity(), "Welcome...", Toast.LENGTH_SHORT).show();
+    	Toast.makeText(getActivity(), "... Professor.", Toast.LENGTH_SHORT).show();
         ///You will setup the action bar with pull to refresh layout
         mPullToRefreshLayout = (PullToRefreshLayout) getView().findViewById(R.id.ptr_layout);
         ActionBarPullToRefresh.from(getActivity())
@@ -99,6 +102,13 @@ public class DashboardFragment extends ListFragment implements OnRefreshListener
 		// TODO Auto-generated method stub
 		
 	} 
+	
+	@Override
+    public void onListItemClick(ListView l, View v, int position, long id) {
+        // TODO Auto-generated method stub
+		Log.w(CommandCenter.TAG, "Item was clicked at pos "+position+", id "+id);
+        super.onListItemClick(l, v, position, id);
+    }
     
 }
 
