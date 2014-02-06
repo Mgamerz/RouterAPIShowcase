@@ -1,28 +1,14 @@
 package com.cs481.mobilemapper.responses.control.gpio;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.io.PrintWriter;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
+import java.util.Scanner;
 
-import org.apache.http.auth.AuthScope;
-import org.apache.http.auth.Credentials;
-import org.apache.http.auth.UsernamePasswordCredentials;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
-import org.springframework.http.converter.FormHttpMessageConverter;
-import org.springframework.http.converter.HttpMessageConverter;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.http.converter.json.MappingJacksonHttpMessageConverter;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
-import org.springframework.web.client.RestTemplate;
+import android.util.Log;
 
-import com.cs481.mobilemapper.Utility;
+import com.cs481.mobilemapper.CommandCenter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.octo.android.robospice.request.springandroid.SpringAndroidSpiceRequest;
 
@@ -40,7 +26,34 @@ public class PutRequest extends SpringAndroidSpiceRequest<GPIO> {
 
 	@Override
 	public GPIO loadDataFromNetwork() throws Exception {
+		URL url = new URL(String.format("http://%s/api/control/gpio/", routerip));
+		ObjectMapper mapper = new ObjectMapper();
+		String req = mapper.writeValueAsString(data.getData());
+		String parameters="data="+URLEncoder.encode(req, "UTF-8");
+		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+		conn.setDoOutput(true);
+		conn.setDoInput(true);
+		conn.setRequestMethod("PUT");
+		//not using the .setRequestProperty to the length, but this, solves the problem that i've mentioned
+		conn.setFixedLengthStreamingMode(parameters.getBytes().length);
+		conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
 
+		PrintWriter out = new PrintWriter(conn.getOutputStream());
+		out.print(parameters);
+		out.close();
+
+		String response = "";
+		Scanner inStream = new Scanner(conn.getInputStream());
+
+		while (inStream.hasNextLine()) {
+		    response += (inStream.nextLine());
+		}
+		inStream.close();
+		Log.i(CommandCenter.TAG, "Response was "+response);
+		return null;
+		
+		
+		/*
 		String url = String.format("http://%s/api/control/gpio/", routerip);
 		RestTemplate rt = getRestTemplate();
 		DefaultHttpClient client = new DefaultHttpClient();
@@ -57,20 +70,24 @@ public class PutRequest extends SpringAndroidSpiceRequest<GPIO> {
 		/*final Map<String, String> parameterMap = new HashMap<String, String>(4);
 		parameterMap.put("charset", "utf-8");
 		requestHeaders.setContentType(
-		    new MediaType("application","x-www-form-urlencoded", parameterMap));*/
+		    new MediaType("application","x-www-form-urlencoded", parameterMap));
 
 		
 		//convert to string.
 		ObjectMapper mapper = new ObjectMapper();
+		
 		String req = mapper.writeValueAsString(data);
-		req = Utility.convertToDataSegment(req);
+		Log.i(CommandCenter.TAG, req);
+		//req = Utility.convertToDataSegment(req);
 		//req = URLEncoder.encode(req, "US-ASCII");
 		
-		MultiValueMap<String, String> map = new LinkedMultiValueMap<String, String>();
-		map.add("LED_POWER", "false");     
-		map.add("LED_WIFI_RED", "false");  
+
 		
-		HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<MultiValueMap<String, String>>(map, requestHeaders);
+		//MultiValueMap<String, String> map = new LinkedMultiValueMap<String, String>();
+		//map.add("LED_POWER", "false");     
+		//map.add("LED_WIFI_RED", "false");  
+		
+		//HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<MultiValueMap<String, String>>(propertyMap, requestHeaders);
 
 		 List<HttpMessageConverter<?>> messageConverters = new ArrayList<HttpMessageConverter<?>>();
 		 messageConverters.add(new MappingJackson2HttpMessageConverter());   
@@ -78,21 +95,12 @@ public class PutRequest extends SpringAndroidSpiceRequest<GPIO> {
 		 rt.setMessageConverters(messageConverters);
 		
 		
-		
-		//req = "data="+req;
-		//StringEntity sreq = new StringEntity("data=false");
-		//"Hack" the string to follow the put format. There seems to be no convenient way to do this
-		
-		//Log.i(CommandCenter.TAG, "mapper str: "+sreq);
-		//Log.i(CommandCenter.TAG,"Mapper str as ASCII: "+)
-		//HttpEntity<?> request = new HttpEntity<Object>(sreq, requestHeaders); //sends unformatted json string
-		
-		
-		//Log.i(CommandCenter.TAG, "Sending request with body:");
-		//Log.i(CommandCenter.TAG, (String) request.getBody());
+		//Map<String,String> propertyMap = mapper.convertValue(data, Map.class);
 
+		//HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<MultiValueMap<String, String>>(propertyMap, requestHeaders);
+		//HttpEntity
 		ResponseEntity<GPIO> r = rt.exchange(url, HttpMethod.PUT, request, GPIO.class);
-		return r.getBody();
+		return r.getBody();*/
 	}
 
 	/**

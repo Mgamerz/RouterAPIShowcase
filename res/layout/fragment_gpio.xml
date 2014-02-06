@@ -21,7 +21,8 @@
         <Switch
             android:id="@+id/powerled_state"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:onClick="onSwitchChange" />
     </TableRow>
 
     <TableRow
@@ -39,7 +40,8 @@
         <Switch
             android:id="@+id/wifiledg_state"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:onClick="onSwitchChange" />
     </TableRow>
 
     <TableRow
@@ -58,6 +60,7 @@
             android:id="@+id/wifiledr_state"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:onClick="onSwitchChange"
             android:thumb="@drawable/apptheme_switch_inner_holo_dark" />
     </TableRow>
 

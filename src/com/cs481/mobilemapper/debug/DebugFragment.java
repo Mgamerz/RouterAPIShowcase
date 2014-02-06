@@ -32,10 +32,4 @@ public class DebugFragment extends Fragment {
 	public void onStart(){
 		super.onStart();
 	}
-	
-	@Override
-	public void onCreateOptionsMenu(
-	      Menu menu, MenuInflater inflater) {
-	   inflater.inflate(R.menu.debug_menu, menu);
-	}
 }
