@@ -3,7 +3,6 @@
 
     <string name="app_name">Mobile Mapper</string>
     <string name="action_settings">App Settings</string>
-    <string name="search_hint">Search for stuff</string>
     <string name="action_logout">Logout</string>
     <string name="title_section2">Section 2</string>
     <string name="title_section3">Section 3</string>
