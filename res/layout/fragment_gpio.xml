@@ -1,67 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/tableLayout1"
+<uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:ptr="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/ptr_layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:shrinkColumns="*"
-    android:stretchColumns="*" >
+    android:layout_height="match_parent" >
 
-    <TableRow
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center_horizontal" >
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
 
-        <TextView
-            android:id="@+id/powerled_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Power LED Green"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
+        <TableLayout
+            android:id="@+id/tableLayout1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:shrinkColumns="*"
+            android:stretchColumns="*" >
 
-        <Switch
-            android:id="@+id/powerled_state"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="onSwitchChange" />
-    </TableRow>
+            <TableRow
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal" >
 
-    <TableRow
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center_horizontal" >
+                <TextView
+                    android:id="@+id/powerled_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Power LED Green"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
 
-        <TextView
-            android:id="@+id/wifiledg_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="WiFi LED Green"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
+                <Switch
+                    android:id="@+id/powerled_state"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </TableRow>
 
-        <Switch
-            android:id="@+id/wifiledg_state"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="onSwitchChange" />
-    </TableRow>
+            <TableRow
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal" >
 
-    <TableRow
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center_horizontal" >
+                <TextView
+                    android:id="@+id/wifiledb_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="WiFi LED Blue"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
 
-        <TextView
-            android:id="@+id/wifiledr_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="WiFi LED Red"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
+                <Switch
+                    android:id="@+id/wifiledb_state"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </TableRow>
 
-        <Switch
-            android:id="@+id/wifiledr_state"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="onSwitchChange"
-            android:thumb="@drawable/apptheme_switch_inner_holo_dark" />
-    </TableRow>
+            <TableRow
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal" >
 
-</TableLayout>
+                <TextView
+                    android:id="@+id/wifiledr_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="WiFi LED Red"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                <Switch
+                    android:id="@+id/wifiledr_state"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:thumb="@drawable/apptheme_switch_inner_holo_dark" />
+            </TableRow>
+        </TableLayout>
+    </ScrollView>
+
+</uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout>

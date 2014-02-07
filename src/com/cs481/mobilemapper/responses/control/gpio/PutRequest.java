@@ -1,7 +1,5 @@
 package com.cs481.mobilemapper.responses.control.gpio;
 
-import java.net.URLEncoder;
-
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.auth.AuthScope;
@@ -15,6 +13,7 @@ import org.apache.http.util.EntityUtils;
 import android.util.Log;
 
 import com.cs481.mobilemapper.CommandCenter;
+import com.cs481.mobilemapper.responses.control.led.LED;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.octo.android.robospice.request.springandroid.SpringAndroidSpiceRequest;
 
