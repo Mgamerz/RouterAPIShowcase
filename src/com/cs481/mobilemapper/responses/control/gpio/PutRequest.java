@@ -1,10 +1,16 @@
 package com.cs481.mobilemapper.responses.control.gpio;
 
-import java.io.PrintWriter;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.net.URLEncoder;
-import java.util.Scanner;
+
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.Credentials;
+import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.client.methods.HttpPut;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.util.EntityUtils;
 
 import android.util.Log;
 
@@ -26,10 +32,66 @@ public class PutRequest extends SpringAndroidSpiceRequest<GPIO> {
 
 	@Override
 	public GPIO loadDataFromNetwork() throws Exception {
+        String url = String.format("http://%s/api/control/gpio", routerip);
+
+		final String CODEPAGE = "UTF-8";
+		HttpPut put = new HttpPut(url);
+		put.setHeader("Content-Type", "application/x-www-form-urlencoded");
+		
+		ObjectMapper mapper = new ObjectMapper();
+		String req = mapper.writeValueAsString(data.getData());
+		
+		put.setEntity(new StringEntity("data="+req, CODEPAGE));
+		HttpResponse resp = null;
+
+		DefaultHttpClient client = new DefaultHttpClient();
+		Credentials defaultcreds = new UsernamePasswordCredentials("admin",
+				password);
+
+		client.getCredentialsProvider().setCredentials(
+				new AuthScope(routerip, 80, AuthScope.ANY_REALM), defaultcreds);
+		
+		
+		resp = client.execute(put);
+		HttpEntity entity = resp.getEntity();
+		String responseString = EntityUtils.toString(entity, "UTF-8");
+		Log.i(CommandCenter.TAG, responseString);
+		GPIO gpio = mapper.readValue(responseString, GPIO.class);
+		return gpio;
+		
+		
+		
+        /*AndroidHttpClient httpClient = AndroidHttpClient.newInstance("MobileCommandCenterApp");
+
+        URL urlObj = new URL(String.format("http://%s/api/control/gpio", routerip));
+        HttpHost host = new HttpHost(urlObj.getHost(), urlObj.getPort(), urlObj.getProtocol());
+        AuthScope scope = new AuthScope(urlObj.getHost(), urlObj.getPort());
+        UsernamePasswordCredentials creds = new UsernamePasswordCredentials("admin", password);
+
+        CredentialsProvider cp = new BasicCredentialsProvider();
+        cp.setCredentials(scope, creds);
+        HttpContext credContext = new BasicHttpContext();
+        credContext.setAttribute(ClientContext.CREDS_PROVIDER, cp);
+
+        HttpPut job = new HttpPut(urlObj);
+        HttpResponse response = httpClient.execute(host,job,credContext);
+        StatusLine status = response.getStatusLine();
+        Log.d(TestActivity.TEST_TAG, status.toString());
+        httpClient.close();*/
+		/*
+		Authenticator.setDefault(new Authenticator() {
+		    @Override
+		    protected PasswordAuthentication getPasswordAuthentication() {
+		        return new PasswordAuthentication("admin", password.toCharArray());
+		    }
+		});
+
+		/*
 		URL url = new URL(String.format("http://%s/api/control/gpio/", routerip));
 		ObjectMapper mapper = new ObjectMapper();
 		String req = mapper.writeValueAsString(data.getData());
 		String parameters="data="+URLEncoder.encode(req, "UTF-8");
+		Log.i(CommandCenter.TAG, parameters);
 		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 		conn.setDoOutput(true);
 		conn.setDoInput(true);
@@ -38,7 +100,14 @@ public class PutRequest extends SpringAndroidSpiceRequest<GPIO> {
 		conn.setFixedLengthStreamingMode(parameters.getBytes().length);
 		conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
 
-		PrintWriter out = new PrintWriter(conn.getOutputStream());
+		DataOutputStream outputStream = new DataOutputStream(conn.getOutputStream());
+
+		// what should I write here to output stream to post params to server ?
+		outputStream.writeBytes(parameters);
+		outputStream.flush();
+		outputStream.close();
+
+		/*PrintWriter out = new PrintWriter(conn.getOutputStream());
 		out.print(parameters);
 		out.close();
 
@@ -50,7 +119,8 @@ public class PutRequest extends SpringAndroidSpiceRequest<GPIO> {
 		}
 		inStream.close();
 		Log.i(CommandCenter.TAG, "Response was "+response);
-		return null;
+		GPIO gpio = mapper.readValue(response, GPIO.class);
+		return gpio; */
 		
 		
 		/*
