@@ -10,10 +10,10 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
 
-        <TableLayout
+       <TableLayout
             android:id="@+id/tableLayout1"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:shrinkColumns="*"
             android:stretchColumns="*" >
 
@@ -32,8 +32,34 @@
                 <Switch
                     android:id="@+id/powerled_state"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:thumb="@drawable/greentheme_switch_inner_holo_light" />
             </TableRow>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@android:color/darker_gray" />
+
+            <TableRow
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal" >
+
+                <TextView
+                    android:id="@+id/wifiledr_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="WiFi LED Red"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                <Switch
+                    android:id="@+id/wifiledr_state"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:thumb="@drawable/apptheme_switch_inner_holo_dark" />
+            </TableRow>
+
 
             <TableRow
                 android:layout_width="wrap_content"
@@ -53,23 +79,27 @@
                     android:layout_height="wrap_content" />
             </TableRow>
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@android:color/darker_gray" />
+
             <TableRow
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal" >
 
                 <TextView
-                    android:id="@+id/wifiledr_text"
+                    android:id="@+id/ss0_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="WiFi LED Red"
+                    android:text="Signal Strength 0"
                     android:textAppearance="?android:attr/textAppearanceMedium" />
 
                 <Switch
-                    android:id="@+id/wifiledr_state"
+                    android:id="@+id/ss0_state"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:thumb="@drawable/apptheme_switch_inner_holo_dark" />
+                    android:layout_height="wrap_content" />
             </TableRow>
         </TableLayout>
     </ScrollView>
