@@ -1,6 +1,12 @@
-package com.cs481.mobilemapper;
+package com.cs481.mobilemapper.fragments;
 
 import java.util.ArrayList;
+
+import com.cs481.mobilemapper.CommandCenter;
+import com.cs481.mobilemapper.ListRow;
+import com.cs481.mobilemapper.R;
+import com.cs481.mobilemapper.R.id;
+import com.cs481.mobilemapper.R.layout;
 
 import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
 import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
@@ -19,14 +25,14 @@ import android.widget.Toast;
 
 
 
-public class DashboardFragment extends ListFragment implements OnRefreshListener{
+public class WlanFragment extends ListFragment implements OnRefreshListener{
     private PullToRefreshLayout mPullToRefreshLayout;
 
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_dash, container, false);
+        return inflater.inflate(R.layout.fragment_wlan, container, false);
     }
 	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState){
@@ -67,10 +73,10 @@ public class DashboardFragment extends ListFragment implements OnRefreshListener
     	//ListView list = (ListView) getView().findViewById(R.id.overview_list);
     	ArrayList<ListRow> rows = new ArrayList<ListRow>();
     	
-    	rows.add(new ListRow("Wireless", "2 CLIENTS"));
-    	rows.add(new ListRow("LAN", "DHCP - 2 Clients"));
-    	rows.add(new ListRow("WAN", "3 Forwarded ports"));
-    	rows.add(new ListRow("GPIO", "Dimmed Mode"));
+    	//rows.add(new ListRow("Wireless", "2 CLIENTS"));
+    	//rows.add(new ListRow("LAN", "DHCP - 2 Clients"));
+    	//rows.add(new ListRow("WAN", "3 Forwarded ports"));
+    	//rows.add(new ListRow("GPIO", "Dimmed Mode"));
     	setListAdapter(new DashboardAdapter(getActivity(), rows));
     }
    

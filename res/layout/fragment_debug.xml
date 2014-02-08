@@ -15,7 +15,7 @@
 
     <fragment
         android:id="@+id/gpio_frag"
-        android:name="com.cs481.mobilemapper.fragments.DebugGPIOFragment"
+        android:name="com.cs481.mobilemapper.fragments.GPIOFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:layout="@layout/fragment_gpio" />

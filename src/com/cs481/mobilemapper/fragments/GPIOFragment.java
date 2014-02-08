@@ -28,7 +28,7 @@ import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
 
-public class DebugGPIOFragment extends Fragment implements OnRefreshListener,
+public class GPIOFragment extends Fragment implements OnRefreshListener,
 		OnCheckedChangeListener {
 	private PullToRefreshLayout mPullToRefreshLayout;
 	private String password = "routerpass";

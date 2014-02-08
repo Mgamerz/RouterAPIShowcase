@@ -1,27 +1,18 @@
 package com.cs481.mobilemapper;
 
-import com.cs481.mobilemapper.debug.DebugActivity;
-
-import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
-import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
-import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
-import android.net.DhcpInfo;
-import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.text.format.Formatter;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.CheckBox;
-import android.widget.EditText;
 import android.widget.SearchView;
 import android.widget.Toast;
+
+import com.cs481.mobilemapper.fragments.DashboardFragment;
 
 public class CommandCenter extends SpiceActivity{
 
@@ -43,9 +34,9 @@ public class CommandCenter extends SpiceActivity{
 		// getSupportFragmentManager - uses for compatible library instead of getFragmentManager
 
 		//replace frame with our fragment
-		ft.replace(R.id.overview_fragment,fragment);
+		ft.replace(R.id.leftside_fragment,fragment);
 		//set type of animation
-		ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+	
 
 		//finish transaction
 		ft.commit();
