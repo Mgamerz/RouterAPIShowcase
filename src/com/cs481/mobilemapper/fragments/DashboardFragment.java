@@ -144,7 +144,14 @@ public class DashboardFragment extends ListFragment implements
 			// Add the fragment to the 'fragment_container' FrameLayout
 			FragmentTransaction transaction = getFragmentManager()
 					.beginTransaction();
-			transaction.replace(R.id.leftside_fragment, gpioFragment);
+
+			// check if the parent activity is dual pane based.
+			CommandCenter parent = (CommandCenter) getActivity();
+			if (parent.isDualPane()) {
+				transaction.replace(R.id.rightside_fragment, gpioFragment);
+			} else {
+				transaction.replace(R.id.leftside_fragment, gpioFragment);
+			}
 			transaction.addToBackStack(null);
 			transaction.commit();
 			break;

@@ -9,6 +9,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.SearchView;
 import android.widget.Toast;
 
@@ -17,7 +18,8 @@ import com.cs481.mobilemapper.fragments.DashboardFragment;
 public class CommandCenter extends SpiceActivity{
 
 	public static final String TAG = "CommandCenter";
-
+	private boolean isDualPane;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -36,10 +38,14 @@ public class CommandCenter extends SpiceActivity{
 		//replace frame with our fragment
 		ft.replace(R.id.leftside_fragment,fragment);
 		//set type of animation
-	
 
 		//finish transaction
 		ft.commit();
+		
+		View dual = findViewById(R.id.rightside_fragment);
+        setDualPane(dual != null && 
+                        dual.getVisibility() == View.VISIBLE);
+		
 	}
 
 	@Override
@@ -73,5 +79,13 @@ public class CommandCenter extends SpiceActivity{
 	      default:
 	         return super.onOptionsItemSelected(item);
 	   }
+	}
+
+	public boolean isDualPane() {
+		return isDualPane;
+	}
+
+	public void setDualPane(boolean isDualPane) {
+		this.isDualPane = isDualPane;
 	}
 }

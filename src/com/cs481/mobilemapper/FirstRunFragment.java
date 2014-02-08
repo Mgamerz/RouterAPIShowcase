@@ -10,15 +10,19 @@ import android.text.InputFilter;
 import android.text.Spanned;
 import android.text.format.Formatter;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.Toast;
+import android.widget.TextView;
+import android.widget.TextView.OnEditorActionListener;
 
 import com.cs481.mobilemapper.debug.DebugActivity;
 
@@ -40,6 +44,18 @@ public class FirstRunFragment extends Fragment {
 	@Override
 	public void onStart() {
 		super.onStart();
+		EditText passw = (EditText) getView().findViewById(R.id.router_password);
+		final Button connect = (Button) getView().findViewById(R.id.connect_button);
+		passw.setOnEditorActionListener(new OnEditorActionListener() {
+		    public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+		    	Log.i(CommandCenter.TAG, "Action ID: "+actionId);
+		        if (actionId == EditorInfo.IME_ACTION_SEND) {
+		            connect.performClick();
+		            return true;
+		        }
+		        return false;
+		    }
+		});
 		setupUI();
 	}
 
