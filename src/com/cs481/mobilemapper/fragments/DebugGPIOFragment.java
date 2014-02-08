@@ -55,7 +55,7 @@ public class DebugGPIOFragment extends Fragment implements OnRefreshListener, On
 
 	private void readGPIOConfig(boolean dialog) {
 		// perform the request.
-		com.cs481.mobilemapper.responses.control.gpio.GetRequest request = new com.cs481.mobilemapper.responses.control.gpio.GetRequest(
+		com.cs481.mobilemapper.responses.status.gpio.GetRequest request = new com.cs481.mobilemapper.responses.status.gpio.GetRequest(
 				ip, password);
 		String lastRequestCacheKey = request.createCacheKey();
 
@@ -145,7 +145,6 @@ public class DebugGPIOFragment extends Fragment implements OnRefreshListener, On
 		public void onRequestSuccess(GPIO gpio) {
 			// update your UI
 			progressDialog.dismiss();
-			Log.i(CommandCenter.TAG, "Get GPIO Object: " + gpio);
 			setGPIO(gpio);
 
 			// Set teh switches
@@ -189,7 +188,7 @@ public class DebugGPIOFragment extends Fragment implements OnRefreshListener, On
 			if (gpio.getData().getException() == null) {
 				Log.i(CommandCenter.TAG, "Command success!");
 				Log.i(CommandCenter.TAG, "Put to GPIO: " + gpio);
-				DebugGPIOFragment.this.gpio = gpio;
+				//DebugGPIOFragment.this.gpio = gpio;
 			} else {
 				Toast.makeText(
 						getActivity(),

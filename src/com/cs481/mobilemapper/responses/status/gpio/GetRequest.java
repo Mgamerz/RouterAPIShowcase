@@ -1,4 +1,4 @@
-package com.cs481.mobilemapper.responses.control.gpio;
+package com.cs481.mobilemapper.responses.status.gpio;
 
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.Credentials;
@@ -7,6 +7,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.web.client.RestTemplate;
 
+import com.cs481.mobilemapper.responses.control.gpio.GPIO;
 import com.octo.android.robospice.request.springandroid.SpringAndroidSpiceRequest;
 
 public class GetRequest extends SpringAndroidSpiceRequest<GPIO> {
@@ -22,7 +23,7 @@ public class GetRequest extends SpringAndroidSpiceRequest<GPIO> {
 	  @Override
 	  public GPIO loadDataFromNetwork() throws Exception {
 
-	    String url = String.format("http://%s/api/control/gpio", routerip);
+	    String url = String.format("http://%s/api/status/gpio", routerip);
 	    RestTemplate rt = getRestTemplate();
 	    DefaultHttpClient client = new DefaultHttpClient();
 	    Credentials defaultcreds = new UsernamePasswordCredentials("admin", routerpass);

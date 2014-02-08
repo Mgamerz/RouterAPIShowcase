@@ -1,5 +1,7 @@
 package com.cs481.mobilemapper.responses.control.gpio;
 
+import java.util.Calendar;
+
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.auth.AuthScope;
@@ -13,7 +15,6 @@ import org.apache.http.util.EntityUtils;
 import android.util.Log;
 
 import com.cs481.mobilemapper.CommandCenter;
-import com.cs481.mobilemapper.responses.control.led.LED;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.octo.android.robospice.request.springandroid.SpringAndroidSpiceRequest;
 
@@ -179,6 +180,6 @@ public class PutRequest extends SpringAndroidSpiceRequest<GPIO> {
 	 * @return
 	 */
 	public String createCacheKey() {
-		return "update_gpio";
+		return "update_gpio@"+System.currentTimeMillis();
 	}
 }
