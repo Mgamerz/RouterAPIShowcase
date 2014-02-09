@@ -3,7 +3,7 @@ package com.cs481.mobilemapper.fragments;
 import java.util.ArrayList;
 
 import com.cs481.mobilemapper.CommandCenter;
-import com.cs481.mobilemapper.ListRow;
+import com.cs481.mobilemapper.DashboardListRow;
 import com.cs481.mobilemapper.R;
 import com.cs481.mobilemapper.R.id;
 import com.cs481.mobilemapper.R.layout;
@@ -71,7 +71,7 @@ public class WlanFragment extends ListFragment implements OnRefreshListener{
           .setup(mPullToRefreshLayout);
     	
     	//ListView list = (ListView) getView().findViewById(R.id.overview_list);
-    	ArrayList<ListRow> rows = new ArrayList<ListRow>();
+    	ArrayList<DashboardListRow> rows = new ArrayList<DashboardListRow>();
     	
     	//rows.add(new ListRow("Wireless", "2 CLIENTS"));
     	//rows.add(new ListRow("LAN", "DHCP - 2 Clients"));
@@ -80,11 +80,11 @@ public class WlanFragment extends ListFragment implements OnRefreshListener{
     	setListAdapter(new DashboardAdapter(getActivity(), rows));
     }
    
-    public class DashboardAdapter extends ArrayAdapter<ListRow> {
+    public class DashboardAdapter extends ArrayAdapter<DashboardListRow> {
     	  private final Context context;
-    	  private final ArrayList<ListRow> rows;
+    	  private final ArrayList<DashboardListRow> rows;
 
-    	  public DashboardAdapter(Context context, ArrayList<ListRow> rows) {
+    	  public DashboardAdapter(Context context, ArrayList<DashboardListRow> rows) {
     	    super(context, R.layout.listview_row, rows);
     	    this.context = context;
     	    this.rows = rows;

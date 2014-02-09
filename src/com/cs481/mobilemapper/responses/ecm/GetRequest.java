@@ -10,6 +10,7 @@ import org.springframework.web.client.RestTemplate;
 import com.cs481.mobilemapper.responses.control.gpio.GPIO;
 import com.octo.android.robospice.request.springandroid.SpringAndroidSpiceRequest;
 
+//TODO FINISH
 public class GetRequest extends SpringAndroidSpiceRequest<GPIO> {
 
 	  private String routerip, routerpass;

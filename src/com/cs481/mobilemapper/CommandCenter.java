@@ -19,33 +19,43 @@ public class CommandCenter extends SpiceActivity{
 
 	public static final String TAG = "CommandCenter";
 	private boolean isDualPane;
+	private AuthInfo authInfo;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_commandcenter);
 		
-		Bundle args = new Bundle();        
-		// add needed args
+		Intent intent = getIntent();
+		//Rebuild authInfo from the intent that put us here
+		authInfo = new AuthInfo();
+		authInfo.setEcm(intent.getBooleanExtra("ecm", false));
+		authInfo.setRouterId(intent.getStringExtra("id"));
+		authInfo.setRouterip(intent.getStringExtra("ip"));
+		authInfo.setUsername(intent.getStringExtra("user"));
+		authInfo.setPassword(intent.getStringExtra("pass"));
+		
 
-		//create fragment and set arguments    
+		//create first UI fragment and set it up   
 		Fragment fragment = new DashboardFragment();
-		fragment.setArguments(args);
 
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-		// getSupportFragmentManager - uses for compatible library instead of getFragmentManager
 
-		//replace frame with our fragment
+		//Inject our fragment
 		ft.replace(R.id.leftside_fragment,fragment);
 		//set type of animation
 
-		//finish transaction
+		//Commit to the UI
 		ft.commit();
 		
 		View dual = findViewById(R.id.rightside_fragment);
         setDualPane(dual != null && 
                         dual.getVisibility() == View.VISIBLE);
 		
+	}
+
+	public AuthInfo getAuthInfo() {
+		return authInfo;
 	}
 
 	@Override

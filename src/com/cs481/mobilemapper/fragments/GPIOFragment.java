@@ -59,7 +59,7 @@ public class GPIOFragment extends Fragment implements OnRefreshListener,
 	private void readGPIOConfig(boolean dialog) {
 		// perform the request.
 		com.cs481.mobilemapper.responses.status.gpio.GetRequest request = new com.cs481.mobilemapper.responses.status.gpio.GetRequest(
-				ip, password);
+				((CommandCenter) getActivity()).getAuthInfo());
 		String lastRequestCacheKey = request.createCacheKey();
 
 		if (dialog) {
@@ -77,7 +77,9 @@ public class GPIOFragment extends Fragment implements OnRefreshListener,
 	@Override
 	public void onStart() {
 		super.onStart();
-		spiceManager = ((SpiceActivity) getActivity()).getSpiceManager();
+		SpiceActivity sa = (SpiceActivity) getActivity();
+		sa.setTitle("GPIO"); //TODO change to string resource
+		spiceManager = sa.getSpiceManager();
 		readGPIOConfig(true);
 
 		// Now find the PullToRefreshLayout to setup
@@ -115,15 +117,13 @@ public class GPIOFragment extends Fragment implements OnRefreshListener,
 		// Red Wifi LED
 		toggle = (Switch) getView().findViewById(R.id.wifiledr_state);
 		toggle.setOnCheckedChangeListener(this);
-		
+
 		// Signal Strength 0
 		toggle = (Switch) getView().findViewById(R.id.ss0_state);
 		toggle.setOnCheckedChangeListener(this);
 
-
-
-		 toggle = (Switch) getView().findViewById(R.id.wifiledb_state);
-		 toggle.setOnCheckedChangeListener(this);
+		toggle = (Switch) getView().findViewById(R.id.wifiledb_state);
+		toggle.setOnCheckedChangeListener(this);
 	}
 
 	@Override
@@ -217,15 +217,14 @@ public class GPIOFragment extends Fragment implements OnRefreshListener,
 				gpio.getData().setLed_power((isChecked) ? 1 : 0);
 				break;
 			case R.id.wifiledr_state:
-				gpio.getData().setLed_wifi_red((isChecked) ? 0 : 1);
+				gpio.getData().setLed_wifi_red((isChecked) ? 1 : 0);
 				break;
 			case R.id.ss0_state:
 				gpio.getData().setLed_ss_0((isChecked) ? 0 : 1);
 				break;
 			case R.id.wifiledb_state:
-				gpio.getData().setLed_wifi_blue((isChecked) ? 0 : 1);
+				gpio.getData().setLed_wifi_blue((isChecked) ? 1 : 0);
 				break;
-
 
 			default:
 				return;

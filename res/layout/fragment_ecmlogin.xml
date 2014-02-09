@@ -14,17 +14,6 @@
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <EditText
-        android:id="@+id/router_ip"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:digits="0123456789."
-        android:ems="10"
-        android:gravity="center"
-        android:hint="@string/routerip_hint"
-        android:inputType="numberDecimal"
-        android:visibility="gone" />
-
-    <EditText
         android:id="@+id/ecm_username"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -33,7 +22,6 @@
         android:singleLine="true"
         android:gravity="center"
         android:hint="@string/ecm_username_hint"
-        android:imeActionLabel="@string/connect"
         android:imeOptions="actionNext" >
     </EditText>
 
@@ -45,7 +33,7 @@
         android:ems="16"
         android:gravity="center"
         android:hint="@string/ecm_password_hint"
-        android:imeActionLabel="@string/connect"
+        android:imeActionLabel="@string/login"
         android:imeOptions="actionSend"
         android:inputType="textPassword" >
     </EditText>
@@ -58,12 +46,12 @@
         android:orientation="horizontal" >
 
         <Button
-            android:id="@+id/connect_button"
+            android:id="@+id/login_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
             android:onClick="connectClick"
-            android:text="@string/connect" />
+            android:text="@string/login" />
     </LinearLayout>
 
 </LinearLayout>

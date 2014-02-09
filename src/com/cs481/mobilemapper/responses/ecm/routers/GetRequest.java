@@ -1,35 +1,45 @@
-package com.cs481.mobilemapper.responses.status.gpio;
+package com.cs481.mobilemapper.responses.ecm.routers;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
+import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.Credentials;
+import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
 
 import com.cs481.mobilemapper.AuthInfo;
-import com.cs481.mobilemapper.ConnectionInfo;
-import com.cs481.mobilemapper.Utility;
-import com.cs481.mobilemapper.responses.control.gpio.GPIO;
-import com.cs481.mobilemapper.responses.ecm.ECM;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.octo.android.robospice.request.springandroid.SpringAndroidSpiceRequest;
 
-public class GetRequest extends SpringAndroidSpiceRequest<GPIO> {
+/**
+ * This is a special request that does not use the default ConnectionInfo values. 
+ * The login to ECM is not part of our router so it does not adhere to our routers basic PUT/GET structure.
+ * @author Mgamerz
+ *
+ */
+public class GetRequest extends SpringAndroidSpiceRequest<Routers> {
 
 	private AuthInfo authInfo;
 
 	public GetRequest(AuthInfo authInfo) {
-		super(GPIO.class);
+		super(Routers.class);
 		this.authInfo = authInfo;
 	}
 
 	@Override
-	public GPIO loadDataFromNetwork() throws Exception {
+	public Routers loadDataFromNetwork() throws Exception {
 		//Prepare connection
-		String url = "status/gpio"; //url to access
-		ConnectionInfo ci = Utility.prepareConnection(url, authInfo);
-		DefaultHttpClient client = ci.getClient();
-		url = ci.getAccessUrl();
+		
+		DefaultHttpClient client = new DefaultHttpClient();
+		Credentials defaultcreds = new UsernamePasswordCredentials(authInfo.getUsername(), authInfo.getPassword());
+		
+		//set auth type
+		String url = String.format("https://cradlepointecm.com/api/v1/routers");
+		AuthScope auth = new AuthScope("cradlepointecm.com",443);
+		client.getCredentialsProvider().setCredentials(auth, defaultcreds);
+
 
 		HttpGet get = new HttpGet(url);
 		HttpResponse resp = client.execute(get); //execute the call on the network.
@@ -38,13 +48,8 @@ public class GetRequest extends SpringAndroidSpiceRequest<GPIO> {
 		String responseString = EntityUtils.toString(entity, "UTF-8"); //format into a string we can read.
 		
 		ObjectMapper mapper = new ObjectMapper();
-		GPIO gpio;
-		if (authInfo.isEcm()){
-			gpio = (GPIO) mapper.readValue(responseString, ECM.class).getData().get(0);
-		} else {
-			gpio = mapper.readValue(responseString, GPIO.class);
-		}
-		return gpio;
+		Routers routers =  mapper.readValue(responseString, Routers.class);
+		return routers;
 	}
 
 	/**
@@ -54,6 +59,6 @@ public class GetRequest extends SpringAndroidSpiceRequest<GPIO> {
 	 * @return
 	 */
 	public String createCacheKey() {
-		return "GPIO_status";
+		return "ecm_get_routers";
 	}
 }

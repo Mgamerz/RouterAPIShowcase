@@ -1,4 +1,4 @@
-package com.cs481.mobilemapper;
+package com.cs481.mobilemapper.fragments;
 
 import android.app.Activity;
 import android.app.Dialog;
@@ -14,6 +14,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.cs481.mobilemapper.CommandCenter;
+import com.cs481.mobilemapper.R;
+import com.cs481.mobilemapper.R.id;
+import com.cs481.mobilemapper.R.layout;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesClient;
 import com.google.android.gms.common.GooglePlayServicesUtil;

@@ -22,5 +22,6 @@
     <string name="reset_leds">Reset LEDs</string>
     <string name="ecm_username_hint">ECM Username</string>
     <string name="ecm_password_hint">ECM Password</string>
+    <string name="login">Login</string>
 
 </resources>

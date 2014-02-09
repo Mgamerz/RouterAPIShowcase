@@ -1,6 +1,6 @@
 package com.cs481.mobilemapper;
 
-public class ListRow {
+public class DashboardListRow {
 	private String title = "";
 	private String subtitle = "";
 	private int id = -1;
@@ -29,11 +29,11 @@ public class ListRow {
 		this.subtitle = subtitle;
 	}
 
-	public ListRow(String title) {
+	public DashboardListRow(String title) {
 		this.title = title;
 	}
 
-	public ListRow(int lWLAN, String title, String subtitle) {
+	public DashboardListRow(int lWLAN, String title, String subtitle) {
 		this.id = lWLAN;
 		this.title = title;
 		this.subtitle = subtitle;

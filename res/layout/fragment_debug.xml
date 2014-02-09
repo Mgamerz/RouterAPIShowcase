@@ -13,11 +13,10 @@
         android:text="Placeholder Text"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
-    <fragment
-        android:id="@+id/ecm_frag"
-        android:name="com.cs481.mobilemapper.fragments.ECMLoginFragment"
+    <FrameLayout
+        android:id="@+id/debug_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:layout="@layout/fragment_ecmlogin" />
+        android:layout_height="match_parent" >
+    </FrameLayout>
 
 </LinearLayout>

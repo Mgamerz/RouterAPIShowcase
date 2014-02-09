@@ -2,11 +2,13 @@ package com.cs481.mobilemapper.debug;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.cs481.mobilemapper.R;
+import com.cs481.mobilemapper.fragments.ECMLoginFragment;
 
 public class DebugFragment extends Fragment {
 	
@@ -28,5 +30,16 @@ public class DebugFragment extends Fragment {
 	@Override
 	public void onStart(){
 		super.onStart();
+		//create first UI fragment and set it up   
+		Fragment fragment = new ECMLoginFragment();
+
+		FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+
+		//Inject our fragment
+		ft.replace(R.id.debug_container,fragment);
+		//set type of animation
+
+		//Commit to the UI
+		ft.commit();
 	}
 }

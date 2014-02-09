@@ -6,9 +6,10 @@ import android.widget.TextView;
 
 import com.cs481.mobilemapper.R;
 import com.cs481.mobilemapper.SpiceActivity;
+import com.cs481.mobilemapper.responses.ecm.routers.Routers;
 
 public class DebugActivity extends SpiceActivity {
-
+	private Routers routers; //used if ECM login is called
 	private String password, ip;
 
 	@Override
@@ -28,5 +29,13 @@ public class DebugActivity extends SpiceActivity {
 
 		TextView header = (TextView) findViewById(R.id.debug_header);
 		header.setText(ip + " - " + password);
+	}
+
+	public Routers getRouters() {
+		return routers;
+	}
+
+	public void setRouters(Routers routers) {
+		this.routers = routers;
 	}
 }

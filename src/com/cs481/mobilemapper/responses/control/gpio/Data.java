@@ -185,7 +185,7 @@ public class Data {
 	}
 
 	public java.lang.Integer getLed_wifi_red() {
-		return led_wifi_red;
+		return (led_wifi_red == 0) ? 1 : 0;
 	}
 
 	@JsonProperty("BPF_ENABLE")
@@ -262,7 +262,7 @@ public class Data {
 	}
 
 	public java.lang.Integer getLed_wifi_blue() {
-		return led_wifi_blue;
+		return (led_wifi_blue == 0) ? 1 : 0;
 	}
 
 	@JsonProperty("LED_USB2_G")

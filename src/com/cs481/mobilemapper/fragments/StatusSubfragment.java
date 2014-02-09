@@ -1,4 +1,7 @@
-package com.cs481.mobilemapper;
+package com.cs481.mobilemapper.fragments;
+
+import com.cs481.mobilemapper.R;
+import com.cs481.mobilemapper.R.layout;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;

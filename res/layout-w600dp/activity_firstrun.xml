@@ -13,7 +13,7 @@
 
     <fragment
         android:id="@+id/login_fragment"
-        android:name="com.cs481.mobilemapper.FirstRunFragment"
+        android:name="com.cs481.mobilemapper.fragments.FirstRunFragment"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         tools:layout="@layout/fragment_firstrun" />

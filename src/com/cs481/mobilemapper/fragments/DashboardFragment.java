@@ -19,7 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cs481.mobilemapper.CommandCenter;
-import com.cs481.mobilemapper.ListRow;
+import com.cs481.mobilemapper.DashboardListRow;
 import com.cs481.mobilemapper.R;
 
 public class DashboardFragment extends ListFragment implements
@@ -76,27 +76,27 @@ public class DashboardFragment extends ListFragment implements
 
 		// ListView list = (ListView)
 		// getView().findViewById(R.id.overview_list);
-		ArrayList<ListRow> rows = new ArrayList<ListRow>();
+		ArrayList<DashboardListRow> rows = new ArrayList<DashboardListRow>();
 
-		rows.add(new ListRow(lWLAN, "Wireless", "2 CLIENTS"));
-		rows.add(new ListRow(lLAN, "LAN", "DHCP - 2 Clients"));
-		rows.add(new ListRow(lWAN, "WAN", "3 Forwarded ports"));
-		rows.add(new ListRow(lGPIO, "GPIO", "Dimmed Mode"));
+		rows.add(new DashboardListRow(lWLAN, "Wireless", "Non Operational"));
+		rows.add(new DashboardListRow(lLAN, "LAN", "Non Operational"));
+		rows.add(new DashboardListRow(lWAN, "WAN", "Non Operational"));
+		rows.add(new DashboardListRow(lGPIO, "GPIO", "Partially Operational"));
 		setListAdapter(new DashboardAdapter(getActivity(), rows));
 	}
 
-	public class DashboardAdapter extends ArrayAdapter<ListRow> {
+	public class DashboardAdapter extends ArrayAdapter<DashboardListRow> {
 		private final Context context;
-		private final ArrayList<ListRow> rows;
+		private final ArrayList<DashboardListRow> rows;
 
-		public DashboardAdapter(Context context, ArrayList<ListRow> rows) {
+		public DashboardAdapter(Context context, ArrayList<DashboardListRow> rows) {
 			super(context, R.layout.listview_row, rows);
 			this.context = context;
 			this.rows = rows;
 		}
 
 		@Override
-		public ListRow getItem(int position) {
+		public DashboardListRow getItem(int position) {
 			return rows.get(position);
 		}
 
@@ -127,7 +127,7 @@ public class DashboardFragment extends ListFragment implements
 		// TODO Auto-generated method stub
 		Log.w(CommandCenter.TAG, "Item was clicked at pos " + position
 				+ ", id " + id);
-		ListRow row = (ListRow) (l.getAdapter().getItem(position));
+		DashboardListRow row = (DashboardListRow) (l.getAdapter().getItem(position));
 		switch (row.getId()) {
 		// case lWLAN:
 		// case lLAN:
