@@ -30,4 +30,17 @@ public class GPIO {
 		return data;
 	}
 	
+	@JsonProperty("id")
+	private transient String id;
+
+	@JsonIgnore
+	public String getId() {
+		return id;
+	}
+
+	@JsonIgnore
+	public void setId(String id) {
+		this.id = id;
+	}
+	
 }

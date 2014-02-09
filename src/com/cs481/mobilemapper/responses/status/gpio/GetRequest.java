@@ -6,11 +6,13 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
 
+import android.util.Log;
+
 import com.cs481.mobilemapper.AuthInfo;
+import com.cs481.mobilemapper.CommandCenterActivity;
 import com.cs481.mobilemapper.ConnectionInfo;
 import com.cs481.mobilemapper.Utility;
 import com.cs481.mobilemapper.responses.control.gpio.GPIO;
-import com.cs481.mobilemapper.responses.ecm.ECM;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.octo.android.robospice.request.springandroid.SpringAndroidSpiceRequest;
 
@@ -30,7 +32,7 @@ public class GetRequest extends SpringAndroidSpiceRequest<GPIO> {
 		ConnectionInfo ci = Utility.prepareConnection(url, authInfo);
 		DefaultHttpClient client = ci.getClient();
 		url = ci.getAccessUrl();
-
+		Log.i(CommandCenterActivity.TAG, "GPIO GET to "+url);
 		HttpGet get = new HttpGet(url);
 		HttpResponse resp = client.execute(get); //execute the call on the network.
 		HttpEntity entity = resp.getEntity(); //get the body of the response from the server.
@@ -40,10 +42,9 @@ public class GetRequest extends SpringAndroidSpiceRequest<GPIO> {
 		ObjectMapper mapper = new ObjectMapper();
 		GPIO gpio;
 		if (authInfo.isEcm()){
-			gpio = (GPIO) mapper.readValue(responseString, ECM.class).getData().get(0);
-		} else {
-			gpio = mapper.readValue(responseString, GPIO.class);
+			responseString = Utility.normalizeECM(mapper, responseString);
 		}
+		gpio = mapper.readValue(responseString, GPIO.class);
 		return gpio;
 	}
 

@@ -18,6 +18,7 @@ import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.Switch;
 import android.widget.Toast;
 
+import com.cs481.mobilemapper.AuthInfo;
 import com.cs481.mobilemapper.CommandCenterActivity;
 import com.cs481.mobilemapper.R;
 import com.cs481.mobilemapper.SpiceActivity;
@@ -31,8 +32,7 @@ import com.octo.android.robospice.request.listener.RequestListener;
 public class GPIOFragment extends Fragment implements OnRefreshListener,
 		OnCheckedChangeListener {
 	private PullToRefreshLayout mPullToRefreshLayout;
-	private String password = "routerpass";
-	private String ip = "192.168.0.1";
+	private AuthInfo authInfo;
 	private GPIO gpio;
 	private boolean checking = true; // Flag for a refresh taking place. First
 										// time it will be true as we don't want
@@ -78,7 +78,7 @@ public class GPIOFragment extends Fragment implements OnRefreshListener,
 	public void onStart() {
 		super.onStart();
 		SpiceActivity sa = (SpiceActivity) getActivity();
-		sa.setTitle("GPIO"); //TODO change to string resource
+		sa.setTitle("GPIO"); // TODO change to string resource
 		spiceManager = sa.getSpiceManager();
 		readGPIOConfig(true);
 
@@ -124,6 +124,12 @@ public class GPIOFragment extends Fragment implements OnRefreshListener,
 
 		toggle = (Switch) getView().findViewById(R.id.wifiledb_state);
 		toggle.setOnCheckedChangeListener(this);
+	}
+
+	@Override
+	public void onActivityCreated(Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
+		authInfo = ((CommandCenterActivity) getActivity()).getAuthInfo();
 	}
 
 	@Override
@@ -232,7 +238,7 @@ public class GPIOFragment extends Fragment implements OnRefreshListener,
 
 			// perform the request.
 			com.cs481.mobilemapper.responses.control.gpio.PutRequest request = new com.cs481.mobilemapper.responses.control.gpio.PutRequest(
-					ip, password, gpio);
+					authInfo, gpio);
 			String lastRequestCacheKey = request.createCacheKey();
 
 			spiceManager.execute(request, lastRequestCacheKey,
@@ -253,13 +259,14 @@ public class GPIOFragment extends Fragment implements OnRefreshListener,
 		switch (item.getItemId()) {
 		case R.id.reset_leds:
 			// perform the request.
-			com.cs481.mobilemapper.responses.control.led.PutRequest request = new com.cs481.mobilemapper.responses.control.led.PutRequest(
-					ip, password);
+			/*com.cs481.mobilemapper.responses.control.led.PutRequest request = new com.cs481.mobilemapper.responses.control.led.PutRequest(
+					authInfo);
 			String lastRequestCacheKey = request.createCacheKey();
 
 			spiceManager.execute(request, lastRequestCacheKey,
 					DurationInMillis.ALWAYS_EXPIRED,
-					new LEDPutRequestListener());
+					new LEDPutRequestListener());*/
+			return true;
 		default:
 			return super.onOptionsItemSelected(item);
 		}

@@ -121,6 +121,9 @@ public class ECMRoutersFragment extends ListFragment implements
 		Log.w(CommandCenterActivity.TAG, "Router ID clicked: " + row.getId());
 		LoginActivity activity = (LoginActivity) getActivity();
 		authInfo = activity.getAuthInfo();
+		Log.i(CommandCenterActivity.TAG, "Authinfo: "+authInfo);
+		Log.i(CommandCenterActivity.TAG, "Router: "+row.getRouter());
+		
 		authInfo.setRouterId(row.getRouter().getId());
 		activity.setAuthInfo(authInfo);
 		//activity.setRouter(row.getRouter());

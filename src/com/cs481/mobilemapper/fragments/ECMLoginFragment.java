@@ -53,7 +53,6 @@ public class ECMLoginFragment extends Fragment {
 				// TODO Auto-generated method stub
 				readECMRouters();
 			}
-
 		});
 
 		return rootView;
@@ -113,7 +112,8 @@ public class ECMLoginFragment extends Fragment {
 			authInfo.setUsername(usern.getText().toString());
 			authInfo.setPassword(passw.getText().toString());
 			authInfo.setEcm(true);
-					
+			
+			activity.setAuthInfo(authInfo);
 			activity.setRouters(routers);
 			
 			ECMRoutersFragment routersFragment = new ECMRoutersFragment();

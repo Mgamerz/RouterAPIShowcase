@@ -61,7 +61,7 @@
             android:name=".debug.DebugActivity"
             android:label="@string/debugHeader" />
         <activity
-            android:name="CommandCenter"
+            android:name="CommandCenterActivity"
             android:label="@string/commandHeader" >
             <meta-data
                 android:name="android.app.searchable"

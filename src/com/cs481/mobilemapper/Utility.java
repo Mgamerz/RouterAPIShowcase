@@ -1,5 +1,7 @@
 package com.cs481.mobilemapper;
 
+import java.io.IOException;
+
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.Credentials;
 import org.apache.http.auth.UsernamePasswordCredentials;
@@ -9,6 +11,11 @@ import android.content.Context;
 import android.net.DhcpInfo;
 import android.net.wifi.WifiManager;
 import android.text.format.Formatter;
+import android.util.Log;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * The utility class holds methods that are accessed by many classes.
@@ -23,6 +30,34 @@ public class Utility {
 		str = str.substring(1, str.length()); // remove first {
 		str = str.replaceFirst("\"data\":", "");
 		return str;
+	}
+	
+	/**
+	 * Converts an ECM reply into a normal direct-interface based response
+	 * @param str String to normalize
+	 * @return Normalized string
+	 */
+	public static String normalizeECM(ObjectMapper mapper, String str){
+		try {
+			JsonNode root = mapper.readTree(str);
+			Log.w(CommandCenterActivity.TAG, "Json Tree:");
+			Log.w(CommandCenterActivity.TAG, root.toString());
+			root = root.get("data");
+			Log.w(CommandCenterActivity.TAG, "Descend to data:");
+			Log.w(CommandCenterActivity.TAG, root.toString());
+			root = root.get(0);
+			Log.w(CommandCenterActivity.TAG, "Descend to index 0:");
+			Log.w(CommandCenterActivity.TAG, root.toString());
+			return root.toString();
+		} catch (JsonProcessingException e) {
+			// TODO Auto-generated catch block
+			Log.e(CommandCenterActivity.TAG, "JSONPROCESSING: ERROR PARSING ECM JSON");
+			e.printStackTrace();
+		} catch (IOException e) {
+			Log.e(CommandCenterActivity.TAG, "IOEXCEPTION: ERROR PARSING ECM JSON");
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 	/**
@@ -39,7 +74,7 @@ public class Utility {
 		//set auth type
 		AuthScope auth;
 		if (authInfo.isEcm()) {
-			ci.setAccessUrl(String.format("https://cradlepointecm.com/api/v1/%s/?id=%s",url,authInfo.getRouterId()));
+			ci.setAccessUrl(String.format("https://cradlepointecm.com/api/v1/remote/%s/?id=%s",url,authInfo.getRouterId()));
 			auth = new AuthScope("cradlepointecm.com",443);
 		} else {
 			ci.setAccessUrl(String.format("http://%s/api/%s", authInfo.getRouterip(), url));
