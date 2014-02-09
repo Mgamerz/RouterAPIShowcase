@@ -20,5 +20,7 @@
     <string name="search_hint">Search for stuff</string>
     <string name="action_mapper">Mapper</string>
     <string name="reset_leds">Reset LEDs</string>
+    <string name="ecm_username_hint">ECM Username</string>
+    <string name="ecm_password_hint">ECM Password</string>
 
 </resources>

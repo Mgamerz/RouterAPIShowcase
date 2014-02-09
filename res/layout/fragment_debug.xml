@@ -14,10 +14,10 @@
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <fragment
-        android:id="@+id/gpio_frag"
-        android:name="com.cs481.mobilemapper.fragments.GPIOFragment"
+        android:id="@+id/ecm_frag"
+        android:name="com.cs481.mobilemapper.fragments.ECMLoginFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:layout="@layout/fragment_gpio" />
+        tools:layout="@layout/fragment_ecmlogin" />
 
 </LinearLayout>

@@ -1,4 +1,4 @@
-package com.cs481.mobilemapper.responses.status.gpio;
+package com.cs481.mobilemapper.responses.ecm;
 
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.Credentials;
@@ -22,9 +22,9 @@ public class GetRequest extends SpringAndroidSpiceRequest<GPIO> {
 
 	  @Override
 	  public GPIO loadDataFromNetwork() throws Exception {
-		RestTemplate rt = getRestTemplate();
-	    String url = String.format("http://%s/api/status/gpio", routerip);
-	    
+
+	    String url = String.format("https://cradlepointecm.com/api/v1/%s/api/status/gpio", routerip);
+	    RestTemplate rt = getRestTemplate();
 	    DefaultHttpClient client = new DefaultHttpClient();
 	    Credentials defaultcreds = new UsernamePasswordCredentials("admin", routerpass);
 

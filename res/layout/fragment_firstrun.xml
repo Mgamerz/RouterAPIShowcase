@@ -43,6 +43,7 @@
             android:digits="0123456789."
             android:ems="10"
             android:gravity="center"
+            android:singleLine="true"
             android:hint="@string/routerip_hint"
             android:inputType="numberDecimal"
             android:visibility="gone" />
