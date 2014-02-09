@@ -18,7 +18,7 @@ import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.Switch;
 import android.widget.Toast;
 
-import com.cs481.mobilemapper.CommandCenter;
+import com.cs481.mobilemapper.CommandCenterActivity;
 import com.cs481.mobilemapper.R;
 import com.cs481.mobilemapper.SpiceActivity;
 import com.cs481.mobilemapper.responses.control.gpio.GPIO;
@@ -59,7 +59,7 @@ public class GPIOFragment extends Fragment implements OnRefreshListener,
 	private void readGPIOConfig(boolean dialog) {
 		// perform the request.
 		com.cs481.mobilemapper.responses.status.gpio.GetRequest request = new com.cs481.mobilemapper.responses.status.gpio.GetRequest(
-				((CommandCenter) getActivity()).getAuthInfo());
+				((CommandCenterActivity) getActivity()).getAuthInfo());
 		String lastRequestCacheKey = request.createCacheKey();
 
 		if (dialog) {
@@ -141,7 +141,7 @@ public class GPIOFragment extends Fragment implements OnRefreshListener,
 			// update your UI
 			progressDialog.dismiss();
 			mPullToRefreshLayout.setRefreshComplete();
-			Log.i(CommandCenter.TAG, "Failed to read GPIO!");
+			Log.i(CommandCenterActivity.TAG, "Failed to read GPIO!");
 			Toast.makeText(getActivity(), "Failed to read GPIO configuration",
 					Toast.LENGTH_SHORT).show();
 			checking = false;
@@ -189,15 +189,15 @@ public class GPIOFragment extends Fragment implements OnRefreshListener,
 		@Override
 		public void onRequestFailure(SpiceException e) {
 			// update your UI
-			Log.i(CommandCenter.TAG, "Command failure!");
+			Log.i(CommandCenterActivity.TAG, "Command failure!");
 		}
 
 		@Override
 		public void onRequestSuccess(GPIO gpio) {
 			// update your UI
 			if (gpio.getData().getException() == null) {
-				Log.i(CommandCenter.TAG, "Command success!");
-				Log.i(CommandCenter.TAG, "Put to GPIO: " + gpio);
+				Log.i(CommandCenterActivity.TAG, "Command success!");
+				Log.i(CommandCenterActivity.TAG, "Put to GPIO: " + gpio);
 				// DebugGPIOFragment.this.gpio = gpio;
 			} else {
 				Toast.makeText(
@@ -248,7 +248,7 @@ public class GPIOFragment extends Fragment implements OnRefreshListener,
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		Log.w(CommandCenter.TAG, "Item was clicked.");
+		Log.w(CommandCenterActivity.TAG, "Item was clicked.");
 		// handle item selection
 		switch (item.getItemId()) {
 		case R.id.reset_leds:
@@ -271,15 +271,15 @@ public class GPIOFragment extends Fragment implements OnRefreshListener,
 		@Override
 		public void onRequestFailure(SpiceException e) {
 			// update your UI
-			Log.i(CommandCenter.TAG, "Command failure!");
+			Log.i(CommandCenterActivity.TAG, "Command failure!");
 		}
 
 		@Override
 		public void onRequestSuccess(LED led) {
 			// update your UI
 			if (led.getData().getException() == null) {
-				Log.i(CommandCenter.TAG, "Command success!");
-				Log.i(CommandCenter.TAG, "Put to LED: " + led);
+				Log.i(CommandCenterActivity.TAG, "Command success!");
+				Log.i(CommandCenterActivity.TAG, "Put to LED: " + led);
 			} else {
 				Toast.makeText(
 						getActivity(),

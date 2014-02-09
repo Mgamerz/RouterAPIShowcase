@@ -18,7 +18,7 @@ public class SpiceActivity extends FragmentActivity {
 	@Override
 	protected void onStart() {
 	  super.onStart();
-	  Log.i(CommandCenter.TAG, "Spice manager: "+spiceManager);
+	  Log.i(CommandCenterActivity.TAG, "Spice manager: "+spiceManager);
 	  spiceManager.start(this);
 	}
 

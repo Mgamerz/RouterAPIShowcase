@@ -5,11 +5,10 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <fragment
-        android:id="@+id/fragment1"
-        android:name="com.cs481.mobilemapper.fragments.FirstRunFragment"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:layout="@layout/fragment_firstrun" />
+    <FrameLayout
+        android:id="@+id/login_fragment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" >
+    </FrameLayout>
 
 </LinearLayout>

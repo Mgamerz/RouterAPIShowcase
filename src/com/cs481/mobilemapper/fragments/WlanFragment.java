@@ -2,7 +2,7 @@ package com.cs481.mobilemapper.fragments;
 
 import java.util.ArrayList;
 
-import com.cs481.mobilemapper.CommandCenter;
+import com.cs481.mobilemapper.CommandCenterActivity;
 import com.cs481.mobilemapper.DashboardListRow;
 import com.cs481.mobilemapper.R;
 import com.cs481.mobilemapper.R.id;
@@ -112,7 +112,7 @@ public class WlanFragment extends ListFragment implements OnRefreshListener{
 	@Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         // TODO Auto-generated method stub
-		Log.w(CommandCenter.TAG, "Item was clicked at pos "+position+", id "+id);
+		Log.w(CommandCenterActivity.TAG, "Item was clicked at pos "+position+", id "+id);
         super.onListItemClick(l, v, position, id);
     }
     

@@ -18,7 +18,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.cs481.mobilemapper.CommandCenter;
+import com.cs481.mobilemapper.CommandCenterActivity;
 import com.cs481.mobilemapper.DashboardListRow;
 import com.cs481.mobilemapper.R;
 
@@ -125,7 +125,7 @@ public class DashboardFragment extends ListFragment implements
 	@Override
 	public void onListItemClick(ListView l, View v, int position, long id) {
 		// TODO Auto-generated method stub
-		Log.w(CommandCenter.TAG, "Item was clicked at pos " + position
+		Log.w(CommandCenterActivity.TAG, "Item was clicked at pos " + position
 				+ ", id " + id);
 		DashboardListRow row = (DashboardListRow) (l.getAdapter().getItem(position));
 		switch (row.getId()) {
@@ -146,7 +146,7 @@ public class DashboardFragment extends ListFragment implements
 					.beginTransaction();
 
 			// check if the parent activity is dual pane based.
-			CommandCenter parent = (CommandCenter) getActivity();
+			CommandCenterActivity parent = (CommandCenterActivity) getActivity();
 			if (parent.isDualPane()) {
 				transaction.replace(R.id.rightside_fragment, gpioFragment);
 			} else {

@@ -49,7 +49,7 @@
             android:value="AIzaSyBbZPcGXcIiuYuMWtjf6brmf7qV1_jO5-I" />
 
         <activity
-            android:name=".FirstRunActivity"
+            android:name=".LoginActivity"
             android:label="@string/commandHeader" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

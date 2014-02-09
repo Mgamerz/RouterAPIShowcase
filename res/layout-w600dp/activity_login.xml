@@ -11,12 +11,11 @@
         android:layout_weight="1" >
     </View>
 
-    <fragment
+    <FrameLayout
         android:id="@+id/login_fragment"
-        android:name="com.cs481.mobilemapper.fragments.FirstRunFragment"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        tools:layout="@layout/fragment_firstrun" />
+        android:layout_height="wrap_content" >
+    </FrameLayout>
 
     <View
         android:layout_width="0dp"

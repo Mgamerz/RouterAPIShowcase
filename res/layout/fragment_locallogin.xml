@@ -2,47 +2,63 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_gravity="center_horizontal"
-    android:padding="5dp"
-    android:orientation="vertical" >
-
+    android:gravity="center"
+    android:orientation="vertical"
+    android:padding="15dp" >
     <View
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1" >
     </View>
-
     <TextView
-        android:id="@+id/ecm_text_title"
+        android:id="@+id/locallogin_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="Enterprise Cloud Manager"
+        android:text="Mobile Command Center"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
-    <EditText
-        android:id="@+id/ecm_username"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:ems="16"
         android:gravity="center"
-        android:hint="@string/ecm_username_hint"
-        android:imeOptions="actionNext"
-        android:singleLine="true" >
-    </EditText>
+        android:orientation="horizontal" >
+
+        <CheckBox
+            android:id="@+id/use_default_gateway"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:onClick="defaultGatewayChange"
+            android:text="@string/default_gateway" />
+    </LinearLayout>
 
     <EditText
-        android:id="@+id/ecm_password"
+        android:id="@+id/router_ip"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:digits="0123456789."
+        android:ems="10"
+        android:gravity="center"
+        android:hint="@string/routerip_hint"
+        android:inputType="numberDecimal"
+        android:singleLine="true"
+        android:visibility="gone" />
+
+    <EditText
+        android:id="@+id/router_password"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:ems="16"
         android:gravity="center"
-        android:hint="@string/ecm_password_hint"
-        android:imeActionLabel="@string/login"
+        android:hint="@string/password_hint"
+        android:imeActionLabel="@string/connect"
         android:imeOptions="actionSend"
         android:inputType="textPassword" >
+
+        <requestFocus />
     </EditText>
 
     <LinearLayout
@@ -53,18 +69,16 @@
         android:orientation="horizontal" >
 
         <Button
-            android:id="@+id/login_button"
+            android:id="@+id/connect_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
             android:onClick="connectClick"
-            android:text="@string/login" />
+            android:text="@string/connect" />
     </LinearLayout>
-
     <View
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1" >
     </View>
-
 </LinearLayout>

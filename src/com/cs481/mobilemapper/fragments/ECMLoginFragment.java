@@ -1,21 +1,27 @@
 package com.cs481.mobilemapper.fragments;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import com.cs481.mobilemapper.AuthInfo;
-import com.cs481.mobilemapper.CommandCenter;
+import com.cs481.mobilemapper.LoginActivity;
 import com.cs481.mobilemapper.R;
 import com.cs481.mobilemapper.SpiceActivity;
+import com.cs481.mobilemapper.Utility;
 import com.cs481.mobilemapper.debug.DebugActivity;
 import com.cs481.mobilemapper.responses.ecm.routers.Routers;
 import com.octo.android.robospice.SpiceManager;
@@ -26,6 +32,12 @@ import com.octo.android.robospice.request.listener.RequestListener;
 public class ECMLoginFragment extends Fragment {
 	private ProgressDialog progressDialog;
 	private SpiceManager spiceManager;
+
+	@Override
+	public void onCreate(Bundle savedInstancedState) {
+		super.onCreate(savedInstancedState);
+		setHasOptionsMenu(true);
+	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -94,7 +106,16 @@ public class ECMLoginFragment extends Fragment {
 		public void onRequestSuccess(Routers routers) {
 			// update your UI
 			progressDialog.dismiss();
-			((DebugActivity) getActivity()).setRouters(routers);
+			LoginActivity activity = (LoginActivity) getActivity();
+			AuthInfo authInfo = new AuthInfo();
+			EditText usern = (EditText) getView().findViewById(R.id.ecm_username);
+			EditText passw = (EditText) getView().findViewById(R.id.ecm_password);
+			authInfo.setUsername(usern.getText().toString());
+			authInfo.setPassword(passw.getText().toString());
+			authInfo.setEcm(true);
+					
+			activity.setRouters(routers);
+			
 			ECMRoutersFragment routersFragment = new ECMRoutersFragment();
 
 			// In case this activity was started with special instructions from
@@ -103,14 +124,69 @@ public class ECMLoginFragment extends Fragment {
 			// firstFragment.setArguments(getIntent().getExtras());
 
 			// Add the fragment to the 'fragment_container' FrameLayout
-			FragmentTransaction transaction = getActivity().getSupportFragmentManager()
-					.beginTransaction();
+			FragmentTransaction transaction = getActivity()
+					.getSupportFragmentManager().beginTransaction();
 
 			// check if the parent activity is dual pane based.
-			transaction.replace(R.id.debug_container, routersFragment);
+			transaction.replace(R.id.login_fragment, routersFragment);
 
 			transaction.addToBackStack(null);
 			transaction.commit();
+		}
+	}
+
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		inflater.inflate(R.menu.login_menu, menu);
+		MenuItem item = menu.findItem(R.id.menu_switchtoecm);
+		item.setVisible(false);
+		getActivity().invalidateOptionsMenu();
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		// handle item selection
+		switch (item.getItemId()) {
+		case R.id.fr_debug:
+			Intent intent = new Intent(getActivity(), DebugActivity.class);
+			CheckBox gateway = (CheckBox) getView().findViewById(
+					R.id.use_default_gateway);
+			String routerip = "";
+			if (gateway.isChecked()) {
+				routerip = Utility.getDefaultGateway(getActivity());
+			} else {
+				EditText iptext = (EditText) getView().findViewById(
+						R.id.router_ip);
+				routerip = iptext.getText().toString();
+			}
+
+			intent.putExtra("ip", routerip);
+			String password = ((EditText) getView().findViewById(
+					R.id.router_password)).getText().toString();
+			intent.putExtra("pass", password);
+			intent.putExtra("ecm", false);
+			intent.putExtra("id", "NOT-ECM-MANAGED");
+			intent.putExtra("user", "admin");
+
+			startActivity(intent);
+			return true;
+		case R.id.menu_switchtolocal:
+			LocalLoginFragment localFragment = new LocalLoginFragment();
+
+			// In case this activity was started with special instructions from
+			// an
+			// Intent, pass the Intent's extras to the fragment as arguments
+			// firstFragment.setArguments(getIntent().getExtras());
+
+			// Add the fragment to the 'fragment_container' FrameLayout
+			FragmentTransaction transaction = getActivity()
+					.getSupportFragmentManager().beginTransaction();
+
+			transaction.replace(R.id.login_fragment, localFragment);
+			transaction.commit();
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
 		}
 	}
 }

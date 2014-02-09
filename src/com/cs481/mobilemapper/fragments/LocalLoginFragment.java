@@ -3,6 +3,7 @@ package com.cs481.mobilemapper.fragments;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.text.InputFilter;
 import android.text.Spanned;
 import android.util.Log;
@@ -21,12 +22,13 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
-import com.cs481.mobilemapper.CommandCenter;
+import com.cs481.mobilemapper.CommandCenterActivity;
 import com.cs481.mobilemapper.R;
+import com.cs481.mobilemapper.SpiceActivity;
 import com.cs481.mobilemapper.Utility;
 import com.cs481.mobilemapper.debug.DebugActivity;
 
-public class FirstRunFragment extends Fragment {
+public class LocalLoginFragment extends Fragment {
 	@Override
 	public void onCreate(Bundle savedInstancedState) {
 		super.onCreate(savedInstancedState);
@@ -36,7 +38,7 @@ public class FirstRunFragment extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		View rootView = inflater.inflate(R.layout.fragment_firstrun, container,
+		View rootView = inflater.inflate(R.layout.fragment_locallogin, container,
 				false);
 		return rootView;
 	}
@@ -44,6 +46,8 @@ public class FirstRunFragment extends Fragment {
 	@Override
 	public void onStart() {
 		super.onStart();
+		SpiceActivity sa = (SpiceActivity) getActivity();
+		sa.setTitle("Local Device Login"); // TODO change to string resource
 		EditText passw = (EditText) getView()
 				.findViewById(R.id.router_password);
 		final Button connect = (Button) getView().findViewById(
@@ -51,7 +55,7 @@ public class FirstRunFragment extends Fragment {
 		passw.setOnEditorActionListener(new OnEditorActionListener() {
 			public boolean onEditorAction(TextView v, int actionId,
 					KeyEvent event) {
-				Log.i(CommandCenter.TAG, "Action ID: " + actionId);
+				Log.i(CommandCenterActivity.TAG, "Action ID: " + actionId);
 				if (actionId == EditorInfo.IME_ACTION_SEND) {
 					connect.performClick();
 					return true;
@@ -63,7 +67,8 @@ public class FirstRunFragment extends Fragment {
 	}
 
 	public void setupUI() {
-		final EditText ipAddress = (EditText) getView().findViewById(R.id.router_ip);
+		final EditText ipAddress = (EditText) getView().findViewById(
+				R.id.router_ip);
 		InputFilter[] filters = new InputFilter[1];
 		filters[0] = new InputFilter() {
 			public CharSequence filter(CharSequence source, int start, int end,
@@ -95,7 +100,7 @@ public class FirstRunFragment extends Fragment {
 
 			@Override
 			public void onClick(View v) {
-				//collect information.
+				// collect information.
 				CheckBox gateway = (CheckBox) getView().findViewById(
 						R.id.use_default_gateway);
 				String routerip = "";
@@ -106,20 +111,21 @@ public class FirstRunFragment extends Fragment {
 							R.id.router_ip);
 					routerip = iptext.getText().toString();
 				}
-				
-				//Prepare new intent.
-				Intent intent = new Intent(getActivity(), CommandCenter.class);
+
+				// Prepare new intent.
+				Intent intent = new Intent(getActivity(), CommandCenterActivity.class);
 				intent.putExtra("ip", routerip);
 				String password = ((EditText) getView().findViewById(
 						R.id.router_password)).getText().toString();
 				intent.putExtra("pass", password);
-				
-				//Set ecm flags to false.
+
+				// Set ecm flags to false.
 				intent.putExtra("ecm", false);
 				intent.putExtra("id", "NOT-ECM-MANAGED");
 				intent.putExtra("user", "admin");
-				
-				//start the new activity, and prevent this one from being returned to unless logout is chosen.
+
+				// start the new activity, and prevent this one from being
+				// returned to unless logout is chosen.
 				startActivity(intent);
 				getActivity().finish();
 			}
@@ -129,12 +135,15 @@ public class FirstRunFragment extends Fragment {
 
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-		inflater.inflate(R.menu.firstrun_menu, menu);
+		inflater.inflate(R.menu.login_menu, menu);
+		MenuItem item = menu.findItem(R.id.menu_switchtolocal);
+		item.setVisible(false);
+		getActivity().invalidateOptionsMenu();
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		Log.w(CommandCenter.TAG, "Item was clicked.");
+		Log.w(CommandCenterActivity.TAG, "Item was clicked.");
 		// handle item selection
 		switch (item.getItemId()) {
 		case R.id.fr_debug:
@@ -159,6 +168,21 @@ public class FirstRunFragment extends Fragment {
 			intent.putExtra("user", "admin");
 
 			startActivity(intent);
+			return true;
+		case R.id.menu_switchtoecm:
+			ECMLoginFragment ecmFragment = new ECMLoginFragment();
+
+			// In case this activity was started with special instructions from
+			// an
+			// Intent, pass the Intent's extras to the fragment as arguments
+			// firstFragment.setArguments(getIntent().getExtras());
+
+			// Add the fragment to the 'fragment_container' FrameLayout
+			FragmentTransaction transaction = getActivity()
+					.getSupportFragmentManager().beginTransaction();
+
+			transaction.replace(R.id.login_fragment, ecmFragment);
+			transaction.commit();
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);

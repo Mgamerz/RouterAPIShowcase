@@ -15,7 +15,7 @@ import android.widget.Toast;
 
 import com.cs481.mobilemapper.fragments.DashboardFragment;
 
-public class CommandCenter extends SpiceActivity{
+public class CommandCenterActivity extends SpiceActivity{
 
 	public static final String TAG = "CommandCenter";
 	private boolean isDualPane;
@@ -76,11 +76,11 @@ public class CommandCenter extends SpiceActivity{
 	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		Log.w(CommandCenter.TAG, "Item was clicked.");
+		Log.w(CommandCenterActivity.TAG, "Item was clicked.");
 	   // handle item selection
 	   switch (item.getItemId()) {
 	      case R.id.action_logout:
-	    	  Intent intent = new Intent(this, FirstRunActivity.class);
+	    	  Intent intent = new Intent(this, LoginActivity.class);
 	    	  Toast.makeText(this, "You have been logged out.", Toast.LENGTH_SHORT).show();
 	    	  startActivity(intent);
 	    	  finish();

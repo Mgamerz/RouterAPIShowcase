@@ -14,7 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.cs481.mobilemapper.CommandCenter;
+import com.cs481.mobilemapper.CommandCenterActivity;
 import com.cs481.mobilemapper.R;
 import com.cs481.mobilemapper.R.id;
 import com.cs481.mobilemapper.R.layout;
@@ -79,7 +79,7 @@ public class MappingFragment extends Fragment implements
 				R.id.trackmap)).getMap();
 		map.setMyLocationEnabled(true);
 		// CameraUpdate cam = CameraUpdateFactory.;
-		Log.i(CommandCenter.TAG, "Finished setting up map");
+		Log.i(CommandCenterActivity.TAG, "Finished setting up map");
 	}
 
 	@Override

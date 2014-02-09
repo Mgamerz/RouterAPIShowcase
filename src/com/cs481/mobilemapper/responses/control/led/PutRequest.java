@@ -12,7 +12,7 @@ import org.apache.http.util.EntityUtils;
 
 import android.util.Log;
 
-import com.cs481.mobilemapper.CommandCenter;
+import com.cs481.mobilemapper.CommandCenterActivity;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.octo.android.robospice.request.springandroid.SpringAndroidSpiceRequest;
 
@@ -60,7 +60,7 @@ public class PutRequest extends SpringAndroidSpiceRequest<LED> {
 		resp = client.execute(put);
 		HttpEntity entity = resp.getEntity();
 		String responseString = EntityUtils.toString(entity, "UTF-8");
-		Log.i(CommandCenter.TAG, responseString);
+		Log.i(CommandCenterActivity.TAG, responseString);
 		LED reset = mapper.readValue(responseString, LED.class);
 		return reset;
 	}

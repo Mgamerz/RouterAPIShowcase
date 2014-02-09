@@ -17,10 +17,11 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.cs481.mobilemapper.CommandCenter;
+import com.cs481.mobilemapper.AuthInfo;
+import com.cs481.mobilemapper.CommandCenterActivity;
+import com.cs481.mobilemapper.LoginActivity;
 import com.cs481.mobilemapper.R;
 import com.cs481.mobilemapper.RouterListRow;
-import com.cs481.mobilemapper.debug.DebugActivity;
 import com.cs481.mobilemapper.responses.ecm.routers.Router;
 import com.octo.android.robospice.SpiceManager;
 
@@ -30,6 +31,7 @@ public class ECMRoutersFragment extends ListFragment implements
 	private PullToRefreshLayout mPullToRefreshLayout;
 	ProgressDialog progressDialog;
 	private SpiceManager spiceManager;
+	private AuthInfo authInfo;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -37,13 +39,13 @@ public class ECMRoutersFragment extends ListFragment implements
 		// Inflate the layout for this fragment
 		View v = inflater.inflate(R.layout.fragment_ecmrouters, container, false);
 		ArrayList<RouterListRow> rows = new ArrayList<RouterListRow>();
-		ArrayList<Router> routers = ((DebugActivity) getActivity()).getRouters().getData();
+		ArrayList<Router> routers = ((LoginActivity) getActivity()).getRouters().getData();
 		
 		for (Router router : routers){
 			String rId = router.getId();
 			String name = router.getName();
 			String online = router.getState();
-			rows.add(new RouterListRow(rId, name, online));
+			rows.add(new RouterListRow(router, rId, name, online));
 		}
 	
 		setListAdapter(new RouterAdapter(getActivity(), rows));
@@ -116,6 +118,14 @@ public class ECMRoutersFragment extends ListFragment implements
 	@Override
 	public void onListItemClick(ListView l, View v, int position, long id) {
 		RouterListRow row = (RouterListRow) (l.getAdapter().getItem(position));
-		Log.w(CommandCenter.TAG, "Router ID clicked: " + row.getId());
+		Log.w(CommandCenterActivity.TAG, "Router ID clicked: " + row.getId());
+		LoginActivity activity = (LoginActivity) getActivity();
+		authInfo = activity.getAuthInfo();
+		authInfo.setRouterId(row.getRouter().getId());
+		activity.setAuthInfo(authInfo);
+		//activity.setRouter(row.getRouter());
+		RouterConfirmDialogFragment rcFragment = new RouterConfirmDialogFragment();
+		rcFragment.setData(row.getRouter(), authInfo);
+		rcFragment.show(getFragmentManager(), "RouterConfirm");
 	}
 }
