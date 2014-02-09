@@ -138,7 +138,7 @@ public class LocalLoginFragment extends Fragment {
 		inflater.inflate(R.menu.login_menu, menu);
 		MenuItem item = menu.findItem(R.id.menu_switchtolocal);
 		item.setVisible(false);
-		getActivity().invalidateOptionsMenu();
+//		getActivity().invalidateOptionsMenu();
 	}
 
 	@Override
