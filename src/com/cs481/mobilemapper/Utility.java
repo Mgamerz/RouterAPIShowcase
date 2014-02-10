@@ -101,4 +101,13 @@ public class Utility {
 		// so ignore the deprecation.
 		return Formatter.formatIpAddress(dhcp.gateway);
 	}
+	
+	/**
+	 * Converts RSSI into a signal strength percentage
+	 * @param rssi rssi the router gives you
+	 * @return human readable percentage
+	 */
+	public static int rssiToSignalStrength(int rssi){
+		return  2 * (rssi + 100);
+	}
 }

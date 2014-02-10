@@ -20,7 +20,7 @@ public class WAP{
    	private String mode;
 	
 	@JsonProperty("rssi")
-   	private Number rssi;
+   	private int  rssi;
 	
 	@JsonProperty("ssid")
    	private String ssid;
@@ -58,10 +58,10 @@ public class WAP{
 	public void setMode(String mode){
 		this.mode = mode;
 	}
- 	public Number getRssi(){
+ 	public int getRssi(){
 		return this.rssi;
 	}
-	public void setRssi(Number rssi){
+	public void setRssi(int rssi){
 		this.rssi = rssi;
 	}
  	public String getSsid(){

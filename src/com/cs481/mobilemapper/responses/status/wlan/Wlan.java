@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class Wlan {
 	@JsonProperty("data")
 	private Data data;
+	
 	@JsonProperty("success")
 	private boolean success;
 

@@ -91,7 +91,7 @@ public class DashboardFragment extends ListFragment implements
 
 		public DashboardAdapter(Context context,
 				ArrayList<DashboardListRow> rows) {
-			super(context, R.layout.router_listview, rows);
+			super(context, R.layout.listrow_ecm_routers, rows);
 			this.context = context;
 			this.rows = rows;
 		}
@@ -105,7 +105,7 @@ public class DashboardFragment extends ListFragment implements
 		public View getView(int position, View convertView, ViewGroup parent) {
 			LayoutInflater inflater = (LayoutInflater) context
 					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			View rowView = inflater.inflate(R.layout.router_listview, parent,
+			View rowView = inflater.inflate(R.layout.listrow_ecm_routers, parent,
 					false);
 			TextView title = (TextView) rowView
 					.findViewById(R.id.listview_title);
