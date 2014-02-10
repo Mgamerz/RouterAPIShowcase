@@ -1,9 +1,13 @@
 
 package com.cs481.mobilemapper.responses.status.wlan;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 
 public class Wlan{
+	@JsonProperty("data")
    	private Data data;
+	@JsonProperty("success")
    	private boolean success;
 
  	public Data getData(){

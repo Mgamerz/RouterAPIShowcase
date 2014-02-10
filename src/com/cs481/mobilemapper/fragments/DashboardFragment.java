@@ -155,6 +155,10 @@ public class DashboardFragment extends ListFragment implements
 			transaction.addToBackStack(null);
 			transaction.commit();
 			break;
+		case lWLAN:
+			Log.i(CommandCenterActivity.TAG, "WLAN WAS CLICKED");
+			break;
+			
 		default:
 			super.onListItemClick(l, v, position, id);
 		}

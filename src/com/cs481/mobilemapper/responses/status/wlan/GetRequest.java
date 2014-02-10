@@ -1,45 +1,67 @@
 package com.cs481.mobilemapper.responses.status.wlan;
 
-import org.apache.http.auth.AuthScope;
-import org.apache.http.auth.Credentials;
-import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
-import org.springframework.web.client.RestTemplate;
+import org.apache.http.util.EntityUtils;
 
+import android.util.Log;
+
+import com.cs481.mobilemapper.AuthInfo;
+import com.cs481.mobilemapper.CommandCenterActivity;
+import com.cs481.mobilemapper.ConnectionInfo;
+import com.cs481.mobilemapper.Utility;
+import com.cs481.mobilemapper.responses.control.gpio.GPIO;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.octo.android.robospice.request.springandroid.SpringAndroidSpiceRequest;
 
 public class GetRequest extends SpringAndroidSpiceRequest<Wlan> {
 
-	  private String routerip;
+	private AuthInfo authInfo;
 
-	  public GetRequest(String routerip) {
-	    super(Wlan.class);
-	    this.routerip = routerip;
-	  }
+	public GetRequest(AuthInfo authInfo) {
+		super(Wlan.class);
+		this.authInfo = authInfo;
+	}
 
-	  @Override
-	  public Wlan loadDataFromNetwork() throws Exception {
+	@Override
+	public Wlan loadDataFromNetwork() throws Exception {
+		// Prepare connection
+		String url = "status/wlan"; // url to access
+		ConnectionInfo ci = Utility.prepareConnection(url, authInfo);
+		DefaultHttpClient client = ci.getClient();
+		url = ci.getAccessUrl();
+		Log.i(CommandCenterActivity.TAG, "WLAN GET to " + url);
+		HttpGet get = new HttpGet(url);
+		HttpResponse resp = client.execute(get); // execute the call on the
+													// network.
+		HttpEntity entity = resp.getEntity(); // get the body of the response
+												// from the server.
 
-	    String url = String.format("http://%s/api/status/wlan", routerip);
-	    RestTemplate rt = getRestTemplate();
-	    DefaultHttpClient client = new DefaultHttpClient();
-	    Credentials defaultcreds = new UsernamePasswordCredentials("admin", "routerpass");
+		String responseString = EntityUtils.toString(entity, "UTF-8"); // format
+																		// into
+																		// a
+																		// string
+																		// we
+																		// can
+																		// read.
 
-	    client.getCredentialsProvider()
-	      .setCredentials(new AuthScope("192.168.0.1", 80, AuthScope.ANY_REALM), defaultcreds);
-	    // The HttpComponentsClientHttpRequestFactory uses the
-	    // org.apache.http package to make network requests
-	    rt.setRequestFactory(new HttpComponentsClientHttpRequestFactory(client));
-	    return rt.getForObject(url, Wlan.class);
-	  }
+		ObjectMapper mapper = new ObjectMapper();
+		if (authInfo.isEcm()) {
+			responseString = Utility.normalizeECM(mapper, responseString);
+		}
+		Wlan wlan = mapper.readValue(responseString, Wlan.class);
+		return wlan;
+	}
 
-	  /**
-	   * This method generates a unique cache key for this request. In this case
-	   * our cache key depends just on the keyword.
-	   * @return
-	   */
-	  public String createCacheKey() {
-	      return "wlan_status";
-	  }
+	/**
+	 * This method generates a unique cache key for this request. In this case
+	 * our cache key depends just on the keyword.
+	 * 
+	 * @return
+	 */
+	public String createCacheKey() {
+		return "wlan_status";
+	}
 }

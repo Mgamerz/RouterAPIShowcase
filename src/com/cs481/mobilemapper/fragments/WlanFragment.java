@@ -77,44 +77,14 @@ public class WlanFragment extends ListFragment implements OnRefreshListener{
     	//rows.add(new ListRow("LAN", "DHCP - 2 Clients"));
     	//rows.add(new ListRow("WAN", "3 Forwarded ports"));
     	//rows.add(new ListRow("GPIO", "Dimmed Mode"));
-    	setListAdapter(new DashboardAdapter(getActivity(), rows));
+    	//setListAdapter(new DashboardAdapter(getActivity(), rows));
     }
-   
-    public class DashboardAdapter extends ArrayAdapter<DashboardListRow> {
-    	  private final Context context;
-    	  private final ArrayList<DashboardListRow> rows;
-
-    	  public DashboardAdapter(Context context, ArrayList<DashboardListRow> rows) {
-    	    super(context, R.layout.listview_row, rows);
-    	    this.context = context;
-    	    this.rows = rows;
-    	  }
-
-    	  @Override
-    	  public View getView(int position, View convertView, ViewGroup parent) {
-    	    LayoutInflater inflater = (LayoutInflater) context
-    	        .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-    	    View rowView = inflater.inflate(R.layout.listview_row, parent, false);
-    	    TextView title = (TextView) rowView.findViewById(R.id.listview_title);
-    	    title.setText(rows.get(position).getTitle());
-    	    TextView subtitle = (TextView) rowView.findViewById(R.id.listview_subtitle);
-    	    subtitle.setText(rows.get(position).getSubtitle());
-    	    return rowView;
-    	  }
-    	}
 
 	@Override
 	public void onRefreshStarted(View view) {
 		// TODO Auto-generated method stub
 		
 	} 
-	
-	@Override
-    public void onListItemClick(ListView l, View v, int position, long id) {
-        // TODO Auto-generated method stub
-		Log.w(CommandCenterActivity.TAG, "Item was clicked at pos "+position+", id "+id);
-        super.onListItemClick(l, v, position, id);
-    }
     
 }
 
