@@ -5,14 +5,19 @@ import java.util.ArrayList;
 import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
 import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
 import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.TextView;
 
 import com.cs481.mobilemapper.DashboardListRow;
 import com.cs481.mobilemapper.R;
+import com.cs481.mobilemapper.WlanListRow;
+import com.cs481.mobilemapper.fragments.DashboardFragment.DashboardAdapter;
 
 
 
@@ -60,14 +65,48 @@ public class WlanFragment extends ListFragment implements OnRefreshListener{
           .setup(mPullToRefreshLayout);
     	
     	//ListView list = (ListView) getView().findViewById(R.id.overview_list);
-    	ArrayList<DashboardListRow> rows = new ArrayList<DashboardListRow>();
+    	ArrayList<WlanListRow> rows = new ArrayList<WlanListRow>();
     	
-    	//rows.add(new ListRow("Wireless", "2 CLIENTS"));
-    	//rows.add(new ListRow("LAN", "DHCP - 2 Clients"));
-    	//rows.add(new ListRow("WAN", "3 Forwarded ports"));
-    	//rows.add(new ListRow("GPIO", "Dimmed Mode"));
-    	//setListAdapter(new DashboardAdapter(getActivity(), rows));
+    	rows.add(new WlanListRow(1, "Boise-Wireless", "AdHoc - B/G/N"));
+    	rows.add(new WlanListRow(2, "Boise-Guest", "AdHoc - B/G/N"));
+    	rows.add(new WlanListRow(3, "CS481", "AdHoc - B/G/N"));
+    	rows.add(new WlanListRow(4, "Cloud Router", "AdHoc - B/G/N"));
+    	setListAdapter(new WlanAdapter(getActivity(), rows));
     }
+    
+    public class WlanAdapter extends ArrayAdapter<WlanListRow> {
+		private final Context context;
+		private final ArrayList<WlanListRow> rows;
+
+		public WlanAdapter(Context context,
+				ArrayList<WlanListRow> rows) {
+			super(context, R.layout.wlan_network_listrow, rows);
+			this.context = context;
+			this.rows = rows;
+		}
+
+		@Override
+		public WlanListRow getItem(int position) {
+			return rows.get(position);
+		}
+
+		@Override
+		public View getView(int position, View convertView, ViewGroup parent) {
+			LayoutInflater inflater = (LayoutInflater) context
+					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+			
+			
+			View rowView = inflater.inflate(R.layout.wlan_network_listrow, parent,
+					false);
+			TextView title = (TextView) rowView
+					.findViewById(R.id.wlan_ssid_text);
+			title.setText(rows.get(position).getTitle());
+			TextView subtitle = (TextView) rowView
+					.findViewById(R.id.wlan_type_mode_text);
+			subtitle.setText(rows.get(position).getSubtitle());
+			return rowView;
+		}
+	}
 
 	@Override
 	public void onRefreshStarted(View view) {
