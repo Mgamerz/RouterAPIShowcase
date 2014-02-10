@@ -18,6 +18,8 @@ import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
@@ -56,7 +58,7 @@ public class LocalLoginFragment extends Fragment {
 			public boolean onEditorAction(TextView v, int actionId,
 					KeyEvent event) {
 				Log.i(CommandCenterActivity.TAG, "Action ID: " + actionId);
-				if (actionId == EditorInfo.IME_ACTION_SEND) {
+				if (actionId == EditorInfo.IME_ACTION_SEND || actionId == EditorInfo.IME_NULL) {
 					connect.performClick();
 					return true;
 				}
@@ -94,6 +96,24 @@ public class LocalLoginFragment extends Fragment {
 			}
 		};
 		ipAddress.setFilters(filters);
+		
+		CheckBox cb = (CheckBox) getView().findViewById(R.id.use_default_gateway);
+		cb.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+			
+			@Override
+			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+				// TODO Auto-generated method stub
+				Log.i(CommandCenterActivity.TAG, "Default gateway checkbox");
+				EditText customip = (EditText) getView().findViewById(R.id.router_ip);
+				if (!isChecked) {
+					customip.setVisibility(EditText.VISIBLE);
+					customip.requestFocus();
+				} else {
+					customip.setVisibility(EditText.GONE);
+				}
+			}
+		});
+
 
 		Button connect = (Button) getView().findViewById(R.id.connect_button);
 		connect.setOnClickListener(new OnClickListener() {

@@ -18,31 +18,24 @@ public class LoginActivity extends SpiceActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
-		LocalLoginFragment frFragment = new LocalLoginFragment();
+		
+		//Save layout on rotation
+		if (savedInstanceState == null) {
+			LocalLoginFragment frFragment = new LocalLoginFragment();
 
-		// In case this activity was started with special instructions from
-		// an
-		// Intent, pass the Intent's extras to the fragment as arguments
-		// firstFragment.setArguments(getIntent().getExtras());
+			// In case this activity was started with special instructions from
+			// an
+			// Intent, pass the Intent's extras to the fragment as arguments
+			// firstFragment.setArguments(getIntent().getExtras());
 
-		// Add the fragment to the 'fragment_container' FrameLayout
-		FragmentTransaction transaction = getSupportFragmentManager()
-				.beginTransaction();
+			// Add the fragment to the 'fragment_container' FrameLayout
+			FragmentTransaction transaction = getSupportFragmentManager()
+					.beginTransaction();
 
-		transaction.replace(R.id.login_fragment, frFragment);
-		transaction.commit();
-
-	}
-
-	public void defaultGatewayChange(View v) {
-		CheckBox cb = (CheckBox) v;
-		Log.i(CommandCenterActivity.TAG, "Default gateway checkbox");
-		EditText customip = (EditText) findViewById(R.id.router_ip);
-		if (!cb.isChecked()) {
-			customip.setVisibility(EditText.VISIBLE);
-		} else {
-			customip.setVisibility(EditText.GONE);
+			transaction.replace(R.id.login_fragment, frFragment);
+			transaction.commit();
 		}
+
 	}
 
 	public void setRouters(Routers routers) {

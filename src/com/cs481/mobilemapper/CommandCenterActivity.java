@@ -15,43 +15,46 @@ import android.widget.Toast;
 
 import com.cs481.mobilemapper.fragments.DashboardFragment;
 
-public class CommandCenterActivity extends SpiceActivity{
+public class CommandCenterActivity extends SpiceActivity {
 
 	public static final String TAG = "CommandCenter";
 	private boolean isDualPane;
 	private AuthInfo authInfo;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_commandcenter);
-		
+
 		Intent intent = getIntent();
-		//Rebuild authInfo from the intent that put us here
+		// Rebuild authInfo from the intent that put us here
 		authInfo = new AuthInfo();
 		authInfo.setEcm(intent.getBooleanExtra("ecm", false));
 		authInfo.setRouterId(intent.getStringExtra("id"));
 		authInfo.setRouterip(intent.getStringExtra("ip"));
 		authInfo.setUsername(intent.getStringExtra("user"));
 		authInfo.setPassword(intent.getStringExtra("pass"));
-		
 
-		//create first UI fragment and set it up   
-		Fragment fragment = new DashboardFragment();
+		//Retain fragments on rotation
+		if (null == savedInstanceState) {
+			// set you initial fragment object
 
-		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+			// create first UI fragment and set it up
+			Fragment fragment = new DashboardFragment();
 
-		//Inject our fragment
-		ft.replace(R.id.leftside_fragment,fragment);
-		//set type of animation
+			FragmentTransaction ft = getSupportFragmentManager()
+					.beginTransaction();
 
-		//Commit to the UI
-		ft.commit();
-		
+			// Inject our fragment
+			ft.replace(R.id.leftside_fragment, fragment);
+			// set type of animation
+
+			// Commit to the UI
+			ft.commit();
+		}
 		View dual = findViewById(R.id.rightside_fragment);
-        setDualPane(dual != null && 
-                        dual.getVisibility() == View.VISIBLE);
-		
+		setDualPane(dual != null && dual.getVisibility() == View.VISIBLE);
+
 	}
 
 	public AuthInfo getAuthInfo() {
@@ -63,32 +66,32 @@ public class CommandCenterActivity extends SpiceActivity{
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.commandcenter_menu, menu);
 
-	    // Associate searchable configuration with the SearchView
-	    SearchManager searchManager =
-	           (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-	    SearchView searchView =
-	            (SearchView) menu.findItem(R.id.search).getActionView();
-	    searchView.setSearchableInfo(
-	            searchManager.getSearchableInfo(getComponentName()));
+		// Associate searchable configuration with the SearchView
+		SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+		SearchView searchView = (SearchView) menu.findItem(R.id.search)
+				.getActionView();
+		searchView.setSearchableInfo(searchManager
+				.getSearchableInfo(getComponentName()));
 		return true;
 	}
-	
-	
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		Log.w(CommandCenterActivity.TAG, "Item was clicked.");
-	   // handle item selection
-	   switch (item.getItemId()) {
-	      case R.id.action_logout:
-	    	  Intent intent = new Intent(this, LoginActivity.class);
-	    	  Toast.makeText(this, "You have been logged out.", Toast.LENGTH_SHORT).show();
-	    	  startActivity(intent);
-	    	  finish();
-	    	  overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-	         return true;
-	      default:
-	         return super.onOptionsItemSelected(item);
-	   }
+		// handle item selection
+		switch (item.getItemId()) {
+		case R.id.action_logout:
+			Intent intent = new Intent(this, LoginActivity.class);
+			Toast.makeText(this, "You have been logged out.",
+					Toast.LENGTH_SHORT).show();
+			startActivity(intent);
+			finish();
+			overridePendingTransition(android.R.anim.fade_in,
+					android.R.anim.fade_out);
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
 	}
 
 	public boolean isDualPane() {

@@ -5,19 +5,25 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.inputmethod.EditorInfo;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.TextView.OnEditorActionListener;
 
 import com.cs481.mobilemapper.AuthInfo;
+import com.cs481.mobilemapper.CommandCenterActivity;
 import com.cs481.mobilemapper.LoginActivity;
 import com.cs481.mobilemapper.R;
 import com.cs481.mobilemapper.SpiceActivity;
@@ -64,6 +70,22 @@ public class ECMLoginFragment extends Fragment {
 		SpiceActivity sa = (SpiceActivity) getActivity();
 		sa.setTitle("ECM Login"); // TODO change to string resource
 		spiceManager = sa.getSpiceManager();
+		EditText passw = (EditText) getView()
+				.findViewById(R.id.ecm_password);
+		final Button connect = (Button) getView().findViewById(
+				R.id.login_button);
+		passw.setOnEditorActionListener(new OnEditorActionListener() {
+			public boolean onEditorAction(TextView v, int actionId,
+					KeyEvent event) {
+				Log.i(CommandCenterActivity.TAG, "Action ID: " + actionId);
+				if (actionId == EditorInfo.IME_ACTION_SEND || actionId == EditorInfo.IME_NULL) {
+					connect.performClick();
+					return true;
+				}
+				return false;
+			}
+		});
+		
 	}
 
 	private void readECMRouters() {
