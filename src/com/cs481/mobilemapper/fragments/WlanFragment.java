@@ -2,26 +2,17 @@ package com.cs481.mobilemapper.fragments;
 
 import java.util.ArrayList;
 
-import com.cs481.mobilemapper.CommandCenterActivity;
-import com.cs481.mobilemapper.DashboardListRow;
-import com.cs481.mobilemapper.R;
-import com.cs481.mobilemapper.R.id;
-import com.cs481.mobilemapper.R.layout;
-
 import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
 import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
 import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.Toast;
+
+import com.cs481.mobilemapper.DashboardListRow;
+import com.cs481.mobilemapper.R;
 
 
 
