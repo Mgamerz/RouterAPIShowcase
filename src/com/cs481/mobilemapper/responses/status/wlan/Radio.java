@@ -1,14 +1,28 @@
 
 package com.cs481.mobilemapper.responses.status.wlan;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class Radio{
+	@JsonProperty("channel")
    	private Number channel;
+	
+	@JsonProperty("channel_contention")
    	private Number channel_contention;
+	
+	@JsonProperty("channel_locked")
    	private boolean channel_locked;
-   	private List clients;
-   	private List survey;
+	
+	@JsonProperty("clients")
+   	private ArrayList clients;
+	
+	@JsonProperty("survey")
+   	private ArrayList survey;
+	
+	@JsonProperty("txpower")
    	private Number txpower;
 
  	public Number getChannel(){
@@ -29,16 +43,16 @@ public class Radio{
 	public void setChannel_locked(boolean channel_locked){
 		this.channel_locked = channel_locked;
 	}
- 	public List getClients(){
+ 	public ArrayList getClients(){
 		return this.clients;
 	}
-	public void setClients(List clients){
+	public void setClients(ArrayList clients){
 		this.clients = clients;
 	}
- 	public List getSurvey(){
+ 	public ArrayList getSurvey(){
 		return this.survey;
 	}
-	public void setSurvey(List survey){
+	public void setSurvey(ArrayList survey){
 		this.survey = survey;
 	}
  	public Number getTxpower(){
