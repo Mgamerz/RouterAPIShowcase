@@ -1,20 +1,49 @@
 
 package com.cs481.mobilemapper.responses.status.wlan;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class Client{
+	@JsonProperty("aid")
    	private Number aid;
+	
+	@JsonProperty("bss")
    	private Number bss;
+	
+	@JsonProperty("bw")
    	private Number bw;
+	
+	@JsonProperty("mac")
    	private String mac;
+	
+	@JsonProperty("mcs")
    	private Number mcs;
+	
+	@JsonProperty("mode")
    	private Number mode;
+	
+	@JsonProperty("psmode")
    	private Number psmode;
+	
+	@JsonProperty("radio")
    	private Number radio;
+	
+	@JsonProperty("rssi0")
    	private Number rssi0;
+	
+	@JsonProperty("rssi1")
    	private Number rssi1;
+	
+	@JsonProperty("rssi2")
    	private Number rssi2;
+	
+	@JsonProperty("rxrate")
    	private Number rxrate;
+	
+	@JsonProperty("time")
    	private Number time;
+	
+	@JsonProperty("txrate")
    	private Number txrate;
 
  	public Number getAid(){
@@ -102,3 +131,6 @@ public class Client{
 		this.txrate = txrate;
 	}
 }
+
+
+
