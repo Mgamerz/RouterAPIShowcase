@@ -36,8 +36,7 @@ public class WlanFragment extends ListFragment implements OnRefreshListener {
 	private SpiceManager spiceManager;
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		// Inflate the layout for this fragment
 		return inflater.inflate(R.layout.fragment_wlan, container, false);
 	}
@@ -60,8 +59,7 @@ public class WlanFragment extends ListFragment implements OnRefreshListener {
 
 				// We need to mark the ListView and it's Empty View as pullable
 				// This is because they are not dirent children of the ViewGroup
-				.theseChildrenArePullable(getListView(),
-						getListView().getEmptyView())
+				.theseChildrenArePullable(getListView(), getListView().getEmptyView())
 
 				// We can now complete the setup as desired
 				.listener(this).setup(mPullToRefreshLayout);
@@ -71,10 +69,8 @@ public class WlanFragment extends ListFragment implements OnRefreshListener {
 	public void onStart() {
 		super.onStart();
 		// /You will setup the action bar with pull to refresh layout
-		mPullToRefreshLayout = (PullToRefreshLayout) getView().findViewById(
-				R.id.ptr_layout);
-		ActionBarPullToRefresh.from(getActivity()).allChildrenArePullable()
-				.listener(this).setup(mPullToRefreshLayout);
+		mPullToRefreshLayout = (PullToRefreshLayout) getView().findViewById(R.id.ptr_layout);
+		ActionBarPullToRefresh.from(getActivity()).allChildrenArePullable().listener(this).setup(mPullToRefreshLayout);
 
 		// ListView list = (ListView)
 		// getView().findViewById(R.id.overview_list);
@@ -107,6 +103,8 @@ public class WlanFragment extends ListFragment implements OnRefreshListener {
 			View rowView = inflater.inflate(R.layout.listrow_wlan_network,
 					parent, false);
 			
+			WAP wap = rows.get(position).getWap();
+			
 			//title
 			TextView title = (TextView) rowView
 					.findViewById(R.id.wlan_ssid_text);
@@ -129,14 +127,22 @@ public class WlanFragment extends ListFragment implements OnRefreshListener {
 		        }
 		    }
 			
-			int signalStrength = signalQuality/25;
-			
+			int signalStrength = (signalQuality/25);
+			signalStrength = Math.min(signalStrength, 3); //cap it.
+			if (wap.getAuthmode().equals("none")){
+				signalStrengthIcon.setImageDrawable(getResources().getDrawable(R.drawable.ic_wifi_dark_open));
+			} else {
+				signalStrengthIcon.setImageDrawable(getResources().getDrawable(R.drawable.ic_wifi_dark_locked));
+			}
+			//signalStrengthIcon.setImageDrawable(getResources().getDrawable(R.drawable.ic_wifi_dark_open));
 			signalStrengthIcon.setImageLevel(signalStrength);
+			
+			
 			
 			//subtitle
 			TextView subtitle = (TextView) rowView
 					.findViewById(R.id.wlan_type_mode_text);
-			subtitle.setText(rows.get(position).getSubtitle()+" - dBm: "+dbm+" -> SS: "+signalStrength);
+			subtitle.setText(rows.get(position).getSubtitle());
 
 			return rowView;
 		}
@@ -161,8 +167,7 @@ public class WlanFragment extends ListFragment implements OnRefreshListener {
 			progressDialog.setCancelable(false);
 		}
 
-		spiceManager.execute(request, lastRequestCacheKey,
-				DurationInMillis.ALWAYS_EXPIRED, new WLANGetRequestListener());
+		spiceManager.execute(request, lastRequestCacheKey, DurationInMillis.ALWAYS_EXPIRED, new WLANGetRequestListener());
 	}
 
 	private class WLANGetRequestListener implements RequestListener<Wlan> {
@@ -173,8 +178,7 @@ public class WlanFragment extends ListFragment implements OnRefreshListener {
 			progressDialog.dismiss();
 			mPullToRefreshLayout.setRefreshComplete();
 			Log.i(CommandCenterActivity.TAG, "Failed to read WLAN!");
-			Toast.makeText(getActivity(), "Failed to read WLAN configuration",
-					Toast.LENGTH_SHORT).show();
+			Toast.makeText(getActivity(), "Failed to read WLAN configuration", Toast.LENGTH_SHORT).show();
 		}
 
 		@Override
