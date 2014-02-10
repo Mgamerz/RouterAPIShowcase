@@ -89,7 +89,8 @@ public class DashboardFragment extends ListFragment implements
 		private final Context context;
 		private final ArrayList<DashboardListRow> rows;
 
-		public DashboardAdapter(Context context, ArrayList<DashboardListRow> rows) {
+		public DashboardAdapter(Context context,
+				ArrayList<DashboardListRow> rows) {
 			super(context, R.layout.listview_row, rows);
 			this.context = context;
 			this.rows = rows;
@@ -127,12 +128,13 @@ public class DashboardFragment extends ListFragment implements
 		// TODO Auto-generated method stub
 		Log.w(CommandCenterActivity.TAG, "Item was clicked at pos " + position
 				+ ", id " + id);
-		DashboardListRow row = (DashboardListRow) (l.getAdapter().getItem(position));
+		DashboardListRow row = (DashboardListRow) (l.getAdapter()
+				.getItem(position));
 		switch (row.getId()) {
 		// case lWLAN:
 		// case lLAN:
 		// case lWAN:
-		case lGPIO:
+		case lGPIO: {
 			// Create a new Fragment to be placed in the activity layout
 			GPIOFragment gpioFragment = new GPIOFragment();
 
@@ -154,11 +156,33 @@ public class DashboardFragment extends ListFragment implements
 			}
 			transaction.addToBackStack(null);
 			transaction.commit();
+		}
 			break;
-		case lWLAN:
+		case lWLAN: {
 			Log.i(CommandCenterActivity.TAG, "WLAN WAS CLICKED");
+			WlanFragment wlanFragment = new WlanFragment();
+
+			// In case this activity was started with special instructions from
+			// an
+			// Intent, pass the Intent's extras to the fragment as arguments
+			// firstFragment.setArguments(getIntent().getExtras());
+
+			// Add the fragment to the 'fragment_container' FrameLayout
+			FragmentTransaction transaction = getFragmentManager()
+					.beginTransaction();
+
+			// check if the parent activity is dual pane based.
+			CommandCenterActivity parent = (CommandCenterActivity) getActivity();
+			if (parent.isDualPane()) {
+				transaction.replace(R.id.rightside_fragment, wlanFragment);
+			} else {
+				transaction.replace(R.id.leftside_fragment, wlanFragment);
+			}
+			transaction.addToBackStack(null);
+			transaction.commit();
+		}
 			break;
-			
+
 		default:
 			super.onListItemClick(l, v, position, id);
 		}

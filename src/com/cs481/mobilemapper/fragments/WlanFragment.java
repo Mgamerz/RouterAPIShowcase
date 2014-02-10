@@ -61,8 +61,6 @@ public class WlanFragment extends ListFragment implements OnRefreshListener{
     @Override
     public void onStart(){
     	super.onStart();
-    	Toast.makeText(getActivity(), "Welcome...", Toast.LENGTH_SHORT).show();
-    	Toast.makeText(getActivity(), "... Professor.", Toast.LENGTH_SHORT).show();
         ///You will setup the action bar with pull to refresh layout
         mPullToRefreshLayout = (PullToRefreshLayout) getView().findViewById(R.id.ptr_layout);
         ActionBarPullToRefresh.from(getActivity())
