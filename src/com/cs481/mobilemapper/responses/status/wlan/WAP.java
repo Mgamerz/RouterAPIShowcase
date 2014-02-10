@@ -3,7 +3,7 @@ package com.cs481.mobilemapper.responses.status.wlan;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class Survey{
+public class WAP{
 	@JsonProperty("authmode")
    	private String authmode;
 	

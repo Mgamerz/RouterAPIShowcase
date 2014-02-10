@@ -19,7 +19,7 @@ public class Radio{
    	private ArrayList<Client> clients;
 	
 	@JsonProperty("survey")
-   	private ArrayList<Survey> survey;
+   	private ArrayList<WAP> survey;
 	
 	@JsonProperty("txpower")
    	private Number txpower;
@@ -48,10 +48,10 @@ public class Radio{
 	public void setClients(ArrayList<Client> clients){
 		this.clients = clients;
 	}
- 	public ArrayList<Survey> getSurvey(){
+ 	public ArrayList<WAP> getSurvey(){
 		return this.survey;
 	}
-	public void setSurvey(ArrayList<Survey> survey){
+	public void setSurvey(ArrayList<WAP> survey){
 		this.survey = survey;
 	}
  	public Number getTxpower(){

@@ -5,24 +5,35 @@ import java.util.ArrayList;
 import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
 import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
 import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.cs481.mobilemapper.DashboardListRow;
+import com.cs481.mobilemapper.CommandCenterActivity;
 import com.cs481.mobilemapper.R;
+import com.cs481.mobilemapper.SpiceActivity;
 import com.cs481.mobilemapper.WlanListRow;
-import com.cs481.mobilemapper.fragments.DashboardFragment.DashboardAdapter;
+import com.cs481.mobilemapper.responses.status.wlan.WAP;
+import com.cs481.mobilemapper.responses.status.wlan.Wlan;
+import com.octo.android.robospice.SpiceManager;
+import com.octo.android.robospice.persistence.DurationInMillis;
+import com.octo.android.robospice.persistence.exception.SpiceException;
+import com.octo.android.robospice.request.listener.RequestListener;
 
 
 
 public class WlanFragment extends ListFragment implements OnRefreshListener{
     private PullToRefreshLayout mPullToRefreshLayout;
+    ProgressDialog progressDialog;
+	private SpiceManager spiceManager;
 
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -65,13 +76,10 @@ public class WlanFragment extends ListFragment implements OnRefreshListener{
           .setup(mPullToRefreshLayout);
     	
     	//ListView list = (ListView) getView().findViewById(R.id.overview_list);
-    	ArrayList<WlanListRow> rows = new ArrayList<WlanListRow>();
-    	
-    	rows.add(new WlanListRow(1, "Boise-Wireless", "AdHoc - B/G/N"));
-    	rows.add(new WlanListRow(2, "Boise-Guest", "AdHoc - B/G/N"));
-    	rows.add(new WlanListRow(3, "CS481", "AdHoc - B/G/N"));
-    	rows.add(new WlanListRow(4, "Cloud Router", "AdHoc - B/G/N"));
-    	setListAdapter(new WlanAdapter(getActivity(), rows));
+        SpiceActivity sa = (SpiceActivity) getActivity();
+		sa.setTitle("WLAN"); // TODO change to string resource
+		spiceManager = sa.getSpiceManager();
+        readWlanConfig(true);
     }
     
     public class WlanAdapter extends ArrayAdapter<WlanListRow> {
@@ -110,9 +118,62 @@ public class WlanFragment extends ListFragment implements OnRefreshListener{
 
 	@Override
 	public void onRefreshStarted(View view) {
-		// TODO Auto-generated method stub
-		
+		readWlanConfig(false);
 	} 
-    
+
+	private void readWlanConfig(boolean dialog) {
+		// perform the request.
+		com.cs481.mobilemapper.responses.status.wlan.GetRequest request = new com.cs481.mobilemapper.responses.status.wlan.GetRequest(
+				((CommandCenterActivity) getActivity()).getAuthInfo());
+		String lastRequestCacheKey = request.createCacheKey();
+
+		if (dialog) {
+			progressDialog = new ProgressDialog(getActivity());
+			progressDialog.setMessage("Reading WLAN Configuration");
+			progressDialog.show();
+			progressDialog.setCanceledOnTouchOutside(false);
+			progressDialog.setCancelable(false);
+		}
+
+		spiceManager.execute(request, lastRequestCacheKey,
+				DurationInMillis.ALWAYS_EXPIRED, new WLANGetRequestListener());
+	}
+	
+	private class WLANGetRequestListener implements RequestListener<Wlan> {
+
+		@Override
+		public void onRequestFailure(SpiceException e) {
+			// update your UI
+			progressDialog.dismiss();
+			mPullToRefreshLayout.setRefreshComplete();
+			Log.i(CommandCenterActivity.TAG, "Failed to read WLAN!");
+			Toast.makeText(getActivity(), "Failed to read WLAN configuration",
+					Toast.LENGTH_SHORT).show();
+		}
+
+		@Override
+		public void onRequestSuccess(Wlan wlan) {
+			// update your UI
+			progressDialog.dismiss();
+			mPullToRefreshLayout.setRefreshComplete();
+			Log.i(CommandCenterActivity.TAG, "Succeded reading from WLAN!");
+			updateWlanList(wlan);
+		}
+		
+	}
+
+	public void updateWlanList(Wlan wlan) {
+		Log.i(CommandCenterActivity.TAG, wlan.toString());
+		ArrayList<WlanListRow> rows = new ArrayList<WlanListRow>();
+    	ArrayList<WAP> waps = wlan.getData().getRadio().get(0).getSurvey(); //TODO: Add dual band support
+    	for(WAP wap : waps) {
+    		String subtitle = wap.getType() + " - " + wap.getMode();
+    		String ssid = wap.getSsid();
+    		if(ssid.equals("")) ssid = "<Hidden>";
+    		rows.add(new WlanListRow(wap, ssid, subtitle));
+    	}
+    	setListAdapter(new WlanAdapter(getActivity(), rows));
+	}
+	
 }
 
