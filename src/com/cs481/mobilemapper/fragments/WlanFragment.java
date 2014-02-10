@@ -176,18 +176,18 @@ public class WlanFragment extends ListFragment implements OnRefreshListener {
 		public void onRequestFailure(SpiceException e) {
 			// update your UI
 			progressDialog.dismiss();
-			mPullToRefreshLayout.setRefreshComplete();
 			Log.i(CommandCenterActivity.TAG, "Failed to read WLAN!");
 			Toast.makeText(getActivity(), "Failed to read WLAN configuration", Toast.LENGTH_SHORT).show();
+			mPullToRefreshLayout.setRefreshComplete();
 		}
 
 		@Override
 		public void onRequestSuccess(Wlan wlan) {
 			// update your UI
 			progressDialog.dismiss();
-			mPullToRefreshLayout.setRefreshComplete();
 			Log.i(CommandCenterActivity.TAG, "Succeded reading from WLAN!");
 			updateWlanList(wlan);
+			mPullToRefreshLayout.setRefreshComplete();
 		}
 
 	}

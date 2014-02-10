@@ -47,7 +47,7 @@ public class DashboardFragment extends ListFragment implements
 		mPullToRefreshLayout = new PullToRefreshLayout(viewGroup.getContext());
 
 		// We can now setup the PullToRefreshLayout
-		ActionBarPullToRefresh.from(getActivity())
+		/*ActionBarPullToRefresh.from(getActivity())
 
 		// We need to insert the PullToRefreshLayout into the Fragment's
 		// ViewGroup
@@ -59,7 +59,7 @@ public class DashboardFragment extends ListFragment implements
 						getListView().getEmptyView())
 
 				// We can now complete the setup as desired
-				.listener(this).setup(mPullToRefreshLayout);
+				.listener(this).setup(mPullToRefreshLayout);*/
 	}
 
 	@Override
@@ -74,11 +74,9 @@ public class DashboardFragment extends ListFragment implements
 		ActionBarPullToRefresh.from(getActivity()).allChildrenArePullable()
 				.listener(this).setup(mPullToRefreshLayout);
 
-		// ListView list = (ListView)
-		// getView().findViewById(R.id.overview_list);
 		ArrayList<DashboardListRow> rows = new ArrayList<DashboardListRow>();
 
-		rows.add(new DashboardListRow(lWLAN, "Wireless", "Non Operational"));
+		rows.add(new DashboardListRow(lWLAN, "Wireless", "Partially Operational"));
 		rows.add(new DashboardListRow(lLAN, "LAN", "Non Operational"));
 		rows.add(new DashboardListRow(lWAN, "WAN", "Non Operational"));
 		rows.add(new DashboardListRow(lGPIO, "GPIO", "Partially Operational"));
@@ -155,6 +153,7 @@ public class DashboardFragment extends ListFragment implements
 				transaction.replace(R.id.leftside_fragment, gpioFragment);
 			}
 			transaction.addToBackStack(null);
+			transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
 			transaction.commit();
 		}
 			break;
@@ -179,6 +178,7 @@ public class DashboardFragment extends ListFragment implements
 				transaction.replace(R.id.leftside_fragment, wlanFragment);
 			}
 			transaction.addToBackStack(null);
+			transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
 			transaction.commit();
 		}
 			break;
