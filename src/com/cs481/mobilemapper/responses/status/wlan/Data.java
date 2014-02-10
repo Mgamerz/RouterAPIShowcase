@@ -3,15 +3,34 @@ package com.cs481.mobilemapper.responses.status.wlan;
 
 import java.util.ArrayList;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class Data{
+	@JsonProperty("channels_2_4ghz_first")
    	private Number channels_2_4ghz_first;
+	
+	@JsonProperty("channels_2_4ghz_last")
    	private Number channels_2_4ghz_last;
+	
+   	@JsonProperty("channels_5ghz_first")
    	private Number channels_5ghz_first;
+   	
+   	@JsonProperty("channels_5ghz_last")
    	private Number channels_5ghz_last;
+   	
+   	@JsonProperty("clients")
    	private ArrayList<Client> clients;
+   	
+   	@JsonProperty("events")
    	private Events events;
+   	
+   	@JsonProperty("radio")
    	private ArrayList<Radio> radio;
+   	
+   	@JsonProperty("state")
    	private String state;
+   	
+   	@JsonProperty("wps")
    	private Wps wps;
 
  	public Number getChannels_2_4ghz_first(){
