@@ -2,12 +2,7 @@ package com.cs481.mobilemapper.responses.control.gpio;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
-import org.apache.http.auth.AuthScope;
-import org.apache.http.auth.Credentials;
-import org.apache.http.auth.UsernamePasswordCredentials;
-import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPut;
-import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
 
@@ -52,28 +47,23 @@ public class PutRequest extends SpringAndroidSpiceRequest<GPIO> {
 		}
 		
 		put = Utility.preparePutRequest(authInfo, put, jsonStr);
-		//put.setHeader("Content-Type", "application/x-www-form-urlencoded");
-		
-
-		
-		//put.setEntity(new StringEntity("data="+req, "UTF-8"));
 		
 		HttpResponse resp = client.execute(put);
 		HttpEntity entity = resp.getEntity();
 		String responseString = EntityUtils.toString(entity, "UTF-8");
 		if (authInfo.isEcm()){
+			Log.i(CommandCenterActivity.TAG, "Normalizing ECM response");
 			responseString = Utility.normalizeECM(mapper, responseString);
 		}
 		
 		Log.i(CommandCenterActivity.TAG, responseString);
 		GPIO gpio = mapper.readValue(responseString, GPIO.class);
 		return gpio;
-		
 	}
 
 	/**
 	 * This method generates a unique cache key for this request. In this case
-	 * our cache key depends just on the keyword.
+	 * our cache key depends just on the request type and the time (so it is always unique).
 	 * 
 	 * @return
 	 */

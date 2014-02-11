@@ -34,13 +34,15 @@ public class Utility {
 		str = str.replaceFirst("\"data\":", "");
 		return str;
 	}
-	
+
 	/**
 	 * Converts an ECM reply into a normal direct-interface based response
-	 * @param str String to normalize
+	 * 
+	 * @param str
+	 *            String to normalize
 	 * @return Normalized string
 	 */
-	public static String normalizeECM(ObjectMapper mapper, String str){
+	public static String normalizeECM(ObjectMapper mapper, String str) {
 		try {
 			JsonNode root = mapper.readTree(str);
 			Log.w(CommandCenterActivity.TAG, "Json Tree:");
@@ -54,33 +56,44 @@ public class Utility {
 			return root.toString();
 		} catch (JsonProcessingException e) {
 			// TODO Auto-generated catch block
-			Log.e(CommandCenterActivity.TAG, "JSONPROCESSING: ERROR PARSING ECM JSON");
+			Log.e(CommandCenterActivity.TAG,
+					"JSONPROCESSING: ERROR PARSING ECM JSON");
 			e.printStackTrace();
 		} catch (IOException e) {
-			Log.e(CommandCenterActivity.TAG, "IOEXCEPTION: ERROR PARSING ECM JSON");
+			Log.e(CommandCenterActivity.TAG,
+					"IOEXCEPTION: ERROR PARSING ECM JSON");
 			e.printStackTrace();
 		}
 		return null;
 	}
 
 	/**
-	 * Prepares a connection and makes it transparent to other classes what the type of router they are accessing, be it ECM or local-based.
-	 * @param url Suburl of the API to connect to, e.g. status/wlan
-	 * @param authInfo Authinfo package defining authorization and router information.
+	 * Prepares a connection and makes it transparent to other classes what the
+	 * type of router they are accessing, be it ECM or local-based.
+	 * 
+	 * @param url
+	 *            Suburl of the API to connect to, e.g. status/wlan
+	 * @param authInfo
+	 *            Authinfo package defining authorization and router
+	 *            information.
 	 * @return ConnectionInfo bundle describing this connection
 	 */
 	public static ConnectionInfo prepareConnection(String url, AuthInfo authInfo) {
 		ConnectionInfo ci = new ConnectionInfo();
 		DefaultHttpClient client = new DefaultHttpClient();
-		Credentials defaultcreds = new UsernamePasswordCredentials(authInfo.getUsername(), authInfo.getPassword());
-		
-		//set auth type
+		Credentials defaultcreds = new UsernamePasswordCredentials(
+				authInfo.getUsername(), authInfo.getPassword());
+
+		// set auth type
 		AuthScope auth;
 		if (authInfo.isEcm()) {
-			ci.setAccessUrl(String.format("https://cradlepointecm.com/api/v1/remote/%s/?id=%s",url,authInfo.getRouterId()));
-			auth = new AuthScope("cradlepointecm.com",443);
+			ci.setAccessUrl(String.format(
+					"https://cradlepointecm.com/api/v1/remote/%s/?id=%s", url,
+					authInfo.getRouterId()));
+			auth = new AuthScope("cradlepointecm.com", 443);
 		} else {
-			ci.setAccessUrl(String.format("http://%s/api/%s", authInfo.getRouterip(), url));
+			ci.setAccessUrl(String.format("http://%s/api/%s",
+					authInfo.getRouterip(), url));
 			auth = new AuthScope(authInfo.getRouterip(), 80,
 					AuthScope.ANY_REALM);
 		}
@@ -91,7 +104,9 @@ public class Utility {
 
 	/**
 	 * Gets the default gateway this device is connected to
-	 * @param context Context to use to get the service (the calling activity)
+	 * 
+	 * @param context
+	 *            Context to use to get the service (the calling activity)
 	 * @return String of the gateway
 	 */
 	public static String getDefaultGateway(Context context) {
@@ -104,30 +119,36 @@ public class Utility {
 		// so ignore the deprecation.
 		return Formatter.formatIpAddress(dhcp.gateway);
 	}
-	
+
 	/**
 	 * Converts RSSI into a signal strength percentage
-	 * @param rssi rssi the router gives you
+	 * 
+	 * @param rssi
+	 *            rssi the router gives you
 	 * @return human readable percentage
 	 */
-	public static int rssiToSignalStrength(int rssi){
-		return  2 * (rssi + 100);
+	public static int rssiToSignalStrength(int rssi) {
+		return 2 * (rssi + 100);
 	}
 
-	public static HttpPut preparePutRequest(AuthInfo authInfo, HttpPut put, String data) throws UnsupportedEncodingException {
+	public static HttpPut preparePutRequest(AuthInfo authInfo, HttpPut put,
+			String data) throws JsonProcessingException, IOException {
 		// TODO Auto-generated method stub
-		//ObjectMapper mapper = new ObjectMapper();
-		//Log.i(CommandCenterActivity.TAG, "PPR: "+r.getData());
+		// Log.i(CommandCenterActivity.TAG, "PPR: "+r.getData());
 
-		if (authInfo.isEcm()){
-			//ECM prepare
+		if (authInfo.isEcm()) {
+			// ECM prepare
+			ObjectMapper mapper = new ObjectMapper();
 			put.setHeader("Content-Type", "application/json");
-			put.setEntity(new StringEntity(data, "UTF-8"));
+			JsonNode json = mapper.readTree(data);
+			json = json.get("data");
+			// Log.i(CommandCenterActivity.TAG, json.toString());
+			put.setEntity(new StringEntity(json.toString(), "UTF-8"));
 		} else {
 			put.setHeader("Content-Type", "application/x-www-form-urlencoded");
-			put.setEntity(new StringEntity("data="+data, "UTF-8"));
+			put.setEntity(new StringEntity("data=" + data, "UTF-8"));
 		}
 		return put;
-		
+
 	}
 }
