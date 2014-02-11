@@ -25,5 +25,7 @@
     <string name="login">Login</string>
     <string name="switch_to_ecm">Switch to ECM Login</string>
     <string name="switch_to_local">Switch to local login</string>
+    <string name="wifimenu_sort_signal">Sort by Signal</string>
+    <string name="wifi_sort_alphabetically">Sort by name</string>
 
 </resources>

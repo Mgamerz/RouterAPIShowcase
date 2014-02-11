@@ -11,6 +11,8 @@ import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -36,7 +38,14 @@ public class WlanFragment extends ListFragment implements OnRefreshListener {
 	private SpiceManager spiceManager;
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setHasOptionsMenu(true);
+	}
+
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
 		// Inflate the layout for this fragment
 		return inflater.inflate(R.layout.fragment_wlan, container, false);
 	}
@@ -59,7 +68,8 @@ public class WlanFragment extends ListFragment implements OnRefreshListener {
 
 				// We need to mark the ListView and it's Empty View as pullable
 				// This is because they are not dirent children of the ViewGroup
-				.theseChildrenArePullable(getListView(), getListView().getEmptyView())
+				.theseChildrenArePullable(getListView(),
+						getListView().getEmptyView())
 
 				// We can now complete the setup as desired
 				.listener(this).setup(mPullToRefreshLayout);
@@ -69,8 +79,10 @@ public class WlanFragment extends ListFragment implements OnRefreshListener {
 	public void onStart() {
 		super.onStart();
 		// /You will setup the action bar with pull to refresh layout
-		mPullToRefreshLayout = (PullToRefreshLayout) getView().findViewById(R.id.ptr_layout);
-		ActionBarPullToRefresh.from(getActivity()).allChildrenArePullable().listener(this).setup(mPullToRefreshLayout);
+		mPullToRefreshLayout = (PullToRefreshLayout) getView().findViewById(
+				R.id.ptr_layout);
+		ActionBarPullToRefresh.from(getActivity()).allChildrenArePullable()
+				.listener(this).setup(mPullToRefreshLayout);
 
 		// ListView list = (ListView)
 		// getView().findViewById(R.id.overview_list);
@@ -102,44 +114,43 @@ public class WlanFragment extends ListFragment implements OnRefreshListener {
 
 			View rowView = inflater.inflate(R.layout.listrow_wlan_network,
 					parent, false);
-			
+
 			WAP wap = rows.get(position).getWap();
-			
-			//title
+
+			// title
 			TextView title = (TextView) rowView
 					.findViewById(R.id.wlan_ssid_text);
 			title.setText(rows.get(position).getTitle());
-			
-			//signal indicator
-			ImageView signalStrengthIcon = (ImageView) rowView.findViewById(R.id.signal_strength);
+
+			// signal indicator
+			ImageView signalStrengthIcon = (ImageView) rowView
+					.findViewById(R.id.signal_strength);
 			int dbm = rows.get(position).getWap().getRssi();
 			int signalQuality;
-		    if(dbm <= -100){
-		        signalQuality = 0;
-		    }
-		    else if(dbm >= -50) {
-		        signalQuality = 100;
-		    }
-		    else {
-		        signalQuality = Utility.rssiToSignalStrength(dbm)-1;
-		        if (signalQuality < 0){
-		        	signalQuality = 0; //rollunder check
-		        }
-		    }
-			
-			int signalStrength = (signalQuality/25);
-			signalStrength = Math.min(signalStrength, 3); //cap it.
-			if (wap.getAuthmode().equals("none")){
-				signalStrengthIcon.setImageDrawable(getResources().getDrawable(R.drawable.ic_wifi_dark_open));
+			if (dbm <= -100) {
+				signalQuality = 0;
+			} else if (dbm >= -50) {
+				signalQuality = 100;
 			} else {
-				signalStrengthIcon.setImageDrawable(getResources().getDrawable(R.drawable.ic_wifi_dark_locked));
+				signalQuality = Utility.rssiToSignalStrength(dbm) - 1;
+				if (signalQuality < 0) {
+					signalQuality = 0; // rollunder check
+				}
 			}
-			//signalStrengthIcon.setImageDrawable(getResources().getDrawable(R.drawable.ic_wifi_dark_open));
+
+			int signalStrength = (signalQuality / 25);
+			signalStrength = Math.min(signalStrength, 3); // cap it.
+			if (wap.getAuthmode().equals("none")) {
+				signalStrengthIcon.setImageDrawable(getResources().getDrawable(
+						R.drawable.ic_wifi_dark_open));
+			} else {
+				signalStrengthIcon.setImageDrawable(getResources().getDrawable(
+						R.drawable.ic_wifi_dark_locked));
+			}
+			// signalStrengthIcon.setImageDrawable(getResources().getDrawable(R.drawable.ic_wifi_dark_open));
 			signalStrengthIcon.setImageLevel(signalStrength);
-			
-			
-			
-			//subtitle
+
+			// subtitle
 			TextView subtitle = (TextView) rowView
 					.findViewById(R.id.wlan_type_mode_text);
 			subtitle.setText(rows.get(position).getSubtitle());
@@ -151,6 +162,12 @@ public class WlanFragment extends ListFragment implements OnRefreshListener {
 	@Override
 	public void onRefreshStarted(View view) {
 		readWlanConfig(false);
+	}
+	
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		//super.onCreateOptionsMenu(menu, inflater);
+		inflater.inflate(R.menu.wifi_menu, menu);
 	}
 
 	private void readWlanConfig(boolean dialog) {
@@ -167,7 +184,8 @@ public class WlanFragment extends ListFragment implements OnRefreshListener {
 			progressDialog.setCancelable(false);
 		}
 
-		spiceManager.execute(request, lastRequestCacheKey, DurationInMillis.ALWAYS_EXPIRED, new WLANGetRequestListener());
+		spiceManager.execute(request, lastRequestCacheKey,
+				DurationInMillis.ALWAYS_EXPIRED, new WLANGetRequestListener());
 	}
 
 	private class WLANGetRequestListener implements RequestListener<Wlan> {
@@ -177,7 +195,8 @@ public class WlanFragment extends ListFragment implements OnRefreshListener {
 			// update your UI
 			progressDialog.dismiss();
 			Log.i(CommandCenterActivity.TAG, "Failed to read WLAN!");
-			Toast.makeText(getActivity(), "Failed to read WLAN configuration", Toast.LENGTH_SHORT).show();
+			Toast.makeText(getActivity(), "Failed to read WLAN configuration",
+					Toast.LENGTH_SHORT).show();
 			mPullToRefreshLayout.setRefreshComplete();
 		}
 
@@ -188,6 +207,7 @@ public class WlanFragment extends ListFragment implements OnRefreshListener {
 			Log.i(CommandCenterActivity.TAG, "Succeded reading from WLAN!");
 			updateWlanList(wlan);
 			mPullToRefreshLayout.setRefreshComplete();
+			Log.i(CommandCenterActivity.TAG, "isRefresh(): "+mPullToRefreshLayout.isRefreshing());
 		}
 
 	}

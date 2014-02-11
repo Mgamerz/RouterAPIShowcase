@@ -22,9 +22,8 @@ import com.cs481.mobilemapper.CommandCenterActivity;
 import com.cs481.mobilemapper.DashboardListRow;
 import com.cs481.mobilemapper.R;
 
-public class DashboardFragment extends ListFragment implements
-		OnRefreshListener {
-	private PullToRefreshLayout mPullToRefreshLayout;
+public class DashboardFragment extends ListFragment {
+	//private PullToRefreshLayout mPullToRefreshLayout;
 	private final int lWLAN = 0;
 	private final int lLAN = 1;
 	private final int lWAN = 2;
@@ -44,7 +43,7 @@ public class DashboardFragment extends ListFragment implements
 		ViewGroup viewGroup = (ViewGroup) view;
 
 		// We need to create a PullToRefreshLayout manually
-		mPullToRefreshLayout = new PullToRefreshLayout(viewGroup.getContext());
+		//mPullToRefreshLayout = new PullToRefreshLayout(viewGroup.getContext());
 
 		// We can now setup the PullToRefreshLayout
 		/*ActionBarPullToRefresh.from(getActivity())
@@ -69,10 +68,10 @@ public class DashboardFragment extends ListFragment implements
 		Toast.makeText(getActivity(), "... Professor.", Toast.LENGTH_SHORT)
 				.show();
 		// /You will setup the action bar with pull to refresh layout
-		mPullToRefreshLayout = (PullToRefreshLayout) getView().findViewById(
-				R.id.ptr_layout);
-		ActionBarPullToRefresh.from(getActivity()).allChildrenArePullable()
-				.listener(this).setup(mPullToRefreshLayout);
+		//mPullToRefreshLayout = (PullToRefreshLayout) getView().findViewById(
+		//		R.id.ptr_layout);
+		//ActionBarPullToRefresh.from(getActivity()).allChildrenArePullable()
+		//		.listener(this).setup(mPullToRefreshLayout);
 
 		ArrayList<DashboardListRow> rows = new ArrayList<DashboardListRow>();
 
@@ -113,12 +112,6 @@ public class DashboardFragment extends ListFragment implements
 			subtitle.setText(rows.get(position).getSubtitle());
 			return rowView;
 		}
-	}
-
-	@Override
-	public void onRefreshStarted(View view) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override

@@ -1,10 +1,13 @@
 package com.cs481.mobilemapper;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.Credentials;
 import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.client.methods.HttpPut;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 
 import android.content.Context;
@@ -109,5 +112,22 @@ public class Utility {
 	 */
 	public static int rssiToSignalStrength(int rssi){
 		return  2 * (rssi + 100);
+	}
+
+	public static HttpPut preparePutRequest(AuthInfo authInfo, HttpPut put, String data) throws UnsupportedEncodingException {
+		// TODO Auto-generated method stub
+		//ObjectMapper mapper = new ObjectMapper();
+		//Log.i(CommandCenterActivity.TAG, "PPR: "+r.getData());
+
+		if (authInfo.isEcm()){
+			//ECM prepare
+			put.setHeader("Content-Type", "application/json");
+			put.setEntity(new StringEntity(data, "UTF-8"));
+		} else {
+			put.setHeader("Content-Type", "application/x-www-form-urlencoded");
+			put.setEntity(new StringEntity("data="+data, "UTF-8"));
+		}
+		return put;
+		
 	}
 }

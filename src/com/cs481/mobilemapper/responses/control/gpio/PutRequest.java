@@ -18,6 +18,7 @@ import com.cs481.mobilemapper.CommandCenterActivity;
 import com.cs481.mobilemapper.ConnectionInfo;
 import com.cs481.mobilemapper.Utility;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
 import com.octo.android.robospice.request.springandroid.SpringAndroidSpiceRequest;
 
 public class PutRequest extends SpringAndroidSpiceRequest<GPIO> {
@@ -39,17 +40,31 @@ public class PutRequest extends SpringAndroidSpiceRequest<GPIO> {
 		url = ci.getAccessUrl();
 		Log.i(CommandCenterActivity.TAG, "GPIO PUT to "+url);
 		HttpPut put = new HttpPut(url);
-
-		put.setHeader("Content-Type", "application/x-www-form-urlencoded");
-		
 		ObjectMapper mapper = new ObjectMapper();
-		String req = mapper.writeValueAsString(data.getData());
 		
-		put.setEntity(new StringEntity("data="+req, "UTF-8"));
+		String jsonStr;
+		//I can't really do this part in a utility without heavy use of generics and making the code really ugly.
+		if (authInfo.isEcm()){
+			ObjectWriter ow = mapper.writer().withDefaultPrettyPrinter();
+			jsonStr = ow.writeValueAsString(data);
+		} else {
+			jsonStr = mapper.writeValueAsString(data.getData());
+		}
+		
+		put = Utility.preparePutRequest(authInfo, put, jsonStr);
+		//put.setHeader("Content-Type", "application/x-www-form-urlencoded");
+		
+
+		
+		//put.setEntity(new StringEntity("data="+req, "UTF-8"));
 		
 		HttpResponse resp = client.execute(put);
 		HttpEntity entity = resp.getEntity();
 		String responseString = EntityUtils.toString(entity, "UTF-8");
+		if (authInfo.isEcm()){
+			responseString = Utility.normalizeECM(mapper, responseString);
+		}
+		
 		Log.i(CommandCenterActivity.TAG, responseString);
 		GPIO gpio = mapper.readValue(responseString, GPIO.class);
 		return gpio;

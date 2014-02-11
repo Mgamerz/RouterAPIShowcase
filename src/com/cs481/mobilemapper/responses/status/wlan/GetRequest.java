@@ -51,6 +51,7 @@ public class GetRequest extends SpringAndroidSpiceRequest<Wlan> {
 		if (authInfo.isEcm()) {
 			responseString = Utility.normalizeECM(mapper, responseString);
 		}
+		Log.i(CommandCenterActivity.TAG, responseString);
 		Wlan wlan = mapper.readValue(responseString, Wlan.class);
 		return wlan;
 	}
