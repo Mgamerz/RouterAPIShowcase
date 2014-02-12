@@ -3,9 +3,10 @@ package com.cs481.mobilemapper.responses.status.lan;
 
 import java.util.List;
 
+import com.cs481.mobilemapper.responses.RootElement;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class Lan{
+public class Lan extends RootElement{
 	@JsonProperty("data")
    	private Data data;
 	
