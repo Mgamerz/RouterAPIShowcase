@@ -105,11 +105,12 @@ public class ECMRoutersFragment extends ListFragment implements
 					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			View rowView = inflater.inflate(R.layout.listrow_ecm_routers, parent,
 					false);
-			TextView title = (TextView) rowView
-					.findViewById(R.id.listview_title);
+			
+			TextView title = (TextView) rowView.findViewById(R.id.listview_title);
+			
+			
 			title.setText(rows.get(position).getTitle());
-			TextView subtitle = (TextView) rowView
-					.findViewById(R.id.listview_subtitle);
+			TextView subtitle = (TextView) rowView.findViewById(R.id.listview_subtitle);
 			subtitle.setText(rows.get(position).getSubtitle());
 			return rowView;
 		}
@@ -119,7 +120,9 @@ public class ECMRoutersFragment extends ListFragment implements
 	public void onListItemClick(ListView l, View v, int position, long id) {
 		RouterListRow row = (RouterListRow) (l.getAdapter().getItem(position));
 		Log.w(CommandCenterActivity.TAG, "Router ID clicked: " + row.getId());
+		
 		LoginActivity activity = (LoginActivity) getActivity();
+		
 		authInfo = activity.getAuthInfo();
 		Log.i(CommandCenterActivity.TAG, "Authinfo: "+authInfo);
 		Log.i(CommandCenterActivity.TAG, "Router: "+row.getRouter());

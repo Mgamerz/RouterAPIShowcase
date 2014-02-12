@@ -69,16 +69,14 @@ public class GPIOFragment extends Fragment implements OnRefreshListener,
 			progressDialog.setCanceledOnTouchOutside(false);
 			progressDialog.setCancelable(false);
 		}
-
-		spiceManager.execute(request, lastRequestCacheKey,
-				DurationInMillis.ALWAYS_EXPIRED, new GPIOGetRequestListener());
+		spiceManager.execute(request, lastRequestCacheKey, DurationInMillis.ALWAYS_EXPIRED, new GPIOGetRequestListener());
 	}
 
 	@Override
 	public void onStart() {
 		super.onStart();
 		SpiceActivity sa = (SpiceActivity) getActivity();
-		sa.setTitle("GPIO"); // TODO change to string resource
+		sa.setTitle(getResources().getString(R.string.gpio_title)); // TODO change to string resource
 		spiceManager = sa.getSpiceManager();
 		readGPIOConfig(true);
 
@@ -179,6 +177,9 @@ public class GPIOFragment extends Fragment implements OnRefreshListener,
 			lswitch = (Switch) getView().findViewById(R.id.wifiledb_state);
 			lswitch.setChecked((gpio.getData().getLed_wifi() == 1) ? true
 					: false);
+			
+			
+			
 			mPullToRefreshLayout.setRefreshComplete();
 			checking = false;
 
@@ -259,13 +260,13 @@ public class GPIOFragment extends Fragment implements OnRefreshListener,
 		switch (item.getItemId()) {
 		case R.id.reset_leds:
 			// perform the request.
-			/*com.cs481.mobilemapper.responses.control.led.PutRequest request = new com.cs481.mobilemapper.responses.control.led.PutRequest(
+			com.cs481.mobilemapper.responses.control.led.PutRequest request = new com.cs481.mobilemapper.responses.control.led.PutRequest(
 					authInfo);
 			String lastRequestCacheKey = request.createCacheKey();
 
 			spiceManager.execute(request, lastRequestCacheKey,
 					DurationInMillis.ALWAYS_EXPIRED,
-					new LEDPutRequestListener());*/
+					new LEDPutRequestListener());
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);

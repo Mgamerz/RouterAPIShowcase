@@ -40,11 +40,10 @@ public class GetRequest extends SpringAndroidSpiceRequest<GPIO> {
 		String responseString = EntityUtils.toString(entity, "UTF-8"); //format into a string we can read.
 		
 		ObjectMapper mapper = new ObjectMapper();
-		GPIO gpio;
 		if (authInfo.isEcm()){
 			responseString = Utility.normalizeECM(mapper, responseString);
 		}
-		gpio = mapper.readValue(responseString, GPIO.class);
+		GPIO gpio = mapper.readValue(responseString, GPIO.class);
 		return gpio;
 	}
 

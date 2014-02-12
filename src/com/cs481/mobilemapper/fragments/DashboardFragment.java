@@ -2,9 +2,6 @@ package com.cs481.mobilemapper.fragments;
 
 import java.util.ArrayList;
 
-import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
-import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
-import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
@@ -16,11 +13,11 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.cs481.mobilemapper.CommandCenterActivity;
 import com.cs481.mobilemapper.DashboardListRow;
 import com.cs481.mobilemapper.R;
+import com.cs481.mobilemapper.SpiceActivity;
 
 public class DashboardFragment extends ListFragment {
 	//private PullToRefreshLayout mPullToRefreshLayout;
@@ -37,42 +34,12 @@ public class DashboardFragment extends ListFragment {
 	}
 
 	@Override
-	public void onViewCreated(View view, Bundle savedInstanceState) {
-		super.onViewCreated(view, savedInstanceState);
-		// This is the View which is created by ListFragment
-		ViewGroup viewGroup = (ViewGroup) view;
-
-		// We need to create a PullToRefreshLayout manually
-		//mPullToRefreshLayout = new PullToRefreshLayout(viewGroup.getContext());
-
-		// We can now setup the PullToRefreshLayout
-		/*ActionBarPullToRefresh.from(getActivity())
-
-		// We need to insert the PullToRefreshLayout into the Fragment's
-		// ViewGroup
-				.insertLayoutInto(viewGroup)
-
-				// We need to mark the ListView and it's Empty View as pullable
-				// This is because they are not dirent children of the ViewGroup
-				.theseChildrenArePullable(getListView(),
-						getListView().getEmptyView())
-
-				// We can now complete the setup as desired
-				.listener(this).setup(mPullToRefreshLayout);*/
-	}
-
-	@Override
 	public void onStart() {
 		super.onStart();
-		Toast.makeText(getActivity(), "Welcome...", Toast.LENGTH_SHORT).show();
-		Toast.makeText(getActivity(), "... Professor.", Toast.LENGTH_SHORT)
-				.show();
-		// /You will setup the action bar with pull to refresh layout
-		//mPullToRefreshLayout = (PullToRefreshLayout) getView().findViewById(
-		//		R.id.ptr_layout);
-		//ActionBarPullToRefresh.from(getActivity()).allChildrenArePullable()
-		//		.listener(this).setup(mPullToRefreshLayout);
-
+		SpiceActivity sa = (SpiceActivity) getActivity();
+		sa.setTitle(getResources().getString(R.string.dashboard_title));
+		
+		
 		ArrayList<DashboardListRow> rows = new ArrayList<DashboardListRow>();
 
 		rows.add(new DashboardListRow(lWLAN, "Wireless", "Partially Operational"));

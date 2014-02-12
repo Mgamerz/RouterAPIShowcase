@@ -93,7 +93,7 @@
                     android:id="@+id/ss0_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Signal Strength 0"
+                    android:text="@string/signalStrength0"
                     android:textAppearance="?android:attr/textAppearanceMedium" />
 
                 <Switch

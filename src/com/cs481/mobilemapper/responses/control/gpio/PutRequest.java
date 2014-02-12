@@ -42,6 +42,7 @@ public class PutRequest extends SpringAndroidSpiceRequest<GPIO> {
 		if (authInfo.isEcm()){
 			ObjectWriter ow = mapper.writer().withDefaultPrettyPrinter();
 			jsonStr = ow.writeValueAsString(data);
+			Log.i(CommandCenterActivity.TAG, "Data to post: "+jsonStr);
 		} else {
 			jsonStr = mapper.writeValueAsString(data.getData());
 		}
