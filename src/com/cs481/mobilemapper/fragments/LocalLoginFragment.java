@@ -21,6 +21,7 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
@@ -40,8 +41,8 @@ public class LocalLoginFragment extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		View rootView = inflater.inflate(R.layout.fragment_locallogin, container,
-				false);
+		View rootView = inflater.inflate(R.layout.fragment_locallogin,
+				container, false);
 		return rootView;
 	}
 
@@ -58,7 +59,8 @@ public class LocalLoginFragment extends Fragment {
 			public boolean onEditorAction(TextView v, int actionId,
 					KeyEvent event) {
 				Log.i(CommandCenterActivity.TAG, "Action ID: " + actionId);
-				if (actionId == EditorInfo.IME_ACTION_SEND || actionId == EditorInfo.IME_NULL) {
+				if (actionId == EditorInfo.IME_ACTION_SEND
+						|| actionId == EditorInfo.IME_NULL) {
 					connect.performClick();
 					return true;
 				}
@@ -96,24 +98,25 @@ public class LocalLoginFragment extends Fragment {
 			}
 		};
 		ipAddress.setFilters(filters);
-		
-		CheckBox cb = (CheckBox) getView().findViewById(R.id.use_default_gateway);
+
+		CheckBox cb = (CheckBox) getView().findViewById(
+				R.id.use_default_gateway);
 		cb.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-			
+
 			@Override
-			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+			public void onCheckedChanged(CompoundButton buttonView,
+					boolean isChecked) {
 				// TODO Auto-generated method stub
 				Log.i(CommandCenterActivity.TAG, "Default gateway checkbox");
-				EditText customip = (EditText) getView().findViewById(R.id.router_ip);
+				LinearLayout connectOptions = (LinearLayout) getView()
+						.findViewById(R.id.nongateway_layout);
 				if (!isChecked) {
-					customip.setVisibility(EditText.VISIBLE);
-					customip.requestFocus();
+					connectOptions.setVisibility(EditText.VISIBLE);
 				} else {
-					customip.setVisibility(EditText.GONE);
+					connectOptions.setVisibility(EditText.GONE);
 				}
 			}
 		});
-
 
 		Button connect = (Button) getView().findViewById(R.id.connect_button);
 		connect.setOnClickListener(new OnClickListener() {
@@ -124,16 +127,22 @@ public class LocalLoginFragment extends Fragment {
 				CheckBox gateway = (CheckBox) getView().findViewById(
 						R.id.use_default_gateway);
 				String routerip = "";
+				boolean remoteBool = false; // default to local admin
 				if (gateway.isChecked()) {
 					routerip = Utility.getDefaultGateway(getActivity());
 				} else {
 					EditText iptext = (EditText) getView().findViewById(
 							R.id.router_ip);
 					routerip = iptext.getText().toString();
+
+					CheckBox remote = (CheckBox) getView().findViewById(
+							R.id.use_remote_admin);
+					remoteBool = remote.isChecked();
 				}
 
 				// Prepare new intent.
-				Intent intent = new Intent(getActivity(), CommandCenterActivity.class);
+				Intent intent = new Intent(getActivity(),
+						CommandCenterActivity.class);
 				intent.putExtra("ip", routerip);
 				String password = ((EditText) getView().findViewById(
 						R.id.router_password)).getText().toString();
@@ -141,6 +150,7 @@ public class LocalLoginFragment extends Fragment {
 
 				// Set ecm flags to false.
 				intent.putExtra("ecm", false);
+				intent.putExtra("remote", remoteBool);
 				intent.putExtra("id", "NOT-ECM-MANAGED");
 				intent.putExtra("user", "admin");
 
@@ -149,7 +159,6 @@ public class LocalLoginFragment extends Fragment {
 				startActivity(intent);
 				getActivity().finish();
 			}
-
 		});
 	}
 
@@ -158,7 +167,7 @@ public class LocalLoginFragment extends Fragment {
 		inflater.inflate(R.menu.login_menu, menu);
 		MenuItem item = menu.findItem(R.id.menu_switchtolocal);
 		item.setVisible(false);
-//		getActivity().invalidateOptionsMenu();
+		// getActivity().invalidateOptionsMenu();
 	}
 
 	@Override

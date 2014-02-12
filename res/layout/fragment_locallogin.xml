@@ -2,15 +2,17 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:animateLayoutChanges="true"
     android:gravity="center"
     android:orientation="vertical"
-    android:animateLayoutChanges="true"
     android:padding="15dp" >
+
     <View
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1" >
     </View>
+
     <TextView
         android:id="@+id/locallogin_header"
         android:layout_width="match_parent"
@@ -19,32 +21,40 @@
         android:text="Mobile Command Center"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
+    <CheckBox
+        android:id="@+id/use_default_gateway"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:checked="true"
+        android:text="@string/default_gateway" />
+
     <LinearLayout
+        android:id="@+id/nongateway_layout"
+        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:gravity="center"
-        android:orientation="horizontal" >
+        android:orientation="vertical" >
 
         <CheckBox
-            android:id="@+id/use_default_gateway"
+            android:id="@+id/use_remote_admin"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:checked="true"
-            android:text="@string/default_gateway" />
-    </LinearLayout>
+            android:text="@string/remote_admin" />
 
-    <EditText
-        android:id="@+id/router_ip"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:digits="0123456789."
-        android:ems="10"
-        android:gravity="center"
-        android:hint="@string/routerip_hint"
-        android:inputType="numberDecimal"
-        android:singleLine="true"
-        android:visibility="gone" />
+        <EditText
+            android:id="@+id/router_ip"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:digits="0123456789."
+            android:ems="10"
+            android:gravity="center"
+            android:hint="@string/routerip_hint"
+            android:inputType="numberDecimal"
+            android:singleLine="true" />
+    </LinearLayout>
 
     <EditText
         android:id="@+id/router_password"
@@ -76,9 +86,11 @@
             android:onClick="connectClick"
             android:text="@string/connect" />
     </LinearLayout>
+
     <View
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1" >
     </View>
+
 </LinearLayout>

@@ -9,9 +9,10 @@
         android:id="@+id/menu_switchtolocal"
         android:title="@string/switch_to_local">
     </item>
-    <item
+    <item android:id="@+id/debug_preenter_ip" android:title="Preenter Cloud IP"></item><item
         android:id="@+id/fr_debug"
         android:title="Debug">
     </item>
+    
 
 </menu>

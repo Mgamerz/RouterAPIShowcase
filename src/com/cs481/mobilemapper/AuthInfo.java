@@ -1,19 +1,31 @@
 package com.cs481.mobilemapper;
 
 /**
- * This class is a convenience bundle for authentication related information.
- * If the ecm flag is set to true, classes that use this object will expect username, password and routerId to not be null.
- * If the ecm flag is set to false, the routerip, username, and password must not be null.
+ * This class is a convenience bundle for authentication related information. If
+ * the ecm flag is set to true, classes that use this object will expect
+ * username, password and routerId to not be null. If the ecm flag is set to
+ * false, the routerip, username, and password must not be null.
  * 
  * @author Mgamerz
  * 
  */
 public class AuthInfo {
 	private boolean ecm;
+	private boolean remote; // changes what port to use if we are doing remote
+							// admin
+
 	private String routerip;
-	private String username = "admin"; //default
+	private String username = "admin"; // default
 	private String password;
 	private String routerId;
+
+	public boolean isRemote() {
+		return remote;
+	}
+
+	public void setRemote(boolean remote) {
+		this.remote = remote;
+	}
 
 	public String getRouterId() {
 		return routerId;

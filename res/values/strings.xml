@@ -12,6 +12,7 @@
     <string name="routerip_hint">Router IP</string>
     <string name="password_hint">Router Admin Password</string>
     <string name="default_gateway">Use Default Gateway</string>
+    <string name="remote_admin">Use Remote Admin</string>
     <string name="connect">Connect</string>
     <string name="switch_to_ecm">Switch to ECM Login</string>
 

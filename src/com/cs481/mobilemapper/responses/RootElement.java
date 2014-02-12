@@ -11,6 +11,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * @author Mgamerz
  * 
  */
+/**
+ * @author mjperez
+ *
+ */
 public class RootElement {
 	@JsonProperty("id")
 	private transient String id;
@@ -24,4 +28,17 @@ public class RootElement {
 	public void setId(String id) {
 		this.id = id;
 	}
+	
+	@JsonProperty("reason")
+	private transient String reason;
+
+	public String getReason() {
+		return reason;
+	}
+
+	public void setReason(String reason) {
+		this.reason = reason;
+	}
+	
+	
 }

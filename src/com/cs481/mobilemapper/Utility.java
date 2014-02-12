@@ -1,7 +1,6 @@
 package com.cs481.mobilemapper;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.Credentials;
@@ -45,14 +44,14 @@ public class Utility {
 	public static String normalizeECM(ObjectMapper mapper, String str) {
 		try {
 			JsonNode root = mapper.readTree(str);
-			Log.w(CommandCenterActivity.TAG, "Json Tree:");
-			Log.w(CommandCenterActivity.TAG, root.toString());
+			// Log.w(CommandCenterActivity.TAG, "Json Tree:");
+			// Log.w(CommandCenterActivity.TAG, root.toString());
 			root = root.get("data");
-			Log.w(CommandCenterActivity.TAG, "Descend to data:");
-			Log.w(CommandCenterActivity.TAG, root.toString());
+			// Log.w(CommandCenterActivity.TAG, "Descend to data:");
+			// Log.w(CommandCenterActivity.TAG, root.toString());
 			root = root.get(0);
-			Log.w(CommandCenterActivity.TAG, "Descend to index 0:");
-			Log.w(CommandCenterActivity.TAG, root.toString());
+			// Log.w(CommandCenterActivity.TAG, "Descend to index 0:");
+			// Log.w(CommandCenterActivity.TAG, root.toString());
 			return root.toString();
 		} catch (JsonProcessingException e) {
 			// TODO Auto-generated catch block
@@ -92,8 +91,16 @@ public class Utility {
 					authInfo.getRouterId()));
 			auth = new AuthScope("cradlepointecm.com", 443);
 		} else {
-			ci.setAccessUrl(String.format("http://%s/api/%s",
-					authInfo.getRouterip(), url));
+			if (authInfo.isRemote()) {
+				// TODO define a remote port besides 8080, perhaps in settings,
+				// or in a field.
+				ci.setAccessUrl(String.format("http://%s:%s/api/%s",
+						authInfo.getRouterip(),"8080", url));
+			} else {
+				ci.setAccessUrl(String.format("http://%s/api/%s",
+						authInfo.getRouterip(), url));
+			}
+
 			auth = new AuthScope(authInfo.getRouterip(), 80,
 					AuthScope.ANY_REALM);
 		}
