@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Mobile Mapper</string>
+    <!-- Xml Comment -->
+    <string name="app_name">Command Center</string>
     <string name="action_settings">App Settings</string>
     <string name="action_logout">Logout</string>
-    <string name="title_section2">Section 2</string>
-    <string name="title_section3">Section 3</string>
     <string name="tabSettings">Settings</string>
     <string name="tabMapping">Mapping</string>
     <string name="status">Status:</string>
@@ -25,7 +24,9 @@
     <string name="login">Login</string>
     <string name="switch_to_ecm">Switch to ECM Login</string>
     <string name="switch_to_local">Switch to local login</string>
-    <string name="wifimenu_sort_signal">Sort by Signal</string>
+    <string name="wifimenu_sort_signal">Sort by signal</string>
     <string name="wifi_sort_alphabetically">Sort by name</string>
+    <string name="gpio_title">LED Control</string>
+    <string name="signalStrength0">Signal Strength 0</string>
 
 </resources>
