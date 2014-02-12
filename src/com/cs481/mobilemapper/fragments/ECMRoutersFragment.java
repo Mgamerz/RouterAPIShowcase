@@ -121,11 +121,9 @@ public class ECMRoutersFragment extends ListFragment implements
 			ImageView router_icon = (ImageView) rowView.findViewById(R.id.routerrow_image);
 			Router router = rows.get(position).getRouter();
 			
-			if(router.getState()=="online") {
-				Log.i(CommandCenterActivity.TAG, "Imagelevel to 1");
+			if(router.getState().equals("offline")) {
 				router_icon.setImageLevel(1); //1 is offline image (see drawable/ic_router xml file)
 			} else {
-				Log.i(CommandCenterActivity.TAG, "Imagelevel to 0");
 				router_icon.setImageLevel(0); //0 is online image (see drawable/ic_router xml file)
 			}
 			
