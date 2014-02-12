@@ -1,8 +1,6 @@
 
 package com.cs481.mobilemapper.responses.status.lan;
 
-import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Wlan_wireless0{

@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -106,12 +107,28 @@ public class ECMRoutersFragment extends ListFragment implements
 			View rowView = inflater.inflate(R.layout.listrow_ecm_routers, parent,
 					false);
 			
-			TextView title = (TextView) rowView.findViewById(R.id.listview_title);
 			
 			
+			//Title text
+			TextView title = (TextView) rowView.findViewById(R.id.routerrow_title);
 			title.setText(rows.get(position).getTitle());
-			TextView subtitle = (TextView) rowView.findViewById(R.id.listview_subtitle);
+			
+			//Subtitle text
+			TextView subtitle = (TextView) rowView.findViewById(R.id.routerrow_subtitle);
 			subtitle.setText(rows.get(position).getSubtitle());
+			
+			//Router image
+			ImageView router_icon = (ImageView) rowView.findViewById(R.id.routerrow_image);
+			Router router = rows.get(position).getRouter();
+			
+			if(router.getState()=="online") {
+				Log.i(CommandCenterActivity.TAG, "Imagelevel to 1");
+				router_icon.setImageLevel(1); //1 is offline image (see drawable/ic_router xml file)
+			} else {
+				Log.i(CommandCenterActivity.TAG, "Imagelevel to 0");
+				router_icon.setImageLevel(0); //0 is online image (see drawable/ic_router xml file)
+			}
+			
 			return rowView;
 		}
 	}

@@ -69,7 +69,7 @@ public class DashboardFragment extends ListFragment {
 		public View getView(int position, View convertView, ViewGroup parent) {
 			LayoutInflater inflater = (LayoutInflater) context
 					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			View rowView = inflater.inflate(R.layout.listrow_ecm_routers, parent,
+			View rowView = inflater.inflate(R.layout.listrow_dashboard, parent,
 					false);
 			TextView title = (TextView) rowView
 					.findViewById(R.id.listview_title);
