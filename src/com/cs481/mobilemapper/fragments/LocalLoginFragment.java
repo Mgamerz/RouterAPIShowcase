@@ -213,6 +213,11 @@ public class LocalLoginFragment extends Fragment {
 			transaction.replace(R.id.login_fragment, ecmFragment);
 			transaction.commit();
 			return true;
+		case R.id.menu_preenter_ip:
+			EditText iptext = (EditText) getView().findViewById(
+					R.id.router_ip);
+			iptext.setText("132.178.226.103");
+			return true;
 		default:
 			return super.onOptionsItemSelected(item);
 		}
