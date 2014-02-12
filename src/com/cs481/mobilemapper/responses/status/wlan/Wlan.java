@@ -1,9 +1,9 @@
 package com.cs481.mobilemapper.responses.status.wlan;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.cs481.mobilemapper.responses.RootElement;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class Wlan {
+public class Wlan extends RootElement {
 	@JsonProperty("data")
 	private Data data;
 	
@@ -24,18 +24,5 @@ public class Wlan {
 
 	public void setSuccess(boolean success) {
 		this.success = success;
-	}
-
-	@JsonProperty("id")
-	private transient String id;
-
-	@JsonIgnore
-	public String getId() {
-		return id;
-	}
-
-	@JsonIgnore
-	public void setId(String id) {
-		this.id = id;
 	}
 }

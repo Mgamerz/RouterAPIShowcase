@@ -50,7 +50,7 @@
 
         <activity
             android:name=".LoginActivity"
-            android:label="@string/commandHeader" >
+            android:label="@string/command_title" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -59,10 +59,10 @@
         </activity>
         <activity
             android:name=".debug.DebugActivity"
-            android:label="@string/debugHeader" />
+            android:label="@string/debug_title" />
         <activity
             android:name="CommandCenterActivity"
-            android:label="@string/commandHeader" >
+            android:label="@string/command_title" >
             <meta-data
                 android:name="android.app.searchable"
                 android:resource="@xml/searchable" />

@@ -1,9 +1,10 @@
 package com.cs481.mobilemapper.responses.control.led;
 
+import com.cs481.mobilemapper.responses.RootElement;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class LED {
+public class LED extends RootElement {
 	@JsonProperty("data")
 	private Data data;
 
@@ -25,18 +26,5 @@ public class LED {
 	@JsonIgnore
 	public void setSuccess(boolean success) {
 		this.success = success;
-	}
-
-	@JsonProperty("id")
-	private transient String id;
-
-	@JsonIgnore
-	public String getId() {
-		return id;
-	}
-
-	@JsonIgnore
-	public void setId(String id) {
-		this.id = id;
 	}
 }

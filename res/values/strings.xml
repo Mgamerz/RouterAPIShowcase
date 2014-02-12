@@ -2,31 +2,46 @@
 <resources>
 
     <!-- Xml Comment -->
+    <!-- General strings -->
     <string name="app_name">Command Center</string>
-    <string name="action_settings">App Settings</string>
-    <string name="action_logout">Logout</string>
-    <string name="tabSettings">Settings</string>
-    <string name="tabMapping">Mapping</string>
     <string name="status">Status:</string>
+    <string name="debug_title">CC Debugging</string>
+
+    <!-- Local Login -->
+    <string name="login_title">Router Login</string>
+    <string name="routerip_hint">Router IP</string>
     <string name="password_hint">Router Admin Password</string>
     <string name="default_gateway">Use Default Gateway</string>
     <string name="connect">Connect</string>
-    <string name="routerip_hint">Router IP</string>
-    <string name="commandHeader">Command Center</string>
-    <string name="debugHeader">CC Debugging</string>
-    <string name="firstrunHeader">Router Login</string>
-    <string name="search_title">Search</string>
-    <string name="search_hint">Search for stuff</string>
-    <string name="action_mapper">Mapper</string>
-    <string name="reset_leds">Reset LEDs</string>
+    <string name="switch_to_ecm">Switch to ECM Login</string>
+
+    <!-- ECM Login -->
+    <string name="switch_to_local">Switch to local login</string>
     <string name="ecm_username_hint">ECM Username</string>
     <string name="ecm_password_hint">ECM Password</string>
     <string name="login">Login</string>
-    <string name="switch_to_ecm">Switch to ECM Login</string>
-    <string name="switch_to_local">Switch to local login</string>
+
+    <!-- CommandCenter -->
+    <string name="command_title">Command Center</string>
+    <string name="action_settings">App Settings</string>
+    <string name="action_logout">Logout</string>
+
+    <!-- Dashboard -->
+    <string name="dashboard_title">Dashboard</string>
+    <string name="search_title">Search</string>
+    <string name="search_hint">Search for stuff</string>
+    <string name="action_mapper">Mapper</string>
+
+    <!-- Wlan -->
     <string name="wifimenu_sort_signal">Sort by signal</string>
     <string name="wifi_sort_alphabetically">Sort by name</string>
+
+    <!-- LED Control -->
     <string name="gpio_title">LED Control</string>
+    <string name="reset_leds">Reset LEDs</string>
     <string name="signalStrength0">Signal Strength 0</string>
+    <string name="signalStrength1">Signal Strength 1</string>
+    <string name="signalStrength2">Signal Strength 2</string>
+    <string name="signalStrength3">Signal Strength 3</string>
 
 </resources>

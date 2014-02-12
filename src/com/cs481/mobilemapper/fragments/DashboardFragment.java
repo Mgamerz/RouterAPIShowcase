@@ -17,6 +17,7 @@ import android.widget.TextView;
 import com.cs481.mobilemapper.CommandCenterActivity;
 import com.cs481.mobilemapper.DashboardListRow;
 import com.cs481.mobilemapper.R;
+import com.cs481.mobilemapper.SpiceActivity;
 
 public class DashboardFragment extends ListFragment {
 	//private PullToRefreshLayout mPullToRefreshLayout;
@@ -35,15 +36,10 @@ public class DashboardFragment extends ListFragment {
 	@Override
 	public void onStart() {
 		super.onStart();
-		//Toast.makeText(getActivity(), "Welcome...", Toast.LENGTH_SHORT).show();
-		//Toast.makeText(getActivity(), "... Professor.", Toast.LENGTH_SHORT)
-		//		.show();
-		// /You will setup the action bar with pull to refresh layout
-		//mPullToRefreshLayout = (PullToRefreshLayout) getView().findViewById(
-		//		R.id.ptr_layout);
-		//ActionBarPullToRefresh.from(getActivity()).allChildrenArePullable()
-		//		.listener(this).setup(mPullToRefreshLayout);
-
+		SpiceActivity sa = (SpiceActivity) getActivity();
+		sa.setTitle(getResources().getString(R.string.dashboard_title));
+		
+		
 		ArrayList<DashboardListRow> rows = new ArrayList<DashboardListRow>();
 
 		rows.add(new DashboardListRow(lWLAN, "Wireless", "Partially Operational"));
