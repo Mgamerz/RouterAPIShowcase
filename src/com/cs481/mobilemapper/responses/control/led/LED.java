@@ -1,29 +1,42 @@
-
 package com.cs481.mobilemapper.responses.control.led;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class LED{
+public class LED {
 	@JsonProperty("data")
-   	private Data data;
-   	
-	@JsonProperty("success")
-   	private transient boolean success;
+	private Data data;
 
- 	public Data getData(){
+	@JsonProperty("success")
+	private transient boolean success;
+
+	public Data getData() {
 		return this.data;
 	}
- 	
-	public void setData(Data data){
+
+	public void setData(Data data) {
 		this.data = data;
 	}
- 	public boolean getSuccess(){
+
+	public boolean getSuccess() {
 		return this.success;
 	}
- 	
- 	@JsonIgnore
-	public void setSuccess(boolean success){
+
+	@JsonIgnore
+	public void setSuccess(boolean success) {
 		this.success = success;
+	}
+
+	@JsonProperty("id")
+	private transient String id;
+
+	@JsonIgnore
+	public String getId() {
+		return id;
+	}
+
+	@JsonIgnore
+	public void setId(String id) {
+		this.id = id;
 	}
 }

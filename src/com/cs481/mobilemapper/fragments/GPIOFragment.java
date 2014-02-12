@@ -259,13 +259,13 @@ public class GPIOFragment extends Fragment implements OnRefreshListener,
 		switch (item.getItemId()) {
 		case R.id.reset_leds:
 			// perform the request.
-			/*com.cs481.mobilemapper.responses.control.led.PutRequest request = new com.cs481.mobilemapper.responses.control.led.PutRequest(
+			com.cs481.mobilemapper.responses.control.led.PutRequest request = new com.cs481.mobilemapper.responses.control.led.PutRequest(
 					authInfo);
 			String lastRequestCacheKey = request.createCacheKey();
 
 			spiceManager.execute(request, lastRequestCacheKey,
 					DurationInMillis.ALWAYS_EXPIRED,
-					new LEDPutRequestListener());*/
+					new LEDPutRequestListener());
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
