@@ -1,6 +1,8 @@
 package com.cs481.mobilemapper.fragments;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
 import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
@@ -13,6 +15,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -34,8 +37,11 @@ import com.octo.android.robospice.request.listener.RequestListener;
 
 public class WlanFragment extends ListFragment implements OnRefreshListener {
 	private PullToRefreshLayout mPullToRefreshLayout;
-	ProgressDialog progressDialog;
+	private ProgressDialog progressDialog;
 	private SpiceManager spiceManager;
+	private ArrayList<WlanListRow> rows;
+	private WlanAdapter adapter;
+	
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -163,10 +169,10 @@ public class WlanFragment extends ListFragment implements OnRefreshListener {
 	public void onRefreshStarted(View view) {
 		readWlanConfig(false);
 	}
-	
+
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-		//super.onCreateOptionsMenu(menu, inflater);
+		// super.onCreateOptionsMenu(menu, inflater);
 		inflater.inflate(R.menu.wifi_menu, menu);
 	}
 
@@ -204,17 +210,24 @@ public class WlanFragment extends ListFragment implements OnRefreshListener {
 		public void onRequestSuccess(Wlan wlan) {
 			// update your UI
 			progressDialog.dismiss();
-			Log.i(CommandCenterActivity.TAG, "Succeded reading from WLAN!");
-			updateWlanList(wlan);
-			mPullToRefreshLayout.setRefreshComplete();
-			Log.i(CommandCenterActivity.TAG, "isRefresh(): "+mPullToRefreshLayout.isRefreshing());
-		}
+			if (wlan.getSuccess()) {
+				Log.i(CommandCenterActivity.TAG, "WLAN request successful");
+				updateWlanList(wlan);
+				mPullToRefreshLayout.setRefreshComplete();
+				Log.i(CommandCenterActivity.TAG, "isRefresh(): "
+						+ mPullToRefreshLayout.isRefreshing());
+			} else {
+				mPullToRefreshLayout.setRefreshComplete();
 
+				Toast.makeText(getActivity(), wlan.getReason(),
+						Toast.LENGTH_LONG).show();
+			}
+		}
 	}
 
 	public void updateWlanList(Wlan wlan) {
 		Log.i(CommandCenterActivity.TAG, wlan.toString());
-		ArrayList<WlanListRow> rows = new ArrayList<WlanListRow>();
+		rows = new ArrayList<WlanListRow>();
 		ArrayList<WAP> waps = wlan.getData().getRadio().get(0).getSurvey(); // TODO:
 																			// Add
 																			// dual
@@ -227,7 +240,56 @@ public class WlanFragment extends ListFragment implements OnRefreshListener {
 				ssid = "<Hidden>";
 			rows.add(new WlanListRow(wap, ssid, subtitle));
 		}
-		setListAdapter(new WlanAdapter(getActivity(), rows));
+		adapter = new WlanAdapter(getActivity(), rows);
+		setListAdapter(adapter);
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()){
+		case R.id.wifimenu_sort_alphabetically:
+			sortAlphabetically();
+			return true;
+		case R.id.wifimenu_sort_signal:
+			sortSignal();
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
+		
+	}
+
+	/**
+	 * Sorts the list of AP's this router can see by name.
+	 * 
+	 */
+	public void sortAlphabetically() {
+		Collections.sort(rows, new Comparator<WlanListRow>() {
+
+			@Override
+			public int compare(WlanListRow lhs, WlanListRow rhs) {
+				return lhs.getWap().getSsid()
+						.compareToIgnoreCase(rhs.getWap().getSsid());
+			}
+		});
+		adapter.notifyDataSetChanged();
+	}
+
+	/**
+	 * Sorts the list of AP's this router can see by signal strength.
+	 * 
+	 */
+	public void sortSignal() {
+		Collections.sort(rows, new Comparator<WlanListRow>() {
+
+			@Override
+			public int compare(WlanListRow lhs, WlanListRow rhs) {
+				Integer lhsRssi = lhs.getWap().getRssi();
+				Integer rhsRssi = rhs.getWap().getRssi();
+				return rhsRssi.compareTo(lhsRssi);
+			}
+		});
+		adapter.notifyDataSetChanged();
 	}
 
 }
