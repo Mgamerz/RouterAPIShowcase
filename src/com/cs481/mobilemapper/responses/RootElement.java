@@ -4,17 +4,13 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
- * This class defines a root element. It contains some code for id's and
- * exceptions in Json responses so we don't have to copy paste them. Top level
- * response objects should subclass this.
+ * This class is only here so you can copy paste the code into 'root response' objects.
+ * You can't sublcass this as annotations in Java are not inherited apparently.
  * 
  * @author Mgamerz
  * 
  */
-/**
- * @author mjperez
- *
- */
+
 public class RootElement {
 	@JsonProperty("id")
 	private transient String id;
@@ -28,7 +24,7 @@ public class RootElement {
 	public void setId(String id) {
 		this.id = id;
 	}
-	
+
 	@JsonProperty("reason")
 	private transient String reason;
 
@@ -39,6 +35,16 @@ public class RootElement {
 	public void setReason(String reason) {
 		this.reason = reason;
 	}
-	
-	
+
+	@JsonProperty("success")
+	private transient boolean success; //must be boolean not Boolean! Jackson doesn't know how to map to Boolean only false/true
+
+	public void setSuccess(boolean success) {
+		this.success = success;
+	}
+
+	public boolean getSuccess() {
+		return success;
+	}
+
 }

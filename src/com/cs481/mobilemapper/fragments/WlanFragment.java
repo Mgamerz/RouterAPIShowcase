@@ -210,18 +210,19 @@ public class WlanFragment extends ListFragment implements OnRefreshListener {
 		public void onRequestSuccess(Wlan wlan) {
 			// update your UI
 			progressDialog.dismiss();
+			System.out.println("DEBUG POIN");
 			if (wlan.getSuccess()) {
 				Log.i(CommandCenterActivity.TAG, "WLAN request successful");
 				updateWlanList(wlan);
-				mPullToRefreshLayout.setRefreshComplete();
 				Log.i(CommandCenterActivity.TAG, "isRefresh(): "
 						+ mPullToRefreshLayout.isRefreshing());
 			} else {
-				mPullToRefreshLayout.setRefreshComplete();
 
 				Toast.makeText(getActivity(), wlan.getReason(),
 						Toast.LENGTH_LONG).show();
 			}
+			mPullToRefreshLayout.setRefreshComplete();
+
 		}
 	}
 

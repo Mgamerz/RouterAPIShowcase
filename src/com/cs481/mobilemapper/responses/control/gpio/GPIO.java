@@ -3,22 +3,10 @@
 
 package com.cs481.mobilemapper.responses.control.gpio;
 
-import com.cs481.mobilemapper.responses.RootElement;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class GPIO extends RootElement {
-	@JsonProperty("success")
-	private transient java.lang.Boolean success;
-
- 	public void setSuccess(java.lang.Boolean success) {
-		this.success = success;
-	}
-
- 	@JsonIgnore
-	public java.lang.Boolean getSuccess() {
-		return success;
-	}
+public class GPIO {
 
 	@JsonProperty("data")
 	private Data data;
@@ -29,6 +17,43 @@ public class GPIO extends RootElement {
 
 	public Data getData() {
 		return data;
+	}
+	
+	//RootElement
+	@JsonProperty("id")
+	private transient String id;
+
+	@JsonIgnore
+	public String getId() {
+		return id;
+	}
+
+	@JsonIgnore
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	@JsonProperty("reason")
+	private transient String reason;
+
+	public String getReason() {
+		return reason;
+	}
+
+	public void setReason(String reason) {
+		this.reason = reason;
+	}
+
+	@JsonProperty("success")
+	private transient boolean success;
+
+	public void setSuccess(boolean success) {
+		this.success = success;
+	}
+
+	@JsonIgnore
+	public boolean getSuccess() {
+		return success;
 	}
 	
 }

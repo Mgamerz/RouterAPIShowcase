@@ -28,6 +28,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class Utility {
 
 	public static String convertToDataSegment(String str) {
+		//JsonObject json = new JsonObject()
 		str = str.substring(0, str.length() - 1); // remove last }
 		str = str.substring(1, str.length()); // remove first {
 		str = str.replaceFirst("\"data\":", "");
@@ -92,16 +93,16 @@ public class Utility {
 			auth = new AuthScope("cradlepointecm.com", 443);
 		} else {
 			if (authInfo.isRemote()) {
-				// TODO define a remote port besides 8080, perhaps in settings,
-				// or in a field.
+				// Assuming it's a WAN.
 				ci.setAccessUrl(String.format("http://%s:%s/api/%s",
-						authInfo.getRouterip(),"8080", url));
-				auth = new AuthScope(authInfo.getRouterip(), 80,
+						authInfo.getRouterip(), authInfo.getRouterport(), url));
+				auth = new AuthScope(authInfo.getRouterip(), authInfo.getRouterport(),
 						AuthScope.ANY_REALM);
 			} else {
+				//On the current LAN
 				ci.setAccessUrl(String.format("http://%s/api/%s",
 						authInfo.getRouterip(), url));
-				auth = new AuthScope(authInfo.getRouterip(), 8080,
+				auth = new AuthScope(authInfo.getRouterip(), 80,
 						AuthScope.ANY_REALM);
 			}
 
