@@ -2,7 +2,6 @@
 package com.cs481.mobilemapper.responses.status.lan;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -14,7 +13,7 @@ public class Data{
    	private Devices devices;
 	
 	@JsonProperty("networks")
-   	private Network networks;
+   	private Networks networks;
 	
 	@JsonProperty("stats")
    	private Stats stats;
@@ -31,10 +30,10 @@ public class Data{
 	public void setDevices(Devices devices){
 		this.devices = devices;
 	}
- 	public Network getNetworks(){
+ 	public Networks getNetworks(){
 		return this.networks;
 	}
-	public void setNetworks(Network networks){
+	public void setNetworks(Networks networks){
 		this.networks = networks;
 	}
  	public Stats getStats(){

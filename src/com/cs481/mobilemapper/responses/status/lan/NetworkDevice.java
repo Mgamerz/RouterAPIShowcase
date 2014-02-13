@@ -3,9 +3,15 @@ package com.cs481.mobilemapper.responses.status.lan;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class Wlan_wireless0{
+/**
+ * This class is under /status/lan/networks - it only shows some of the network information.
+ * The other part is in the NetworkInterface part
+ * @author Mgamerz
+ *
+ */
+public class NetworkDevice{
 	@JsonProperty("info")
-   	private Info info;
+   	private InterfaceInfo info;
 	
 	@JsonProperty("stats")
    	private Stats stats;
@@ -13,10 +19,10 @@ public class Wlan_wireless0{
 	@JsonProperty("status")
    	private Status status;
 
- 	public Info getInfo(){
+ 	public InterfaceInfo getInfo(){
 		return this.info;
 	}
-	public void setInfo(Info info){
+	public void setInfo(InterfaceInfo info){
 		this.info = info;
 	}
  	public Stats getStats(){
