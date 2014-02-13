@@ -47,7 +47,6 @@ public class LED {
 		this.success = success;
 	}
 
-	@JsonIgnore
 	public boolean getSuccess() {
 		return success;
 	}

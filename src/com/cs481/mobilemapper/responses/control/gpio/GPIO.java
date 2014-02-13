@@ -51,7 +51,6 @@ public class GPIO {
 		this.success = success;
 	}
 
-	@JsonIgnore
 	public boolean getSuccess() {
 		return success;
 	}
