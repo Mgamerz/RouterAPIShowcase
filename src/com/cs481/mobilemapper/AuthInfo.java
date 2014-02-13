@@ -15,6 +15,8 @@ public class AuthInfo {
 							// admin
 
 	private String routerip;
+	private int routerport = 80; // default to http port 80
+
 	private String username = "admin"; // default
 	private String password;
 	private String routerId;
@@ -67,4 +69,11 @@ public class AuthInfo {
 		this.password = password;
 	}
 
+	public int getRouterport() {
+		return routerport;
+	}
+
+	public void setRouterport(int routerport) {
+		this.routerport = routerport;
+	}
 }

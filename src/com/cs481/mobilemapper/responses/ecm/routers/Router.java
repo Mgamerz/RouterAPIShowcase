@@ -1,8 +1,11 @@
 
 package com.cs481.mobilemapper.responses.ecm.routers;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 
-public class Router{
+
+public class Router implements Parcelable{
    	private String account;
    	private String actual_firmware;
    	private String alerts;
@@ -248,5 +251,15 @@ public class Router{
 	}
 	public void setWireless_ap_surveys(String wireless_ap_surveys){
 		this.wireless_ap_surveys = wireless_ap_surveys;
+	}
+	@Override
+	public int describeContents() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+	@Override
+	public void writeToParcel(Parcel dest, int flags) {
+		// TODO Auto-generated method stub
+		
 	}
 }

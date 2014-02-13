@@ -69,14 +69,18 @@ public class GPIOFragment extends Fragment implements OnRefreshListener,
 			progressDialog.setCanceledOnTouchOutside(false);
 			progressDialog.setCancelable(false);
 		}
-		spiceManager.execute(request, lastRequestCacheKey, DurationInMillis.ALWAYS_EXPIRED, new GPIOGetRequestListener());
+		spiceManager.execute(request, lastRequestCacheKey,
+				DurationInMillis.ALWAYS_EXPIRED, new GPIOGetRequestListener());
 	}
 
 	@Override
 	public void onStart() {
 		super.onStart();
 		SpiceActivity sa = (SpiceActivity) getActivity();
-		sa.setTitle(getResources().getString(R.string.gpio_title)); // TODO change to string resource
+		sa.setTitle(getResources().getString(R.string.gpio_title)); // TODO
+																	// change to
+																	// string
+																	// resource
 		spiceManager = sa.getSpiceManager();
 		readGPIOConfig(true);
 
@@ -154,32 +158,34 @@ public class GPIOFragment extends Fragment implements OnRefreshListener,
 		@Override
 		public void onRequestSuccess(GPIO gpio) {
 			// update your UI
-			progressDialog.dismiss();
-			setGPIO(gpio);
+			progressDialog.dismiss(); // update your UI
+			if (gpio.getSuccess()) {
+				setGPIO(gpio);
 
-			// Power LED Green (turns to orange if off)
-			Switch lswitch = (Switch) getView().findViewById(
-					R.id.powerled_state);
-			lswitch.setChecked((gpio.getData().getLed_power() == 1) ? true
-					: false);
+				// Power LED Green (turns to orange if off)
+				Switch lswitch = (Switch) getView().findViewById(
+						R.id.powerled_state);
+				lswitch.setChecked((gpio.getData().getLed_power() == 1) ? true
+						: false);
 
-			// Wifi Red
-			lswitch = (Switch) getView().findViewById(R.id.wifiledr_state);
-			lswitch.setChecked((gpio.getData().getLed_wifi_red() == 1) ? true
-					: false);
+				// Wifi Red
+				lswitch = (Switch) getView().findViewById(R.id.wifiledr_state);
+				lswitch.setChecked((gpio.getData().getLed_wifi_red() == 1) ? true
+						: false);
 
-			// Wifi Green
-			lswitch = (Switch) getView().findViewById(R.id.ss0_state);
-			lswitch.setChecked((gpio.getData().getLed_ss_0() == 1) ? true
-					: false);
+				// Wifi Green
+				lswitch = (Switch) getView().findViewById(R.id.ss0_state);
+				lswitch.setChecked((gpio.getData().getLed_ss_0() == 1) ? true
+						: false);
 
-			// Wifi Blue
-			lswitch = (Switch) getView().findViewById(R.id.wifiledb_state);
-			lswitch.setChecked((gpio.getData().getLed_wifi() == 1) ? true
-					: false);
-			
-			
-			
+				// Wifi Blue
+				lswitch = (Switch) getView().findViewById(R.id.wifiledb_state);
+				lswitch.setChecked((gpio.getData().getLed_wifi() == 1) ? true
+						: false);
+			} else {
+				Toast.makeText(getActivity(), gpio.getReason(),
+						Toast.LENGTH_LONG).show();
+			}
 			mPullToRefreshLayout.setRefreshComplete();
 			checking = false;
 
@@ -202,15 +208,20 @@ public class GPIOFragment extends Fragment implements OnRefreshListener,
 		@Override
 		public void onRequestSuccess(GPIO gpio) {
 			// update your UI
-			if (gpio.getData().getException() == null) {
-				Log.i(CommandCenterActivity.TAG, "Command success!");
-				Log.i(CommandCenterActivity.TAG, "Put to GPIO: " + gpio);
-				// DebugGPIOFragment.this.gpio = gpio;
+			if (gpio.getSuccess()) {
+				if (gpio.getData().getException() == null) {
+					Log.i(CommandCenterActivity.TAG, "Command success!");
+					Log.i(CommandCenterActivity.TAG, "Put to GPIO: " + gpio);
+					// DebugGPIOFragment.this.gpio = gpio;
+				} else {
+					Toast.makeText(
+							getActivity(),
+							"GPIO: Server returned exception: "
+									+ gpio.getData().getException(),
+							Toast.LENGTH_LONG).show();
+				}
 			} else {
-				Toast.makeText(
-						getActivity(),
-						"GPIO: Server returned exception: "
-								+ gpio.getData().getException(),
+				Toast.makeText(getActivity(), gpio.getReason(),
 						Toast.LENGTH_LONG).show();
 			}
 		}

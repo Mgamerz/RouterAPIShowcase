@@ -96,13 +96,16 @@ public class Utility {
 				// or in a field.
 				ci.setAccessUrl(String.format("http://%s:%s/api/%s",
 						authInfo.getRouterip(),"8080", url));
+				auth = new AuthScope(authInfo.getRouterip(), 80,
+						AuthScope.ANY_REALM);
 			} else {
 				ci.setAccessUrl(String.format("http://%s/api/%s",
 						authInfo.getRouterip(), url));
+				auth = new AuthScope(authInfo.getRouterip(), 8080,
+						AuthScope.ANY_REALM);
 			}
 
-			auth = new AuthScope(authInfo.getRouterip(), 80,
-					AuthScope.ANY_REALM);
+			
 		}
 		client.getCredentialsProvider().setCredentials(auth, defaultcreds);
 		ci.setClient(client);

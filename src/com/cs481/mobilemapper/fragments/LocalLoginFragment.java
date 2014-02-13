@@ -128,16 +128,17 @@ public class LocalLoginFragment extends Fragment {
 						R.id.use_default_gateway);
 				String routerip = "";
 				boolean remoteBool = false; // default to local admin
+				int port = 80; //default http port for local
 				if (gateway.isChecked()) {
 					routerip = Utility.getDefaultGateway(getActivity());
 				} else {
 					EditText iptext = (EditText) getView().findViewById(
 							R.id.router_ip);
 					routerip = iptext.getText().toString();
-
 					CheckBox remote = (CheckBox) getView().findViewById(
 							R.id.use_remote_admin);
 					remoteBool = remote.isChecked();
+					port = 8080; //TODO add box for custom ports, perhaps SSL management
 				}
 
 				// Prepare new intent.
@@ -150,6 +151,7 @@ public class LocalLoginFragment extends Fragment {
 
 				// Set ecm flags to false.
 				intent.putExtra("ecm", false);
+				intent.putExtra("port", port);
 				intent.putExtra("remote", remoteBool);
 				intent.putExtra("id", "NOT-ECM-MANAGED");
 				intent.putExtra("user", "admin");

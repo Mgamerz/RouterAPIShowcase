@@ -31,6 +31,7 @@ public class CommandCenterActivity extends SpiceActivity {
 		authInfo = new AuthInfo();
 		authInfo.setEcm(intent.getBooleanExtra("ecm", false));
 		authInfo.setRemote(intent.getBooleanExtra("remote", false));
+		authInfo.setRouterport(intent.getIntExtra("port", 80));
 		authInfo.setRouterId(intent.getStringExtra("id"));
 		authInfo.setRouterip(intent.getStringExtra("ip"));
 		authInfo.setUsername(intent.getStringExtra("user"));
