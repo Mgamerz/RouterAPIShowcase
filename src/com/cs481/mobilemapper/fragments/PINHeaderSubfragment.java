@@ -1,14 +1,15 @@
 package com.cs481.mobilemapper.fragments;
 
+import android.graphics.Point;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.FrameLayout;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.cs481.mobilemapper.R;
 
@@ -22,56 +23,67 @@ public class PINHeaderSubfragment extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		View rootView = inflater.inflate(R.layout.subfrag_pinpad, container, false);
-/*		FrameLayout pinpad = (FrameLayout) rootView.findViewById(R.id.pinpad_fragment);
+		View rootView = inflater.inflate(R.layout.subfrag_pinheader, container,
+				false);
+		TextView enterText = (TextView) rootView
+				.findViewById(R.id.enterpin_text);
+
+		RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) enterText
+				.getLayoutParams();
 		
-		//Add the subfragment if we need to
-		String pin_id = "pinpad"; //fragment tag
-		FragmentManager cfm = getChildFragmentManager(); //only works with this fragment
-		PINPadSubfragment pinpad_fragment = (PINPadSubfragment) cfm.findFragmentByTag(pin_id);
 		
-		if (pinpad_fragment==null){
-			
-		}
-		*/
+		//set the headers margin based on how tall the current screen height is - it can change across devices and orientations.
+		Display display = getActivity().getWindowManager().getDefaultDisplay();
+		Point size = new Point();
+		display.getSize(size);
+		int height = size.y;
+		
+		int margin = (int) ((height/10)*0.8);
+		
+		params.setMargins(0, margin, 0, 0);
+		enterText.setLayoutParams(params);
+
+		/*
+		 * FrameLayout pinpad = (FrameLayout)
+		 * rootView.findViewById(R.id.pinpad_fragment);
+		 * 
+		 * //Add the subfragment if we need to String pin_id = "pinpad";
+		 * //fragment tag FragmentManager cfm = getChildFragmentManager();
+		 * //only works with this fragment PINPadSubfragment pinpad_fragment =
+		 * (PINPadSubfragment) cfm.findFragmentByTag(pin_id);
+		 * 
+		 * if (pinpad_fragment==null){
+		 * 
+		 * }
+		 */
 		return rootView;
 	}
-
 	/*
-	@Override
-	public void onStart() {
-		super.onStart();
-		// SpiceActivity sa = (SpiceActivity) getActivity();
-		// sa.setTitle("UNLOCK"); // TODO change to string resource
-		setupUI();
-	}
-
-	public void setupUI() {
-		// Make the numeric buttons have listeners
-		Button pinButton = (Button) getView().findViewById(R.id.pin0);
-		pinButton.setOnClickListener(this);
-		pinButton = (Button) getView().findViewById(R.id.pin1);
-		pinButton.setOnClickListener(this);
-		pinButton = (Button) getView().findViewById(R.id.pin2);
-		pinButton.setOnClickListener(this);
-		pinButton = (Button) getView().findViewById(R.id.pin3);
-		pinButton.setOnClickListener(this);
-		pinButton = (Button) getView().findViewById(R.id.pin4);
-		pinButton.setOnClickListener(this);
-		pinButton = (Button) getView().findViewById(R.id.pin5);
-		pinButton.setOnClickListener(this);
-		pinButton = (Button) getView().findViewById(R.id.pin6);
-		pinButton.setOnClickListener(this);
-		pinButton = (Button) getView().findViewById(R.id.pin7);
-		pinButton.setOnClickListener(this);
-		pinButton = (Button) getView().findViewById(R.id.pin8);
-		pinButton.setOnClickListener(this);
-		pinButton = (Button) getView().findViewById(R.id.pin9);
-		pinButton.setOnClickListener(this);
-
-	}
-
-	/*
+	 * @Override public void onStart() { super.onStart(); // SpiceActivity sa =
+	 * (SpiceActivity) getActivity(); // sa.setTitle("UNLOCK"); // TODO change
+	 * to string resource setupUI(); }
+	 * 
+	 * public void setupUI() { // Make the numeric buttons have listeners Button
+	 * pinButton = (Button) getView().findViewById(R.id.pin0);
+	 * pinButton.setOnClickListener(this); pinButton = (Button)
+	 * getView().findViewById(R.id.pin1); pinButton.setOnClickListener(this);
+	 * pinButton = (Button) getView().findViewById(R.id.pin2);
+	 * pinButton.setOnClickListener(this); pinButton = (Button)
+	 * getView().findViewById(R.id.pin3); pinButton.setOnClickListener(this);
+	 * pinButton = (Button) getView().findViewById(R.id.pin4);
+	 * pinButton.setOnClickListener(this); pinButton = (Button)
+	 * getView().findViewById(R.id.pin5); pinButton.setOnClickListener(this);
+	 * pinButton = (Button) getView().findViewById(R.id.pin6);
+	 * pinButton.setOnClickListener(this); pinButton = (Button)
+	 * getView().findViewById(R.id.pin7); pinButton.setOnClickListener(this);
+	 * pinButton = (Button) getView().findViewById(R.id.pin8);
+	 * pinButton.setOnClickListener(this); pinButton = (Button)
+	 * getView().findViewById(R.id.pin9); pinButton.setOnClickListener(this);
+	 * 
+	 * }
+	 * 
+	 * /*
+	 * 
 	 * @Override public void onCreateOptionsMenu(Menu menu, MenuInflater
 	 * inflater) { inflater.inflate(R.menu.login_menu, menu); MenuItem item =
 	 * menu.findItem(R.id.menu_switchtolocal); item.setVisible(false); //

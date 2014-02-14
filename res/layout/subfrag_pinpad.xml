@@ -79,7 +79,7 @@
         android:layout_height="wrap_content" >
 
         <Button
-            android:id="@+id/button10"
+            android:id="@+id/pin_extra"
             style="?android:attr/buttonBarButtonStyle"
             android:layout_width="match_parent"
             android:text="\?\?\?" />
@@ -94,7 +94,7 @@
             android:id="@+id/pin_backspace"
             style="?android:attr/buttonBarButtonStyle"
             android:layout_width="match_parent"
-            android:text="BACK-S" />
+            android:text="&lt;" />
     </TableRow>
 
 </TableLayout>

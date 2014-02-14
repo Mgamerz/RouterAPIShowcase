@@ -4,14 +4,18 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.TextView;
 
+import com.cs481.mobilemapper.CommandCenterActivity;
 import com.cs481.mobilemapper.R;
+import com.cs481.mobilemapper.SpiceActivity;
 
 public class PINFragment extends Fragment implements OnClickListener {
 	@Override
@@ -62,12 +66,15 @@ public class PINFragment extends Fragment implements OnClickListener {
 	@Override
 	public void onStart() {
 		super.onStart();
-		// SpiceActivity sa = (SpiceActivity) getActivity();
-		// sa.setTitle("UNLOCK"); // TODO change to string resource
+		SpiceActivity sa = (SpiceActivity) getActivity();
+		sa.setTitle("UNLOCK"); // TODO change to string resource
 		setupUI();
 	}
 
 	public void setupUI() {
+		TextView debugPin = (TextView) getView().findViewById(
+				R.id.debug_enteredpin);
+		debugPin.setText("");
 		// Make the numeric buttons have listeners
 		Button pinButton = (Button) getView().findViewById(R.id.pin0);
 		pinButton.setOnClickListener(this);
@@ -88,6 +95,10 @@ public class PINFragment extends Fragment implements OnClickListener {
 		pinButton = (Button) getView().findViewById(R.id.pin8);
 		pinButton.setOnClickListener(this);
 		pinButton = (Button) getView().findViewById(R.id.pin9);
+		pinButton.setOnClickListener(this);
+		pinButton = (Button) getView().findViewById(R.id.pin_backspace);
+		pinButton.setOnClickListener(this);
+		pinButton = (Button) getView().findViewById(R.id.pin_extra);
 		pinButton.setOnClickListener(this);
 
 	}
@@ -136,7 +147,56 @@ public class PINFragment extends Fragment implements OnClickListener {
 	@Override
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
+		TextView debugPin = (TextView) getView().findViewById(
+				R.id.debug_enteredpin);
+		String currentPin = debugPin.getText().toString();
+		
+		int buttonId = v.getId();
+		
+		if (currentPin.length() >= 4 && buttonId != R.id.pin_backspace) {
+			return;
+		}
+		
+		switch (v.getId()) {
+		case R.id.pin0:
+			currentPin += "0";
+			break;
+		case R.id.pin1:
+			currentPin += "1";
+			break;
+		case R.id.pin2:
+			currentPin += "2";
+			break;
+		case R.id.pin3:
+			currentPin += "3";
+			break;
+		case R.id.pin4:
+			currentPin += "4";
+			break;
+		case R.id.pin5:
+			currentPin += "5";
+			break;
+		case R.id.pin6:
+			currentPin += "6";
+			break;
+		case R.id.pin7:
+			currentPin += "7";
+			break;
+		case R.id.pin8:
+			currentPin += "8";
+			break;
+		case R.id.pin9:
+			currentPin += "9";
+			break;
+		case R.id.pin_backspace:
+			Log.i(CommandCenterActivity.TAG, "BACKSPACE");
+			if (currentPin.length() > 0) {
+				currentPin = currentPin.substring(0, currentPin.length() - 1);
+			}
+			break;
+		}
 
+		debugPin.setText(currentPin);
 	}
 
 }
