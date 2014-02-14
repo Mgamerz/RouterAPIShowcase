@@ -1,7 +1,6 @@
 package com.cs481.mobilemapper.fragments;
 
 import android.app.ProgressDialog;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -13,22 +12,19 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.inputmethod.EditorInfo;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.TextView.OnEditorActionListener;
+import android.widget.Toast;
 
 import com.cs481.mobilemapper.AuthInfo;
 import com.cs481.mobilemapper.CommandCenterActivity;
 import com.cs481.mobilemapper.LoginActivity;
 import com.cs481.mobilemapper.R;
 import com.cs481.mobilemapper.SpiceActivity;
-import com.cs481.mobilemapper.Utility;
-import com.cs481.mobilemapper.debug.DebugActivity;
 import com.cs481.mobilemapper.responses.ecm.routers.Routers;
 import com.octo.android.robospice.SpiceManager;
 import com.octo.android.robospice.persistence.DurationInMillis;
@@ -70,22 +66,22 @@ public class ECMLoginFragment extends Fragment {
 		SpiceActivity sa = (SpiceActivity) getActivity();
 		sa.setTitle("ECM Login"); // TODO change to string resource
 		spiceManager = sa.getSpiceManager();
-		EditText passw = (EditText) getView()
-				.findViewById(R.id.ecm_password);
+		EditText passw = (EditText) getView().findViewById(R.id.ecm_password);
 		final Button connect = (Button) getView().findViewById(
 				R.id.login_button);
 		passw.setOnEditorActionListener(new OnEditorActionListener() {
 			public boolean onEditorAction(TextView v, int actionId,
 					KeyEvent event) {
 				Log.i(CommandCenterActivity.TAG, "Action ID: " + actionId);
-				if (actionId == EditorInfo.IME_ACTION_SEND || actionId == EditorInfo.IME_NULL) {
+				if (actionId == EditorInfo.IME_ACTION_SEND
+						|| actionId == EditorInfo.IME_NULL) {
 					connect.performClick();
 					return true;
 				}
 				return false;
 			}
 		});
-		
+
 	}
 
 	private void readECMRouters() {
@@ -129,15 +125,17 @@ public class ECMLoginFragment extends Fragment {
 			progressDialog.dismiss();
 			LoginActivity activity = (LoginActivity) getActivity();
 			AuthInfo authInfo = new AuthInfo();
-			EditText usern = (EditText) getView().findViewById(R.id.ecm_username);
-			EditText passw = (EditText) getView().findViewById(R.id.ecm_password);
+			EditText usern = (EditText) getView().findViewById(
+					R.id.ecm_username);
+			EditText passw = (EditText) getView().findViewById(
+					R.id.ecm_password);
 			authInfo.setUsername(usern.getText().toString());
 			authInfo.setPassword(passw.getText().toString());
 			authInfo.setEcm(true);
-			
+
 			activity.setAuthInfo(authInfo);
 			activity.setRouters(routers);
-			
+
 			ECMRoutersFragment routersFragment = new ECMRoutersFragment();
 
 			// In case this activity was started with special instructions from
@@ -162,36 +160,13 @@ public class ECMLoginFragment extends Fragment {
 		inflater.inflate(R.menu.login_menu, menu);
 		MenuItem item = menu.findItem(R.id.menu_switchtoecm);
 		item.setVisible(false);
-//		getActivity().invalidateOptionsMenu();
+		// getActivity().invalidateOptionsMenu();
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// handle item selection
 		switch (item.getItemId()) {
-		case R.id.fr_debug:
-			Intent intent = new Intent(getActivity(), DebugActivity.class);
-			CheckBox gateway = (CheckBox) getView().findViewById(
-					R.id.use_default_gateway);
-			String routerip = "";
-			if (gateway.isChecked()) {
-				routerip = Utility.getDefaultGateway(getActivity());
-			} else {
-				EditText iptext = (EditText) getView().findViewById(
-						R.id.router_ip);
-				routerip = iptext.getText().toString();
-			}
-
-			intent.putExtra("ip", routerip);
-			String password = ((EditText) getView().findViewById(
-					R.id.router_password)).getText().toString();
-			intent.putExtra("pass", password);
-			intent.putExtra("ecm", false);
-			intent.putExtra("id", "NOT-ECM-MANAGED");
-			intent.putExtra("user", "admin");
-
-			startActivity(intent);
-			return true;
 		case R.id.menu_switchtolocal:
 			LocalLoginFragment localFragment = new LocalLoginFragment();
 

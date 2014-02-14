@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 
 import com.cs481.mobilemapper.R;
 import com.cs481.mobilemapper.fragments.ECMLoginFragment;
+import com.cs481.mobilemapper.fragments.PINFragment;
 
 public class DebugFragment extends Fragment {
 	
@@ -31,7 +32,7 @@ public class DebugFragment extends Fragment {
 	public void onStart(){
 		super.onStart();
 		//create first UI fragment and set it up   
-		Fragment fragment = new ECMLoginFragment();
+		Fragment fragment = new PINFragment();
 
 		FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
 

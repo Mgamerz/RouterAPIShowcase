@@ -29,7 +29,6 @@ import com.cs481.mobilemapper.CommandCenterActivity;
 import com.cs481.mobilemapper.R;
 import com.cs481.mobilemapper.SpiceActivity;
 import com.cs481.mobilemapper.Utility;
-import com.cs481.mobilemapper.debug.DebugActivity;
 
 public class LocalLoginFragment extends Fragment {
 	@Override
@@ -177,29 +176,6 @@ public class LocalLoginFragment extends Fragment {
 		Log.w(CommandCenterActivity.TAG, "Item was clicked.");
 		// handle item selection
 		switch (item.getItemId()) {
-		case R.id.fr_debug:
-			Intent intent = new Intent(getActivity(), DebugActivity.class);
-			CheckBox gateway = (CheckBox) getView().findViewById(
-					R.id.use_default_gateway);
-			String routerip = "";
-			if (gateway.isChecked()) {
-				routerip = Utility.getDefaultGateway(getActivity());
-			} else {
-				EditText iptext = (EditText) getView().findViewById(
-						R.id.router_ip);
-				routerip = iptext.getText().toString();
-			}
-
-			intent.putExtra("ip", routerip);
-			String password = ((EditText) getView().findViewById(
-					R.id.router_password)).getText().toString();
-			intent.putExtra("pass", password);
-			intent.putExtra("ecm", false);
-			intent.putExtra("id", "NOT-ECM-MANAGED");
-			intent.putExtra("user", "admin");
-
-			startActivity(intent);
-			return true;
 		case R.id.menu_switchtoecm:
 			ECMLoginFragment ecmFragment = new ECMLoginFragment();
 

@@ -1,12 +1,13 @@
 package com.cs481.mobilemapper;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
-import android.view.View;
+import android.view.MenuItem;
 import android.widget.CheckBox;
 import android.widget.EditText;
 
+import com.cs481.mobilemapper.debug.DebugActivity;
 import com.cs481.mobilemapper.fragments.LocalLoginFragment;
 import com.cs481.mobilemapper.responses.ecm.routers.Routers;
 
@@ -18,8 +19,8 @@ public class LoginActivity extends SpiceActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
-		
-		//Save layout on rotation
+
+		// Save layout on rotation
 		if (savedInstanceState == null) {
 			LocalLoginFragment frFragment = new LocalLoginFragment();
 
@@ -36,6 +37,18 @@ public class LoginActivity extends SpiceActivity {
 			transaction.commit();
 		}
 
+	}
+
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+
+		case R.id.fr_debug:
+			Intent intent = new Intent(this, DebugActivity.class);
+			startActivity(intent);
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
 	}
 
 	public void setRouters(Routers routers) {
