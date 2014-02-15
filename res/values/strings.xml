@@ -17,6 +17,7 @@
     <string name="switch_to_ecm">Switch to ECM Login</string>
 
     <!-- ECM Login -->
+    <string name="ecm_title">Enterprise Cloud Manager</string>
     <string name="switch_to_local">Switch to local login</string>
     <string name="ecm_username_hint">ECM Username</string>
     <string name="ecm_password_hint">ECM Password</string>
