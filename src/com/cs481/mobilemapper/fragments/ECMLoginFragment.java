@@ -1,6 +1,7 @@
 package com.cs481.mobilemapper.fragments;
 
 import android.app.ProgressDialog;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -64,7 +65,8 @@ public class ECMLoginFragment extends Fragment {
 	public void onStart() {
 		super.onStart();
 		SpiceActivity sa = (SpiceActivity) getActivity();
-		sa.setTitle("ECM Login"); // TODO change to string resource
+		Resources resources = getResources();
+		sa.setTitle(resources.getString(R.string.ecm_actionbar_title)); // TODO change to string resource
 		spiceManager = sa.getSpiceManager();
 		EditText passw = (EditText) getView().findViewById(R.id.ecm_password);
 		final Button connect = (Button) getView().findViewById(
@@ -90,13 +92,14 @@ public class ECMLoginFragment extends Fragment {
 		EditText passw = (EditText) getView().findViewById(R.id.ecm_password);
 		authInfo.setUsername(usern.getText().toString());
 		authInfo.setPassword(passw.getText().toString());
+		Resources resources = getResources();
 
 		com.cs481.mobilemapper.responses.ecm.routers.GetRequest request = new com.cs481.mobilemapper.responses.ecm.routers.GetRequest(
 				authInfo);
 		String lastRequestCacheKey = request.createCacheKey();
 
 		progressDialog = new ProgressDialog(getActivity());
-		progressDialog.setMessage("Connecting to ECM...");
+		progressDialog.setMessage(resources.getString(R.string.ecm_connecting));
 		progressDialog.show();
 		progressDialog.setCanceledOnTouchOutside(false);
 		progressDialog.setCancelable(false);
@@ -109,13 +112,13 @@ public class ECMLoginFragment extends Fragment {
 	// inner class of your spiced Activity
 	private class ECMRoutersGetRequestListener implements
 			RequestListener<Routers> {
-
+		Resources resources = getResources();
 		@Override
 		public void onRequestFailure(SpiceException e) {
 			// update your UI
 			progressDialog.dismiss();
 			Toast.makeText(getActivity(),
-					"Failed to get list of routers from ECM",
+					resources.getString(R.string.ecm_failed_get_routers),
 					Toast.LENGTH_SHORT).show();
 		}
 
