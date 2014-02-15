@@ -224,10 +224,10 @@ public class GPIOFragment extends Fragment implements OnRefreshListener,
 					Log.i(CommandCenterActivity.TAG, "Put to GPIO: " + gpio);
 					// DebugGPIOFragment.this.gpio = gpio;
 				} else {
-				/*	Toast.makeText(
+					Toast.makeText(
 							getActivity(),
-								resources.getString(R.string.gpio)+” “+resources.getString(R.string.server_exception)+”: “+led.getData().getException(),
-							Toast.LENGTH_LONG).show();*/
+								resources.getString(R.string.gpio) + resources.getString(R.string.server_exception) + gpio.getData().getException(),
+							Toast.LENGTH_LONG).show();
 				}
 				
 			} else {

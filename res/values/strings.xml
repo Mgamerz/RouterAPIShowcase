@@ -74,7 +74,7 @@
     <string name="gpio_reading">Reading GPIO Configuration</string>
     <string name="gpio_get_config_failure">Failed to read GPIO configuration</string>
     <string name="gpio_get_null_response">GPIO response was null.</string>
-    <string name="gpio_get_null_response">GPIO: Server returned exception</string>
+    <string name="server_exception">Server returned exception</string>
     
 
 </resources>
