@@ -24,7 +24,7 @@ public class DebugFragment extends Fragment {
 		View rootView = inflater.inflate(R.layout.fragment_debug, container,
 				false);
 		if (savedInstanceState == null) {
-			Fragment fragment = new PINFragment();
+			Fragment fragment = PINFragment.newInstance(true); //used to pass arguments to a fragment
 			FragmentTransaction ft = getChildFragmentManager()
 					.beginTransaction();
 

@@ -1,10 +1,25 @@
 package com.cs481.mobilemapper.fragments;
 
+import java.io.UnsupportedEncodingException;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.InvalidParameterSpecException;
+import java.security.spec.KeySpec;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import org.apache.commons.lang3.time.StopWatch;
+import javax.crypto.BadPaddingException;
+import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+import javax.crypto.SecretKey;
+import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.PBEKeySpec;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.PorterDuff.Mode;
@@ -12,6 +27,7 @@ import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.provider.Settings.Secure;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -34,21 +50,42 @@ import com.cs481.mobilemapper.SpiceActivity;
 
 public class PINFragment extends Fragment implements OnClickListener {
 	String currentPin = ""; // pin that has been currently entered
-	int attemptsRemaining = 5; //TODO this should be set in SharedPreferences with a timestamp for a cooldown on attempts
+	int attemptsRemaining = 5; // TODO this should be set in SharedPreferences
+								// with a timestamp for a cooldown on attempts
 	boolean isTimerRunning = false;
+	boolean pinsetup;
+	
+	//Crypto variables
+	private int KEY_LENGTH = 256;
+	private int ITERATION_COUNT = 1000;
+	public final String PBKDF2_DERIVATION_ALGORITHM = "PBKDF2WithHmacSHA1";
 
 	@Override
 	public void onCreate(Bundle savedInstancedState) {
 		super.onCreate(savedInstancedState);
-		Log.i(CommandCenterActivity.TAG,
-				"Created PINFragment, bundle passed is " + savedInstancedState);
 		if (savedInstancedState != null) {
-			Log.i(CommandCenterActivity.TAG, "PIN before unpack: " + currentPin);
-
 			currentPin = savedInstancedState.getString("pin");
-			Log.i(CommandCenterActivity.TAG, "PIN after unpack: " + currentPin);
-
 		}
+	}
+
+	/**
+	 * Use this to create a new fragment of PINFragment. Do not use the empty
+	 * constructor. We have to do this because of the kinda stupid way android
+	 * handles memory and device rotation (we need to setup the UI before the
+	 * user can see it)
+	 * 
+	 * @param createPIN
+	 *            If in pin setup mode, set this to true. Otherwise it's in
+	 *            decrypt mode
+	 * @return
+	 */
+	public static PINFragment newInstance(boolean createPIN) {
+		PINFragment pinFragment = new PINFragment();
+
+		Bundle args = new Bundle();
+		args.putBoolean("createpin", createPIN);
+		pinFragment.setArguments(args);
+		return pinFragment;
 	}
 
 	@Override
@@ -91,13 +128,15 @@ public class PINFragment extends Fragment implements OnClickListener {
 		}
 		return rootView;
 	}
-	
-	public void wrongPIN(){
+
+	public void wrongPIN() {
 		attemptsRemaining--;
-		LinearLayout pinProgress = (LinearLayout) getView().findViewById(R.id.pinprogress_layout);
-		Animation shakeAnimation = AnimationUtils.loadAnimation(getActivity(), R.anim.animation_shake);
+		LinearLayout pinProgress = (LinearLayout) getView().findViewById(
+				R.id.pinprogress_layout);
+		Animation shakeAnimation = AnimationUtils.loadAnimation(getActivity(),
+				R.anim.animation_shake);
 		pinProgress.startAnimation(shakeAnimation);
-		currentPin="";
+		currentPin = "";
 		unlockPad(false);
 		resetTimer();
 	}
@@ -107,7 +146,11 @@ public class PINFragment extends Fragment implements OnClickListener {
 		super.onStart();
 		SpiceActivity sa = (SpiceActivity) getActivity();
 		Resources resources = getResources();
-		sa.setTitle(resources.getString(R.string.pin_actionbar_title)); // TODO change to string resource
+		sa.setTitle(resources.getString(R.string.pin_actionbar_title)); // TODO
+																		// change
+																		// to
+																		// string
+																		// resource
 		setupUI();
 		if (!currentPin.equals("")) {
 			updateProgress(currentPin);
@@ -192,7 +235,6 @@ public class PINFragment extends Fragment implements OnClickListener {
 			currentPin += "9";
 			break;
 		case R.id.pin_backspace:
-			Log.i(CommandCenterActivity.TAG, "BACKSPACE");
 			if (currentPin.length() > 0) {
 				currentPin = currentPin.substring(0, currentPin.length() - 1);
 			}
@@ -215,8 +257,6 @@ public class PINFragment extends Fragment implements OnClickListener {
 			GradientDrawable circleIcon = (GradientDrawable) getActivity()
 					.getResources().getDrawable(R.drawable.pin_circle);
 			if (i <= pin.length()) {
-				Log.i(CommandCenterActivity.TAG,
-						"i vs pin: " + i + " " + pin.length());
 				// lightens the image
 				circleIcon.setColorFilter(Color.WHITE, Mode.SRC_ATOP);
 			}
@@ -241,18 +281,85 @@ public class PINFragment extends Fragment implements OnClickListener {
 			}
 			progressPos.setImageDrawable(circleIcon);
 		}
-		
-		if (currentPin.length() == 4){
-			//Debugging - simulate a bad pin.
-			wrongPIN();
+
+		if (currentPin.length() == 4) {
+			String hash = createPIN();
+			testEncryptionDecryption(hash);
+			// Debugging - simulate a bad pin.
+			// wrongPIN();
 		}
 	}
-	
+
+	private String createPIN() {
+		Resources resources = getResources();
+		SharedPreferences crypto = getActivity().getSharedPreferences(
+				resources.getString(R.string.crypto_prefsdb),
+				Context.MODE_PRIVATE);
+		String uuid = crypto.getString("uuid", null);
+
+		String device_uuid = Secure.getString(getActivity()
+				.getContentResolver(), Secure.ANDROID_ID);
+		uuid = uuid + device_uuid; // device specific. Might want to make
+									// this more random.
+		return uuid;
+	}
+
+	private void testEncryptionDecryption(String hash) {
+		try {
+		SecretKey secret = generateKey(currentPin, hash.getBytes("UTF-8"));
+		byte[] encrypted = encryptMsg("LOGINPASS", secret);
+		Log.i(CommandCenterActivity.TAG, "Encrypted to: "+new String(encrypted, "UTF-8"));
+		String result = decryptMsg(encrypted, secret);
+		Log.i(CommandCenterActivity.TAG, "Decrypted back to: "+result);
+		} catch (Exception e){
+			//too many exceptions to catch.
+			e.printStackTrace();
+		}
+	}
+
+	public static SecretKey generateKey(String code, byte[] salt) throws NoSuchAlgorithmException, InvalidKeySpecException {
+	    // Number of PBKDF2 hardening rounds to use. Larger values increase
+	    // computation time. You should select a value that causes computation
+	    // to take >100ms.
+	    final int iterations = 1000; 
+
+	    // Generate a 256-bit key
+	    final int outputKeyLength = 256;
+
+	    SecretKeyFactory secretKeyFactory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
+	    KeySpec keySpec = new PBEKeySpec(code.toCharArray(), salt, iterations, outputKeyLength);
+	    SecretKey secretKey = secretKeyFactory.generateSecret(keySpec);
+	    return secretKey;
+	}
+
+	public static byte[] encryptMsg(String message, SecretKey secret) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, InvalidParameterSpecException, IllegalBlockSizeException, BadPaddingException, UnsupportedEncodingException {
+	/* Encrypt the message. */
+	    Cipher cipher = null;
+	    cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
+	    cipher.init(Cipher.ENCRYPT_MODE, secret);
+	    byte[] cipherText = cipher.doFinal(message.getBytes("UTF-8"));
+	    return cipherText;
+	}
+
+	public static String decryptMsg(byte[] cipherText, SecretKey secret) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidParameterSpecException, InvalidAlgorithmParameterException, InvalidKeyException, BadPaddingException, IllegalBlockSizeException, UnsupportedEncodingException {
+
+	    /* Decrypt the message, given derived encContentValues and initialization vector. */
+	    Cipher cipher = null;
+	    cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
+	   cipher.init(Cipher.DECRYPT_MODE, secret);
+	    String decryptString = new String(cipher.doFinal(cipherText), "UTF-8");
+	    return decryptString;
+	}
+
+
 	/**
 	 * Unlocks and locks all keys on the entry pad.
-	 * @param lock True will unlock all elements in the pad allowing entry. False will disable all items.
+	 * 
+	 * @param lock
+	 *            True will unlock all elements in the pad allowing entry. False
+	 *            will disable all items.
 	 */
-	private void unlockPad(boolean lock){
+	private void unlockPad(boolean lock) {
 		Button pinButton = (Button) getView().findViewById(R.id.pin0);
 		pinButton.setEnabled(lock);
 		pinButton = (Button) getView().findViewById(R.id.pin1);
@@ -278,15 +385,19 @@ public class PINFragment extends Fragment implements OnClickListener {
 		pinButton = (Button) getView().findViewById(R.id.pin_extra);
 		pinButton.setEnabled(lock);
 	}
-	
+
+	/**
+	 * Starts a new thread that will callback to end the shaking animation when
+	 * a PIN is incorrectly entered.
+	 */
 	protected void resetTimer() {
-	    isTimerRunning = true; 
-	    Timer timer = new Timer();
-	    timer.schedule(new TimerTask() {
-	        public void run() {
-	            mHandler.obtainMessage(1).sendToTarget();
-	        }
-	    }, 500);
+		isTimerRunning = true;
+		Timer timer = new Timer();
+		timer.schedule(new TimerTask() {
+			public void run() {
+				mHandler.obtainMessage(1).sendToTarget();
+			}
+		}, 500);
 	}
 
 	/**
@@ -294,18 +405,17 @@ public class PINFragment extends Fragment implements OnClickListener {
 	 */
 	public Handler mHandler = new Handler(new Handler.Callback() {
 		@Override
-	    public boolean handleMessage(Message msg) {
-	    	currentPin = "";
-	    	updateProgress(currentPin);
-	    	unlockPad(true);
-	    	return true;
-	    }
+		public boolean handleMessage(Message msg) {
+			currentPin = "";
+			updateProgress(currentPin);
+			unlockPad(true);
+			return true;
+		}
 	});
 
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
-		Log.i(CommandCenterActivity.TAG, "Saving instance state");
 		outState.putString("pin", currentPin);
 	}
 }

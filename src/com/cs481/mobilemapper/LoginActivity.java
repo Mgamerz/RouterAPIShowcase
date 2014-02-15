@@ -1,11 +1,19 @@
 package com.cs481.mobilemapper;
 
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+
+import javax.crypto.KeyGenerator;
+import javax.crypto.SecretKey;
+
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Base64;
+import android.util.Log;
 import android.view.MenuItem;
-import android.widget.CheckBox;
-import android.widget.EditText;
 
 import com.cs481.mobilemapper.debug.DebugActivity;
 import com.cs481.mobilemapper.fragments.LocalLoginFragment;
@@ -19,6 +27,35 @@ public class LoginActivity extends SpiceActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
+
+		// If this is the first time the app has run, there will be no salt key
+		// in the shared prefs.
+		// Look it up first. If it doesn't exist, we can make one. This is not the pure salt key, as ANDROID_ID is added at runtime.
+		// This prevents moving the data to another device and having the encryption/decryption still work.
+		
+		// Reading
+		Resources resources = getResources();
+		SharedPreferences crypto = getSharedPreferences(
+				resources.getString(R.string.crypto_prefsdb), MODE_PRIVATE);
+		String uuid = crypto.getString("uuid", null);
+		if (uuid == null) {
+		//writing
+			SecureRandom secureRandom = new SecureRandom();
+			// Do *not* seed secureRandom! Automatically seeded from system.
+			try {
+			KeyGenerator keyGenerator = KeyGenerator.getInstance("AES");
+			keyGenerator.init(128, secureRandom);
+			SecretKey key = keyGenerator.generateKey();
+
+			SharedPreferences.Editor editor = crypto.edit();
+			editor.putString("uuid",
+					Base64.encodeToString(key.getEncoded(), Base64.DEFAULT));
+			// Commit the edits!
+			editor.commit();
+			} catch (NoSuchAlgorithmException e){
+				Log.e(CommandCenterActivity.TAG, "This devices does not support AES (that's weird!)");
+			}
+		}
 
 		// Save layout on rotation
 		if (savedInstanceState == null) {
