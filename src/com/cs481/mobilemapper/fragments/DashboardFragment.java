@@ -3,6 +3,7 @@ package com.cs481.mobilemapper.fragments;
 import java.util.ArrayList;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.ListFragment;
@@ -20,7 +21,6 @@ import com.cs481.mobilemapper.R;
 import com.cs481.mobilemapper.SpiceActivity;
 
 public class DashboardFragment extends ListFragment {
-	//private PullToRefreshLayout mPullToRefreshLayout;
 	private final int lWLAN = 0;
 	private final int lLAN = 1;
 	private final int lWAN = 2;
@@ -37,15 +37,15 @@ public class DashboardFragment extends ListFragment {
 	public void onStart() {
 		super.onStart();
 		SpiceActivity sa = (SpiceActivity) getActivity();
-		sa.setTitle(getResources().getString(R.string.dashboard_title));
-		
+		Resources resources = getResources();
+
+		sa.setTitle(resources.getString(R.string.dashboard_title));
 		
 		ArrayList<DashboardListRow> rows = new ArrayList<DashboardListRow>();
-
-		rows.add(new DashboardListRow(lWLAN, "Wireless", "Partially Operational"));
-		rows.add(new DashboardListRow(lLAN, "LAN", "Non Operational"));
-		rows.add(new DashboardListRow(lWAN, "WAN", "Non Operational"));
-		rows.add(new DashboardListRow(lGPIO, "GPIO", "Partially Operational"));
+		rows.add(new DashboardListRow(lWLAN, resources.getString(R.string.wireless), "Partially Operational"));
+		rows.add(new DashboardListRow(lLAN, resources.getString(R.string.lan), "Non Operational"));
+		rows.add(new DashboardListRow(lWAN, resources.getString(R.string.wan), "Non Operational"));
+		rows.add(new DashboardListRow(lGPIO, resources.getString(R.string.gpio), "Partially Operational"));
 		setListAdapter(new DashboardAdapter(getActivity(), rows));
 	}
 
