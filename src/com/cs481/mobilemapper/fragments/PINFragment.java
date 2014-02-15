@@ -1,5 +1,8 @@
 package com.cs481.mobilemapper.fragments;
 
+import android.graphics.Color;
+import android.graphics.PorterDuff.Mode;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -11,6 +14,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.cs481.mobilemapper.CommandCenterActivity;
@@ -18,10 +22,14 @@ import com.cs481.mobilemapper.R;
 import com.cs481.mobilemapper.SpiceActivity;
 
 public class PINFragment extends Fragment implements OnClickListener {
+	String currentPin = ""; // pin that has been currently entered
+
 	@Override
 	public void onCreate(Bundle savedInstancedState) {
 		super.onCreate(savedInstancedState);
-		// setHasOptionsMenu(true);
+		if (savedInstancedState != null) {
+			currentPin = savedInstancedState.getString("pin");
+		}
 	}
 
 	@Override
@@ -69,12 +77,16 @@ public class PINFragment extends Fragment implements OnClickListener {
 		SpiceActivity sa = (SpiceActivity) getActivity();
 		sa.setTitle("UNLOCK"); // TODO change to string resource
 		setupUI();
+		if (!currentPin.equals("")) {
+			updateProgress(currentPin);
+		}
 	}
 
 	public void setupUI() {
 		TextView debugPin = (TextView) getView().findViewById(
 				R.id.debug_enteredpin);
-		debugPin.setText("");
+		debugPin.setText(currentPin);
+
 		// Make the numeric buttons have listeners
 		Button pinButton = (Button) getView().findViewById(R.id.pin0);
 		pinButton.setOnClickListener(this);
@@ -103,60 +115,18 @@ public class PINFragment extends Fragment implements OnClickListener {
 
 	}
 
-	/*
-	 * @Override public void onCreateOptionsMenu(Menu menu, MenuInflater
-	 * inflater) { inflater.inflate(R.menu.login_menu, menu); MenuItem item =
-	 * menu.findItem(R.id.menu_switchtolocal); item.setVisible(false); //
-	 * getActivity().invalidateOptionsMenu(); }
-	 * 
-	 * 
-	 * @Override public boolean onOptionsItemSelected(MenuItem item) {
-	 * Log.w(CommandCenterActivity.TAG, "Item was clicked."); // handle item
-	 * selection switch (item.getItemId()) { case R.id.fr_debug: Intent intent =
-	 * new Intent(getActivity(), DebugActivity.class); CheckBox gateway =
-	 * (CheckBox) getView().findViewById( R.id.use_default_gateway); String
-	 * routerip = ""; if (gateway.isChecked()) { routerip =
-	 * Utility.getDefaultGateway(getActivity()); } else { EditText iptext =
-	 * (EditText) getView().findViewById( R.id.router_ip); routerip =
-	 * iptext.getText().toString(); }
-	 * 
-	 * intent.putExtra("ip", routerip); String password = ((EditText)
-	 * getView().findViewById( R.id.router_password)).getText().toString();
-	 * intent.putExtra("pass", password); intent.putExtra("ecm", false);
-	 * intent.putExtra("id", "NOT-ECM-MANAGED"); intent.putExtra("user",
-	 * "admin");
-	 * 
-	 * startActivity(intent); return true; case R.id.menu_switchtoecm:
-	 * ECMLoginFragment ecmFragment = new ECMLoginFragment();
-	 * 
-	 * // In case this activity was started with special instructions from // an
-	 * // Intent, pass the Intent's extras to the fragment as arguments //
-	 * firstFragment.setArguments(getIntent().getExtras());
-	 * 
-	 * // Add the fragment to the 'fragment_container' FrameLayout
-	 * FragmentTransaction transaction = getActivity()
-	 * .getSupportFragmentManager().beginTransaction();
-	 * 
-	 * transaction.replace(R.id.login_fragment, ecmFragment);
-	 * transaction.commit(); return true; case R.id.menu_preenter_ip: EditText
-	 * iptext = (EditText) getView().findViewById( R.id.router_ip);
-	 * iptext.setText("132.178.226.103"); return true; default: return
-	 * super.onOptionsItemSelected(item); } }
-	 */
-
 	@Override
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
 		TextView debugPin = (TextView) getView().findViewById(
 				R.id.debug_enteredpin);
-		String currentPin = debugPin.getText().toString();
-		
+
 		int buttonId = v.getId();
-		
+		//int preAddedLength = currentPin.length();
 		if (currentPin.length() >= 4 && buttonId != R.id.pin_backspace) {
 			return;
 		}
-		
+
 		switch (v.getId()) {
 		case R.id.pin0:
 			currentPin += "0";
@@ -195,8 +165,54 @@ public class PINFragment extends Fragment implements OnClickListener {
 			}
 			break;
 		}
-
+		updateProgress(currentPin);
 		debugPin.setText(currentPin);
 	}
 
+	/**
+	 * Updates the circle shape color to make it appear that it has indeed been
+	 * entered already.
+	 * 
+	 * @param pin
+	 *            current pin (it is not read - only the length matters)
+	 */
+	private void updateProgress(String pin) {
+		ImageView progressPos = null;
+		for (int i = 1; i < 4; i++) {
+			GradientDrawable circleIcon = (GradientDrawable) getActivity()
+					.getResources().getDrawable(R.drawable.pin_circle);
+			if (i <= pin.length()) {
+				Log.i(CommandCenterActivity.TAG, "i vs pin: "+i+" "+pin.length());
+				// lightens the image
+				circleIcon.setColorFilter(Color.WHITE, Mode.SRC_ATOP);
+			}
+			switch (i) {
+			// in a for loop, update each of the pin icons to the new value.
+			case 1:
+				progressPos = (ImageView) getView().findViewById(
+						R.id.pinprogress1);
+				break;
+			case 2:
+				progressPos = (ImageView) getView().findViewById(
+						R.id.pinprogress2);
+				break;
+			case 3:
+				progressPos = (ImageView) getView().findViewById(
+						R.id.pinprogress3);
+				break;
+			case 4:
+				progressPos = (ImageView) getView().findViewById(
+						R.id.pinprogress4);
+				break;
+			}
+			progressPos.setImageDrawable(circleIcon);
+		}
+
+	}
+
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		outState.putString("pin", currentPin);
+	}
 }
