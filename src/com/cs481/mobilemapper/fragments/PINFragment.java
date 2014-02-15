@@ -1,9 +1,17 @@
 package com.cs481.mobilemapper.fragments;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
+import org.apache.commons.lang3.time.StopWatch;
+
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.PorterDuff.Mode;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -12,9 +20,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.cs481.mobilemapper.CommandCenterActivity;
@@ -23,6 +34,8 @@ import com.cs481.mobilemapper.SpiceActivity;
 
 public class PINFragment extends Fragment implements OnClickListener {
 	String currentPin = ""; // pin that has been currently entered
+	int attemptsRemaining = 5; //TODO this should be set in SharedPreferences with a timestamp for a cooldown on attempts
+	boolean isTimerRunning = false;
 
 	@Override
 	public void onCreate(Bundle savedInstancedState) {
@@ -76,15 +89,25 @@ public class PINFragment extends Fragment implements OnClickListener {
 				fmt.commit();
 			}
 		}
-
 		return rootView;
+	}
+	
+	public void wrongPIN(){
+		attemptsRemaining--;
+		LinearLayout pinProgress = (LinearLayout) getView().findViewById(R.id.pinprogress_layout);
+		Animation shakeAnimation = AnimationUtils.loadAnimation(getActivity(), R.anim.animation_shake);
+		pinProgress.startAnimation(shakeAnimation);
+		currentPin="";
+		unlockPad(false);
+		resetTimer();
 	}
 
 	@Override
 	public void onStart() {
 		super.onStart();
 		SpiceActivity sa = (SpiceActivity) getActivity();
-		sa.setTitle("UNLOCK"); // TODO change to string resource
+		Resources resources = getResources();
+		sa.setTitle(resources.getString(R.string.pin_actionbar_title)); // TODO change to string resource
 		setupUI();
 		if (!currentPin.equals("")) {
 			updateProgress(currentPin);
@@ -218,8 +241,66 @@ public class PINFragment extends Fragment implements OnClickListener {
 			}
 			progressPos.setImageDrawable(circleIcon);
 		}
-
+		
+		if (currentPin.length() == 4){
+			//Debugging - simulate a bad pin.
+			wrongPIN();
+		}
 	}
+	
+	/**
+	 * Unlocks and locks all keys on the entry pad.
+	 * @param lock True will unlock all elements in the pad allowing entry. False will disable all items.
+	 */
+	private void unlockPad(boolean lock){
+		Button pinButton = (Button) getView().findViewById(R.id.pin0);
+		pinButton.setEnabled(lock);
+		pinButton = (Button) getView().findViewById(R.id.pin1);
+		pinButton.setEnabled(lock);
+		pinButton = (Button) getView().findViewById(R.id.pin2);
+		pinButton.setEnabled(lock);
+		pinButton = (Button) getView().findViewById(R.id.pin3);
+		pinButton.setEnabled(lock);
+		pinButton = (Button) getView().findViewById(R.id.pin4);
+		pinButton.setEnabled(lock);
+		pinButton = (Button) getView().findViewById(R.id.pin5);
+		pinButton.setEnabled(lock);
+		pinButton = (Button) getView().findViewById(R.id.pin6);
+		pinButton.setEnabled(lock);
+		pinButton = (Button) getView().findViewById(R.id.pin7);
+		pinButton.setEnabled(lock);
+		pinButton = (Button) getView().findViewById(R.id.pin8);
+		pinButton.setEnabled(lock);
+		pinButton = (Button) getView().findViewById(R.id.pin9);
+		pinButton.setEnabled(lock);
+		pinButton = (Button) getView().findViewById(R.id.pin_backspace);
+		pinButton.setEnabled(lock);
+		pinButton = (Button) getView().findViewById(R.id.pin_extra);
+		pinButton.setEnabled(lock);
+	}
+	
+	protected void resetTimer() {
+	    isTimerRunning = true; 
+	    Timer timer = new Timer();
+	    timer.schedule(new TimerTask() {
+	        public void run() {
+	            mHandler.obtainMessage(1).sendToTarget();
+	        }
+	    }, 500);
+	}
+
+	/**
+	 * UI Thread callback for timer
+	 */
+	public Handler mHandler = new Handler(new Handler.Callback() {
+		@Override
+	    public boolean handleMessage(Message msg) {
+	    	currentPin = "";
+	    	updateProgress(currentPin);
+	    	unlockPad(true);
+	    	return true;
+	    }
+	});
 
 	@Override
 	public void onSaveInstanceState(Bundle outState) {

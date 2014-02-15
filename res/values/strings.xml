@@ -6,6 +6,7 @@
     <string name="app_name">Command Center</string>
     <string name="status">Status:</string>
     <string name="debug_title">CC Debugging</string>
+    <string name="server_exception">Server returned exception</string>
 
     <!-- Local Login -->
     <string name="login_title">Router Login</string>
@@ -40,7 +41,6 @@
     <string name="lan">LAN</string>
     <string name="wan">WAN</string>
     <string name="gpio">GPIO</string>
-    
 
     <!-- Wlan -->
     <string name="wifimenu_sort_signal">Sort by signal</string>
@@ -54,7 +54,7 @@
     <string name="signalStrength2">Signal Strength 2</string>
     <string name="signalStrength3">Signal Strength 3</string>
 
-    <!-- Fragment GPIO -->
+    <!-- GPIO -->
     <string name="power_led_green">Power LED Green</string>
     <string name="wifi_led_red">Wifi LED Red</string>
     <string name="wifi_led_green">Wifi LED Green</string>
@@ -74,7 +74,8 @@
     <string name="gpio_reading">Reading GPIO Configuration</string>
     <string name="gpio_get_config_failure">Failed to read GPIO configuration</string>
     <string name="gpio_get_null_response">GPIO response was null.</string>
-    <string name="server_exception">Server returned exception</string>
-    
+
+    <!-- PIN -->
+    <string name="pin_actionbar_title">UNLOCK</string>
 
 </resources>
