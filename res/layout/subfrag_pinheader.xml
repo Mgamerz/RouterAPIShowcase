@@ -25,6 +25,8 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/debug_enteredpin"
         android:background="#333377"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
         android:orientation="horizontal" >
 
         <ImageView

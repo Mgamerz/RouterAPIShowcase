@@ -27,8 +27,14 @@ public class PINFragment extends Fragment implements OnClickListener {
 	@Override
 	public void onCreate(Bundle savedInstancedState) {
 		super.onCreate(savedInstancedState);
+		Log.i(CommandCenterActivity.TAG,
+				"Created PINFragment, bundle passed is " + savedInstancedState);
 		if (savedInstancedState != null) {
+			Log.i(CommandCenterActivity.TAG, "PIN before unpack: " + currentPin);
+
 			currentPin = savedInstancedState.getString("pin");
+			Log.i(CommandCenterActivity.TAG, "PIN after unpack: " + currentPin);
+
 		}
 	}
 
@@ -37,35 +43,38 @@ public class PINFragment extends Fragment implements OnClickListener {
 			Bundle savedInstanceState) {
 		View rootView = inflater.inflate(R.layout.fragment_pin, container,
 				false);
-		FrameLayout header = (FrameLayout) rootView
-				.findViewById(R.id.pinprogress_fragment);
-		FrameLayout pinpad = (FrameLayout) rootView
-				.findViewById(R.id.pinpad_fragment);
+		if (savedInstanceState == null) {
+			FrameLayout header = (FrameLayout) rootView
+					.findViewById(R.id.pinprogress_fragment);
+			FrameLayout pinpad = (FrameLayout) rootView
+					.findViewById(R.id.pinpad_fragment);
 
-		// Add the subfragment if we need to
-		String pinpadId = "pinpad"; // fragment tag
-		String pinHeaderId = "pinheader";
-		FragmentManager cfm = getChildFragmentManager(); // only works with this
-															// fragment
-		PINHeaderSubfragment headerFragment = (PINHeaderSubfragment) cfm
-				.findFragmentByTag(pinHeaderId);
-		PINPadSubfragment pinpadFragment = (PINPadSubfragment) cfm
-				.findFragmentByTag(pinpadId);
+			// Add the subfragment if we need to
+			String pinpadId = "pinpad"; // fragment tag
+			String pinHeaderId = "pinheader";
+			FragmentManager cfm = getChildFragmentManager(); // only works with
+																// this
+																// fragment
+			PINHeaderSubfragment headerFragment = (PINHeaderSubfragment) cfm
+					.findFragmentByTag(pinHeaderId);
+			PINPadSubfragment pinpadFragment = (PINPadSubfragment) cfm
+					.findFragmentByTag(pinpadId);
 
-		// transaction on header
-		if (headerFragment == null) {
-			headerFragment = new PINHeaderSubfragment();
-			FragmentTransaction fmt = cfm.beginTransaction();
-			fmt.replace(header.getId(), headerFragment, pinHeaderId);
-			fmt.commit();
-		}
+			// transaction on header
+			if (headerFragment == null) {
+				headerFragment = new PINHeaderSubfragment();
+				FragmentTransaction fmt = cfm.beginTransaction();
+				fmt.replace(header.getId(), headerFragment, pinHeaderId);
+				fmt.commit();
+			}
 
-		// transaction on pinpad
-		if (pinpadFragment == null) {
-			pinpadFragment = new PINPadSubfragment();
-			FragmentTransaction fmt = cfm.beginTransaction();
-			fmt.replace(pinpad.getId(), pinpadFragment, pinpadId);
-			fmt.commit();
+			// transaction on pinpad
+			if (pinpadFragment == null) {
+				pinpadFragment = new PINPadSubfragment();
+				FragmentTransaction fmt = cfm.beginTransaction();
+				fmt.replace(pinpad.getId(), pinpadFragment, pinpadId);
+				fmt.commit();
+			}
 		}
 
 		return rootView;
@@ -122,8 +131,9 @@ public class PINFragment extends Fragment implements OnClickListener {
 				R.id.debug_enteredpin);
 
 		int buttonId = v.getId();
-		//int preAddedLength = currentPin.length();
-		if (currentPin.length() >= 4 && buttonId != R.id.pin_backspace) {
+		// Prevent entering a pin over 4 characters long (if its over 3, the pin
+		// count is full
+		if (currentPin.length() > 3 && buttonId != R.id.pin_backspace) {
 			return;
 		}
 
@@ -178,11 +188,12 @@ public class PINFragment extends Fragment implements OnClickListener {
 	 */
 	private void updateProgress(String pin) {
 		ImageView progressPos = null;
-		for (int i = 1; i < 4; i++) {
+		for (int i = 1; i < 5; i++) {
 			GradientDrawable circleIcon = (GradientDrawable) getActivity()
 					.getResources().getDrawable(R.drawable.pin_circle);
 			if (i <= pin.length()) {
-				Log.i(CommandCenterActivity.TAG, "i vs pin: "+i+" "+pin.length());
+				Log.i(CommandCenterActivity.TAG,
+						"i vs pin: " + i + " " + pin.length());
 				// lightens the image
 				circleIcon.setColorFilter(Color.WHITE, Mode.SRC_ATOP);
 			}
@@ -213,6 +224,7 @@ public class PINFragment extends Fragment implements OnClickListener {
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
+		Log.i(CommandCenterActivity.TAG, "Saving instance state");
 		outState.putString("pin", currentPin);
 	}
 }

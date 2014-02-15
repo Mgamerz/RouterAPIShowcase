@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.cs481.mobilemapper.R;
-import com.cs481.mobilemapper.fragments.ECMLoginFragment;
 import com.cs481.mobilemapper.fragments.PINFragment;
 
 public class DebugFragment extends Fragment {
@@ -24,17 +23,18 @@ public class DebugFragment extends Fragment {
 			Bundle savedInstanceState) {
 		View rootView = inflater.inflate(R.layout.fragment_debug, container,
 				false);
+		if (savedInstanceState == null) {
+			Fragment fragment = new PINFragment();
+			FragmentTransaction ft = getChildFragmentManager()
+					.beginTransaction();
 
-		Fragment fragment = new PINFragment();
-		FragmentTransaction ft = getChildFragmentManager().beginTransaction();
+			// Inject our fragment
+			ft.replace(R.id.debug_container, fragment);
+			// set type of animation
 
-		// Inject our fragment
-		ft.replace(R.id.debug_container, fragment);
-		// set type of animation
-
-		// Commit to the UI
-		ft.commit();
-
+			// Commit to the UI
+			ft.commit();
+		}
 		return rootView;
 	}
 
