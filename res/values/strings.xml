@@ -32,6 +32,10 @@
     <string name="search_title">Search</string>
     <string name="search_hint">Search for stuff</string>
     <string name="action_mapper">Mapper</string>
+    <string name="wireless">Wireless</string>
+    <string name="lan">LAN</string>
+    <string name="wan">WAN</string>
+    <string name="gpio">GPIO</string>
 
     <!-- Wlan -->
     <string name="wifimenu_sort_signal">Sort by signal</string>
@@ -44,5 +48,23 @@
     <string name="signalStrength1">Signal Strength 1</string>
     <string name="signalStrength2">Signal Strength 2</string>
     <string name="signalStrength3">Signal Strength 3</string>
+    
+    <!--  Fragment GPIO -->
+    <string name="power_led_green">Power LED Green</string>
+    <string name="wifi_led_red">Wifi LED Red</string>
+    <string name="wifi_led_green">Wifi LED Green</string>
+    <string name="usb1_led_red">USB1 LED Red</string>
+    <string name="usb1_led_green">USB1 LED Green</string>
+    <string name="usb2_led_red">USB2 LED Red</string>
+    <string name="usb2_led_green">USB2 LED Green</string>
+    <string name="usb3_led_red">USB3 LED Red</string>
+    <string name="usb3">USB3</string>
+    <string name="usb2">USB2</string>
+    <string name="usb1">USB1</string>
+    <string name="expansionBay1_led_green">Expansion Bay 1 LED Green</string>
+    <string name="expansionBay1_led_red">Expansion Bay 1 LED Red</string>
+    <string name="expansionBay2_led_green">Expansion Bay 2 LED Green</string>
+    <string name="expansionBay2_led_red">Expansion Bay 2 LED Red</string>
+    
 
 </resources>

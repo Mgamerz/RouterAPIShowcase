@@ -26,7 +26,7 @@
                     android:id="@+id/powerled_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Power LED Green"
+                    android:text="@string/power_led_green"
                     android:textAppearance="?android:attr/textAppearanceMedium" />
 
                 <Switch
@@ -50,7 +50,7 @@
                     android:id="@+id/wifiledr_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="WiFi LED Red"
+                    android:text="@string/wifi_led_red"
                     android:textAppearance="?android:attr/textAppearanceMedium" />
 
                 <Switch
@@ -70,7 +70,7 @@
                     android:id="@+id/wifiledb_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="WiFi LED Blue"
+                    android:text="@string/wifi_led_blue"
                     android:textAppearance="?android:attr/textAppearanceMedium" />
 
                 <Switch
