@@ -121,12 +121,22 @@ public class GPIOFragment extends Fragment implements OnRefreshListener,
 		toggle = (Switch) getView().findViewById(R.id.wifiledr_state);
 		toggle.setOnCheckedChangeListener(this);
 
+		// Green Wifi LED
+		toggle = (Switch) getView().findViewById(R.id.wifiledg_state);
+		toggle.setOnCheckedChangeListener(this);
+		
+		// Blue Wifi LED
+		toggle = (Switch) getView().findViewById(R.id.wifiledb_state);
+		toggle.setOnCheckedChangeListener(this);
+		
 		// Signal Strength 0
 		toggle = (Switch) getView().findViewById(R.id.ss0_state);
 		toggle.setOnCheckedChangeListener(this);
-
-		toggle = (Switch) getView().findViewById(R.id.wifiledb_state);
+		
+		// Signal Strength 1
+		toggle = (Switch) getView().findViewById(R.id.ss1_state);
 		toggle.setOnCheckedChangeListener(this);
+
 	}
 
 	@Override
@@ -179,14 +189,25 @@ public class GPIOFragment extends Fragment implements OnRefreshListener,
 							: false);
 
 					// Wifi Green
-					lswitch = (Switch) getView().findViewById(R.id.ss0_state);
-					lswitch.setChecked((gpio.getData().getLed_ss_0() == 1) ? true
-							: false);
-
+					lswitch = (Switch) getView().findViewById(
+							R.id.wifiledg_state);
+					lswitch.setChecked((gpio.getData().getLed_wifi() == 1) ? false
+							: true);
+					
 					// Wifi Blue
 					lswitch = (Switch) getView().findViewById(
 							R.id.wifiledb_state);
-					lswitch.setChecked((gpio.getData().getLed_wifi() == 1) ? true
+					lswitch.setChecked((gpio.getData().getLed_wifi_blue() == 1) ? true
+							: false);
+					
+					// Signal Strength 0
+					lswitch = (Switch) getView().findViewById(R.id.ss0_state);
+					lswitch.setChecked((gpio.getData().getLed_ss_0() == 1) ? true
+							: false);
+					
+					// Signal Strength 1
+					lswitch = (Switch) getView().findViewById(R.id.ss1_state);
+					lswitch.setChecked((gpio.getData().getLed_ss_1() == 1) ? true
 							: false);
 				} else {
 					Toast.makeText(getActivity(), gpio.getReason(),
@@ -247,11 +268,17 @@ public class GPIOFragment extends Fragment implements OnRefreshListener,
 			case R.id.wifiledr_state:
 				gpio.getData().setLed_wifi_red((isChecked) ? 1 : 0);
 				break;
-			case R.id.ss0_state:
-				gpio.getData().setLed_ss_0((isChecked) ? 0 : 1);
+			case R.id.wifiledg_state:
+				gpio.getData().setLed_wifi((isChecked) ? 0 : 1);
 				break;
 			case R.id.wifiledb_state:
 				gpio.getData().setLed_wifi_blue((isChecked) ? 1 : 0);
+				break;
+			case R.id.ss0_state:
+				gpio.getData().setLed_ss_0((isChecked) ? 0 : 1);
+				break;
+			case R.id.ss1_state:
+				gpio.getData().setLed_ss_1((isChecked) ? 0 : 1);
 				break;
 
 			default:
