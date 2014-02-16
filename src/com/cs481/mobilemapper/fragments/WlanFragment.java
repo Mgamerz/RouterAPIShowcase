@@ -9,6 +9,7 @@ import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
 import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.util.Log;
@@ -181,10 +182,10 @@ public class WlanFragment extends ListFragment implements OnRefreshListener {
 		com.cs481.mobilemapper.responses.status.wlan.GetRequest request = new com.cs481.mobilemapper.responses.status.wlan.GetRequest(
 				((CommandCenterActivity) getActivity()).getAuthInfo());
 		String lastRequestCacheKey = request.createCacheKey();
-
+		Resources resources = getResources();
 		if (dialog) {
 			progressDialog = new ProgressDialog(getActivity());
-			progressDialog.setMessage("Reading WLAN Configuration");
+			progressDialog.setMessage(resources.getString(R.string.wlan_reading));
 			progressDialog.show();
 			progressDialog.setCanceledOnTouchOutside(false);
 			progressDialog.setCancelable(false);
@@ -198,10 +199,11 @@ public class WlanFragment extends ListFragment implements OnRefreshListener {
 
 		@Override
 		public void onRequestFailure(SpiceException e) {
+			Resources resources = getResources();
 			// update your UI
 			progressDialog.dismiss();
 			Log.i(CommandCenterActivity.TAG, "Failed to read WLAN!");
-			Toast.makeText(getActivity(), "Failed to read WLAN configuration",
+			Toast.makeText(getActivity(), resources.getString(R.string.wlan_get_config_failure),
 					Toast.LENGTH_SHORT).show();
 			mPullToRefreshLayout.setRefreshComplete();
 		}
@@ -210,7 +212,6 @@ public class WlanFragment extends ListFragment implements OnRefreshListener {
 		public void onRequestSuccess(Wlan wlan) {
 			// update your UI
 			progressDialog.dismiss();
-			System.out.println("DEBUG POIN");
 			if (wlan.getSuccess()) {
 				Log.i(CommandCenterActivity.TAG, "WLAN request successful");
 				updateWlanList(wlan);
@@ -227,6 +228,7 @@ public class WlanFragment extends ListFragment implements OnRefreshListener {
 	}
 
 	public void updateWlanList(Wlan wlan) {
+		Resources resources = getResources();
 		Log.i(CommandCenterActivity.TAG, wlan.toString());
 		rows = new ArrayList<WlanListRow>();
 		ArrayList<WAP> waps = wlan.getData().getRadio().get(0).getSurvey(); // TODO:
@@ -238,7 +240,7 @@ public class WlanFragment extends ListFragment implements OnRefreshListener {
 			String subtitle = wap.getType() + " - " + wap.getMode();
 			String ssid = wap.getSsid();
 			if (ssid.equals(""))
-				ssid = "<Hidden>";
+				ssid = resources.getString(R.string.wlan_hidden_ssid);
 			rows.add(new WlanListRow(wap, ssid, subtitle));
 		}
 		adapter = new WlanAdapter(getActivity(), rows);

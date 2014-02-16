@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.util.Log;
@@ -12,13 +13,14 @@ import android.util.Log;
 import com.cs481.mobilemapper.AuthInfo;
 import com.cs481.mobilemapper.CommandCenterActivity;
 import com.cs481.mobilemapper.LoginActivity;
+import com.cs481.mobilemapper.R;
 import com.cs481.mobilemapper.responses.ecm.routers.Router;
 
 public class RouterConfirmDialogFragment extends DialogFragment {
 	Router router;
 	AuthInfo authInfo;
 	Context context;
-
+	
     /**
      * This constructor must be empty or the Fragment won't be able to start.
      */
@@ -34,13 +36,14 @@ public class RouterConfirmDialogFragment extends DialogFragment {
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
+    	Resources resources = getResources();
     	LoginActivity activity = (LoginActivity) getActivity();
     	//authInfo = activity.getAuthInfo();
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(activity);
         alertDialogBuilder.setTitle(router.getName());
-        alertDialogBuilder.setMessage("Are you sure you want to connect and manage "+router.getName()+"?");
+        alertDialogBuilder.setMessage(String.format(resources.getString(R.string.confirm_router_management), router.getName()));
         //null should be your on click listener
-        alertDialogBuilder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+        alertDialogBuilder.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
 			
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
@@ -55,7 +58,7 @@ public class RouterConfirmDialogFragment extends DialogFragment {
 			}
 		});
         
-        alertDialogBuilder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+        alertDialogBuilder.setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
 
             @Override
             public void onClick(DialogInterface dialog, int which) {

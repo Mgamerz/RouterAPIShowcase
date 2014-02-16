@@ -16,6 +16,8 @@
     <string name="remote_admin">Use Remote Admin</string>
     <string name="connect">Connect</string>
     <string name="switch_to_ecm">Switch to ECM Login</string>
+    <string name="locallogin_actionbar_title">Local Device Login</string>
+    
 
     <!-- ECM Login -->
     <string name="ecm_title">Enterprise Cloud Manager</string>
@@ -45,6 +47,9 @@
     <!-- Wlan -->
     <string name="wifimenu_sort_signal">Sort by signal</string>
     <string name="wifi_sort_alphabetically">Sort by name</string>
+    <string name="wlan_reading">Reading WLAN Configuration</string>
+    <string name="wlan_get_config_failure">Failed to read WLANconfiguration</string>
+    <string name="wlan_hidden_ssid">&lt;Hidden&gt;</string>
 
     <!-- LED Control -->
     <string name="gpio_title">LED Control</string>
@@ -64,6 +69,7 @@
     <string name="usb2_led_red">USB2 LED Red</string>
     <string name="usb2_led_green">USB2 LED Green</string>
     <string name="usb3_led_red">USB3 LED Red</string>
+    <string name="usb3_led_green">USB3 LED Green</string>
     <string name="usb3">USB3</string>
     <string name="usb2">USB2</string>
     <string name="usb1">USB1</string>
@@ -80,6 +86,9 @@
     
     <!-- PIN -->
     <string name="pin_actionbar_title">UNLOCK</string>
+    
+    <!-- Router Confirm Dialog -->
+    <string name="confirm_router_management">Are you sure you want to connect and manage %1$s?</string>
     
     <!-- Preferences Databases -->
         <string name="crypto_prefsdb">crypto</string>

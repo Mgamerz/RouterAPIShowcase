@@ -1,6 +1,7 @@
 package com.cs481.mobilemapper.fragments;
 
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -48,8 +49,9 @@ public class LocalLoginFragment extends Fragment {
 	@Override
 	public void onStart() {
 		super.onStart();
+		Resources resources = getResources();
 		SpiceActivity sa = (SpiceActivity) getActivity();
-		sa.setTitle("Local Device Login"); // TODO change to string resource
+		sa.setTitle(resources.getString(R.string.locallogin_actionbar_title)); // TODO change to string resource
 		EditText passw = (EditText) getView()
 				.findViewById(R.id.router_password);
 		final Button connect = (Button) getView().findViewById(
