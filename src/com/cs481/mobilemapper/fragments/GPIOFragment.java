@@ -65,7 +65,8 @@ public class GPIOFragment extends Fragment implements OnRefreshListener,
 
 		if (dialog) {
 			progressDialog = new ProgressDialog(getActivity());
-			progressDialog.setMessage(getResources().getString(R.string.gpio_reading));
+			progressDialog.setMessage(getResources().getString(
+					R.string.gpio_reading));
 			progressDialog.show();
 			progressDialog.setCanceledOnTouchOutside(false);
 			progressDialog.setCancelable(false);
@@ -124,19 +125,66 @@ public class GPIOFragment extends Fragment implements OnRefreshListener,
 		// Green Wifi LED
 		toggle = (Switch) getView().findViewById(R.id.wifiledg_state);
 		toggle.setOnCheckedChangeListener(this);
-		
+
 		// Blue Wifi LED
 		toggle = (Switch) getView().findViewById(R.id.wifiledb_state);
 		toggle.setOnCheckedChangeListener(this);
-		
+
 		// Signal Strength 0
 		toggle = (Switch) getView().findViewById(R.id.ss0_state);
 		toggle.setOnCheckedChangeListener(this);
-		
+
 		// Signal Strength 1
 		toggle = (Switch) getView().findViewById(R.id.ss1_state);
 		toggle.setOnCheckedChangeListener(this);
 
+		// Signal Strength 2
+		toggle = (Switch) getView().findViewById(R.id.ss2_state);
+		toggle.setOnCheckedChangeListener(this);
+
+		// Signal Strength 3
+		toggle = (Switch) getView().findViewById(R.id.ss3_state);
+		toggle.setOnCheckedChangeListener(this);
+
+		// Red USB 1 LED
+		toggle = (Switch) getView().findViewById(R.id.usb1ledr_state);
+		toggle.setOnCheckedChangeListener(this);
+
+		// Green USB 1 LED
+		toggle = (Switch) getView().findViewById(R.id.usb1ledg_state);
+		toggle.setOnCheckedChangeListener(this);
+
+		// Red USB 2 LED
+		toggle = (Switch) getView().findViewById(R.id.usb2ledr_state);
+		toggle.setOnCheckedChangeListener(this);
+
+		// Green USB 2 LED
+		toggle = (Switch) getView().findViewById(R.id.usb2ledg_state);
+		toggle.setOnCheckedChangeListener(this);
+		
+		// Red USB 3 LED
+		toggle = (Switch) getView().findViewById(R.id.usb3ledr_state);
+		toggle.setOnCheckedChangeListener(this);
+
+		// Green USB 3 LED
+		toggle = (Switch) getView().findViewById(R.id.usb3ledg_state);
+		toggle.setOnCheckedChangeListener(this);
+		
+		// Red Expansion Bay 1 LED
+		toggle = (Switch) getView().findViewById(R.id.expansionbay1ledr_state);
+		toggle.setOnCheckedChangeListener(this);
+		
+		// Green Expansion Bay 1 LED
+		toggle = (Switch) getView().findViewById(R.id.expansionbay1ledg_state);
+		toggle.setOnCheckedChangeListener(this);
+		
+		// Red Expansion Bay 2 LED
+		toggle = (Switch) getView().findViewById(R.id.expansionbay2ledr_state);
+		toggle.setOnCheckedChangeListener(this);
+		
+		// Green Expansion Bay 2 LED
+		toggle = (Switch) getView().findViewById(R.id.expansionbay2ledg_state);
+		toggle.setOnCheckedChangeListener(this);
 	}
 
 	@Override
@@ -161,8 +209,9 @@ public class GPIOFragment extends Fragment implements OnRefreshListener,
 			progressDialog.dismiss();
 			mPullToRefreshLayout.setRefreshComplete();
 			Log.i(CommandCenterActivity.TAG, "Failed to read GPIO!");
-			
-			Toast.makeText(getActivity(), getResources().getString(R.string.gpio_get_config_failure),
+
+			Toast.makeText(getActivity(),
+					getResources().getString(R.string.gpio_get_config_failure),
 					Toast.LENGTH_SHORT).show();
 			checking = false;
 		}
@@ -193,28 +242,96 @@ public class GPIOFragment extends Fragment implements OnRefreshListener,
 							R.id.wifiledg_state);
 					lswitch.setChecked((gpio.getData().getLed_wifi() == 1) ? false
 							: true);
-					
+
 					// Wifi Blue
 					lswitch = (Switch) getView().findViewById(
 							R.id.wifiledb_state);
 					lswitch.setChecked((gpio.getData().getLed_wifi_blue() == 1) ? true
 							: false);
-					
+
 					// Signal Strength 0
 					lswitch = (Switch) getView().findViewById(R.id.ss0_state);
-					lswitch.setChecked((gpio.getData().getLed_ss_0() == 1) ? true
-							: false);
-					
+					lswitch.setChecked((gpio.getData().getLed_ss_0() == 1) ? false
+							: true);
+
 					// Signal Strength 1
 					lswitch = (Switch) getView().findViewById(R.id.ss1_state);
-					lswitch.setChecked((gpio.getData().getLed_ss_1() == 1) ? true
-							: false);
+					lswitch.setChecked((gpio.getData().getLed_ss_1() == 1) ? false
+							: true);
+					
+					// Signal Strength 2
+					lswitch = (Switch) getView().findViewById(R.id.ss2_state);
+					lswitch.setChecked((gpio.getData().getLed_ss_2() == 1) ? false
+							: true);
+					
+					// Signal Strength 3
+					lswitch = (Switch) getView().findViewById(R.id.ss3_state);
+					lswitch.setChecked((gpio.getData().getLed_ss_3() == 1) ? false
+							: true);
+					
+					// USB 1 Red
+					lswitch = (Switch) getView().findViewById(R.id.usb1ledr_state);
+					lswitch.setChecked((gpio.getData().getLed_usb1_r() == 1) ? false
+							: true);
+					
+					// USB 1 Green
+					lswitch = (Switch) getView().findViewById(R.id.usb1ledg_state);
+					lswitch.setChecked((gpio.getData().getLed_usb1_g() == 1) ? false
+							: true);
+					
+					// USB 2 Red
+					lswitch = (Switch) getView().findViewById(R.id.usb2ledr_state);
+					lswitch.setChecked((gpio.getData().getLed_usb2_r() == 1) ? false
+							: true);
+					
+					// USB 2 Green
+					lswitch = (Switch) getView().findViewById(R.id.usb2ledg_state);
+					lswitch.setChecked((gpio.getData().getLed_usb2_g() == 1) ? false
+							: true);
+					
+					// USB 3 Red
+					lswitch = (Switch) getView().findViewById(R.id.usb3ledr_state);
+					lswitch.setChecked((gpio.getData().getLed_usb3_r() == 1) ? false
+							: true);
+					
+					// USB 3 Green
+					lswitch = (Switch) getView().findViewById(R.id.usb3ledg_state);
+					lswitch.setChecked((gpio.getData().getLed_usb3_g() == 1) ? false
+							: true);
+					
+					// USB 1 Red
+					lswitch = (Switch) getView().findViewById(R.id.usb1ledr_state);
+					lswitch.setChecked((gpio.getData().getLed_usb1_r() == 1) ? false
+							: true);
+					
+					// Expansion Bay 1 Red
+					lswitch = (Switch) getView().findViewById(R.id.expansionbay1ledr_state);
+					lswitch.setChecked((gpio.getData().getLed_ex1_r() == 1) ? false
+							: true);
+					
+					// Expansion Bay 1 Green
+					lswitch = (Switch) getView().findViewById(R.id.expansionbay1ledg_state);
+					lswitch.setChecked((gpio.getData().getLed_ex1_g() == 1) ? false
+							: true);
+					
+					// Expansion Bay 2 Red
+					lswitch = (Switch) getView().findViewById(R.id.expansionbay2ledr_state);
+					lswitch.setChecked((gpio.getData().getLed_ex2_r() == 1) ? false
+							: true);
+					
+					// Expansion Bay 2 Green
+					lswitch = (Switch) getView().findViewById(R.id.expansionbay2ledg_state);
+					lswitch.setChecked((gpio.getData().getLed_ex2_g() == 1) ? false
+							: true);
 				} else {
 					Toast.makeText(getActivity(), gpio.getReason(),
 							Toast.LENGTH_LONG).show();
 				}
 			} else {
-				Toast.makeText(getActivity(), getResources().getString(R.string.gpio_get_null_response),
+				Toast.makeText(
+						getActivity(),
+						getResources().getString(
+								R.string.gpio_get_null_response),
 						Toast.LENGTH_LONG).show();
 			}
 			mPullToRefreshLayout.setRefreshComplete();
@@ -247,10 +364,13 @@ public class GPIOFragment extends Fragment implements OnRefreshListener,
 				} else {
 					Toast.makeText(
 							getActivity(),
-								getResources().getString(R.string.gpio) + getResources().getString(R.string.server_exception) + gpio.getData().getException(),
+							getResources().getString(R.string.gpio)
+									+ getResources().getString(
+											R.string.server_exception)
+									+ gpio.getData().getException(),
 							Toast.LENGTH_LONG).show();
 				}
-				
+
 			} else {
 				Toast.makeText(getActivity(), gpio.getReason(),
 						Toast.LENGTH_LONG).show();
@@ -261,6 +381,7 @@ public class GPIOFragment extends Fragment implements OnRefreshListener,
 	@Override
 	public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 		if (gpio != null && checking == false) {
+			Log.i(CommandCenterActivity.TAG,"Check changed");
 			switch (buttonView.getId()) {
 			case R.id.powerled_state:
 				gpio.getData().setLed_power((isChecked) ? 1 : 0);
@@ -279,6 +400,42 @@ public class GPIOFragment extends Fragment implements OnRefreshListener,
 				break;
 			case R.id.ss1_state:
 				gpio.getData().setLed_ss_1((isChecked) ? 0 : 1);
+				break;
+			case R.id.ss2_state:
+				gpio.getData().setLed_ss_2((isChecked) ? 0 : 1);
+				break;
+			case R.id.ss3_state:
+				gpio.getData().setLed_ss_3((isChecked) ? 0 : 1);
+				break;
+			case R.id.usb1ledr_state:
+				gpio.getData().setLed_usb1_r((isChecked) ? 0 : 1);
+				break;
+			case R.id.usb1ledg_state:
+				gpio.getData().setLed_usb1_g((isChecked) ? 0 : 1);
+				break;
+			case R.id.usb2ledr_state:
+				gpio.getData().setLed_usb2_r((isChecked) ? 0 : 1);
+				break;
+			case R.id.usb2ledg_state:
+				gpio.getData().setLed_usb2_g((isChecked) ? 0 : 1);
+				break;
+			case R.id.usb3ledr_state:
+				gpio.getData().setLed_usb3_r((isChecked) ? 0 : 1);
+				break;
+			case R.id.usb3ledg_state:
+				gpio.getData().setLed_usb3_g((isChecked) ? 0 : 1);
+				break;
+			case R.id.expansionbay1ledr_state:
+				gpio.getData().setLed_ex1_r((isChecked) ? 0 : 1);
+				break;
+			case R.id.expansionbay1ledg_state:
+				gpio.getData().setLed_ex1_g((isChecked) ? 0 : 1);
+				break;
+			case R.id.expansionbay2ledr_state:
+				gpio.getData().setLed_ex2_r((isChecked) ? 0 : 1);
+				break;
+			case R.id.expansionbay2ledg_state:
+				gpio.getData().setLed_ex2_g((isChecked) ? 0 : 1);
 				break;
 
 			default:
