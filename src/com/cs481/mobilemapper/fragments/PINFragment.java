@@ -1,22 +1,9 @@
 package com.cs481.mobilemapper.fragments;
 
-import java.io.UnsupportedEncodingException;
-import java.security.InvalidAlgorithmParameterException;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
-import java.security.spec.InvalidParameterSpecException;
-import java.security.spec.KeySpec;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import javax.crypto.BadPaddingException;
-import javax.crypto.Cipher;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
-import javax.crypto.SecretKeyFactory;
-import javax.crypto.spec.PBEKeySpec;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -43,28 +30,32 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.cs481.mobilemapper.CommandCenterActivity;
+import com.cs481.mobilemapper.Cryptography;
 import com.cs481.mobilemapper.R;
 import com.cs481.mobilemapper.SpiceActivity;
 
 public class PINFragment extends Fragment implements OnClickListener {
-	String currentPin = ""; // pin that has been currently entered
+	String currentPin = "", verifyPin = ""; // pin that has been currently entered
 	int attemptsRemaining = 5; // TODO this should be set in SharedPreferences
-								// with a timestamp for a cooldown on attempts
+								// with a timestamp for a cooldown on attempts.
+								// Not sure how to do that.
 	boolean isTimerRunning = false;
-	boolean pinsetup;
-	
-	//Crypto variables
-	private int KEY_LENGTH = 256;
-	private int ITERATION_COUNT = 1000;
+	boolean pinsetup, verify = false; // verify stage - "Enter again to verify"
+
 	public final String PBKDF2_DERIVATION_ALGORITHM = "PBKDF2WithHmacSHA1";
 
 	@Override
 	public void onCreate(Bundle savedInstancedState) {
 		super.onCreate(savedInstancedState);
+		Bundle args = getArguments();
+		pinsetup = args.getBoolean("createpin");
+		
 		if (savedInstancedState != null) {
 			currentPin = savedInstancedState.getString("pin");
+			attemptsRemaining = savedInstancedState.getInt("attemptsRemaining");
 		}
 	}
 
@@ -283,20 +274,17 @@ public class PINFragment extends Fragment implements OnClickListener {
 		}
 
 		if (currentPin.length() == 4) {
-			String hash = createPIN();
-			testEncryptionDecryption(hash);
+			pinEntryComplete();
 			// Debugging - simulate a bad pin.
 			// wrongPIN();
 		}
 	}
 
-	private String createPIN() {
-		Resources resources = getResources();
+	private String createLocalUUID() {
 		SharedPreferences crypto = getActivity().getSharedPreferences(
-				resources.getString(R.string.crypto_prefsdb),
+				getResources().getString(R.string.crypto_prefsdb),
 				Context.MODE_PRIVATE);
 		String uuid = crypto.getString("uuid", null);
-
 		String device_uuid = Secure.getString(getActivity()
 				.getContentResolver(), Secure.ANDROID_ID);
 		uuid = uuid + device_uuid; // device specific. Might want to make
@@ -306,51 +294,18 @@ public class PINFragment extends Fragment implements OnClickListener {
 
 	private void testEncryptionDecryption(String hash) {
 		try {
-		SecretKey secret = generateKey(currentPin, hash.getBytes("UTF-8"));
-		byte[] encrypted = encryptMsg("LOGINPASS", secret);
-		Log.i(CommandCenterActivity.TAG, "Encrypted to: "+new String(encrypted, "UTF-8"));
-		String result = decryptMsg(encrypted, secret);
-		Log.i(CommandCenterActivity.TAG, "Decrypted back to: "+result);
-		} catch (Exception e){
-			//too many exceptions to catch.
+			SecretKey secret = Cryptography.generateKey(currentPin,
+					hash.getBytes("UTF-8"));
+			byte[] encrypted = Cryptography.encryptMsg("LOGINPASS", secret);
+			Log.i(CommandCenterActivity.TAG, "Encrypted to: "
+					+ new String(encrypted, "UTF-8"));
+			String result = Cryptography.decryptMsg(encrypted, secret);
+			Log.i(CommandCenterActivity.TAG, "Decrypted back to: " + result);
+		} catch (Exception e) {
+			// too many exceptions to catch.
 			e.printStackTrace();
 		}
 	}
-
-	public static SecretKey generateKey(String code, byte[] salt) throws NoSuchAlgorithmException, InvalidKeySpecException {
-	    // Number of PBKDF2 hardening rounds to use. Larger values increase
-	    // computation time. You should select a value that causes computation
-	    // to take >100ms.
-	    final int iterations = 1000; 
-
-	    // Generate a 256-bit key
-	    final int outputKeyLength = 256;
-
-	    SecretKeyFactory secretKeyFactory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
-	    KeySpec keySpec = new PBEKeySpec(code.toCharArray(), salt, iterations, outputKeyLength);
-	    SecretKey secretKey = secretKeyFactory.generateSecret(keySpec);
-	    return secretKey;
-	}
-
-	public static byte[] encryptMsg(String message, SecretKey secret) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, InvalidParameterSpecException, IllegalBlockSizeException, BadPaddingException, UnsupportedEncodingException {
-	/* Encrypt the message. */
-	    Cipher cipher = null;
-	    cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
-	    cipher.init(Cipher.ENCRYPT_MODE, secret);
-	    byte[] cipherText = cipher.doFinal(message.getBytes("UTF-8"));
-	    return cipherText;
-	}
-
-	public static String decryptMsg(byte[] cipherText, SecretKey secret) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidParameterSpecException, InvalidAlgorithmParameterException, InvalidKeyException, BadPaddingException, IllegalBlockSizeException, UnsupportedEncodingException {
-
-	    /* Decrypt the message, given derived encContentValues and initialization vector. */
-	    Cipher cipher = null;
-	    cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
-	   cipher.init(Cipher.DECRYPT_MODE, secret);
-	    String decryptString = new String(cipher.doFinal(cipherText), "UTF-8");
-	    return decryptString;
-	}
-
 
 	/**
 	 * Unlocks and locks all keys on the entry pad.
@@ -387,6 +342,76 @@ public class PINFragment extends Fragment implements OnClickListener {
 	}
 
 	/**
+	 * This method checks if the entered PIN will be able to unlock (hopefully)
+	 * data encrypted with it by attempting to
+	 * 
+	 * @return
+	 */
+	private boolean testUnlockPin() {
+		String uuid = createLocalUUID(); // create a local-device only version
+											// so the app can't move to
+											// different devices.
+		SharedPreferences crypto = getActivity().getSharedPreferences(
+				getResources().getString(R.string.crypto_prefsdb),
+				Context.MODE_PRIVATE);
+		String verify = crypto.getString("validator", ""); // this should turn
+															// into the uuid
+															// stored in the
+															// prefs.
+		try {
+			SecretKey secret = Cryptography.generateKey(currentPin,
+					uuid.getBytes("UTF-8"));
+			// byte[] encrypted = Cryptography.encryptMsg("LOGINPASS", secret);
+			// Log.i(CommandCenterActivity.TAG, "Encrypted to: "+new
+			// String(encrypted, "UTF-8"));
+			String result = Cryptography.decryptMsg(verify.getBytes("UTF-8"),
+					secret);
+			Log.i(CommandCenterActivity.TAG, "Decrypted back to: " + result);
+			if (result.equals(crypto.getString("uuid", "FAILURE"))) {
+				return true;
+			}
+		} catch (Exception e) {
+			// too many exceptions to catch.
+			e.printStackTrace();
+		}
+		return false;
+	}
+
+	/**
+	 * Saves a verification object to the SharedPreferences that allow us to
+	 * validate a PIN. It does not store the PIN on the device.
+	 */
+	private void savePIN() {
+		SharedPreferences crypto = getActivity().getSharedPreferences(
+				getResources().getString(R.string.crypto_prefsdb),
+				Context.MODE_PRIVATE);
+		String uuid = crypto.getString("uuid", null);
+		if (uuid != null) {
+
+			try {
+				SecretKey secret = Cryptography.generateKey(currentPin,
+						uuid.getBytes("UTF-8"));
+				byte[] encrypted = Cryptography.encryptMsg(uuid, secret);
+				Log.i(CommandCenterActivity.TAG, "Encrypted to: "
+						+ new String(encrypted, "UTF-8"));
+				SharedPreferences.Editor editor = crypto.edit();
+				editor.putString("validator", new String(encrypted, "UTF-8"));
+				// Commit the edits!
+				editor.commit();
+			} catch (Exception e) {
+				// too many exceptions to catch.
+				e.printStackTrace();
+			}
+
+		} else {
+			Toast.makeText(
+					getActivity(),
+					"DEBUG: No UUID - cannot create a PIN verification object.",
+					Toast.LENGTH_LONG).show();
+		}
+	}
+
+	/**
 	 * Starts a new thread that will callback to end the shaking animation when
 	 * a PIN is incorrectly entered.
 	 */
@@ -417,5 +442,38 @@ public class PINFragment extends Fragment implements OnClickListener {
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
 		outState.putString("pin", currentPin);
+		outState.putInt("attemptsRemaining", attemptsRemaining);
+	}
+
+	/**
+	 * This method is called if a PIN has been entered
+	 */
+	public void pinEntryComplete() {
+		if (pinsetup) {
+			if (verify != true) {
+				// PIN is being created
+				TextView instructions = (TextView) getView().findViewById(
+						R.id.enterpin_text);
+				instructions.setText("Re-enter PIN to verify");
+				verifyPin = currentPin; //compare against
+				currentPin = "";
+				verify = true;
+				updateProgress(currentPin);
+			} else {
+				//This is the verify stage
+				if (currentPin.equals(verifyPin)){
+					savePIN();
+					Toast.makeText(getActivity(), "PIN verification object saved to SharedPrefs",
+							Toast.LENGTH_LONG).show();
+					getActivity().finish();
+				}
+			}
+		} else {
+			// PIN is being validated
+			if (testUnlockPin()) {
+				Toast.makeText(getActivity(), "PIN unlocked successfully",
+						Toast.LENGTH_LONG).show();
+			}
+		}
 	}
 }
