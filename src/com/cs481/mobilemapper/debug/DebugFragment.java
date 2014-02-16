@@ -3,10 +3,12 @@ package com.cs481.mobilemapper.debug;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.cs481.mobilemapper.CommandCenterActivity;
 import com.cs481.mobilemapper.R;
 import com.cs481.mobilemapper.fragments.PINFragment;
 
@@ -23,8 +25,13 @@ public class DebugFragment extends Fragment {
 			Bundle savedInstanceState) {
 		View rootView = inflater.inflate(R.layout.fragment_debug, container,
 				false);
+		
+		DebugActivity da = (DebugActivity) getActivity();
+		boolean create = da.create_new;
+		Log.i(CommandCenterActivity.TAG, "DF CR: "+create);
+		
 		if (savedInstanceState == null) {
-			Fragment fragment = PINFragment.newInstance(true); //used to pass arguments to a fragment
+			Fragment fragment = PINFragment.newInstance(create); //used to pass arguments to a fragment
 			FragmentTransaction ft = getChildFragmentManager()
 					.beginTransaction();
 

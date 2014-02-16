@@ -6,6 +6,7 @@ import java.security.SecureRandom;
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 
+import roboguice.util.temp.Ln;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
@@ -26,34 +27,39 @@ public class LoginActivity extends SpiceActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		Ln.getConfig().setLoggingLevel(Log.ERROR);
+
 		setContentView(R.layout.activity_login);
 
 		// If this is the first time the app has run, there will be no salt key
 		// in the shared prefs.
-		// Look it up first. If it doesn't exist, we can make one. This is not the pure salt key, as ANDROID_ID is added at runtime.
-		// This prevents moving the data to another device and having the encryption/decryption still work.
-		
+		// Look it up first. If it doesn't exist, we can make one. This is not
+		// the pure salt key, as ANDROID_ID is added at runtime.
+		// This prevents moving the data to another device and having the
+		// encryption/decryption still work.
+
 		// Reading
 		Resources resources = getResources();
 		SharedPreferences crypto = getSharedPreferences(
 				resources.getString(R.string.crypto_prefsdb), MODE_PRIVATE);
 		String uuid = crypto.getString("uuid", null);
 		if (uuid == null) {
-		//writing
+			// writing
 			SecureRandom secureRandom = new SecureRandom();
 			// Do *not* seed secureRandom! Automatically seeded from system.
 			try {
-			KeyGenerator keyGenerator = KeyGenerator.getInstance("AES");
-			keyGenerator.init(128, secureRandom);
-			SecretKey key = keyGenerator.generateKey();
+				KeyGenerator keyGenerator = KeyGenerator.getInstance("AES");
+				keyGenerator.init(256, secureRandom);
+				SecretKey key = keyGenerator.generateKey();
 
-			SharedPreferences.Editor editor = crypto.edit();
-			editor.putString("uuid",
-					Base64.encodeToString(key.getEncoded(), Base64.DEFAULT));
-			// Commit the edits!
-			editor.commit();
-			} catch (NoSuchAlgorithmException e){
-				Log.e(CommandCenterActivity.TAG, "This devices does not support AES (that's weird!)");
+				SharedPreferences.Editor editor = crypto.edit();
+				editor.putString("uuid",
+						Base64.encodeToString(key.getEncoded(), Base64.DEFAULT));
+				// Commit the edits!
+				editor.commit();
+			} catch (NoSuchAlgorithmException e) {
+				Log.e(CommandCenterActivity.TAG,
+						"This devices does not support AES (that's weird!)");
 			}
 		}
 
@@ -79,10 +85,18 @@ public class LoginActivity extends SpiceActivity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 
-		case R.id.fr_debug:
+		case R.id.fr_debug: {
 			Intent intent = new Intent(this, DebugActivity.class);
+			intent.putExtra("create_new", false);
 			startActivity(intent);
 			return true;
+		}
+		case R.id.fr_debug_new: {
+			Intent intent = new Intent(this, DebugActivity.class);
+			intent.putExtra("create_new", true);
+			startActivity(intent);
+			return true;
+		}
 		default:
 			return super.onOptionsItemSelected(item);
 		}

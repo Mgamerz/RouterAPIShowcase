@@ -1,8 +1,11 @@
 package com.cs481.mobilemapper.debug;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.cs481.mobilemapper.AuthInfo;
+import com.cs481.mobilemapper.CommandCenterActivity;
 import com.cs481.mobilemapper.R;
 import com.cs481.mobilemapper.SpiceActivity;
 import com.cs481.mobilemapper.responses.ecm.routers.Router;
@@ -11,8 +14,8 @@ import com.cs481.mobilemapper.responses.ecm.routers.Routers;
 public class DebugActivity extends SpiceActivity {
 	private Routers routers; //used if ECM login is called
 	private Router router;
-	private String password, ip;
 	private AuthInfo authInfo;
+	public boolean create_new = false;
 
 	public AuthInfo getAuthInfo() {
 		return authInfo;
@@ -25,8 +28,10 @@ public class DebugActivity extends SpiceActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		Intent intent = getIntent();
+		create_new = intent.getBooleanExtra("create_new", true);
 		setContentView(R.layout.activity_debug);
-
+		Log.i(CommandCenterActivity.TAG, "Create new: "+create_new);
 	}
 
 	@Override

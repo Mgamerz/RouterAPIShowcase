@@ -1,8 +1,17 @@
 package com.cs481.mobilemapper.fragments;
 
+import java.io.UnsupportedEncodingException;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.InvalidParameterSpecException;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 
 import android.content.Context;
@@ -52,7 +61,7 @@ public class PINFragment extends Fragment implements OnClickListener {
 		super.onCreate(savedInstancedState);
 		Bundle args = getArguments();
 		pinsetup = args.getBoolean("createpin");
-		
+		Log.i(CommandCenterActivity.TAG, "PS: "+pinsetup);
 		if (savedInstancedState != null) {
 			currentPin = savedInstancedState.getString("pin");
 			attemptsRemaining = savedInstancedState.getInt("attemptsRemaining");
@@ -74,6 +83,7 @@ public class PINFragment extends Fragment implements OnClickListener {
 		PINFragment pinFragment = new PINFragment();
 
 		Bundle args = new Bundle();
+		Log.i(CommandCenterActivity.TAG, "CP: "+createPIN);
 		args.putBoolean("createpin", createPIN);
 		pinFragment.setArguments(args);
 		return pinFragment;
@@ -285,6 +295,8 @@ public class PINFragment extends Fragment implements OnClickListener {
 				getResources().getString(R.string.crypto_prefsdb),
 				Context.MODE_PRIVATE);
 		String uuid = crypto.getString("uuid", null);
+		
+		
 		String device_uuid = Secure.getString(getActivity()
 				.getContentResolver(), Secure.ANDROID_ID);
 		uuid = uuid + device_uuid; // device specific. Might want to make
@@ -358,20 +370,49 @@ public class PINFragment extends Fragment implements OnClickListener {
 															// into the uuid
 															// stored in the
 															// prefs.
+		Log.i(CommandCenterActivity.TAG, "Reading stored validation token: "+verify);
 		try {
+
+			//SecretKey secret = Cryptography.generateKey(currentPin,
+			//		uuid.getBytes("UTF-8"));
+			//byte[] encrypted = Cryptography.encryptMsg(uuid, secret);
+			
+			Log.w(CommandCenterActivity.TAG, "Unlocking: "+currentPin+" with salt "+uuid);
 			SecretKey secret = Cryptography.generateKey(currentPin,
 					uuid.getBytes("UTF-8"));
-			// byte[] encrypted = Cryptography.encryptMsg("LOGINPASS", secret);
-			// Log.i(CommandCenterActivity.TAG, "Encrypted to: "+new
-			// String(encrypted, "UTF-8"));
+			
 			String result = Cryptography.decryptMsg(verify.getBytes("UTF-8"),
 					secret);
 			Log.i(CommandCenterActivity.TAG, "Decrypted back to: " + result);
 			if (result.equals(crypto.getString("uuid", "FAILURE"))) {
 				return true;
 			}
-		} catch (Exception e) {
-			// too many exceptions to catch.
+		} catch (NoSuchAlgorithmException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InvalidKeySpecException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InvalidKeyException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (NoSuchPaddingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InvalidParameterSpecException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InvalidAlgorithmParameterException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (BadPaddingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalBlockSizeException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return false;
@@ -385,12 +426,14 @@ public class PINFragment extends Fragment implements OnClickListener {
 		SharedPreferences crypto = getActivity().getSharedPreferences(
 				getResources().getString(R.string.crypto_prefsdb),
 				Context.MODE_PRIVATE);
-		String uuid = crypto.getString("uuid", null);
+		String uuid = createLocalUUID();
 		if (uuid != null) {
 
 			try {
 				SecretKey secret = Cryptography.generateKey(currentPin,
 						uuid.getBytes("UTF-8"));
+				Log.w(CommandCenterActivity.TAG, "Unlocking: "+currentPin+" with salt "+uuid);
+
 				byte[] encrypted = Cryptography.encryptMsg(uuid, secret);
 				Log.i(CommandCenterActivity.TAG, "Encrypted to: "
 						+ new String(encrypted, "UTF-8"));
@@ -466,6 +509,12 @@ public class PINFragment extends Fragment implements OnClickListener {
 					Toast.makeText(getActivity(), "PIN verification object saved to SharedPrefs",
 							Toast.LENGTH_LONG).show();
 					getActivity().finish();
+				} else {
+					wrongPIN();
+					TextView instructions = (TextView) getView().findViewById(
+							R.id.enterpin_text);
+					instructions.setText("PIN's did not match");
+					verify = false;
 				}
 			}
 		} else {
@@ -473,6 +522,8 @@ public class PINFragment extends Fragment implements OnClickListener {
 			if (testUnlockPin()) {
 				Toast.makeText(getActivity(), "PIN unlocked successfully",
 						Toast.LENGTH_LONG).show();
+			} else {
+				wrongPIN();
 			}
 		}
 	}
