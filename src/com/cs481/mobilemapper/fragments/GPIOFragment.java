@@ -42,7 +42,6 @@ public class GPIOFragment extends Fragment implements OnRefreshListener,
 										// stuff when they are updated.
 	ProgressDialog progressDialog;
 	private SpiceManager spiceManager;
-	Resources resources = getResources();
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -66,7 +65,7 @@ public class GPIOFragment extends Fragment implements OnRefreshListener,
 
 		if (dialog) {
 			progressDialog = new ProgressDialog(getActivity());
-			progressDialog.setMessage(resources.getString(R.string.gpio_reading));
+			progressDialog.setMessage(getResources().getString(R.string.gpio_reading));
 			progressDialog.show();
 			progressDialog.setCanceledOnTouchOutside(false);
 			progressDialog.setCancelable(false);
@@ -152,7 +151,8 @@ public class GPIOFragment extends Fragment implements OnRefreshListener,
 			progressDialog.dismiss();
 			mPullToRefreshLayout.setRefreshComplete();
 			Log.i(CommandCenterActivity.TAG, "Failed to read GPIO!");
-			Toast.makeText(getActivity(), resources.getString(R.string.gpio_get_config_failure),
+			
+			Toast.makeText(getActivity(), getResources().getString(R.string.gpio_get_config_failure),
 					Toast.LENGTH_SHORT).show();
 			checking = false;
 		}
@@ -193,7 +193,7 @@ public class GPIOFragment extends Fragment implements OnRefreshListener,
 							Toast.LENGTH_LONG).show();
 				}
 			} else {
-				Toast.makeText(getActivity(), resources.getString(R.string.gpio_get_null_response),
+				Toast.makeText(getActivity(), getResources().getString(R.string.gpio_get_null_response),
 						Toast.LENGTH_LONG).show();
 			}
 			mPullToRefreshLayout.setRefreshComplete();
@@ -226,7 +226,7 @@ public class GPIOFragment extends Fragment implements OnRefreshListener,
 				} else {
 					Toast.makeText(
 							getActivity(),
-								resources.getString(R.string.gpio) + resources.getString(R.string.server_exception) + gpio.getData().getException(),
+								getResources().getString(R.string.gpio) + getResources().getString(R.string.server_exception) + gpio.getData().getException(),
 							Toast.LENGTH_LONG).show();
 				}
 				
