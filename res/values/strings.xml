@@ -8,6 +8,22 @@
     <string name="debug_title">CC Debugging</string>
     <string name="server_exception">Server returned exception</string>
 
+    <!-- Login Activity -->
+    <!-- Debugging strings -->
+    <string-array name="profiles_array">
+        <item>Band1</item>
+        <item>Band2</item>
+        <item>Corporate</item>
+        <item>Herp</item>
+        <item>Derp</item>
+        <item>Flerp</item>
+        <item>Citadel</item>
+        <item>Turian</item>
+    </string-array>
+        <string name="drawer_open">Drawer Open</string>
+        <string name="drawer_closed">Drawer Closed</string>
+        
+
     <!-- Local Login -->
     <string name="login_title">Router Login</string>
     <string name="routerip_hint">Router IP</string>
@@ -17,7 +33,6 @@
     <string name="connect">Connect</string>
     <string name="switch_to_ecm">Switch to ECM Login</string>
     <string name="locallogin_actionbar_title">Local Device Login</string>
-    
 
     <!-- ECM Login -->
     <string name="ecm_title">Enterprise Cloud Manager</string>
@@ -82,17 +97,16 @@
     <string name="gpio_get_null_response">GPIO response was null.</string>
 
     <!-- Router save profile dialog -->
-     <string name="save_profile">"Do you want to save this connection as a profile?"</string>
-    
+    <string name="save_profile">"Do you want to save this connection as a profile?"</string>
+
     <!-- PIN -->
     <string name="pin_actionbar_title">UNLOCK</string>
     <string name="pin_verify_fail">Pin did not match</string>
-    
+
     <!-- Router Confirm Dialog -->
     <string name="confirm_router_management">Are you sure you want to connect and manage %1$s?</string>
-    
+
     <!-- Preferences Databases -->
-        <string name="crypto_prefsdb">crypto</string>
-    
+    <string name="crypto_prefsdb">crypto</string>
 
 </resources>

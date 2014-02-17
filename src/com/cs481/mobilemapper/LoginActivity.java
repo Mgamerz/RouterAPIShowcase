@@ -9,12 +9,20 @@ import javax.crypto.SecretKey;
 import roboguice.util.temp.Ln;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.widget.DrawerLayout;
 import android.util.Base64;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
 import com.cs481.mobilemapper.debug.DebugActivity;
 import com.cs481.mobilemapper.fragments.LocalLoginFragment;
@@ -23,6 +31,12 @@ import com.cs481.mobilemapper.responses.ecm.routers.Routers;
 public class LoginActivity extends SpiceActivity {
 	Routers routers; // used if ECM login is called
 	private AuthInfo authInfo;
+	private String[] mPlanetTitles;
+	private DrawerLayout mDrawerLayout;
+	private ListView mDrawerList;
+	private CharSequence mDrawerTitle;
+	private CharSequence mTitle;
+	private ActionBarDrawerToggle mDrawerToggle;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -30,7 +44,6 @@ public class LoginActivity extends SpiceActivity {
 		Ln.getConfig().setLoggingLevel(Log.ERROR);
 
 		setContentView(R.layout.activity_login);
-
 		// If this is the first time the app has run, there will be no salt key
 		// in the shared prefs.
 		// Look it up first. If it doesn't exist, we can make one. This is not
@@ -63,6 +76,16 @@ public class LoginActivity extends SpiceActivity {
 			}
 		}
 
+		mPlanetTitles = getResources().getStringArray(R.array.profiles_array);
+		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+		mDrawerList = (ListView) findViewById(R.id.left_drawer);
+
+		// Set the adapter for the list view
+		mDrawerList.setAdapter(new ArrayAdapter<String>(this,
+				R.layout.drawer_profile, mPlanetTitles));
+		// Set the list's click listener
+		mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
+
 		// Save layout on rotation
 		if (savedInstanceState == null) {
 			LocalLoginFragment frFragment = new LocalLoginFragment();
@@ -80,11 +103,45 @@ public class LoginActivity extends SpiceActivity {
 			transaction.commit();
 		}
 
+		mTitle = mDrawerTitle = getTitle();
+		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+		mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
+				R.drawable.ic_drawer, R.string.drawer_open,
+				R.string.drawer_closed) {
+
+			/** Called when a drawer has settled in a completely closed state. */
+			public void onDrawerClosed(View view) {
+				super.onDrawerClosed(view);
+				getActionBar().setTitle(mTitle);
+				invalidateOptionsMenu(); // creates call to
+											// onPrepareOptionsMenu()
+			}
+
+			/** Called when a drawer has settled in a completely open state. */
+			public void onDrawerOpened(View drawerView) {
+				super.onDrawerOpened(drawerView);
+				getActionBar().setTitle(mDrawerTitle);
+				invalidateOptionsMenu(); // creates call to
+											// onPrepareOptionsMenu()
+			}
+		};
+
+		// Set the drawer toggle as the DrawerListener
+		mDrawerLayout.setDrawerListener(mDrawerToggle);
+		// Set the drawer toggle as the DrawerListener
+		mDrawerLayout.setDrawerListener(mDrawerToggle);
+
+		getActionBar().setDisplayHomeAsUpEnabled(true);
+		getActionBar().setHomeButtonEnabled(true);
 	}
 
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-
+		case android.R.id.home:
+			if (mDrawerToggle.onOptionsItemSelected(item)) {
+				return true;
+			}
+			return false;
 		case R.id.fr_debug: {
 			Intent intent = new Intent(this, DebugActivity.class);
 			intent.putExtra("create_new", false);
@@ -119,4 +176,72 @@ public class LoginActivity extends SpiceActivity {
 	public AuthInfo getAuthInfo() {
 		return authInfo;
 	}
+
+	private class DrawerItemClickListener implements
+			ListView.OnItemClickListener {
+		@Override
+		public void onItemClick(AdapterView parent, View view, int position,
+				long id) {
+			selectItem(position);
+		}
+	}
+
+	/** Swaps fragments in the main content view */
+	private void selectItem(int position) {
+		// Create a new fragment and specify the planet to show based on
+		// position
+		/*
+		 * Fragment fragment = new PlanetFragment(); Bundle args = new Bundle();
+		 * args.putInt(PlanetFragment.ARG_PLANET_NUMBER, position);
+		 * fragment.setArguments(args);
+		 * 
+		 * // Insert the fragment by replacing any existing fragment
+		 * FragmentManager fragmentManager = getFragmentManager();
+		 * fragmentManager.beginTransaction() .replace(R.id.content_frame,
+		 * fragment).commit();
+		 */
+		// Highlight the selected item, update the title, and close the drawer
+		mDrawerList.setItemChecked(position, true);
+		setTitle(mPlanetTitles[position]);
+		mDrawerLayout.closeDrawer(mDrawerList);
+	}
+
+	@Override
+	public void setTitle(CharSequence title) {
+		mTitle = title;
+		getActionBar().setTitle(mTitle);
+	}    
+	
+	@Override
+	protected void onPostCreate(Bundle savedInstanceState) {
+	    super.onPostCreate(savedInstanceState);
+	    // Sync the toggle state after onRestoreInstanceState has occurred.
+	    mDrawerToggle.syncState();
+	}
+
+	@Override
+	public void onConfigurationChanged(Configuration newConfig) {
+	    super.onConfigurationChanged(newConfig);
+	    mDrawerToggle.onConfigurationChanged(newConfig);
+	}
+	
+	/* Called whenever we call invalidateOptionsMenu() */
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        // If the nav drawer is open, hide action items related to the content view
+        boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerList);
+        MenuItem menuitem = menu.findItem(R.id.menu_switchtolocal);
+        if (menuitem != null){
+        	menuitem.setVisible(!drawerOpen);
+        }
+        
+        menuitem = menu.findItem(R.id.menu_switchtoecm).setVisible(!drawerOpen);
+        if (menuitem != null){
+        	menuitem.setVisible(!drawerOpen);
+        }
+        
+        return super.onPrepareOptionsMenu(menu);
+    }
+	
+	
 }
