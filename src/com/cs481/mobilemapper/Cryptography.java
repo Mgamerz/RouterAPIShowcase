@@ -72,5 +72,5 @@ public class Cryptography {
 		Log.i(CommandCenterActivity.TAG, "Decrypted to "+decryptString);
 
 		return decryptString;
-	}
+	}	
 }

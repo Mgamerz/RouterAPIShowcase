@@ -1,11 +1,13 @@
 package com.cs481.mobilemapper.fragments;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.InvalidParameterSpecException;
+import java.util.Arrays;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -13,6 +15,8 @@ import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
+
+import org.springframework.util.support.Base64;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -61,7 +65,6 @@ public class PINFragment extends Fragment implements OnClickListener {
 		super.onCreate(savedInstancedState);
 		Bundle args = getArguments();
 		pinsetup = args.getBoolean("createpin");
-		Log.i(CommandCenterActivity.TAG, "PS: "+pinsetup);
 		if (savedInstancedState != null) {
 			currentPin = savedInstancedState.getString("pin");
 			attemptsRemaining = savedInstancedState.getInt("attemptsRemaining");
@@ -296,7 +299,6 @@ public class PINFragment extends Fragment implements OnClickListener {
 				Context.MODE_PRIVATE);
 		String uuid = crypto.getString("uuid", null);
 		
-		
 		String device_uuid = Secure.getString(getActivity()
 				.getContentResolver(), Secure.ANDROID_ID);
 		uuid = uuid + device_uuid; // device specific. Might want to make
@@ -306,9 +308,10 @@ public class PINFragment extends Fragment implements OnClickListener {
 
 	private void testEncryptionDecryption(String hash) {
 		try {
+			String uuid = createLocalUUID();
 			SecretKey secret = Cryptography.generateKey(currentPin,
-					hash.getBytes("UTF-8"));
-			byte[] encrypted = Cryptography.encryptMsg("LOGINPASS", secret);
+					uuid.getBytes("UTF-8"));
+			byte[] encrypted = Cryptography.encryptMsg(uuid, secret);
 			Log.i(CommandCenterActivity.TAG, "Encrypted to: "
 					+ new String(encrypted, "UTF-8"));
 			String result = Cryptography.decryptMsg(encrypted, secret);
@@ -366,7 +369,7 @@ public class PINFragment extends Fragment implements OnClickListener {
 		SharedPreferences crypto = getActivity().getSharedPreferences(
 				getResources().getString(R.string.crypto_prefsdb),
 				Context.MODE_PRIVATE);
-		String verify = crypto.getString("validator", ""); // this should turn
+		String verify = crypto.getString("validator", "FAILURE"); // this should turn
 															// into the uuid
 															// stored in the
 															// prefs.
@@ -381,10 +384,11 @@ public class PINFragment extends Fragment implements OnClickListener {
 			SecretKey secret = Cryptography.generateKey(currentPin,
 					uuid.getBytes("UTF-8"));
 			
-			String result = Cryptography.decryptMsg(verify.getBytes("UTF-8"),
+			String result = Cryptography.decryptMsg(Base64.decode(verify),
 					secret);
 			Log.i(CommandCenterActivity.TAG, "Decrypted back to: " + result);
-			if (result.equals(crypto.getString("uuid", "FAILURE"))) {
+			//Log.i(CommandCenterActivity.TAG, "Compare against: "+crypto.getString("uuid", "FAILURE"));
+			if (result.equals(createLocalUUID())) {
 				return true;
 			}
 		} catch (NoSuchAlgorithmException e) {
@@ -414,6 +418,9 @@ public class PINFragment extends Fragment implements OnClickListener {
 		} catch (UnsupportedEncodingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		return false;
 	}
@@ -428,24 +435,39 @@ public class PINFragment extends Fragment implements OnClickListener {
 				Context.MODE_PRIVATE);
 		String uuid = createLocalUUID();
 		if (uuid != null) {
-
 			try {
 				SecretKey secret = Cryptography.generateKey(currentPin,
 						uuid.getBytes("UTF-8"));
 				Log.w(CommandCenterActivity.TAG, "Unlocking: "+currentPin+" with salt "+uuid);
 
 				byte[] encrypted = Cryptography.encryptMsg(uuid, secret);
-				Log.i(CommandCenterActivity.TAG, "Encrypted to: "
-						+ new String(encrypted, "UTF-8"));
+				//Log.i(CommandCenterActivity.TAG, "Encrypted to: "
+				//		+ new String(encrypted, "UTF-8"));
 				SharedPreferences.Editor editor = crypto.edit();
-				editor.putString("validator", new String(encrypted, "UTF-8"));
+				String putdata = Base64.encodeBytes(encrypted);
+				Log.i(CommandCenterActivity.TAG, "B64-E: "+putdata);
+				editor.putString("validator", putdata);
 				// Commit the edits!
 				editor.commit();
+				
+				//Test decrypting the validator object
+				String validation = crypto.getString("validator", "FAILURE");
+				Log.i(CommandCenterActivity.TAG, "B64-G: "+validation);
+				
+				//Log.i(CommandCenterActivity.TAG, "Testing validator: "+validation);
+				
+				//SecretKey decryptSecret = Cryptography.generateKey(currentPin,
+				//		uuid.getBytes("UTF-8"));
+				//Log.i(CommandCenterActivity.TAG, "Encrypted byte arrays are equal: "+Arrays.equals(validation.getBytes("UTF-8"), encrypted));
+
+				String result = Cryptography.decryptMsg(Base64.decode(validation), secret);
+				
+				Log.i(CommandCenterActivity.TAG, "Decrypted to: "+result);
+				
 			} catch (Exception e) {
 				// too many exceptions to catch.
 				e.printStackTrace();
 			}
-
 		} else {
 			Toast.makeText(
 					getActivity(),
@@ -492,6 +514,9 @@ public class PINFragment extends Fragment implements OnClickListener {
 	 * This method is called if a PIN has been entered
 	 */
 	public void pinEntryComplete() {
+		//testEncryptionDecryption(null);
+		//wrongPIN();
+		
 		if (pinsetup) {
 			if (verify != true) {
 				// PIN is being created
@@ -513,7 +538,8 @@ public class PINFragment extends Fragment implements OnClickListener {
 					wrongPIN();
 					TextView instructions = (TextView) getView().findViewById(
 							R.id.enterpin_text);
-					instructions.setText("PIN's did not match");
+							
+					instructions.setText(getResources().getString(R.string.pin_verify_fail));
 					verify = false;
 				}
 			}
@@ -525,6 +551,6 @@ public class PINFragment extends Fragment implements OnClickListener {
 			} else {
 				wrongPIN();
 			}
-		}
+		} 
 	}
 }
