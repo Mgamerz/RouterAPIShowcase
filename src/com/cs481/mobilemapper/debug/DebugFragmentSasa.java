@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import com.cs481.mobilemapper.CommandCenterActivity;
 import com.cs481.mobilemapper.R;
 import com.cs481.mobilemapper.fragments.PINFragment;
+import com.cs481.mobilemapper.fragments.SplashScreenFragment;
 
 public class DebugFragmentSasa extends Fragment {
 

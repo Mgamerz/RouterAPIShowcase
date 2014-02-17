@@ -108,5 +108,9 @@
 
     <!-- Preferences Databases -->
     <string name="crypto_prefsdb">crypto</string>
+    
+    <!-- Splash Screen -->
+    <string name="splash_button_ecm">ECM</string>
+    <string name="splash_button_local">Local</string>
 
 </resources>
