@@ -41,6 +41,10 @@ public class Router implements Parcelable {
    	private String update_ts;
    	private String wireless_ap_surveys;
 
+   	public Router(){
+   		//must be here
+   	}
+   	
  	public String getAccount(){
 		return this.account;
 	}
