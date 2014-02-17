@@ -3,14 +3,11 @@ package com.cs481.mobilemapper.debug;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.cs481.mobilemapper.CommandCenterActivity;
 import com.cs481.mobilemapper.R;
-import com.cs481.mobilemapper.fragments.PINFragment;
 import com.cs481.mobilemapper.fragments.SplashScreenFragment;
 
 public class DebugFragmentSasa extends Fragment {
@@ -24,7 +21,7 @@ public class DebugFragmentSasa extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		View rootView = inflater.inflate(R.layout.fragment_splashscreen, container,
+		View rootView = inflater.inflate(R.layout.fragment_debug, container,
 				false);
 		
 		//DebugActivity da = (DebugActivity) getActivity();

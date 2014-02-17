@@ -30,7 +30,7 @@ public class DebugActivitySasa extends SpiceActivity {
 		super.onCreate(savedInstanceState);
 		Intent intent = getIntent();
 		create_new = intent.getBooleanExtra("create_new", true);
-		setContentView(R.layout.activity_debug);
+		setContentView(R.layout.activity_debug_sasa);
 		Log.i(CommandCenterActivity.TAG, "Create new: "+create_new);
 	}
 
