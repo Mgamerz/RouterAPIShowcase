@@ -27,6 +27,7 @@ import android.widget.ListView;
 import com.cs481.mobilemapper.debug.DebugActivity;
 import com.cs481.mobilemapper.debug.DebugActivitySasa;
 import com.cs481.mobilemapper.fragments.LocalLoginFragment;
+import com.cs481.mobilemapper.fragments.SplashScreenFragment;
 import com.cs481.mobilemapper.responses.ecm.routers.Routers;
 
 public class LoginActivity extends SpiceActivity {
@@ -89,7 +90,8 @@ public class LoginActivity extends SpiceActivity {
 
 		// Save layout on rotation
 		if (savedInstanceState == null) {
-			LocalLoginFragment frFragment = new LocalLoginFragment();
+			//LocalLoginFragment frFragment = new LocalLoginFragment();
+			SplashScreenFragment frFragment = new SplashScreenFragment();
 
 			// In case this activity was started with special instructions from
 			// an
