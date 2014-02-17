@@ -42,7 +42,6 @@ public class WlanFragment extends ListFragment implements OnRefreshListener {
 	private SpiceManager spiceManager;
 	private ArrayList<WlanListRow> rows;
 	private WlanAdapter adapter;
-	
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -185,7 +184,8 @@ public class WlanFragment extends ListFragment implements OnRefreshListener {
 		Resources resources = getResources();
 		if (dialog) {
 			progressDialog = new ProgressDialog(getActivity());
-			progressDialog.setMessage(resources.getString(R.string.wlan_reading));
+			progressDialog.setMessage(resources
+					.getString(R.string.wlan_reading));
 			progressDialog.show();
 			progressDialog.setCanceledOnTouchOutside(false);
 			progressDialog.setCancelable(false);
@@ -203,7 +203,8 @@ public class WlanFragment extends ListFragment implements OnRefreshListener {
 			// update your UI
 			progressDialog.dismiss();
 			Log.i(CommandCenterActivity.TAG, "Failed to read WLAN!");
-			Toast.makeText(getActivity(), resources.getString(R.string.wlan_get_config_failure),
+			Toast.makeText(getActivity(),
+					resources.getString(R.string.wlan_get_config_failure),
 					Toast.LENGTH_SHORT).show();
 			mPullToRefreshLayout.setRefreshComplete();
 		}
@@ -246,10 +247,10 @@ public class WlanFragment extends ListFragment implements OnRefreshListener {
 		adapter = new WlanAdapter(getActivity(), rows);
 		setListAdapter(adapter);
 	}
-	
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()){
+		switch (item.getItemId()) {
 		case R.id.wifimenu_sort_alphabetically:
 			sortAlphabetically();
 			return true;
@@ -259,7 +260,7 @@ public class WlanFragment extends ListFragment implements OnRefreshListener {
 		default:
 			return super.onOptionsItemSelected(item);
 		}
-		
+
 	}
 
 	/**
@@ -267,15 +268,17 @@ public class WlanFragment extends ListFragment implements OnRefreshListener {
 	 * 
 	 */
 	public void sortAlphabetically() {
-		Collections.sort(rows, new Comparator<WlanListRow>() {
+		if (rows != null && rows.size() > 1) {
+			Collections.sort(rows, new Comparator<WlanListRow>() {
 
-			@Override
-			public int compare(WlanListRow lhs, WlanListRow rhs) {
-				return lhs.getWap().getSsid()
-						.compareToIgnoreCase(rhs.getWap().getSsid());
-			}
-		});
-		adapter.notifyDataSetChanged();
+				@Override
+				public int compare(WlanListRow lhs, WlanListRow rhs) {
+					return lhs.getWap().getSsid()
+							.compareToIgnoreCase(rhs.getWap().getSsid());
+				}
+			});
+			adapter.notifyDataSetChanged();
+		}
 	}
 
 	/**
@@ -283,16 +286,18 @@ public class WlanFragment extends ListFragment implements OnRefreshListener {
 	 * 
 	 */
 	public void sortSignal() {
-		Collections.sort(rows, new Comparator<WlanListRow>() {
+		if (rows != null && rows.size() > 1) {
+			Collections.sort(rows, new Comparator<WlanListRow>() {
 
-			@Override
-			public int compare(WlanListRow lhs, WlanListRow rhs) {
-				Integer lhsRssi = lhs.getWap().getRssi();
-				Integer rhsRssi = rhs.getWap().getRssi();
-				return rhsRssi.compareTo(lhsRssi);
-			}
-		});
-		adapter.notifyDataSetChanged();
+				@Override
+				public int compare(WlanListRow lhs, WlanListRow rhs) {
+					Integer lhsRssi = lhs.getWap().getRssi();
+					Integer rhsRssi = rhs.getWap().getRssi();
+					return rhsRssi.compareTo(lhsRssi);
+				}
+			});
+			adapter.notifyDataSetChanged();
+		}
 	}
 
 }
