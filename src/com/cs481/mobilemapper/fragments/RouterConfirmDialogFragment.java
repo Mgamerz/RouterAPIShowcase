@@ -55,6 +55,7 @@ public class RouterConfirmDialogFragment extends DialogFragment {
 				intent.putExtra("id", router.getId());
 				intent.putExtra("user", authInfo.getUsername());
 				startActivity(intent);
+				getActivity().finish();
 			}
 		});
         
