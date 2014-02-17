@@ -235,7 +235,7 @@ public class LoginActivity extends SpiceActivity {
         	menuitem.setVisible(!drawerOpen);
         }
         
-        menuitem = menu.findItem(R.id.menu_switchtoecm).setVisible(!drawerOpen);
+        menuitem = menu.findItem(R.id.menu_switchtoecm);
         if (menuitem != null){
         	menuitem.setVisible(!drawerOpen);
         }
