@@ -1,11 +1,10 @@
-
 package com.cs481.mobilemapper.responses.ecm.routers;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 
 
-public class Router implements Parcelable{
+public class Router implements Parcelable {
    	private String account;
    	private String actual_firmware;
    	private String alerts;
@@ -252,14 +251,99 @@ public class Router implements Parcelable{
 	public void setWireless_ap_surveys(String wireless_ap_surveys){
 		this.wireless_ap_surveys = wireless_ap_surveys;
 	}
-	@Override
-	public int describeContents() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-	@Override
-	public void writeToParcel(Parcel dest, int flags) {
-		// TODO Auto-generated method stub
-		
-	}
+
+    protected Router(Parcel in) {
+        account = in.readString();
+        actual_firmware = in.readString();
+        alerts = in.readString();
+        config_status = in.readString();
+        configuration_manager = in.readString();
+        create_ts = in.readString();
+        custom1 = in.readString();
+        custom2 = in.readString();
+        desc = in.readString();
+        factory_reset_pending = in.readByte() != 0x00;
+        full_product_name = in.readString();
+        group = in.readString();
+        id = in.readString();
+        ip_address = in.readString();
+        last_fw_activity = in.readString();
+        locality = in.readString();
+        logs = in.readString();
+        mac = in.readString();
+        name = in.readString();
+        net_devices = in.readString();
+        plugins = in.readString();
+        product = in.readString();
+        reboot_pending = in.readByte() != 0x00;
+        resource_uri = in.readString();
+        session_restart_pending = in.readByte() != 0x00;
+        state = in.readString();
+        state_samples = in.readString();
+        state_ts = in.readString();
+        stream_usage_in = in.readString();
+        stream_usage_out = in.readString();
+        stream_usage_period = (Number) in.readValue(Number.class.getClassLoader());
+        stream_usage_samples = in.readString();
+        target_firmware = in.readString();
+        update_ts = in.readString();
+        wireless_ap_surveys = in.readString();
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(account);
+        dest.writeString(actual_firmware);
+        dest.writeString(alerts);
+        dest.writeString(config_status);
+        dest.writeString(configuration_manager);
+        dest.writeString(create_ts);
+        dest.writeString(custom1);
+        dest.writeString(custom2);
+        dest.writeString(desc);
+        dest.writeByte((byte) (factory_reset_pending ? 0x01 : 0x00));
+        dest.writeString(full_product_name);
+        dest.writeString(group);
+        dest.writeString(id);
+        dest.writeString(ip_address);
+        dest.writeString(last_fw_activity);
+        dest.writeString(locality);
+        dest.writeString(logs);
+        dest.writeString(mac);
+        dest.writeString(name);
+        dest.writeString(net_devices);
+        dest.writeString(plugins);
+        dest.writeString(product);
+        dest.writeByte((byte) (reboot_pending ? 0x01 : 0x00));
+        dest.writeString(resource_uri);
+        dest.writeByte((byte) (session_restart_pending ? 0x01 : 0x00));
+        dest.writeString(state);
+        dest.writeString(state_samples);
+        dest.writeString(state_ts);
+        dest.writeString(stream_usage_in);
+        dest.writeString(stream_usage_out);
+        dest.writeValue(stream_usage_period);
+        dest.writeString(stream_usage_samples);
+        dest.writeString(target_firmware);
+        dest.writeString(update_ts);
+        dest.writeString(wireless_ap_surveys);
+    }
+
+    @SuppressWarnings("unused")
+    public static final Parcelable.Creator<Router> CREATOR = new Parcelable.Creator<Router>() {
+        @Override
+        public Router createFromParcel(Parcel in) {
+            return new Router(in);
+        }
+
+        @Override
+        public Router[] newArray(int size) {
+            return new Router[size];
+        }
+    };
 }
