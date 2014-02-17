@@ -12,6 +12,8 @@
 bin/
 gen/
 
+.DS_Store
+
 # Ignore gradle files
 .gradle/
 build/
