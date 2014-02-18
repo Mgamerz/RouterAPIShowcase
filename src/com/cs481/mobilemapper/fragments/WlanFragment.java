@@ -27,7 +27,6 @@ import android.widget.Toast;
 
 import com.cs481.mobilemapper.AuthInfo;
 import com.cs481.mobilemapper.CommandCenterActivity;
-import com.cs481.mobilemapper.LoginActivity;
 import com.cs481.mobilemapper.R;
 import com.cs481.mobilemapper.SpiceActivity;
 import com.cs481.mobilemapper.Utility;
@@ -136,19 +135,8 @@ public class WlanFragment extends ListFragment implements OnRefreshListener {
 			ImageView signalStrengthIcon = (ImageView) rowView
 					.findViewById(R.id.signal_strength);
 			int dbm = rows.get(position).getWap().getRssi();
-			int signalQuality;
-			if (dbm <= -100) {
-				signalQuality = 0;
-			} else if (dbm >= -50) {
-				signalQuality = 100;
-			} else {
-				signalQuality = Utility.rssiToSignalStrength(dbm) - 1;
-				if (signalQuality < 0) {
-					signalQuality = 0; // rollunder check
-				}
-			}
 
-			int signalStrength = (signalQuality / 25);
+			int signalStrength = (Utility.rssiToHumanSignal(dbm) / 25);
 			signalStrength = Math.min(signalStrength, 3); // cap it.
 			if (wap.getAuthmode().equals("none")) {
 				signalStrengthIcon.setImageDrawable(getResources().getDrawable(
@@ -234,7 +222,7 @@ public class WlanFragment extends ListFragment implements OnRefreshListener {
 
 	public void updateWlanList(Wlan wlan) {
 		Resources resources = getResources();
-		Log.i(CommandCenterActivity.TAG, wlan.toString());
+		//Log.i(CommandCenterActivity.TAG, wlan.toString());
 		rows = new ArrayList<WlanListRow>();
 		ArrayList<WAP> waps = wlan.getData().getRadio().get(0).getSurvey(); // TODO:
 																			// Add
@@ -293,15 +281,9 @@ public class WlanFragment extends ListFragment implements OnRefreshListener {
 		CommandCenterActivity activity = (CommandCenterActivity) getActivity();
 		
 		authInfo = activity.getAuthInfo();
-		//Log.i(CommandCenterActivity.TAG, "Authinfo: "+authInfo);
-		//Log.i(CommandCenterActivity.TAG, "Router: "+row.getRouter());
-		
-		//authInfo.setRouterId(row.getRouter().getId());
-		//activity.setAuthInfo(authInfo);
-		//activity.setRouter(row.getRouter());
 		WifiWanDialog wwFragment = new WifiWanDialog();
 		wwFragment.setData(row.getWap(), authInfo);
-		wwFragment.show(getFragmentManager(), "WAPConfirm");
+		wwFragment.show(getActivity().getSupportFragmentManager(), "WAPConfirm");
 	}
 
 	/**

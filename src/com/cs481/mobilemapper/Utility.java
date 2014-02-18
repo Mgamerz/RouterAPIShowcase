@@ -162,4 +162,42 @@ public class Utility {
 		return put;
 
 	}
+
+	public static String rssiToSignalLiteral(int rssi) {
+		Log.i(CommandCenterActivity.TAG, "Rssi value: "+rssi);
+		int signalQuality = rssiToHumanSignal(rssi);
+		
+		switch(Math.abs(signalQuality-1)/25){
+		case 0:
+			return "Poor";
+		case 1:
+			return "Fair";
+		case 2:
+			return "Good";
+		case 3:
+			return "Excellent";
+			default:
+				return "UNKNOWN";
+		}
+	}
+
+	/**
+	 * Converts RSSI to a human readable "percent" for the most part. It's not perfect as some values fall out of the range.
+	 * @param dbm
+	 * @return
+	 */
+	public static int rssiToHumanSignal(int dbm) {
+		int signalQuality;
+		if (dbm <= -100) {
+			signalQuality = 0;
+		} else if (dbm >= -50) {
+			signalQuality = 100;
+		} else {
+			signalQuality = Utility.rssiToSignalStrength(dbm) - 1;
+			if (signalQuality < 0) {
+				signalQuality = 0; // rollunder check
+			}
+		}
+		return signalQuality;
+	}
 }
