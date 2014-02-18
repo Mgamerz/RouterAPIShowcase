@@ -4,28 +4,32 @@
     android:layout_height="wrap_content"
     android:padding="10dp" >
 
-    <TextView
-        android:id="@+id/wapconnect_ssidset_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:text="SSID" />
-
-    <EditText
-        android:id="@+id/wapconnect_ssidset_field"
+    <LinearLayout
+        android:id="@+id/wapconnect_ssidlayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/wapconnect_ssidset_text"
-        android:ems="10"
-        android:hint="SSID Name"
-        android:inputType="text" />
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/wapconnect_ssidset_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="SSID" />
+
+        <EditText
+            android:id="@+id/wapconnect_ssidset_field"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="SSID Name"
+            android:inputType="text" />
+    </LinearLayout>
 
     <TextView
         android:id="@+id/wapconnect_signalstrength_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/wapconnect_ssidset_field"
+        android:layout_below="@id/wapconnect_ssidlayout"
         android:text="Signal Strength" />
 
     <TextView
@@ -43,6 +47,7 @@
         android:layout_below="@id/wapconnect_signalstrength_value"
         android:layout_marginLeft="20dp"
         android:layout_toRightOf="@id/wapconnect_securitytype_text"
+        android:paddingTop="3dp"
         android:text="SecurityType"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
@@ -59,7 +64,8 @@
         android:id="@+id/wapconnect_password_field"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/wapconnect_password_text"
+        android:layout_below="@id/wapconnect_securitytype_value"
+        android:layout_alignLeft="@id/wapconnect_securitytype_value"
         android:ems="10"
         android:hint="Password"
         android:inputType="textPersonName" >

@@ -12,6 +12,7 @@ import android.text.style.StyleSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -45,14 +46,28 @@ public class WifiWanDialog extends DialogFragment {
     	//CommandCenterActivity activity = (CommandCenterActivity) getActivity();
     	//authInfo = activity.getAuthInfo();
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
-        alertDialogBuilder.setTitle(wap.getSsid());
+        String title = wap.getSsid();
+        boolean hiddenSsid = false; //used to show the SSID field
+        if (title.equals("")){
+        	title = "Hidden SSID";
+        	hiddenSsid = true;
+        }
+        
+        alertDialogBuilder.setTitle(title);
         
         LayoutInflater inflater = getActivity().getLayoutInflater();
 
+
+        
         // Inflate and set the layout for the dialog
         // Pass null as the parent view because its going in the dialog layout
         View dialogView = inflater.inflate(R.layout.dialog_wifiwan, null);
         alertDialogBuilder.setView(dialogView);
+        
+        if (!hiddenSsid) {
+        	LinearLayout layout = (LinearLayout) dialogView.findViewById(R.id.wapconnect_ssidlayout);
+        	layout.setVisibility(LinearLayout.GONE);
+        }
         
         //Get dynamic content, set font to BOLD
         SpannableString securityString = new SpannableString(wap.getAuthmode());
