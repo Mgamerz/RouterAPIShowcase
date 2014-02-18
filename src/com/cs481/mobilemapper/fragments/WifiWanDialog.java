@@ -4,20 +4,21 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cs481.mobilemapper.AuthInfo;
 import com.cs481.mobilemapper.CommandCenterActivity;
-import com.cs481.mobilemapper.LoginActivity;
 import com.cs481.mobilemapper.R;
-import com.cs481.mobilemapper.responses.ecm.routers.Router;
+import com.cs481.mobilemapper.responses.status.wlan.WAP;
 
 public class WifiWanDialog extends DialogFragment {
-	Router router;
+	WAP wap;
 	AuthInfo authInfo;
 	Context context;
 	
@@ -36,12 +37,23 @@ public class WifiWanDialog extends DialogFragment {
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-    	Resources resources = getResources();
-    	LoginActivity activity = (LoginActivity) getActivity();
+    	//Resources resources = getResources();
+    	//CommandCenterActivity activity = (CommandCenterActivity) getActivity();
     	//authInfo = activity.getAuthInfo();
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(activity);
-        alertDialogBuilder.setTitle(router.getName());
-        alertDialogBuilder.setMessage(String.format(resources.getString(R.string.confirm_router_management), router.getName()));
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
+        alertDialogBuilder.setTitle(wap.getSsid());
+        
+        LayoutInflater inflater = getActivity().getLayoutInflater();
+
+        // Inflate and set the layout for the dialog
+        // Pass null as the parent view because its going in the dialog layout
+        View dialogView = inflater.inflate(R.layout.dialog_wifiwan, null);
+        alertDialogBuilder.setView(dialogView);
+        
+        TextView securityType = (TextView) dialogView.findViewById(R.id.wapconnect_securitytype_value);
+        securityType.setText(wap.getAuthmode());
+        
+        //alertDialogBuilder.setMessage();
         //null should be your on click listener
         alertDialogBuilder.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
 			
@@ -69,8 +81,8 @@ public class WifiWanDialog extends DialogFragment {
      * @param router Router object containing this router information
      * @param authInfo Auth information allowing the user to edit this router
      */
-	public void setData(Router router, AuthInfo authInfo) {
-		this.router = router;
+	public void setData(WAP wap, AuthInfo authInfo) {
+		this.wap = wap;
 		this.authInfo = authInfo;
 	}
 }

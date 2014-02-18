@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="10dp" >
+
+    <TextView
+        android:id="@+id/wapconnect_signalstrength_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Signal Strength" />
+
+    <TextView
+        android:id="@+id/wapconnect_securitytype_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/wapconnect_signalstrength_value"
+        android:layout_marginTop="5dp"
+        android:text="Network Security" />
+
+    <TextView
+        android:id="@+id/wapconnect_securitytype_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/wapconnect_signalstrength_value"
+        android:layout_marginLeft="20dp"
+        android:layout_toRightOf="@id/wapconnect_securitytype_text"
+        android:text="SecurityType"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <TextView
+        android:id="@+id/wapconnect_password_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/wapconnect_securitytype_text"
+        android:layout_below="@+id/wapconnect_securitytype_value"
+        android:layout_marginTop="10dp"
+        android:text="Password" />
+
+    <EditText
+        android:id="@+id/wapconnect_password_field"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/wapconnect_password_text"
+        android:ems="10"
+        android:hint="Password"
+        android:inputType="textPersonName" >
+
+        <requestFocus />
+    </EditText>
+
+    <CheckBox
+        android:id="@+id/wapconnect_showpassword"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/wapconnect_password_field"
+        android:paddingLeft="10dp"
+        android:text="Show password" />
+
+    <TextView
+        android:id="@+id/wapconnect_signalstrength_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/wapconnect_securitytype_value"
+        android:layout_alignTop="@+id/wapconnect_signalstrength_text"
+        android:text="SSValue"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+</RelativeLayout>

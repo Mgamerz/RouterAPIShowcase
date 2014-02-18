@@ -21,10 +21,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.cs481.mobilemapper.AuthInfo;
 import com.cs481.mobilemapper.CommandCenterActivity;
+import com.cs481.mobilemapper.LoginActivity;
 import com.cs481.mobilemapper.R;
 import com.cs481.mobilemapper.SpiceActivity;
 import com.cs481.mobilemapper.Utility;
@@ -40,6 +43,7 @@ public class WlanFragment extends ListFragment implements OnRefreshListener {
 	private PullToRefreshLayout mPullToRefreshLayout;
 	private ProgressDialog progressDialog;
 	private SpiceManager spiceManager;
+	private AuthInfo authInfo;
 	private ArrayList<WlanListRow> rows;
 	private WlanAdapter adapter;
 
@@ -279,6 +283,25 @@ public class WlanFragment extends ListFragment implements OnRefreshListener {
 			});
 			adapter.notifyDataSetChanged();
 		}
+	}
+	
+	@Override
+	public void onListItemClick(ListView l, View v, int position, long id) {
+		WlanListRow row = (WlanListRow) (l.getAdapter().getItem(position));
+		//Log.w(CommandCenterActivity.TAG, "WAP ID clicked: " + row.getId());
+		
+		CommandCenterActivity activity = (CommandCenterActivity) getActivity();
+		
+		authInfo = activity.getAuthInfo();
+		//Log.i(CommandCenterActivity.TAG, "Authinfo: "+authInfo);
+		//Log.i(CommandCenterActivity.TAG, "Router: "+row.getRouter());
+		
+		//authInfo.setRouterId(row.getRouter().getId());
+		//activity.setAuthInfo(authInfo);
+		//activity.setRouter(row.getRouter());
+		WifiWanDialog wwFragment = new WifiWanDialog();
+		wwFragment.setData(row.getWap(), authInfo);
+		wwFragment.show(getFragmentManager(), "WAPConfirm");
 	}
 
 	/**
