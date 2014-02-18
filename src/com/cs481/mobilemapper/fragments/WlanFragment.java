@@ -20,8 +20,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -166,6 +169,18 @@ public class WlanFragment extends ListFragment implements OnRefreshListener {
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		// super.onCreateOptionsMenu(menu, inflater);
 		inflater.inflate(R.menu.wifi_menu, menu);
+		   // Get widget's instance
+	    Switch wifiToggle = (Switch) menu.findItem(R.id.wifi_toggle).getActionView();
+	    wifiToggle.setOnCheckedChangeListener(new OnCheckedChangeListener(){
+
+			@Override
+			public void onCheckedChanged(CompoundButton buttonView,
+					boolean isChecked) {
+				// TODO Auto-generated method stub
+				Toast.makeText(getActivity(), "wifi toggled", Toast.LENGTH_LONG).show();
+			}
+	    	
+	    }); 
 	}
 
 	private void readWlanConfig(boolean dialog) {

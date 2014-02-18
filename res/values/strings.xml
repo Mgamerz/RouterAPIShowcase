@@ -65,6 +65,7 @@
     <string name="wlan_reading">Reading WLAN Configuration</string>
     <string name="wlan_get_config_failure">Failed to read WLANconfiguration</string>
     <string name="wlan_hidden_ssid">&lt;Hidden&gt;</string>
+    <string name="wifi">WiFi</string>
 
     <!-- LED Control -->
     <string name="gpio_title">LED Control</string>
