@@ -33,27 +33,10 @@
         </LinearLayout>
 
         <TextView
-            android:id="@+id/wapconnect_ssidset_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
-            android:text="SSID" />
-
-        <EditText
-            android:id="@+id/wapconnect_ssidset_field"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/wapconnect_ssidset_text"
-            android:ems="10"
-            android:hint="SSID Name"
-            android:inputType="text" />
-
-        <TextView
             android:id="@+id/wapconnect_signalstrength_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/wapconnect_ssidset_field"
+            android:layout_below="@id/wapconnect_ssidlayout"
             android:text="Signal Strength" />
 
         <TextView

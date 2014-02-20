@@ -10,6 +10,7 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.net.DhcpInfo;
 import android.net.wifi.WifiManager;
 import android.text.format.Formatter;
@@ -28,7 +29,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class Utility {
 
 	public static String convertToDataSegment(String str) {
-		//JsonObject json = new JsonObject()
+		// JsonObject json = new JsonObject()
 		str = str.substring(0, str.length() - 1); // remove last }
 		str = str.substring(1, str.length()); // remove first {
 		str = str.replaceFirst("\"data\":", "");
@@ -96,17 +97,16 @@ public class Utility {
 				// Assuming it's a WAN.
 				ci.setAccessUrl(String.format("http://%s:%s/api/%s",
 						authInfo.getRouterip(), authInfo.getRouterport(), url));
-				auth = new AuthScope(authInfo.getRouterip(), authInfo.getRouterport(),
-						AuthScope.ANY_REALM);
+				auth = new AuthScope(authInfo.getRouterip(),
+						authInfo.getRouterport(), AuthScope.ANY_REALM);
 			} else {
-				//On the current LAN
+				// On the current LAN
 				ci.setAccessUrl(String.format("http://%s/api/%s",
 						authInfo.getRouterip(), url));
 				auth = new AuthScope(authInfo.getRouterip(), 80,
 						AuthScope.ANY_REALM);
 			}
 
-			
 		}
 		client.getCredentialsProvider().setCredentials(auth, defaultcreds);
 		ci.setClient(client);
@@ -163,26 +163,37 @@ public class Utility {
 
 	}
 
-	public static String rssiToSignalLiteral(int rssi) {
-		Log.i(CommandCenterActivity.TAG, "Rssi value: "+rssi);
+	/**
+	 * Converts a rssi value to a string such as poor, good, or excellent.
+	 * 
+	 * @param rssi
+	 *            RSSI value to translate
+	 * @param resources
+	 *            Refernece to a resources object - since a static class can't
+	 *            access it.
+	 * @return
+	 */
+	public static String rssiToSignalLiteral(int rssi, Resources resources) {
+		Log.i(CommandCenterActivity.TAG, "Rssi value: " + rssi);
 		int signalQuality = rssiToHumanSignal(rssi);
-		
-		switch(Math.abs(signalQuality-1)/25){
+		switch (Math.abs(signalQuality - 1) / 25) {
 		case 0:
-			return "Poor";
+			return resources.getString(R.string.poor);
 		case 1:
-			return "Fair";
+			return resources.getString(R.string.fair);
 		case 2:
-			return "Good";
+			return resources.getString(R.string.good);
 		case 3:
-			return "Excellent";
-			default:
-				return "UNKNOWN";
+			return resources.getString(R.string.excellent);
+		default:
+			return resources.getString(R.string.unknown);
 		}
 	}
 
 	/**
-	 * Converts RSSI to a human readable "percent" for the most part. It's not perfect as some values fall out of the range.
+	 * Converts RSSI to a human readable "percent" for the most part. It's not
+	 * perfect as some values fall out of the range.
+	 * 
 	 * @param dbm
 	 * @return
 	 */

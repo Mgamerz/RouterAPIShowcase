@@ -34,6 +34,7 @@ import com.cs481.mobilemapper.R;
 import com.cs481.mobilemapper.SpiceActivity;
 import com.cs481.mobilemapper.Utility;
 import com.cs481.mobilemapper.WlanListRow;
+import com.cs481.mobilemapper.responses.config.wireless.enabled.WlanConfig;
 import com.cs481.mobilemapper.responses.status.wlan.WAP;
 import com.cs481.mobilemapper.responses.status.wlan.Wlan;
 import com.octo.android.robospice.SpiceManager;
@@ -203,7 +204,14 @@ public class WifiAsWanFragment extends ListFragment implements
 
 	@Override
 	public void onRefreshStarted(View view) {
-		readWlanConfig(false);
+		//readWlanConfig(false);
+		
+		com.cs481.mobilemapper.responses.config.wireless.enabled.GetRequest request = new com.cs481.mobilemapper.responses.config.wireless.enabled.GetRequest (
+				authInfo);
+		String lastRequestCacheKey = request.createCacheKey();
+
+		spiceManager.execute(request, lastRequestCacheKey,
+				DurationInMillis.ALWAYS_EXPIRED, new WLANConfigGetRequestListener());
 	}
 
 	@Override
@@ -251,7 +259,9 @@ public class WifiAsWanFragment extends ListFragment implements
 		public void onRequestFailure(SpiceException e) {
 			Resources resources = getResources();
 			// update your UI
-			progressDialog.dismiss();
+			if (progressDialog != null) {
+				progressDialog.dismiss();
+			}
 			Log.i(CommandCenterActivity.TAG, "Failed to read WLAN!");
 			Toast.makeText(getActivity(),
 					resources.getString(R.string.wlan_get_config_failure),
@@ -262,7 +272,9 @@ public class WifiAsWanFragment extends ListFragment implements
 		@Override
 		public void onRequestSuccess(Wlan wlan) {
 			// update your UI
-			progressDialog.dismiss();
+			if (progressDialog != null) {
+				progressDialog.dismiss();
+			}
 			if (wlan.getSuccess()) {
 				Log.i(CommandCenterActivity.TAG, "WLAN request successful");
 				updateWlanList(wlan);
@@ -277,9 +289,48 @@ public class WifiAsWanFragment extends ListFragment implements
 
 		}
 	}
+	
+	private class WLANConfigGetRequestListener implements RequestListener<WlanConfig> {
+
+		@Override
+		public void onRequestFailure(SpiceException e) {
+			/*Resources resources = getResources();
+			// update your UI
+			if (progressDialog != null) {
+				progressDialog.dismiss();
+			}
+			Log.i(CommandCenterActivity.TAG, "Failed to read WLAN!");
+			Toast.makeText(getActivity(),
+					resources.getString(R.string.wlan_get_config_failure),
+					Toast.LENGTH_SHORT).show();
+			mPullToRefreshLayout.setRefreshComplete();*/
+		}
+
+		@Override
+		public void onRequestSuccess(WlanConfig wlanConfig) {
+			// update your UI
+			/*if (progressDialog != null) {
+				progressDialog.dismiss();
+			}
+			if (wlan.getSuccess()) {
+				Log.i(CommandCenterActivity.TAG, "WLAN request successful");
+				updateWlanList(wlan);
+				Log.i(CommandCenterActivity.TAG, "isRefresh(): "
+						+ mPullToRefreshLayout.isRefreshing());
+			} else {
+
+				Toast.makeText(getActivity(), wlan.getReason(),
+						Toast.LENGTH_LONG).show();
+			}
+			mPullToRefreshLayout.setRefreshComplete();
+	*/
+		}
+	}
+	
 
 	/**
-	 * Should be run when a WLAN object has been returned and the list of AP's shoudl be updated
+	 * Should be run when a WLAN object has been returned and the list of AP's
+	 * shoudl be updated
 	 * 
 	 * @param wlan
 	 */
@@ -297,8 +348,6 @@ public class WifiAsWanFragment extends ListFragment implements
 			adapter = new WlanAdapter(getActivity(), rows);
 			setListAdapter(adapter);
 		}
-		
-
 
 		Resources resources = getResources();
 		for (WAP wap : waps) {

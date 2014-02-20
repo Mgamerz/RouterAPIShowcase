@@ -20,9 +20,9 @@
         <item>Citadel</item>
         <item>Turian</item>
     </string-array>
-        <string name="drawer_open">Drawer Open</string>
-        <string name="drawer_closed">Drawer Closed</string>
-        
+
+    <string name="drawer_open">Drawer Open</string>
+    <string name="drawer_closed">Drawer Closed</string>
 
     <!-- Local Login -->
     <string name="login_title">Router Login</string>
@@ -59,13 +59,20 @@
     <string name="wan">WAN</string>
     <string name="gpio">GPIO</string>
 
-    <!-- Wlan -->
+    <!-- WifiAsWan -->
     <string name="wifimenu_sort_signal">Sort by signal</string>
     <string name="wifi_sort_alphabetically">Sort by name</string>
     <string name="wlan_reading">Reading WLAN Configuration</string>
     <string name="wlan_get_config_failure">Failed to read WLANconfiguration</string>
     <string name="wlan_hidden_ssid">&lt;Hidden&gt;</string>
     <string name="wifi">WiFi</string>
+
+    <!-- WifiAsWanDialog -->
+    <string name="excellent">Excellent</string>
+    <string name="good">Good</string>
+    <string name="fair">Fair</string>
+    <string name="poor">Poor</string>
+    <string name="unknown">Unknown</string>
 
     <!-- LED Control -->
     <string name="gpio_title">LED Control</string>
@@ -109,7 +116,7 @@
 
     <!-- Preferences Databases -->
     <string name="crypto_prefsdb">crypto</string>
-    
+
     <!-- Splash Screen -->
     <string name="splash_button_ecm">ECM</string>
     <string name="splash_button_local">Local</string>

@@ -26,24 +26,24 @@ public class WifiWanDialog extends DialogFragment {
 	WAP wap;
 	AuthInfo authInfo;
 	Context context;
-	
-    /**
-     * This constructor must be empty or the Fragment won't be able to start.
-     */
-    public WifiWanDialog() {
-    	Log.i(CommandCenterActivity.TAG, "Created fragment.");
-    	//context = getActivity();
-    }
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (savedInstanceState != null) {
-        	wap = savedInstanceState.getParcelable("wap");
-        	authInfo = savedInstanceState.getParcelable("authInfo");
-        }
-    }
-    
+	/**
+	 * This constructor must be empty or the Fragment won't be able to start.
+	 */
+	public WifiWanDialog() {
+		Log.i(CommandCenterActivity.TAG, "Created fragment.");
+		// context = getActivity();
+	}
+
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		if (savedInstanceState != null) {
+			wap = savedInstanceState.getParcelable("wap");
+			authInfo = savedInstanceState.getParcelable("authInfo");
+		}
+	}
+
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
@@ -54,77 +54,89 @@ public class WifiWanDialog extends DialogFragment {
 		outState.putParcelable("authInfo", authInfo);
 	}
 
+	@Override
+	public Dialog onCreateDialog(Bundle savedInstanceState) {
+		// Resources resources = getResources();
+		// CommandCenterActivity activity = (CommandCenterActivity)
+		// getActivity();
+		// authInfo = activity.getAuthInfo();
+		AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+				getActivity());
+		String title = wap.getSsid();
+		boolean hiddenSsid = false; // used to show the SSID field
+		if (title.equals("")) {
+			title = "Hidden SSID";
+			hiddenSsid = true;
+		}
 
-    @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState) {
-    	//Resources resources = getResources();
-    	//CommandCenterActivity activity = (CommandCenterActivity) getActivity();
-    	//authInfo = activity.getAuthInfo();
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
-        String title = wap.getSsid();
-        boolean hiddenSsid = false; //used to show the SSID field
-        if (title.equals("")){
-        	title = "Hidden SSID";
-        	hiddenSsid = true;
-        }
-        
-        alertDialogBuilder.setTitle(title);
-        
-        LayoutInflater inflater = getActivity().getLayoutInflater();
+		alertDialogBuilder.setTitle(title);
+		LayoutInflater inflater = getActivity().getLayoutInflater();
 
+		// Inflate and set the layout for the dialog
+		// Pass null as the parent view because its going in the dialog layout
+		View dialogView = inflater.inflate(R.layout.dialog_wifiwan, null);
 
-        
-        // Inflate and set the layout for the dialog
-        // Pass null as the parent view because its going in the dialog layout
-        View dialogView = inflater.inflate(R.layout.dialog_wifiwan, null);
-        alertDialogBuilder.setView(dialogView);
-        
-        if (!hiddenSsid) {
-        	LinearLayout layout = (LinearLayout) dialogView.findViewById(R.id.wapconnect_ssidlayout);
-        	layout.setVisibility(LinearLayout.GONE);
-        }
-        
-        //Get dynamic content, set font to BOLD
-        SpannableString securityString = new SpannableString(wap.getAuthmode());
-        securityString.setSpan(new StyleSpan(Typeface.BOLD), 0, securityString.length(), 0);
-        
-        SpannableString signalString = new SpannableString(Utility.rssiToSignalLiteral(wap.getRssi()));
-        signalString.setSpan(new StyleSpan(Typeface.BOLD), 0, signalString.length(), 0);
-        
-        //Set the dynamic content
-        TextView securityType = (TextView) dialogView.findViewById(R.id.wapconnect_securitytype_value);
-        securityType.setText(securityString);
-        
-        TextView signalStrength = (TextView) dialogView.findViewById(R.id.wapconnect_signalstrength_value);
-        signalStrength.setText(signalString);
-        
-        
-        alertDialogBuilder.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-			
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
-				// TODO Auto-generated method stub
-				Toast.makeText(getActivity(), "Connecting as WAN...", Toast.LENGTH_LONG).show();
-			}
-		});
-        
-        alertDialogBuilder.setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+		if (!hiddenSsid) {
+			Log.i(CommandCenterActivity.TAG, "Not a hidden SSID");
+			LinearLayout layout = (LinearLayout) dialogView
+					.findViewById(R.id.wapconnect_ssidlayout);
+			layout.setVisibility(LinearLayout.GONE);
+			Log.i(CommandCenterActivity.TAG, "Layout visibility: "+layout.getVisibility());
+		}
 
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
+		// Get dynamic content, set font to BOLD
+		SpannableString securityString = new SpannableString(wap.getAuthmode());
+		securityString.setSpan(new StyleSpan(Typeface.BOLD), 0,
+				securityString.length(), 0);
 
+		SpannableString signalString = new SpannableString(
+				Utility.rssiToSignalLiteral(wap.getRssi(), getResources()));
+		signalString.setSpan(new StyleSpan(Typeface.BOLD), 0,
+				signalString.length(), 0);
 
-        return alertDialogBuilder.create();
-    }
+		// Set the dynamic content
+		TextView securityType = (TextView) dialogView
+				.findViewById(R.id.wapconnect_securitytype_value);
+		securityType.setText(securityString);
 
-    /**
-     * Sets the authorization information and the router information, allowing this dialog to navigate to the CommandCenter activity with all required information.
-     * @param router Router object containing this router information
-     * @param authInfo Auth information allowing the user to edit this router
-     */
+		TextView signalStrength = (TextView) dialogView
+				.findViewById(R.id.wapconnect_signalstrength_value);
+		signalStrength.setText(signalString);
+
+		alertDialogBuilder.setPositiveButton(android.R.string.yes,
+				new DialogInterface.OnClickListener() {
+
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						// TODO Auto-generated method stub
+						Toast.makeText(getActivity(), "Connecting as WAN...",
+								Toast.LENGTH_LONG).show();
+					}
+				});
+
+		alertDialogBuilder.setNegativeButton(android.R.string.no,
+				new DialogInterface.OnClickListener() {
+
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						dialog.dismiss();
+					}
+				});
+
+		alertDialogBuilder.setView(dialogView);
+		return alertDialogBuilder.create();
+	}
+
+	/**
+	 * Sets the authorization information and the router information, allowing
+	 * this dialog to navigate to the CommandCenter activity with all required
+	 * information.
+	 * 
+	 * @param router
+	 *            Router object containing this router information
+	 * @param authInfo
+	 *            Auth information allowing the user to edit this router
+	 */
 	public void setData(WAP wap, AuthInfo authInfo) {
 		this.wap = wap;
 		this.authInfo = authInfo;
