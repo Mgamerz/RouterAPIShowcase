@@ -35,7 +35,7 @@ import com.octo.android.robospice.request.listener.RequestListener;
 public class ECMLoginFragment extends Fragment {
 	private ProgressDialog progressDialog;
 	private SpiceManager spiceManager;
-
+	
 	@Override
 	public void onCreate(Bundle savedInstancedState) {
 		super.onCreate(savedInstancedState);
@@ -136,10 +136,12 @@ public class ECMLoginFragment extends Fragment {
 			authInfo.setPassword(passw.getText().toString());
 			authInfo.setEcm(true);
 
-			activity.setAuthInfo(authInfo);
-			activity.setRouters(routers);
+			//activity.setAuthInfo(authInfo);
+			//activity.setRouters(routers);
+			
+			
 
-			ECMRoutersFragment routersFragment = new ECMRoutersFragment();
+			ECMRoutersFragment routersFragment = ECMRoutersFragment.newInstance(routers.getData(), authInfo);
 
 			// In case this activity was started with special instructions from
 			// an

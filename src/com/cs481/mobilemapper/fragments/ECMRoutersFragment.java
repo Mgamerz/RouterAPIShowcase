@@ -24,33 +24,74 @@ import com.cs481.mobilemapper.LoginActivity;
 import com.cs481.mobilemapper.R;
 import com.cs481.mobilemapper.RouterListRow;
 import com.cs481.mobilemapper.responses.ecm.routers.Router;
-import com.octo.android.robospice.SpiceManager;
 
 public class ECMRoutersFragment extends ListFragment implements
 		OnRefreshListener {
-	private boolean checking = true;
+	// private boolean checking = true;
 	private PullToRefreshLayout mPullToRefreshLayout;
 	ProgressDialog progressDialog;
-	private SpiceManager spiceManager;
+	// private SpiceManager spiceManager;
 	private AuthInfo authInfo;
+	// private ArrayList<RouterListRow> rows;
+	private ArrayList<Router> routers;
+
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		if (savedInstanceState != null) {
+			// rows = savedInstanceState.getP
+			routers = savedInstanceState.getParcelableArrayList("routers");
+			authInfo = savedInstanceState.getParcelable("authInfo");
+		} else {
+			Bundle passedArgs = getArguments();
+			if (passedArgs != null) {
+				routers = passedArgs.getParcelableArrayList("routers");
+				authInfo = passedArgs.getParcelable("authInfo");
+			} else {
+				routers = new ArrayList<Router>();
+			}
+		}
+	}
+
+	public static ECMRoutersFragment newInstance(ArrayList<Router> routers, AuthInfo authInfo) {
+		ECMRoutersFragment routerFrag = new ECMRoutersFragment();
+
+		Bundle args = new Bundle();
+		args.putParcelableArrayList("routers", routers);
+		args.putParcelable("authInfo", authInfo);
+		routerFrag.setArguments(args);
+
+		return routerFrag;
+	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		// Inflate the layout for this fragment
-		View v = inflater.inflate(R.layout.fragment_ecmrouters, container, false);
+		View v = inflater.inflate(R.layout.fragment_ecmrouters, container,
+				false);
 		ArrayList<RouterListRow> rows = new ArrayList<RouterListRow>();
-		ArrayList<Router> routers = ((LoginActivity) getActivity()).getRouters().getData();
-		
-		for (Router router : routers){
+		/*ArrayList<Router> routers = ((LoginActivity) getActivity())
+				.getRouters().getData();*/
+
+		for (Router router : routers) {
 			String rId = router.getId();
 			String name = router.getName();
 			String online = router.getState();
 			rows.add(new RouterListRow(router, rId, name, online));
 		}
-	
+
 		setListAdapter(new RouterAdapter(getActivity(), rows));
 		return v;
+	}
+
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		
+		//Save data on rotate. This bundle will be passed to onCreate() by Android.
+		Log.i(CommandCenterActivity.TAG, "Saving instance");
+		outState.putParcelableArrayList("routers", routers);
+		outState.putParcelable("authInfo", authInfo);
 	}
 
 	@Override
@@ -104,29 +145,32 @@ public class ECMRoutersFragment extends ListFragment implements
 		public View getView(int position, View convertView, ViewGroup parent) {
 			LayoutInflater inflater = (LayoutInflater) context
 					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			View rowView = inflater.inflate(R.layout.listrow_ecm_routers, parent,
-					false);
-			
-			
-			
-			//Title text
-			TextView title = (TextView) rowView.findViewById(R.id.routerrow_title);
+			View rowView = inflater.inflate(R.layout.listrow_ecm_routers,
+					parent, false);
+
+			// Title text
+			TextView title = (TextView) rowView
+					.findViewById(R.id.routerrow_title);
 			title.setText(rows.get(position).getTitle());
-			
-			//Subtitle text
-			TextView subtitle = (TextView) rowView.findViewById(R.id.routerrow_subtitle);
+
+			// Subtitle text
+			TextView subtitle = (TextView) rowView
+					.findViewById(R.id.routerrow_subtitle);
 			subtitle.setText(rows.get(position).getSubtitle());
-			
-			//Router image
-			ImageView router_icon = (ImageView) rowView.findViewById(R.id.routerrow_image);
+
+			// Router image
+			ImageView router_icon = (ImageView) rowView
+					.findViewById(R.id.routerrow_image);
 			Router router = rows.get(position).getRouter();
-			
-			if(router.getState().equals("offline")) {
-				router_icon.setImageLevel(1); //1 is offline image (see drawable/ic_router xml file)
+
+			if (router.getState().equals("offline")) {
+				router_icon.setImageLevel(1); // 1 is offline image (see
+												// drawable/ic_router xml file)
 			} else {
-				router_icon.setImageLevel(0); //0 is online image (see drawable/ic_router xml file)
+				router_icon.setImageLevel(0); // 0 is online image (see
+												// drawable/ic_router xml file)
 			}
-			
+
 			return rowView;
 		}
 	}
@@ -135,16 +179,16 @@ public class ECMRoutersFragment extends ListFragment implements
 	public void onListItemClick(ListView l, View v, int position, long id) {
 		RouterListRow row = (RouterListRow) (l.getAdapter().getItem(position));
 		Log.w(CommandCenterActivity.TAG, "Router ID clicked: " + row.getId());
-		
+
 		LoginActivity activity = (LoginActivity) getActivity();
-		
-		authInfo = activity.getAuthInfo();
-		Log.i(CommandCenterActivity.TAG, "Authinfo: "+authInfo);
-		Log.i(CommandCenterActivity.TAG, "Router: "+row.getRouter());
-		
+
+		//authInfo = activity.getAuthInfo();
+		Log.i(CommandCenterActivity.TAG, "Authinfo: " + authInfo);
+		Log.i(CommandCenterActivity.TAG, "Router: " + row.getRouter());
+
 		authInfo.setRouterId(row.getRouter().getId());
 		activity.setAuthInfo(authInfo);
-		//activity.setRouter(row.getRouter());
+		// activity.setRouter(row.getRouter());
 		RouterConfirmDialogFragment rcFragment = new RouterConfirmDialogFragment();
 		rcFragment.setData(row.getRouter(), authInfo);
 		rcFragment.show(getFragmentManager(), "RouterConfirm");

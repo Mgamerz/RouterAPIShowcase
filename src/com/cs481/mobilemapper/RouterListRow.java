@@ -1,5 +1,8 @@
 package com.cs481.mobilemapper;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.cs481.mobilemapper.responses.ecm.routers.Router;
 
 /**
@@ -10,7 +13,7 @@ import com.cs481.mobilemapper.responses.ecm.routers.Router;
  * @author Mgamerz
  * 
  */
-public class RouterListRow {
+public class RouterListRow implements Parcelable {
 	private String title = "";
 	private String subtitle = "";
 	private String id = "NOT_SET";
@@ -58,4 +61,37 @@ public class RouterListRow {
 		this.subtitle = subtitle;
 		this.router = router;
 	}
+
+    protected RouterListRow(Parcel in) {
+        title = in.readString();
+        subtitle = in.readString();
+        id = in.readString();
+        router = (Router) in.readValue(Router.class.getClassLoader());
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(title);
+        dest.writeString(subtitle);
+        dest.writeString(id);
+        dest.writeValue(router);
+    }
+
+    @SuppressWarnings("unused")
+    public static final Parcelable.Creator<RouterListRow> CREATOR = new Parcelable.Creator<RouterListRow>() {
+        @Override
+        public RouterListRow createFromParcel(Parcel in) {
+            return new RouterListRow(in);
+        }
+
+        @Override
+        public RouterListRow[] newArray(int size) {
+            return new RouterListRow[size];
+        }
+    };
 }

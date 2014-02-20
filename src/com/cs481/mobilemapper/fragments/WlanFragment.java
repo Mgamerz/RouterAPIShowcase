@@ -53,6 +53,9 @@ public class WlanFragment extends ListFragment implements OnRefreshListener {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setHasOptionsMenu(true);
+		if (savedInstanceState != null){
+			//mLocalityList = getArguments().getParcelable(KEY_LOCALITY_LIST);
+		}
 	}
 
 	@Override

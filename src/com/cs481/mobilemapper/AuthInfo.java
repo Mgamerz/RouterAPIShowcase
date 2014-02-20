@@ -1,5 +1,8 @@
 package com.cs481.mobilemapper;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /**
  * This class is a convenience bundle for authentication related information. If
  * the ecm flag is set to true, classes that use this object will expect
@@ -9,14 +12,13 @@ package com.cs481.mobilemapper;
  * @author Mgamerz
  * 
  */
-public class AuthInfo {
+public class AuthInfo implements Parcelable {
 	private boolean ecm;
 	private boolean remote; // changes what port to use if we are doing remote
 							// admin
 
 	private String routerip;
 	private int routerport = 80; // default to http port 80
-
 	private String username = "admin"; // default
 	private String password;
 	private String routerId;
@@ -76,4 +78,47 @@ public class AuthInfo {
 	public void setRouterport(int routerport) {
 		this.routerport = routerport;
 	}
+
+	public AuthInfo(){
+		//empty constructor
+	}
+	
+    protected AuthInfo(Parcel in) {
+        ecm = in.readByte() != 0x00;
+        remote = in.readByte() != 0x00;
+        routerip = in.readString();
+        routerport = in.readInt();
+        username = in.readString();
+        password = in.readString();
+        routerId = in.readString();
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeByte((byte) (ecm ? 0x01 : 0x00));
+        dest.writeByte((byte) (remote ? 0x01 : 0x00));
+        dest.writeString(routerip);
+        dest.writeInt(routerport);
+        dest.writeString(username);
+        dest.writeString(password);
+        dest.writeString(routerId);
+    }
+
+    @SuppressWarnings("unused")
+    public static final Parcelable.Creator<AuthInfo> CREATOR = new Parcelable.Creator<AuthInfo>() {
+        @Override
+        public AuthInfo createFromParcel(Parcel in) {
+            return new AuthInfo(in);
+        }
+
+        @Override
+        public AuthInfo[] newArray(int size) {
+            return new AuthInfo[size];
+        }
+    };
 }
