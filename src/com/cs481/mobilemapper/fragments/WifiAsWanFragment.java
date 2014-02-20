@@ -41,21 +41,53 @@ import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
 
-public class WlanFragment extends ListFragment implements OnRefreshListener {
+public class WifiAsWanFragment extends ListFragment implements
+		OnRefreshListener {
 	private PullToRefreshLayout mPullToRefreshLayout;
 	private ProgressDialog progressDialog;
 	private SpiceManager spiceManager;
 	private AuthInfo authInfo;
 	private ArrayList<WlanListRow> rows;
 	private WlanAdapter adapter;
+	private ArrayList<WAP> waps;
+	private boolean shouldLoadData = true;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setHasOptionsMenu(true);
-		if (savedInstanceState != null){
-			//mLocalityList = getArguments().getParcelable(KEY_LOCALITY_LIST);
+		if (savedInstanceState != null) {
+			waps = savedInstanceState.getParcelableArrayList("waps");
+			authInfo = savedInstanceState.getParcelable("authInfo");
+			shouldLoadData = savedInstanceState.getBoolean("shouldLoadData");
+		} else {
+			Bundle passedArgs = getArguments();
+			if (passedArgs != null) {
+				authInfo = passedArgs.getParcelable("authInfo");
+			}
 		}
+	}
+
+	public static WifiAsWanFragment newInstance(AuthInfo authInfo) {
+		WifiAsWanFragment wawFrag = new WifiAsWanFragment();
+
+		Bundle args = new Bundle();
+		args.putParcelable("authInfo", authInfo);
+		wawFrag.setArguments(args);
+
+		return wawFrag;
+	}
+
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+
+		// Save data on rotate. This bundle will be passed to onCreate() by
+		// Android.
+		Log.i(CommandCenterActivity.TAG, "Saving instance");
+		outState.putParcelableArrayList("waps", waps);
+		outState.putParcelable("authInfo", authInfo);
+		outState.putBoolean("shouldLoadData", shouldLoadData);
 	}
 
 	@Override
@@ -104,7 +136,13 @@ public class WlanFragment extends ListFragment implements OnRefreshListener {
 		SpiceActivity sa = (SpiceActivity) getActivity();
 		sa.setTitle("WLAN"); // TODO change to string resource
 		spiceManager = sa.getSpiceManager();
-		readWlanConfig(true);
+		if (shouldLoadData) {
+			readWlanConfig(true);
+			shouldLoadData = false;
+		} else {
+			Log.i(CommandCenterActivity.TAG, waps.toString());
+			updateWapList(waps);
+		}
 	}
 
 	public class WlanAdapter extends ArrayAdapter<WlanListRow> {
@@ -172,24 +210,26 @@ public class WlanFragment extends ListFragment implements OnRefreshListener {
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		// super.onCreateOptionsMenu(menu, inflater);
 		inflater.inflate(R.menu.wifi_menu, menu);
-		   // Get widget's instance
-	    Switch wifiToggle = (Switch) menu.findItem(R.id.wifi_toggle).getActionView();
-	    wifiToggle.setOnCheckedChangeListener(new OnCheckedChangeListener(){
+		// Get widget's instance
+		Switch wifiToggle = (Switch) menu.findItem(R.id.wifi_toggle)
+				.getActionView();
+		wifiToggle.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 
 			@Override
 			public void onCheckedChanged(CompoundButton buttonView,
 					boolean isChecked) {
 				// TODO Auto-generated method stub
-				Toast.makeText(getActivity(), "wifi toggled", Toast.LENGTH_LONG).show();
+				Toast.makeText(getActivity(), "wifi toggled", Toast.LENGTH_LONG)
+						.show();
 			}
-	    	
-	    }); 
+
+		});
 	}
 
 	private void readWlanConfig(boolean dialog) {
 		// perform the request.
 		com.cs481.mobilemapper.responses.status.wlan.GetRequest request = new com.cs481.mobilemapper.responses.status.wlan.GetRequest(
-				((CommandCenterActivity) getActivity()).getAuthInfo());
+				authInfo);
 		String lastRequestCacheKey = request.createCacheKey();
 		Resources resources = getResources();
 		if (dialog) {
@@ -238,15 +278,29 @@ public class WlanFragment extends ListFragment implements OnRefreshListener {
 		}
 	}
 
+	/**
+	 * Should be run when a WLAN object has been returned and the list of AP's shoudl be updated
+	 * 
+	 * @param wlan
+	 */
 	public void updateWlanList(Wlan wlan) {
-		Resources resources = getResources();
-		//Log.i(CommandCenterActivity.TAG, wlan.toString());
+		waps = wlan.getData().getRadio().get(0).getSurvey(); // might need to
+																// try to add
+																// dual band
+																// support.
+		updateWapList(waps);
+	}
+
+	public void updateWapList(ArrayList<WAP> waps) {
 		rows = new ArrayList<WlanListRow>();
-		ArrayList<WAP> waps = wlan.getData().getRadio().get(0).getSurvey(); // TODO:
-																			// Add
-																			// dual
-																			// band
-																			// support
+		if (adapter == null) {
+			adapter = new WlanAdapter(getActivity(), rows);
+			setListAdapter(adapter);
+		}
+		
+
+
+		Resources resources = getResources();
 		for (WAP wap : waps) {
 			String subtitle = wap.getType() + " - " + wap.getMode();
 			String ssid = wap.getSsid();
@@ -254,8 +308,7 @@ public class WlanFragment extends ListFragment implements OnRefreshListener {
 				ssid = resources.getString(R.string.wlan_hidden_ssid);
 			rows.add(new WlanListRow(wap, ssid, subtitle));
 		}
-		adapter = new WlanAdapter(getActivity(), rows);
-		setListAdapter(adapter);
+		adapter.notifyDataSetChanged();
 	}
 
 	@Override
@@ -290,18 +343,20 @@ public class WlanFragment extends ListFragment implements OnRefreshListener {
 			adapter.notifyDataSetChanged();
 		}
 	}
-	
+
 	@Override
 	public void onListItemClick(ListView l, View v, int position, long id) {
 		WlanListRow row = (WlanListRow) (l.getAdapter().getItem(position));
-		//Log.w(CommandCenterActivity.TAG, "WAP ID clicked: " + row.getId());
-		
-		CommandCenterActivity activity = (CommandCenterActivity) getActivity();
-		
-		authInfo = activity.getAuthInfo();
+		// Log.w(CommandCenterActivity.TAG, "WAP ID clicked: " + row.getId());
+
+		// CommandCenterActivity activity = (CommandCenterActivity)
+		// getActivity();
+
+		// authInfo = activity.getAuthInfo();
 		WifiWanDialog wwFragment = new WifiWanDialog();
 		wwFragment.setData(row.getWap(), authInfo);
-		wwFragment.show(getActivity().getSupportFragmentManager(), "WAPConfirm");
+		wwFragment
+				.show(getActivity().getSupportFragmentManager(), "WAPConfirm");
 	}
 
 	/**

@@ -1,9 +1,11 @@
-
 package com.cs481.mobilemapper.responses.status.wlan;
+
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class WAP{
+public class WAP implements Parcelable {
 	@JsonProperty("authmode")
    	private String authmode;
 	
@@ -11,7 +13,7 @@ public class WAP{
    	private String bssid;
 	
 	@JsonProperty("channel")
-   	private Number channel;
+   	private int channel;
 	
 	@JsonProperty("extcha")
    	private String extcha;
@@ -40,10 +42,10 @@ public class WAP{
 	public void setBssid(String bssid){
 		this.bssid = bssid;
 	}
- 	public Number getChannel(){
+ 	public int getChannel(){
 		return this.channel;
 	}
-	public void setChannel(Number channel){
+	public void setChannel(int channel){
 		this.channel = channel;
 	}
  	public String getExtcha(){
@@ -76,4 +78,49 @@ public class WAP{
 	public void setType(String type){
 		this.type = type;
 	}
+
+	public WAP(){
+		//empty constructor for jackson
+	}
+	
+    protected WAP(Parcel in) {
+        authmode = in.readString();
+        bssid = in.readString();
+        channel = in.readInt();
+        extcha = in.readString();
+        mode = in.readString();
+        rssi = in.readInt();
+        ssid = in.readString();
+        type = in.readString();
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(authmode);
+        dest.writeString(bssid);
+        dest.writeInt(channel);
+        dest.writeString(extcha);
+        dest.writeString(mode);
+        dest.writeInt(rssi);
+        dest.writeString(ssid);
+        dest.writeString(type);
+    }
+
+    @SuppressWarnings("unused")
+    public static final Parcelable.Creator<WAP> CREATOR = new Parcelable.Creator<WAP>() {
+        @Override
+        public WAP createFromParcel(Parcel in) {
+            return new WAP(in);
+        }
+
+        @Override
+        public WAP[] newArray(int size) {
+            return new WAP[size];
+        }
+    };
 }

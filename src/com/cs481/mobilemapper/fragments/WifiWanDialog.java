@@ -38,7 +38,22 @@ public class WifiWanDialog extends DialogFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (savedInstanceState != null) {
+        	wap = savedInstanceState.getParcelable("wap");
+        	authInfo = savedInstanceState.getParcelable("authInfo");
+        }
     }
+    
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+
+		// Save data on rotate. This bundle will be passed to onCreate() by
+		// Android.
+		outState.putParcelable("wap", wap);
+		outState.putParcelable("authInfo", authInfo);
+	}
+
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {

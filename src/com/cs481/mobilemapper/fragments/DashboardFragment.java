@@ -15,6 +15,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.cs481.mobilemapper.AuthInfo;
 import com.cs481.mobilemapper.CommandCenterActivity;
 import com.cs481.mobilemapper.DashboardListRow;
 import com.cs481.mobilemapper.R;
@@ -25,12 +26,45 @@ public class DashboardFragment extends ListFragment {
 	private final int lLAN = 1;
 	private final int lWAN = 2;
 	private final int lGPIO = 3;
+	private AuthInfo authInfo;
+
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		if (savedInstanceState != null) {
+			// rows = savedInstanceState.getP
+			authInfo = savedInstanceState.getParcelable("authInfo");
+		} else {
+			Bundle passedArgs = getArguments();
+			if (passedArgs != null) {
+				authInfo = passedArgs.getParcelable("authInfo");
+			}
+		}
+	}
+
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+
+		// Save data on rotate. This bundle will be passed to onCreate() by
+		// Android.
+		outState.putParcelable("authInfo", authInfo);
+	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		// Inflate the layout for this fragment
 		return inflater.inflate(R.layout.fragment_dash, container, false);
+	}
+
+	public static DashboardFragment newInstance(AuthInfo authInfo) {
+		DashboardFragment routerFrag = new DashboardFragment();
+
+		Bundle args = new Bundle();
+		args.putParcelable("authInfo", authInfo);
+		routerFrag.setArguments(args);
+
+		return routerFrag;
 	}
 
 	@Override
@@ -40,12 +74,16 @@ public class DashboardFragment extends ListFragment {
 		Resources resources = getResources();
 
 		sa.setTitle(resources.getString(R.string.dashboard_title));
-		
+
 		ArrayList<DashboardListRow> rows = new ArrayList<DashboardListRow>();
-		rows.add(new DashboardListRow(lWLAN, resources.getString(R.string.wireless), "Partially Operational"));
-		rows.add(new DashboardListRow(lLAN, resources.getString(R.string.lan), "Non Operational"));
-		rows.add(new DashboardListRow(lWAN, resources.getString(R.string.wan), "Non Operational"));
-		rows.add(new DashboardListRow(lGPIO, resources.getString(R.string.gpio), "Partially Operational"));
+		rows.add(new DashboardListRow(lWLAN, resources
+				.getString(R.string.wireless), "Partially Operational"));
+		rows.add(new DashboardListRow(lLAN, resources.getString(R.string.lan),
+				"Non Operational"));
+		rows.add(new DashboardListRow(lWAN, resources.getString(R.string.wan),
+				"Non Operational"));
+		rows.add(new DashboardListRow(lGPIO,
+				resources.getString(R.string.gpio), "Partially Operational"));
 		setListAdapter(new DashboardAdapter(getActivity(), rows));
 	}
 
@@ -113,13 +151,15 @@ public class DashboardFragment extends ListFragment {
 				transaction.replace(R.id.leftside_fragment, gpioFragment);
 			}
 			transaction.addToBackStack(null);
-			transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+			transaction
+					.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
 			transaction.commit();
 		}
 			break;
 		case lWLAN: {
 			Log.i(CommandCenterActivity.TAG, "WLAN WAS CLICKED");
-			WlanFragment wlanFragment = new WlanFragment();
+			WifiAsWanFragment wlanFragment = WifiAsWanFragment
+					.newInstance(authInfo);
 
 			// In case this activity was started with special instructions from
 			// an
@@ -138,7 +178,8 @@ public class DashboardFragment extends ListFragment {
 				transaction.replace(R.id.leftside_fragment, wlanFragment);
 			}
 			transaction.addToBackStack(null);
-			transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+			transaction
+					.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
 			transaction.commit();
 		}
 			break;

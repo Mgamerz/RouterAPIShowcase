@@ -42,7 +42,7 @@ public class CommandCenterActivity extends SpiceActivity {
 			// set you initial fragment object
 
 			// create first UI fragment and set it up
-			Fragment fragment = new DashboardFragment();
+			Fragment fragment = DashboardFragment.newInstance(authInfo);
 
 			FragmentTransaction ft = getSupportFragmentManager()
 					.beginTransaction();

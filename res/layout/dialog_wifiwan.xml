@@ -1,82 +1,113 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ScrollView01"
     android:layout_width="match_parent"
-    android:padding="10dp"
-    android:layout_height="wrap_content" >
-    <TextView
-        android:id="@+id/wapconnect_ssidset_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:text="SSID" />
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    android:scrollbars="none" >
 
-    <EditText
-        android:id="@+id/wapconnect_ssidset_field"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/wapconnect_ssidset_text"
-        android:ems="10"
-        android:hint="SSID Name"
-        android:inputType="text" />
-    <TextView
-        android:id="@+id/wapconnect_signalstrength_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/wapconnect_ssidset_field"
-        android:text="Signal Strength" />
+        android:padding="10dp" >
 
-    <TextView
-        android:id="@+id/wapconnect_signalstrength_value"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/wapconnect_signalstrength_text"
-        android:text="SSValue"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        <LinearLayout
+            android:id="@+id/wapconnect_ssidlayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
 
-    <TextView
-        android:id="@+id/wapconnect_securitytype_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/wapconnect_signalstrength_value"
-        android:layout_marginTop="5dp"
-        android:text="Network Security" />
+            <TextView
+                android:id="@+id/wapconnect_ssidset_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="SSID" />
 
-    <TextView
-        android:id="@+id/wapconnect_securitytype_value"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/wapconnect_securitytype_text"
-        android:text="SecurityType"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+            <EditText
+                android:id="@+id/wapconnect_ssidset_field"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="SSID Name"
+                android:inputType="text" />
+        </LinearLayout>
 
-    <TextView
-        android:id="@+id/wapconnect_password_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/wapconnect_securitytype_value"
-        android:layout_marginTop="10dp"
-        android:text="Password" />
+        <TextView
+            android:id="@+id/wapconnect_ssidset_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:text="SSID" />
 
-    <EditText
-        android:id="@+id/wapconnect_password_field"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/wapconnect_password_text"
-        android:ems="10"
-        android:hint="Password"
-        android:inputType="textPassword" >
+        <EditText
+            android:id="@+id/wapconnect_ssidset_field"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/wapconnect_ssidset_text"
+            android:ems="10"
+            android:hint="SSID Name"
+            android:inputType="text" />
 
-        <requestFocus />
-    </EditText>
+        <TextView
+            android:id="@+id/wapconnect_signalstrength_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/wapconnect_ssidset_field"
+            android:text="Signal Strength" />
 
-    <CheckBox
-        android:id="@+id/wapconnect_showpassword"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingLeft="10dp"
-        android:layout_below="@+id/wapconnect_password_field"
-        android:text="Show password" />
+        <TextView
+            android:id="@+id/wapconnect_signalstrength_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/wapconnect_signalstrength_text"
+            android:text="SSValue"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
 
-</RelativeLayout>
+        <TextView
+            android:id="@+id/wapconnect_securitytype_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/wapconnect_signalstrength_value"
+            android:layout_marginTop="5dp"
+            android:text="Network Security" />
+
+        <TextView
+            android:id="@+id/wapconnect_securitytype_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/wapconnect_securitytype_text"
+            android:text="SecurityType"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <TextView
+            android:id="@+id/wapconnect_password_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/wapconnect_securitytype_value"
+            android:layout_marginTop="10dp"
+            android:text="Password" />
+
+        <EditText
+            android:id="@+id/wapconnect_password_field"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/wapconnect_password_text"
+            android:ems="10"
+            android:hint="Password"
+            android:inputType="textPassword" >
+
+            <requestFocus />
+        </EditText>
+
+        <CheckBox
+            android:id="@+id/wapconnect_showpassword"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/wapconnect_password_field"
+            android:paddingLeft="10dp"
+            android:text="Show password" />
+    </RelativeLayout>
+
+</ScrollView>
