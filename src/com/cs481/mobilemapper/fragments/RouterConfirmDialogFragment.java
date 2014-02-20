@@ -19,7 +19,7 @@ import com.cs481.mobilemapper.responses.ecm.routers.Router;
 public class RouterConfirmDialogFragment extends DialogFragment {
 	Router router;
 	AuthInfo authInfo;
-	Context context;
+	//Context context;
 	
     /**
      * This constructor must be empty or the Fragment won't be able to start.
@@ -32,14 +32,18 @@ public class RouterConfirmDialogFragment extends DialogFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (savedInstanceState != null){
+        	router = savedInstanceState.getParcelable("router");
+        	authInfo = savedInstanceState.getParcelable("authInfo");
+        }
     }
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
     	Resources resources = getResources();
-    	LoginActivity activity = (LoginActivity) getActivity();
+    	//LoginActivity activity = (LoginActivity) getActivity();
     	//authInfo = activity.getAuthInfo();
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(activity);
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
         alertDialogBuilder.setTitle(router.getName());
         alertDialogBuilder.setMessage(String.format(resources.getString(R.string.confirm_router_management), router.getName()));
         //null should be your on click listener
@@ -69,6 +73,12 @@ public class RouterConfirmDialogFragment extends DialogFragment {
 
 
         return alertDialogBuilder.create();
+    }
+    
+    public void onSaveInstanceState(Bundle outState){
+    	super.onSaveInstanceState(outState);
+    	outState.putParcelable("router", router);
+    	outState.putParcelable("authInfo", authInfo);
     }
 
     /**
