@@ -10,6 +10,10 @@ public class Response {
 		this.data = data;
 		this.responseInfo = response;
 	}
+	
+	public Response(){
+		//empty constructor for jackson.
+	}
 
 	public Object getData() {
 		return data;

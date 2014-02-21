@@ -16,11 +16,13 @@ import android.net.wifi.WifiManager;
 import android.text.format.Formatter;
 import android.util.Log;
 
-import com.cs481.mobilemapper.responses.RootResponse;
+import com.cs481.mobilemapper.responses.RootElement;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 /**
  * The utility class holds methods that are accessed by many classes.
@@ -151,12 +153,12 @@ public class Utility {
 
 		if (authInfo.isEcm()) {
 			// ECM prepare
-			ObjectMapper mapper = new ObjectMapper();
+			//ObjectMapper mapper = new ObjectMapper();
 			put.setHeader("Content-Type", "application/json");
-			JsonNode json = mapper.readTree(data);
-			json = json.get("data");
+			//JsonNode json = mapper.readTree(data);
+			//json = json.get("data");
 			// Log.i(CommandCenterActivity.TAG, json.toString());
-			put.setEntity(new StringEntity(json.toString(), "UTF-8"));
+			put.setEntity(new StringEntity(data, "UTF-8"));
 		} else {
 			put.setHeader("Content-Type", "application/x-www-form-urlencoded");
 			put.setEntity(new StringEntity("data=" + data, "UTF-8"));
@@ -214,16 +216,26 @@ public class Utility {
 		return signalQuality;
 	}
 
-	public static String getPutString(Object data, int classId, boolean ecm,
+	public static String getPutString(Object data, Class clazz, int classId,
 			ObjectMapper mapper) {
-		String result;
-		if (ecm) {
-			ObjectWriter ow = mapper.writer().withDefaultPrettyPrinter();
-			result = ow.writeValueAsString(Response);
-			Log.i(CommandCenterActivity.TAG, "Data to post: " + jsonStr);
-		} else {
-			result = mapper.writeValueAsString(new RootResponse(data));
+		// } else {
+		try {
+			String result;
+			// if (ecm) {
+			// ObjectWriter ow = mapper.writer().withDefaultPrettyPrinter();
+			// result = ow.writeValueAsString(clazz.cast(data));
+			// Log.i(CommandCenterActivity.TAG, "Data to post: " + result);
+
+			result = mapper.writeValueAsString(clazz.cast(data));
+			// if (!ecm){
+			// result = "data="+
+			// }
+			return result;
+		} catch (JsonProcessingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-		return result;
+		// }
+		return null;
 	}
 }

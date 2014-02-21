@@ -4,7 +4,6 @@ import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
 import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
 import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
 import android.app.ProgressDialog;
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -23,6 +22,7 @@ import com.cs481.mobilemapper.AuthInfo;
 import com.cs481.mobilemapper.CommandCenterActivity;
 import com.cs481.mobilemapper.R;
 import com.cs481.mobilemapper.SpiceActivity;
+import com.cs481.mobilemapper.responses.Response;
 import com.cs481.mobilemapper.responses.control.gpio.GPIO;
 import com.cs481.mobilemapper.responses.control.led.LED;
 import com.octo.android.robospice.SpiceManager;
@@ -221,7 +221,6 @@ public class GPIOFragment extends Fragment implements OnRefreshListener,
 			// update your UI
 			progressDialog.dismiss(); // update your UI
 			if (gpio != null) {
-				System.out.println("DEBUG POIN");
 				if (gpio.getSuccess()) {
 					setGPIO(gpio);
 
@@ -358,9 +357,7 @@ public class GPIOFragment extends Fragment implements OnRefreshListener,
 			// update your UI
 			if (gpio.getSuccess()) {
 				if (gpio.getData().getException() == null) {
-					Log.i(CommandCenterActivity.TAG, "Command success!");
-					Log.i(CommandCenterActivity.TAG, "Put to GPIO: " + gpio);
-					// DebugGPIOFragment.this.gpio = gpio;
+					//handle something here if necessary.
 				} else {
 					Toast.makeText(
 							getActivity(),
@@ -377,11 +374,46 @@ public class GPIOFragment extends Fragment implements OnRefreshListener,
 			}
 		}
 	}
+	
+	
+	// inner class of your spiced Activity
+	private class GPIONewPutRequestListener implements RequestListener<Response> {
+
+		@Override
+		public void onRequestFailure(SpiceException e) {
+			// update your UI
+			Log.i(CommandCenterActivity.TAG, "Command failure!");
+		}
+
+		@Override
+		public void onRequestSuccess(Response response) {
+			// update your UI
+
+			if (response.getResponseInfo().getSuccess()) {
+				com.cs481.mobilemapper.responses.control.gpio.Data gpio = (com.cs481.mobilemapper.responses.control.gpio.Data) response.getData();
+				if (gpio.getException() == null) {
+					//handle here
+				} else {
+					Toast.makeText(
+							getActivity(),
+							getResources().getString(R.string.gpio)
+									+ getResources().getString(
+											R.string.server_exception)
+									+ gpio.getException(),
+							Toast.LENGTH_LONG).show();
+				}
+
+			} else {
+				Toast.makeText(getActivity(), gpio.getReason(),
+						Toast.LENGTH_LONG).show();
+			}
+		}
+	}
+	
 
 	@Override
 	public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 		if (gpio != null && checking == false) {
-			Log.i(CommandCenterActivity.TAG,"Check changed");
 			switch (buttonView.getId()) {
 			case R.id.powerled_state:
 				gpio.getData().setLed_power((isChecked) ? 1 : 0);
@@ -443,13 +475,13 @@ public class GPIOFragment extends Fragment implements OnRefreshListener,
 			}
 
 			// perform the request.
-			com.cs481.mobilemapper.responses.control.gpio.PutRequest request = new com.cs481.mobilemapper.responses.control.gpio.PutRequest(
-					authInfo, gpio);
+			com.cs481.mobilemapper.responses.PutRequest request = new com.cs481.mobilemapper.responses.PutRequest(gpio, authInfo, "control/gpio", 0, GPIO.class
+					);
 			String lastRequestCacheKey = request.createCacheKey();
 
 			spiceManager.execute(request, lastRequestCacheKey,
 					DurationInMillis.ALWAYS_EXPIRED,
-					new GPIOPutRequestListener());
+					new GPIONewPutRequestListener());
 		}
 	}
 
@@ -460,7 +492,6 @@ public class GPIOFragment extends Fragment implements OnRefreshListener,
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		Log.w(CommandCenterActivity.TAG, "Item was clicked.");
 		// handle item selection
 		switch (item.getItemId()) {
 		case R.id.reset_leds:
@@ -484,15 +515,14 @@ public class GPIOFragment extends Fragment implements OnRefreshListener,
 		@Override
 		public void onRequestFailure(SpiceException e) {
 			// update your UI
-			Log.i(CommandCenterActivity.TAG, "Command failure!");
+			//handle here if necessary.
 		}
 
 		@Override
 		public void onRequestSuccess(LED led) {
 			// update your UI
 			if (led.getData().getException() == null) {
-				Log.i(CommandCenterActivity.TAG, "Command success!");
-				Log.i(CommandCenterActivity.TAG, "Put to LED: " + led);
+				//should possibly do a get here.
 			} else {
 				Toast.makeText(
 						getActivity(),

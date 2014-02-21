@@ -17,102 +17,73 @@ import com.cs481.mobilemapper.CommandCenterActivity;
 import com.cs481.mobilemapper.ConnectionInfo;
 import com.cs481.mobilemapper.Utility;
 import com.cs481.mobilemapper.responses.control.gpio.GPIO;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
+import com.octo.android.robospice.request.SpiceRequest;
 import com.octo.android.robospice.request.springandroid.SpringAndroidSpiceRequest;
 
 /**
- * This put request is used to reset all Responses on the router to their default state.
+ * This is a generic put request that allows you to put any object to the router
+ * or ECM.
+ * 
  * @author Mgamerz
- *
+ * 
  */
-public class PutRequest extends SpringAndroidSpiceRequest<Response> {
+public class PutRequest extends SpiceRequest<Response> {
 
 	private AuthInfo authInfo;
 	private String suburl;
 	private int classId;
+	private Class clazz;
 	private Object data;
 
-	public PutRequest(Object data, AuthInfo authInfo, String suburl, int classId) {
+	public PutRequest(Object data, AuthInfo authInfo, String suburl,
+			int classId, Class clazz) {
 		super(Response.class);
 		this.authInfo = authInfo;
 		this.suburl = suburl;
 		this.classId = classId;
 		this.data = data;
+		this.clazz = clazz;
 	}
 
 	@Override
 	public Response loadDataFromNetwork() throws Exception {
-		String url = suburl; //url to access
+		String url = suburl; // url to access
 		ConnectionInfo ci = Utility.prepareConnection(url, authInfo);
 		DefaultHttpClient client = ci.getClient();
 		url = ci.getAccessUrl();
-		Log.i(CommandCenterActivity.TAG, "Put Request to "+url);
+		Log.i(CommandCenterActivity.TAG, "Put Request to " + url);
 		HttpPut put = new HttpPut(url);
-		
-        //Response Response = new Response();
-        //Response.setData(new com.cs481.mobilemapper.responses.control.Response.Data());
-        //Response.getData().setReset_Responses(true); //makes the Responses reset when the router processes this data
-		
 		ObjectMapper mapper = new ObjectMapper();
-		String jsonStr = Utility.getPutString(data, classId, authInfo.isEcm(), mapper);
-		
+		String jsonStr = Utility.getPutString(data, clazz, classId, mapper);
+		Log.w(CommandCenterActivity.TAG, "Putting data to network: " + jsonStr);
 		put = Utility.preparePutRequest(authInfo, put, jsonStr);
-		
+
 		HttpResponse resp = client.execute(put);
 		HttpEntity entity = resp.getEntity();
+
 		String responseString = EntityUtils.toString(entity, "UTF-8");
-		if (authInfo.isEcm()){
-			Log.i(CommandCenterActivity.TAG, "Normalizing ECM response");
+
+		if (authInfo.isEcm()) {
 			responseString = Utility.normalizeECM(mapper, responseString);
 		}
-		
-		Log.i(CommandCenterActivity.TAG, responseString);
-		Response respResponse = mapper.readValue(responseString, Response.class);
-		return respResponse;
-		
-		
-		/*
-        String url = String.format("http://%s/api/control/Response", routerip);
-
-		final String CODEPAGE = "UTF-8";
-		HttpPut put = new HttpPut(url);
-		put.setHeader("Content-Type", "application/x-www-form-urlencoded");	
-		
-        Response Response = new Response();
-        Response.setData(new com.cs481.mobilemapper.responses.control.Response.Data());
-        Response.getData().setReset_Responses(true);
-		
-		ObjectMapper mapper = new ObjectMapper();
-		String req = mapper.writeValueAsString(Response.getData());
-		
-		put.setEntity(new StringEntity("data="+req, CODEPAGE));
-		HttpResponse resp = null;
-
-		DefaultHttpClient client = new DefaultHttpClient();
-		Credentials defaultcreds = new UsernamePasswordCredentials("admin",
-				password);
-
-		client.getCredentialsProvider().setCredentials(
-				new AuthScope(routerip, 80, AuthScope.ANY_REALM), defaultcreds);
-		
-		
-		resp = client.execute(put);
-		HttpEntity entity = resp.getEntity();
-		String responseString = EntityUtils.toString(entity, "UTF-8");
-		Log.i(CommandCenterActivity.TAG, responseString);
-		Response reset = mapper.readValue(responseString, Response.class);
-		return reset;
-		*/
+		JsonNode tree = mapper.readTree(responseString);
+		RootElement rr = mapper.readValue(responseString, RootElement.class);
+		tree = tree.get("data");
+		Object data = mapper.readValue(tree.toString(), clazz);
+		return new Response(rr, data);
 	}
 
 	/**
 	 * This method generates a unique cache key for this request. In this case
-	 * our cache key depends just on the keyword.
+	 * our cache key depends just on the keyword. This string should not be
+	 * localized.
 	 * 
 	 * @return
 	 */
 	public String createCacheKey() {
-		return "Response_reset";
+		return "putrequest";
 	}
 }

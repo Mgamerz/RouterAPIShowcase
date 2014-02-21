@@ -60,26 +60,6 @@ public class GetRequest extends SpiceRequest<Response> {
 		RootElement rr = mapper.readValue(responseString, RootElement.class);
 		tree = tree.get("data");
 		Object data = mapper.readValue(tree.toString(), clazz);
-		//responseString = tree.toString();
-		// JsonNode tree = mapper.readTree(responseString);
-		// JsonNode datatree = tree.get("data");
-		// Log.w(CommandCenterActivity.TAG, datatree.toString());
-
-		// JsonNode radiotree = datatree.get("radio");
-		// Log.w(CommandCenterActivity.TAG, radiotree.toString());
-		/*
-		 * if (radiotree.isArray()) { Log.e(CommandCenterActivity.TAG,
-		 * "Radiotree is an array."); for (final JsonNode radioNode : radiotree)
-		 * { JsonNode enabled = radioNode.get("enabled");
-		 * Log.w(CommandCenterActivity.TAG, enabled.toString()); } }
-		 */
-		/*
-		 * ObjectMapper mapper = new ObjectMapper(); if (authInfo.isEcm()) {
-		 * responseString = Utility.normalizeECM(mapper, responseString); }
-		 * Log.i(CommandCenterActivity.TAG, responseString);
-		 */
-		//WlanConfig wlanconfig = mapper.readValue(responseString,
-		//		WlanConfig.class);
 		return new Response(rr, data);
 
 	}
