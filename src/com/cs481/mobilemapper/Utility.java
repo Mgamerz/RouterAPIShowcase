@@ -16,9 +16,11 @@ import android.net.wifi.WifiManager;
 import android.text.format.Formatter;
 import android.util.Log;
 
+import com.cs481.mobilemapper.responses.RootResponse;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
 
 /**
  * The utility class holds methods that are accessed by many classes.
@@ -210,5 +212,18 @@ public class Utility {
 			}
 		}
 		return signalQuality;
+	}
+
+	public static String getPutString(Object data, int classId, boolean ecm,
+			ObjectMapper mapper) {
+		String result;
+		if (ecm) {
+			ObjectWriter ow = mapper.writer().withDefaultPrettyPrinter();
+			result = ow.writeValueAsString(Response);
+			Log.i(CommandCenterActivity.TAG, "Data to post: " + jsonStr);
+		} else {
+			result = mapper.writeValueAsString(new RootResponse(data));
+		}
+		return result;
 	}
 }
