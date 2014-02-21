@@ -475,7 +475,7 @@ public class GPIOFragment extends Fragment implements OnRefreshListener,
 			}
 
 			// perform the request.
-			com.cs481.mobilemapper.responses.PutRequest request = new com.cs481.mobilemapper.responses.PutRequest(gpio, authInfo, "control/gpio", 0, GPIO.class
+			com.cs481.mobilemapper.responses.PutRequest request = new com.cs481.mobilemapper.responses.PutRequest(gpio.getData(), authInfo, "control/gpio", 0, com.cs481.mobilemapper.responses.control.gpio.Data.class
 					);
 			String lastRequestCacheKey = request.createCacheKey();
 
