@@ -36,8 +36,8 @@ import com.cs481.mobilemapper.Utility;
 import com.cs481.mobilemapper.WlanListRow;
 import com.cs481.mobilemapper.responses.Response;
 import com.cs481.mobilemapper.responses.config.wlan.Config_Wlan;
+import com.cs481.mobilemapper.responses.status.wlan.StatusWlan;
 import com.cs481.mobilemapper.responses.status.wlan.WAP;
-import com.cs481.mobilemapper.responses.status.wlan.Wlan;
 import com.octo.android.robospice.SpiceManager;
 import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
@@ -244,8 +244,7 @@ public class WifiAsWanFragment extends ListFragment implements
 
 	private void readWlanConfig(boolean dialog) {
 		// perform the request.
-		com.cs481.mobilemapper.responses.status.wlan.GetRequest request = new com.cs481.mobilemapper.responses.status.wlan.GetRequest(
-				authInfo);
+		com.cs481.mobilemapper.responses.GetRequest request = new com.cs481.mobilemapper.responses.GetRequest(authInfo, "status/wlan", StatusWlan.class);
 		String lastRequestCacheKey = request.createCacheKey();
 		Resources resources = getResources();
 		if (dialog) {
@@ -261,7 +260,7 @@ public class WifiAsWanFragment extends ListFragment implements
 				DurationInMillis.ALWAYS_EXPIRED, new WLANGetRequestListener());
 	}
 
-	private class WLANGetRequestListener implements RequestListener<Wlan> {
+	private class WLANGetRequestListener implements RequestListener<Response> {
 
 		@Override
 		public void onRequestFailure(SpiceException e) {
@@ -278,19 +277,21 @@ public class WifiAsWanFragment extends ListFragment implements
 		}
 
 		@Override
-		public void onRequestSuccess(Wlan wlan) {
+		public void onRequestSuccess(Response response) {
 			// update your UI
 			if (progressDialog != null) {
 				progressDialog.dismiss();
 			}
-			if (wlan.getSuccess()) {
+
+			if (response.getResponseInfo().getSuccess()) {
+				StatusWlan wlan = (StatusWlan) response.getData();
 				Log.i(CommandCenterActivity.TAG, "WLAN request successful");
 				updateWlanList(wlan);
 				Log.i(CommandCenterActivity.TAG, "isRefresh(): "
 						+ mPullToRefreshLayout.isRefreshing());
 			} else {
 
-				Toast.makeText(getActivity(), wlan.getReason(),
+				Toast.makeText(getActivity(), response.getResponseInfo().getReason(),
 						Toast.LENGTH_LONG).show();
 			}
 			mPullToRefreshLayout.setRefreshComplete();
@@ -328,8 +329,8 @@ public class WifiAsWanFragment extends ListFragment implements
 	 * 
 	 * @param wlan
 	 */
-	public void updateWlanList(Wlan wlan) {
-		waps = wlan.getData().getRadio().get(0).getSurvey(); // might need to
+	public void updateWlanList(StatusWlan wlan) {
+		waps = wlan.getRadio().get(0).getSurvey(); // might need to
 																// try to add
 																// dual band
 																// support.

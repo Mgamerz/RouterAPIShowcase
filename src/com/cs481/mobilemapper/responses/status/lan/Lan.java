@@ -1,19 +1,19 @@
 package com.cs481.mobilemapper.responses.status.lan;
 
 import com.cs481.mobilemapper.responses.RootElement;
-import com.cs481.mobilemapper.responses.status.wlan.Data;
+import com.cs481.mobilemapper.responses.status.wlan.StatusWlan;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Lan extends RootElement {
 	@JsonProperty("data")
-	private Data data;
+	private StatusWlan data;
 
-	public Data getData() {
+	public StatusWlan getData() {
 		return this.data;
 	}
 
-	public void setData(Data data) {
+	public void setData(StatusWlan data) {
 		this.data = data;
 	}
 	

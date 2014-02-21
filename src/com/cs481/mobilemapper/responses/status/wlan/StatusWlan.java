@@ -5,7 +5,7 @@ import java.util.ArrayList;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class Data{
+public class StatusWlan{
 	@JsonProperty("channels_2_4ghz_first")
    	private Number channels_2_4ghz_first;
 	
