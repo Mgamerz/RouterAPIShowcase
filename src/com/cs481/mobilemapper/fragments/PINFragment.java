@@ -7,7 +7,6 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.InvalidParameterSpecException;
-import java.util.Arrays;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -27,6 +26,7 @@ import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.os.Vibrator;
 import android.provider.Settings.Secure;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -134,6 +134,8 @@ public class PINFragment extends Fragment implements OnClickListener {
 	}
 
 	public void wrongPIN() {
+		Vibrator vibr = (Vibrator) getActivity().getSystemService(Context.VIBRATOR_SERVICE);
+		vibr.vibrate(250);
 		attemptsRemaining--;
 		LinearLayout pinProgress = (LinearLayout) getView().findViewById(
 				R.id.pinprogress_layout);
