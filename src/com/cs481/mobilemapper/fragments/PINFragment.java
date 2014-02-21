@@ -135,7 +135,8 @@ public class PINFragment extends Fragment implements OnClickListener {
 
 	public void wrongPIN() {
 		Vibrator vibr = (Vibrator) getActivity().getSystemService(Context.VIBRATOR_SERVICE);
-		vibr.vibrate(250);
+		long[] wrongPattern = {200, 40, 200, 40};
+		vibr.vibrate(wrongPattern, -1);
 		attemptsRemaining--;
 		LinearLayout pinProgress = (LinearLayout) getView().findViewById(
 				R.id.pinprogress_layout);
