@@ -135,8 +135,7 @@ public class PINFragment extends Fragment implements OnClickListener {
 
 	public void wrongPIN() {
 		Vibrator vibr = (Vibrator) getActivity().getSystemService(Context.VIBRATOR_SERVICE);
-		long[] wrongPattern = {200, 40, 200, 40};
-		vibr.vibrate(wrongPattern, -1);
+		vibr.vibrate(150);
 		attemptsRemaining--;
 		LinearLayout pinProgress = (LinearLayout) getView().findViewById(
 				R.id.pinprogress_layout);
@@ -153,11 +152,7 @@ public class PINFragment extends Fragment implements OnClickListener {
 		super.onStart();
 		SpiceActivity sa = (SpiceActivity) getActivity();
 		Resources resources = getResources();
-		sa.setTitle(resources.getString(R.string.pin_actionbar_title)); // TODO
-																		// change
-																		// to
-																		// string
-																		// resource
+		sa.setTitle(resources.getString(R.string.pin_actionbar_title));
 		setupUI();
 		if (!currentPin.equals("")) {
 			updateProgress(currentPin);
@@ -204,6 +199,10 @@ public class PINFragment extends Fragment implements OnClickListener {
 				R.id.debug_enteredpin);
 
 		int buttonId = v.getId();
+		
+		Vibrator vibr = (Vibrator) getActivity().getSystemService(Context.VIBRATOR_SERVICE);
+		vibr.vibrate(45);
+		
 		// Prevent entering a pin over 4 characters long (if its over 3, the pin
 		// count is full
 		if (currentPin.length() > 3 && buttonId != R.id.pin_backspace) {
