@@ -1,22 +1,13 @@
 package com.cs481.mobilemapper;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.springframework.http.MediaType;
-import org.springframework.http.converter.HttpMessageConverter;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.web.client.RestTemplate;
-
 import android.app.Application;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.octo.android.robospice.SpringAndroidSpiceService;
+import com.octo.android.robospice.SpiceService;
 import com.octo.android.robospice.persistence.CacheManager;
 import com.octo.android.robospice.persistence.exception.CacheCreationException;
 import com.octo.android.robospice.persistence.springandroid.json.jackson2.Jackson2ObjectPersisterFactory;
 
-public class SpiceService extends SpringAndroidSpiceService {
+public class CCSpiceService extends SpiceService {
 
   @Override
   public CacheManager createCacheManager( Application application ) throws CacheCreationException {
@@ -25,7 +16,7 @@ public class SpiceService extends SpringAndroidSpiceService {
     cacheManager.addPersister( jacksonObjectPersisterFactory );
     return cacheManager;
   }
-
+/*
   @Override
   public RestTemplate createRestTemplate() {
     RestTemplate restTemplate = new RestTemplate();
@@ -58,5 +49,5 @@ public class SpiceService extends SpringAndroidSpiceService {
     //listHttpMessageConverters.add( stringHttpMessageConverter );
     restTemplate.setMessageConverters( listHttpMessageConverters );
     return restTemplate;
-  }
+  }*/
 }

@@ -15,8 +15,6 @@ import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 
-import org.springframework.util.support.Base64;
-
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
@@ -31,6 +29,7 @@ import android.provider.Settings.Secure;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -385,8 +384,7 @@ public class PINFragment extends Fragment implements OnClickListener {
 			Log.w(CommandCenterActivity.TAG, "Unlocking: "+currentPin+" with salt "+uuid);
 			SecretKey secret = Cryptography.generateKey(currentPin,
 					uuid.getBytes("UTF-8"));
-			
-			String result = Cryptography.decryptMsg(Base64.decode(verify),
+			String result = Cryptography.decryptMsg(Base64.decode(verify, Base64.DEFAULT),
 					secret);
 			Log.i(CommandCenterActivity.TAG, "Decrypted back to: " + result);
 			//Log.i(CommandCenterActivity.TAG, "Compare against: "+crypto.getString("uuid", "FAILURE"));
@@ -446,7 +444,7 @@ public class PINFragment extends Fragment implements OnClickListener {
 				//Log.i(CommandCenterActivity.TAG, "Encrypted to: "
 				//		+ new String(encrypted, "UTF-8"));
 				SharedPreferences.Editor editor = crypto.edit();
-				String putdata = Base64.encodeBytes(encrypted);
+				String putdata = Base64.encodeToString(encrypted, Base64.DEFAULT);
 				Log.i(CommandCenterActivity.TAG, "B64-E: "+putdata);
 				editor.putString("validator", putdata);
 				// Commit the edits!
@@ -462,7 +460,7 @@ public class PINFragment extends Fragment implements OnClickListener {
 				//		uuid.getBytes("UTF-8"));
 				//Log.i(CommandCenterActivity.TAG, "Encrypted byte arrays are equal: "+Arrays.equals(validation.getBytes("UTF-8"), encrypted));
 
-				String result = Cryptography.decryptMsg(Base64.decode(validation), secret);
+				String result = Cryptography.decryptMsg(Base64.decode(validation, Base64.DEFAULT), secret);
 				
 				Log.i(CommandCenterActivity.TAG, "Decrypted to: "+result);
 				

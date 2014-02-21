@@ -11,7 +11,7 @@ import org.apache.http.util.EntityUtils;
 
 import com.cs481.mobilemapper.AuthInfo;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.octo.android.robospice.request.springandroid.SpringAndroidSpiceRequest;
+import com.octo.android.robospice.request.SpiceRequest;
 
 /**
  * This is a special request that does not use the default ConnectionInfo values. 
@@ -19,7 +19,7 @@ import com.octo.android.robospice.request.springandroid.SpringAndroidSpiceReques
  * @author Mgamerz
  *
  */
-public class GetRequest extends SpringAndroidSpiceRequest<Routers> {
+public class GetRequest extends SpiceRequest<Routers> {
 
 	private AuthInfo authInfo;
 

@@ -2,11 +2,7 @@ package com.cs481.mobilemapper.responses.control.led;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
-import org.apache.http.auth.AuthScope;
-import org.apache.http.auth.Credentials;
-import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.methods.HttpPut;
-import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
 
@@ -16,17 +12,16 @@ import com.cs481.mobilemapper.AuthInfo;
 import com.cs481.mobilemapper.CommandCenterActivity;
 import com.cs481.mobilemapper.ConnectionInfo;
 import com.cs481.mobilemapper.Utility;
-import com.cs481.mobilemapper.responses.control.gpio.GPIO;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
-import com.octo.android.robospice.request.springandroid.SpringAndroidSpiceRequest;
+import com.octo.android.robospice.request.SpiceRequest;
 
 /**
  * This put request is used to reset all LEDs on the router to their default state.
  * @author Mgamerz
  *
  */
-public class PutRequest extends SpringAndroidSpiceRequest<LED> {
+public class PutRequest extends SpiceRequest<LED> {
 
 	private AuthInfo authInfo;
 

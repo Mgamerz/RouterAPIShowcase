@@ -53,6 +53,8 @@ public class WifiAsWanFragment extends ListFragment implements
 	private WlanAdapter adapter;
 	private ArrayList<WAP> waps;
 	private boolean shouldLoadData = true;
+	private boolean wifiState = false;
+	private boolean wifiStateEnabled = false;
 	private Menu menu;
 
 	@Override
@@ -63,6 +65,8 @@ public class WifiAsWanFragment extends ListFragment implements
 			waps = savedInstanceState.getParcelableArrayList("waps");
 			authInfo = savedInstanceState.getParcelable("authInfo");
 			shouldLoadData = savedInstanceState.getBoolean("shouldLoadData");
+			wifiStateEnabled = savedInstanceState.getBoolean("wifiStateEnabled");
+			wifiState = savedInstanceState.getBoolean("wifiState");
 		} else {
 			Bundle passedArgs = getArguments();
 			if (passedArgs != null) {
@@ -91,6 +95,8 @@ public class WifiAsWanFragment extends ListFragment implements
 		outState.putParcelableArrayList("waps", waps);
 		outState.putParcelable("authInfo", authInfo);
 		outState.putBoolean("shouldLoadData", shouldLoadData);
+		outState.putBoolean("wifiState", wifiState);
+		outState.putBoolean("wifiStateEnabled", wifiStateEnabled);
 	}
 
 	@Override
@@ -100,52 +106,51 @@ public class WifiAsWanFragment extends ListFragment implements
 		return inflater.inflate(R.layout.fragment_wlan, container, false);
 	}
 
-	@Override
-	public void onViewCreated(View view, Bundle savedInstanceState) {
-		super.onViewCreated(view, savedInstanceState);
-		// This is the View which is created by ListFragment
-		ViewGroup viewGroup = (ViewGroup) view;
+	   @Override
+	    public void onViewCreated(View view, Bundle savedInstanceState) {
+	        super.onViewCreated(view,savedInstanceState);
+	        
+	        // This is the View which is created by ListFragment
+	        ViewGroup viewGroup = (ViewGroup) view;
 
-		// We need to create a PullToRefreshLayout manually
-		mPullToRefreshLayout = new PullToRefreshLayout(viewGroup.getContext());
+	        // We need to create a PullToRefreshLayout manually
+	        mPullToRefreshLayout = new PullToRefreshLayout(viewGroup.getContext());
 
-		// We can now setup the PullToRefreshLayout
-		ActionBarPullToRefresh.from(getActivity())
-
-		// We need to insert the PullToRefreshLayout into the Fragment's
-		// ViewGroup
-				.insertLayoutInto(viewGroup)
-
-				// We need to mark the ListView and it's Empty View as pullable
-				// This is because they are not dirent children of the ViewGroup
-				.theseChildrenArePullable(getListView(),
-						getListView().getEmptyView())
-
-				// We can now complete the setup as desired
-				.listener(this).setup(mPullToRefreshLayout);
-	}
+	        // We can now setup the PullToRefreshLayout
+	        ActionBarPullToRefresh.from(getActivity())
+	                .insertLayoutInto(viewGroup)
+	                .theseChildrenArePullable(getListView(), getListView().getEmptyView())
+	                .listener(this)
+	                .setup(mPullToRefreshLayout);
+	    }
 
 	@Override
 	public void onStart() {
 		super.onStart();
 		// /You will setup the action bar with pull to refresh layout
-		mPullToRefreshLayout = (PullToRefreshLayout) getView().findViewById(
-				R.id.ptr_layout);
-		ActionBarPullToRefresh.from(getActivity()).allChildrenArePullable()
-				.listener(this).setup(mPullToRefreshLayout);
-
-		// ListView list = (ListView)
-		// getView().findViewById(R.id.overview_list);
 		SpiceActivity sa = (SpiceActivity) getActivity();
 		sa.setTitle("WLAN"); // TODO change to string resource
 		spiceManager = sa.getSpiceManager();
 		if (shouldLoadData) {
+			setWifiState();
 			readWlanConfig(true);
 			shouldLoadData = false;
 		} else {
 			Log.i(CommandCenterActivity.TAG, waps.toString());
 			updateWapList(waps);
 		}
+	}
+
+	/**
+	 * Set's a network operation to change the Wifi Toggle switch state
+	 */
+	private void setWifiState() {
+		// perform the request.
+		com.cs481.mobilemapper.responses.GetRequest request = new com.cs481.mobilemapper.responses.GetRequest(authInfo, "config/wlan", StatusWlan.class);
+		String lastRequestCacheKey = request.createCacheKey();
+
+		spiceManager.execute(request, lastRequestCacheKey,
+				DurationInMillis.ALWAYS_EXPIRED, new WLANConfigGetRequestListener());
 	}
 
 	public class WlanAdapter extends ArrayAdapter<WlanListRow> {
@@ -228,6 +233,8 @@ public class WifiAsWanFragment extends ListFragment implements
 	private void setWifiToggleListener(){
 		Switch wifiToggle = (Switch) menu.findItem(R.id.wifi_toggle)
 				.getActionView();
+		wifiToggle.setChecked(wifiState);
+		wifiToggle.setEnabled(wifiStateEnabled);
 		wifiToggle.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 
 			@Override
