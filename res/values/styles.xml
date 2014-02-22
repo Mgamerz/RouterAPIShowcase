@@ -24,6 +24,8 @@
         <item name="android:editTextStyle">@style/RedEditTextTheme</item>
         <item name="android:checkboxStyle">@style/RedCheckBoxTheme</item>
         <item name="android:itemTextAppearance">@style/RedActionBarItemTheme</item>
+                <item name="android:listViewStyle">@style/RedListViewTheme</item>
+        
     </style>
 
     <!-- Button theme -->
@@ -39,6 +41,12 @@
     <!-- Checkbox Theme -->
     <style name="RedCheckBoxTheme" parent="@android:style/Widget.CompoundButton.CheckBox">
         <item name="android:textColor">@color/White</item>
+    </style>
+
+    <!-- ListView Theme -->
+    <style name="RedListViewTheme" parent="@android:style/Widget.ListView">
+        <item name="android:divider">#FFB2B2</item>
+        <item name="android:dividerHeight">1px</item>
     </style>
 
     <!-- Actionbar Item Theme -->
