@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
     <!--
         Base application theme, dependent on API level. This theme is replaced
         by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
@@ -16,7 +16,14 @@
 
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
 
-        <item name="android:windowBackground">@color/MistyRose</item>
+        <item name="android:windowBackground">@color/Cradlepoint</item>
+        <item name="android:buttonStyle">@style/ButtonTheme</item>
+        <item name="android:textColor">@color/White</item>
+    </style>
+    
+    <!-- Button theme -->
+    <style name="ButtonTheme" parent="@android:style/Widget.Button">
+        <item name="android:textColor">@color/White</item>
     </style>
 
 </resources>

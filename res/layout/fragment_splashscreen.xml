@@ -7,14 +7,12 @@
 
     <Button
         android:id="@+id/button_ecm"
-        style="?android:attr/buttonStyleSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/splash_button_ecm" />
 
     <Button
         android:id="@+id/button_local"
-        style="?android:attr/buttonStyleSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/splash_button_local" />
