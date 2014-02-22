@@ -1,29 +1,34 @@
 
 package com.cs481.mobilemapper.responses.status.productinfo;
 
-import java.util.List;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Cpu{
-   	private Number nice;
-   	private Number system;
-   	private Number user;
+	@JsonProperty("nice")
+   	private int nice;
+	
+	@JsonProperty("system")
+   	private int system;
+   	
+	@JsonProperty("user")
+	private int user;
 
- 	public Number getNice(){
+ 	public int getNice(){
 		return this.nice;
 	}
-	public void setNice(Number nice){
+	public void setNice(int nice){
 		this.nice = nice;
 	}
- 	public Number getSystem(){
+ 	public int getSystem(){
 		return this.system;
 	}
-	public void setSystem(Number system){
+	public void setSystem(int system){
 		this.system = system;
 	}
- 	public Number getUser(){
+ 	public int getUser(){
 		return this.user;
 	}
-	public void setUser(Number user){
+	public void setUser(int user){
 		this.user = user;
 	}
 }

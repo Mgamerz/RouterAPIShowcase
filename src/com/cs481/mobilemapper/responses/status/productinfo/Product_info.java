@@ -1,17 +1,34 @@
 
 package com.cs481.mobilemapper.responses.status.productinfo;
 
-import java.util.List;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Product_info{
+	@JsonProperty("company_name")
    	private String company_name;
+	
+	@JsonProperty("company_url")
    	private String company_url;
+	
+	@JsonProperty("contact_web_link")
    	private String contact_web_link;
+	
+	@JsonProperty("copyright")
    	private String copyright;
+	
+	@JsonProperty("default_SSID_guest")
    	private String default_SSID_guest;
+	
+	@JsonProperty("default_SSID_root")
    	private String default_SSID_root;
+	
+	@JsonProperty("mac0")
    	private String mac0;
+	
+	@JsonProperty("manufacturing_url")
    	private String manufacturing_url;
+	
+	@JsonProperty("product_name")
    	private String product_name;
 
  	public String getCompany_name(){

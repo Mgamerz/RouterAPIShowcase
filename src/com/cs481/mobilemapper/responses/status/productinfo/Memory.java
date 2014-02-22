@@ -1,39 +1,106 @@
 
 package com.cs481.mobilemapper.responses.status.productinfo;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class Memory{
+	@JsonProperty("active")
    	private int active;
+	
+	@JsonProperty("active(anon)")
    	private int active_anon;
+	
+	@JsonProperty("active(file)")
    	private int active_file;
+	
+	@JsonProperty("anonpages")
    	private int anonpages;
+	
+	@JsonProperty("bounce")
    	private int bounce;
+	
+	@JsonProperty("buffers")
    	private int buffers;
+	
+	@JsonProperty("cached")
    	private int cached;
+	
+	@JsonProperty("commitlimit")
    	private int commitlimit;
+	
+	@JsonProperty("comitted_as")
    	private int committed_as;
+	
+	@JsonProperty("dirty")
    	private int dirty;
+	
+	@JsonProperty("inactive")
    	private int inactive;
+	
+	@JsonProperty("inactive(anon)")
    	private int inactive_anon;
+	
+	@JsonProperty("inactive(file)")
    	private int inactive_file;
+	
+	@JsonProperty("kernelstack")
    	private int kernelstack;
+	
+	@JsonProperty("mapped")
    	private int mapped;
+	
+	@JsonProperty("memfree")
    	private int memfree;
+	
+	@JsonProperty("memtotal")
    	private int memtotal;
+	
+	@JsonProperty("mlocked")
    	private int mlocked;
+	
+	@JsonProperty("nfs_unstable")
    	private int nfs_unstable;
+	
+	@JsonProperty("pagetables")
    	private int pagetables;
+	
+	@JsonProperty("shmem")
    	private int shmem;
+	
+	@JsonProperty("slab")
    	private int slab;
+	
+	@JsonProperty("sreclaimable")
    	private int sreclaimable;
+	
+	@JsonProperty("sunreclaim")
    	private int sunreclaim;
+	
+	@JsonProperty("swapcached")
    	private int swapcached;
+	
+	@JsonProperty("swapfree")
    	private int swapfree;
+	
+	@JsonProperty("swaptotal")
    	private int swaptotal;
+	
+	@JsonProperty("unevictable")
    	private int unevictable;
+	
+	@JsonProperty("vmallocchunk")
    	private int vmallocchunk;
+	
+	@JsonProperty("vmalloctotal")
    	private int vmalloctotal;
+	
+	@JsonProperty("vmallocused")
    	private int vmallocused;
+	
+	@JsonProperty("writeback")
    	private int writeback;
+	
+	@JsonProperty("writebacktmp")
    	private int writebacktmp;
 
  	public int getActive(){

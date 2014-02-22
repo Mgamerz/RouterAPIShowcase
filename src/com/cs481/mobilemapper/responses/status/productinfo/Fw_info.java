@@ -1,21 +1,44 @@
 
 package com.cs481.mobilemapper.responses.status.productinfo;
 
-import java.util.List;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Fw_info{
+	@JsonProperty("build_date")
    	private String build_date;
+	
+	@JsonProperty("build_type")
    	private String build_type;
-   	private Number build_version;
+	
+	@JsonProperty("build_version")
+   	private int build_version;
+	
+	@JsonProperty("custom_defaults")
    	private boolean custom_defaults;
+	
+	@JsonProperty("fw_update_available")
    	private boolean fw_update_available;
-   	private Number major_version;
+	
+	@JsonProperty("major_version")
+   	private int major_version;
+	
+	@JsonProperty("manufacturing_upgrade")
    	private boolean manufacturing_upgrade;
-   	private Number minor_version;
-   	private Number patch_version;
-   	private Number upgrade_major_version;
-   	private Number upgrade_minor_version;
-   	private Number upgrade_patch_version;
+	
+	@JsonProperty("minor_version")
+   	private int minor_version;
+	
+	@JsonProperty("patch_version")
+   	private int patch_version;
+	
+	@JsonProperty("upgrade_major_version")
+   	private int upgrade_major_version;
+	
+	@JsonProperty("upgrade_minor version")
+   	private int upgrade_minor_version;
+	
+	@JsonProperty("upgrade_patch_version")
+   	private int upgrade_patch_version;
 
  	public String getBuild_date(){
 		return this.build_date;
@@ -29,10 +52,10 @@ public class Fw_info{
 	public void setBuild_type(String build_type){
 		this.build_type = build_type;
 	}
- 	public Number getBuild_version(){
+ 	public int getBuild_version(){
 		return this.build_version;
 	}
-	public void setBuild_version(Number build_version){
+	public void setBuild_version(int build_version){
 		this.build_version = build_version;
 	}
  	public boolean getCustom_defaults(){
@@ -47,10 +70,10 @@ public class Fw_info{
 	public void setFw_update_available(boolean fw_update_available){
 		this.fw_update_available = fw_update_available;
 	}
- 	public Number getMajor_version(){
+ 	public int getMajor_version(){
 		return this.major_version;
 	}
-	public void setMajor_version(Number major_version){
+	public void setMajor_version(int major_version){
 		this.major_version = major_version;
 	}
  	public boolean getManufacturing_upgrade(){
@@ -59,34 +82,34 @@ public class Fw_info{
 	public void setManufacturing_upgrade(boolean manufacturing_upgrade){
 		this.manufacturing_upgrade = manufacturing_upgrade;
 	}
- 	public Number getMinor_version(){
+ 	public int getMinor_version(){
 		return this.minor_version;
 	}
-	public void setMinor_version(Number minor_version){
+	public void setMinor_version(int minor_version){
 		this.minor_version = minor_version;
 	}
- 	public Number getPatch_version(){
+ 	public int getPatch_version(){
 		return this.patch_version;
 	}
-	public void setPatch_version(Number patch_version){
+	public void setPatch_version(int patch_version){
 		this.patch_version = patch_version;
 	}
- 	public Number getUpgrade_major_version(){
+ 	public int getUpgrade_major_version(){
 		return this.upgrade_major_version;
 	}
-	public void setUpgrade_major_version(Number upgrade_major_version){
+	public void setUpgrade_major_version(int upgrade_major_version){
 		this.upgrade_major_version = upgrade_major_version;
 	}
- 	public Number getUpgrade_minor_version(){
+ 	public int getUpgrade_minor_version(){
 		return this.upgrade_minor_version;
 	}
-	public void setUpgrade_minor_version(Number upgrade_minor_version){
+	public void setUpgrade_minor_version(int upgrade_minor_version){
 		this.upgrade_minor_version = upgrade_minor_version;
 	}
- 	public Number getUpgrade_patch_version(){
+ 	public int getUpgrade_patch_version(){
 		return this.upgrade_patch_version;
 	}
-	public void setUpgrade_patch_version(Number upgrade_patch_version){
+	public void setUpgrade_patch_version(int upgrade_patch_version){
 		this.upgrade_patch_version = upgrade_patch_version;
 	}
 }
