@@ -24,22 +24,22 @@
         <item name="android:editTextStyle">@style/RedEditTextTheme</item>
         <item name="android:checkboxStyle">@style/RedCheckBoxTheme</item>
         <item name="android:itemTextAppearance">@style/RedActionBarItemTheme</item>
-                <item name="android:listViewStyle">@style/RedListViewTheme</item>
-        
+        <item name="android:listViewStyle">@style/RedListViewTheme</item>
+        <item name="android:alertDialogStyle">@style/RedDialogTheme</item>
     </style>
 
     <!-- Button theme -->
     <style name="RedButtonTheme" parent="@android:style/Widget.Button">
         <item name="android:layout_width">wrap_content</item>
-	    <item name="android:layout_height">wrap_content</item>
-	    <item name="android:textColor">#FFF</item>
-	    <item name="android:gravity">center</item>
-	    <item name="android:textSize">12sp</item>
-	    <item name="android:textStyle">bold</item>
-	    <item name="android:shadowColor">#000</item>
-	    <item name="android:shadowRadius">2</item>
-	    <item name="android:background">@drawable/red_button_theme</item>
-	    <item name="android:layout_marginLeft">5dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">#FFF</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:shadowColor">#000</item>
+        <item name="android:shadowRadius">2</item>
+        <item name="android:background">@drawable/red_button_theme</item>
+        <item name="android:layout_marginLeft">5dp</item>
     </style>
 
     <!-- EditText theme -->
@@ -56,6 +56,11 @@
     <style name="RedListViewTheme" parent="@android:style/Widget.ListView">
         <item name="android:divider">#FFB2B2</item>
         <item name="android:dividerHeight">1px</item>
+    </style>
+
+    <!-- Dialog Theme -->
+    <style name="RedDialogTheme" parent="@android:style/Theme.Holo.Light.Dialog">
+        <item name="android:textColorPrimary">#e6e6e6</item>
     </style>
 
     <!-- Actionbar Item Theme -->
