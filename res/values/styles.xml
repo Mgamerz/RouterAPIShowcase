@@ -30,7 +30,16 @@
 
     <!-- Button theme -->
     <style name="RedButtonTheme" parent="@android:style/Widget.Button">
-        <item name="android:textColor">@color/White</item>
+        <item name="android:layout_width">wrap_content</item>
+	    <item name="android:layout_height">wrap_content</item>
+	    <item name="android:textColor">#FFF</item>
+	    <item name="android:gravity">center</item>
+	    <item name="android:textSize">12sp</item>
+	    <item name="android:textStyle">bold</item>
+	    <item name="android:shadowColor">#000</item>
+	    <item name="android:shadowRadius">2</item>
+	    <item name="android:background">@drawable/red_button_theme</item>
+	    <item name="android:layout_marginLeft">5dp</item>
     </style>
 
     <!-- EditText theme -->
