@@ -59,7 +59,7 @@ public class GPIOFragment extends Fragment implements OnRefreshListener,
 
 	private void readGPIOConfig(boolean dialog) {
 		// perform the request.
-		com.cs481.mobilemapper.responses.GetRequest request = new com.cs481.mobilemapper.responses.GetRequest(authInfo, "status/gpio", GPIO.class);
+		com.cs481.mobilemapper.responses.GetRequest request = new com.cs481.mobilemapper.responses.GetRequest(authInfo, "status/gpio", GPIO.class, "gpioget");
 		String lastRequestCacheKey = request.createCacheKey();
 
 		if (dialog) {

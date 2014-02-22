@@ -22,12 +22,14 @@ public class GetRequest extends SpiceRequest<Response> {
 	private AuthInfo authInfo;
 	private String suburl;
 	private Class clazz;
+	private String requestid;
 
-	public GetRequest(AuthInfo authInfo, String url, Class clazz) {
+	public GetRequest(AuthInfo authInfo, String url, Class clazz, String requestid) {
 		super(Response.class);
 		this.suburl = url;
 		this.authInfo = authInfo;
 		this.clazz = clazz;
+		this.requestid = requestid;
 	}
 
 	@Override
@@ -71,6 +73,6 @@ public class GetRequest extends SpiceRequest<Response> {
 	 * @return
 	 */
 	public String createCacheKey() {
-		return "getreq";
+		return requestid;
 	}
 }

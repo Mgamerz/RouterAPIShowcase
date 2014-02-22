@@ -35,7 +35,7 @@ import com.cs481.mobilemapper.SpiceActivity;
 import com.cs481.mobilemapper.Utility;
 import com.cs481.mobilemapper.WlanListRow;
 import com.cs481.mobilemapper.responses.Response;
-import com.cs481.mobilemapper.responses.config.wlan.Config_Wlan;
+import com.cs481.mobilemapper.responses.config.wlan.ConfigWlan;
 import com.cs481.mobilemapper.responses.status.wlan.StatusWlan;
 import com.cs481.mobilemapper.responses.status.wlan.WAP;
 import com.octo.android.robospice.SpiceManager;
@@ -146,7 +146,7 @@ public class WifiAsWanFragment extends ListFragment implements
 	 */
 	private void setWifiState() {
 		// perform the request.
-		com.cs481.mobilemapper.responses.GetRequest request = new com.cs481.mobilemapper.responses.GetRequest(authInfo, "config/wlan", StatusWlan.class);
+		com.cs481.mobilemapper.responses.GetRequest request = new com.cs481.mobilemapper.responses.GetRequest(authInfo, "config/wlan", ConfigWlan.class, "wlanconfigget");
 		String lastRequestCacheKey = request.createCacheKey();
 
 		spiceManager.execute(request, lastRequestCacheKey,
@@ -214,7 +214,7 @@ public class WifiAsWanFragment extends ListFragment implements
 		//readWlanConfig(false);
 		
 		com.cs481.mobilemapper.responses.GetRequest request = new com.cs481.mobilemapper.responses.GetRequest (
-				authInfo, "config/wlan", Config_Wlan.class);
+				authInfo, "config/wlan", ConfigWlan.class, "configwlanget");
 		String lastRequestCacheKey = request.createCacheKey();
 
 		spiceManager.execute(request, lastRequestCacheKey,
@@ -251,7 +251,7 @@ public class WifiAsWanFragment extends ListFragment implements
 
 	private void readWlanConfig(boolean dialog) {
 		// perform the request.
-		com.cs481.mobilemapper.responses.GetRequest request = new com.cs481.mobilemapper.responses.GetRequest(authInfo, "status/wlan", StatusWlan.class);
+		com.cs481.mobilemapper.responses.GetRequest request = new com.cs481.mobilemapper.responses.GetRequest(authInfo, "status/wlan", StatusWlan.class, "statuswlanget");
 		String lastRequestCacheKey = request.createCacheKey();
 		Resources resources = getResources();
 		if (dialog) {
@@ -264,10 +264,10 @@ public class WifiAsWanFragment extends ListFragment implements
 		}
 
 		spiceManager.execute(request, lastRequestCacheKey,
-				DurationInMillis.ALWAYS_EXPIRED, new WLANGetRequestListener());
+				DurationInMillis.ALWAYS_EXPIRED, new WLANStatusGetRequestListener());
 	}
 
-	private class WLANGetRequestListener implements RequestListener<Response> {
+	private class WLANStatusGetRequestListener implements RequestListener<Response> {
 
 		@Override
 		public void onRequestFailure(SpiceException e) {
@@ -319,11 +319,15 @@ public class WifiAsWanFragment extends ListFragment implements
 
 		@Override
 		public void onRequestSuccess(Response wlanConfig) {
-			Config_Wlan cwlan = (Config_Wlan) wlanConfig.getData();
+			Log.i(CommandCenterActivity.TAG, "UPDATING SWITCH!");
+			ConfigWlan cwlan = (ConfigWlan) wlanConfig.getData();
 			Switch wifiToggle = (Switch) menu.findItem(R.id.wifi_toggle)
 					.getActionView();
 			wifiToggle.setOnCheckedChangeListener(null);
-			wifiToggle.setChecked(cwlan.getRadios().get(0).getEnabled());
+			wifiState = cwlan.getRadios().get(0).getEnabled();
+			wifiStateEnabled = true;
+			wifiToggle.setEnabled(wifiStateEnabled);
+			wifiToggle.setChecked(wifiState);
 			setWifiToggleListener();
 			mPullToRefreshLayout.setRefreshComplete();
 		}

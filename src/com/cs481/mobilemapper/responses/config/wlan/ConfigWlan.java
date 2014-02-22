@@ -5,7 +5,7 @@ import java.util.ArrayList;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class Config_Wlan{
+public class ConfigWlan{
 	@JsonProperty("radio")
    	private ArrayList<Radio> radios;
 	

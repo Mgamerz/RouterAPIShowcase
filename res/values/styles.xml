@@ -1,4 +1,5 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
+
     <!--
         Base application theme, dependent on API level. This theme is replaced
         by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
@@ -11,19 +12,38 @@
         -->
     </style>
 
+    <!-- Mobile Mapper code goes below. -->
     <!-- Application theme. -->
     <style name="AppTheme" parent="@style/AppBaseTheme">
 
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
 
         <item name="android:windowBackground">@color/Cradlepoint</item>
-        <item name="android:buttonStyle">@style/ButtonTheme</item>
+        <item name="android:buttonStyle">@style/RedButtonTheme</item>
+        <item name="android:textColor">@color/White</item>
+        <item name="android:editTextStyle">@style/RedEditTextTheme</item>
+        <item name="android:checkboxStyle">@style/RedCheckBoxTheme</item>
+        <item name="android:itemTextAppearance">@style/RedActionBarItemTheme</item>
+    </style>
+
+    <!-- Button theme -->
+    <style name="RedButtonTheme" parent="@android:style/Widget.Button">
         <item name="android:textColor">@color/White</item>
     </style>
-    
-    <!-- Button theme -->
-    <style name="ButtonTheme" parent="@android:style/Widget.Button">
+
+    <!-- EditText theme -->
+    <style name="RedEditTextTheme" parent="@android:style/Widget.EditText">
         <item name="android:textColor">@color/White</item>
+    </style>
+
+    <!-- Checkbox Theme -->
+    <style name="RedCheckBoxTheme" parent="@android:style/Widget.CompoundButton.CheckBox">
+        <item name="android:textColor">@color/White</item>
+    </style>
+
+    <!-- Actionbar Item Theme -->
+    <style name="RedActionBarItemTheme">
+        <item name="android:textColor">@color/Black</item>
     </style>
 
 </resources>
