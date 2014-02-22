@@ -73,6 +73,14 @@
     <string name="fair">Fair</string>
     <string name="poor">Poor</string>
     <string name="unknown">Unknown</string>
+    <string name="ssid">SSID</string>
+    <string name="ssidname">SSID Name</string>
+    <string name="signal_strength">Signal Strength</string>
+    <string name="ssvalue">SSValue</string>
+    <string name="network_security">Network Security</string>
+    <string name="security_type">SecurityType</string>
+    <string name="password">Password</string>
+    <string name="show_password">Show Password</string>
 
     <!-- LED Control -->
     <string name="gpio_title">LED Control</string>

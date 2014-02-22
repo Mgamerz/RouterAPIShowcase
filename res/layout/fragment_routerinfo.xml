@@ -21,14 +21,14 @@
                 android:id="@+id/wapconnect_ssidset_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/ssid" />
+                android:text="SSID" />
 
             <EditText
                 android:id="@+id/wapconnect_ssidset_field"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
-                android:hint="@string/ssidname"
+                android:hint="SSID Name"
                 android:inputType="text" />
         </LinearLayout>
 
@@ -37,14 +37,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/wapconnect_ssidlayout"
-            android:text="@string/signal_strength" />
+            android:text="Signal Strength" />
 
         <TextView
             android:id="@+id/wapconnect_signalstrength_value"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/wapconnect_signalstrength_text"
-            android:text="@string/ssvalue"
+            android:text="SSValue"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <TextView
@@ -53,14 +53,14 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/wapconnect_signalstrength_value"
             android:layout_marginTop="5dp"
-            android:text="@string/network_security" />
+            android:text="Network Security" />
 
         <TextView
             android:id="@+id/wapconnect_securitytype_value"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/wapconnect_securitytype_text"
-            android:text="@string/security_type"
+            android:text="SecurityType"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <TextView
@@ -70,27 +70,8 @@
             android:layout_alignParentLeft="true"
             android:layout_below="@+id/wapconnect_securitytype_value"
             android:layout_marginTop="10dp"
-            android:text="@string/password" />
+            android:text="Password" />
 
-        <EditText
-            android:id="@+id/wapconnect_password_field"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/wapconnect_password_text"
-            android:ems="10"
-            android:hint="@string/password"
-            android:inputType="textPassword" >
-
-            <requestFocus />
-        </EditText>
-
-        <CheckBox
-            android:id="@+id/wapconnect_showpassword"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/wapconnect_password_field"
-            android:paddingLeft="10dp"
-            android:text="@string/show_password" />
     </RelativeLayout>
 
 </ScrollView>
