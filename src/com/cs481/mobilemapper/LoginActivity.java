@@ -25,8 +25,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.cs481.mobilemapper.debug.DebugActivity;
-import com.cs481.mobilemapper.debug.DebugActivitySasa;
-import com.cs481.mobilemapper.fragments.LocalLoginFragment;
 import com.cs481.mobilemapper.fragments.SplashScreenFragment;
 import com.cs481.mobilemapper.responses.ecm.routers.Routers;
 
@@ -148,12 +146,6 @@ public class LoginActivity extends SpiceActivity {
 		case R.id.fr_debug: {
 			Intent intent = new Intent(this, DebugActivity.class);
 			intent.putExtra("create_new", false);
-			startActivity(intent);
-			return true;
-		}
-		case R.id.fr_debug_sasa: {
-			Intent intent = new Intent(this, DebugActivitySasa.class);
-			//intent.putExtra("create_new", false);
 			startActivity(intent);
 			return true;
 		}
