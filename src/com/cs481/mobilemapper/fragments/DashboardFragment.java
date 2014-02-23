@@ -26,6 +26,7 @@ public class DashboardFragment extends ListFragment {
 	private final int lLAN = 1;
 	private final int lWAN = 2;
 	private final int lGPIO = 3;
+	private final int lABOUT = 4;
 	private AuthInfo authInfo;
 
 	public void onCreate(Bundle savedInstanceState) {
@@ -176,6 +177,33 @@ public class DashboardFragment extends ListFragment {
 				transaction.replace(R.id.rightside_fragment, wlanFragment);
 			} else {
 				transaction.replace(R.id.leftside_fragment, wlanFragment);
+			}
+			transaction.addToBackStack(null);
+			transaction
+					.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+			transaction.commit();
+		}
+			break;
+		case lABOUT: {
+			Log.i(CommandCenterActivity.TAG, "ABOUT WAS CLICKED");
+			RouterInfoFragment infoFragment = RouterInfoFragment
+					.newInstance(authInfo);
+
+			// In case this activity was started with special instructions from
+			// an
+			// Intent, pass the Intent's extras to the fragment as arguments
+			// firstFragment.setArguments(getIntent().getExtras());
+
+			// Add the fragment to the 'fragment_container' FrameLayout
+			FragmentTransaction transaction = getActivity().getSupportFragmentManager()
+					.beginTransaction();
+
+			// check if the parent activity is dual pane based.
+			CommandCenterActivity parent = (CommandCenterActivity) getActivity();
+			if (parent.isDualPane()) {
+				transaction.replace(R.id.rightside_fragment, infoFragment);
+			} else {
+				transaction.replace(R.id.leftside_fragment, infoFragment);
 			}
 			transaction.addToBackStack(null);
 			transaction
