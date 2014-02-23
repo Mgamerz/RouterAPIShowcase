@@ -2,7 +2,7 @@ package com.cs481.mobilemapper.fragments;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
-import android.support.v4.app.ListFragment;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,7 +14,7 @@ import com.cs481.mobilemapper.R;
 import com.cs481.mobilemapper.SpiceActivity;
 import com.octo.android.robospice.SpiceManager;
 
-public class RouterInfoFragment extends ListFragment {
+public class RouterInfoFragment extends Fragment {
 	private AuthInfo authInfo;
 	private SpiceManager spiceManager;
 	private ProgressDialog progressDialog;
@@ -67,7 +67,7 @@ public class RouterInfoFragment extends ListFragment {
 		super.onStart();
 		// /You will setup the action bar with pull to refresh layout
 		SpiceActivity sa = (SpiceActivity) getActivity();
-		sa.setTitle("@string/routerinfo");
+		sa.setTitle(getResources().getString(R.string.routerinfo));
 		spiceManager = sa.getSpiceManager();
 		/* call the reading methods */
 	}
