@@ -6,7 +6,7 @@
     android:fillViewport="true"
     android:scrollbars="none" >
 
-    <RelativeLayout
+   <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="10dp" >
@@ -21,15 +21,13 @@
                 android:id="@+id/wapconnect_ssidset_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="SSID" />
+                android:text="@string/product" />
 
-            <EditText
+            <TextView
                 android:id="@+id/wapconnect_ssidset_field"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:ems="10"
-                android:hint="SSID Name"
-                android:inputType="text" />
+                android:text="@string/firmware" />
         </LinearLayout>
 
         <TextView
@@ -37,15 +35,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/wapconnect_ssidlayout"
-            android:text="Signal Strength" />
+            android:text="@string/mac_address" />
 
         <TextView
             android:id="@+id/wapconnect_signalstrength_value"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/wapconnect_signalstrength_text"
-            android:text="SSValue"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
+            android:text="@string/uptime" />
 
         <TextView
             android:id="@+id/wapconnect_securitytype_text"
@@ -53,24 +50,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/wapconnect_signalstrength_value"
             android:layout_marginTop="5dp"
-            android:text="Network Security" />
-
-        <TextView
-            android:id="@+id/wapconnect_securitytype_value"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/wapconnect_securitytype_text"
-            android:text="SecurityType"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
-
-        <TextView
-            android:id="@+id/wapconnect_password_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_below="@+id/wapconnect_securitytype_value"
-            android:layout_marginTop="10dp"
-            android:text="Password" />
+            android:text="@string/hostname" />
 
     </RelativeLayout>
 

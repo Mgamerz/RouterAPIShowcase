@@ -233,8 +233,8 @@ public class GPIOFragment extends Fragment implements OnRefreshListener,
 					// Wifi Red
 					lswitch = (Switch) getView().findViewById(
 							R.id.wifiledr_state);
-					lswitch.setChecked((gpio.getLed_wifi_red() == 1) ? true
-							: false);
+					lswitch.setChecked((gpio.getLed_wifi_red() == 1) ? false
+							: true);
 
 					// Wifi Green
 					lswitch = (Switch) getView().findViewById(
@@ -245,8 +245,8 @@ public class GPIOFragment extends Fragment implements OnRefreshListener,
 					// Wifi Blue
 					lswitch = (Switch) getView().findViewById(
 							R.id.wifiledb_state);
-					lswitch.setChecked((gpio.getLed_wifi_blue() == 1) ? true
-							: false);
+					lswitch.setChecked((gpio.getLed_wifi_blue() == 1) ? false
+							: true);
 
 					// Signal Strength 0
 					lswitch = (Switch) getView().findViewById(R.id.ss0_state);

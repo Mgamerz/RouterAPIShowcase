@@ -130,9 +130,11 @@
     <string name="splash_button_local">Local</string>
 
     <!--  Router Info -->
+    <string name="routerinfo">Router Information</string>
     <string name="product">Product</string>
     <string name="firmware">Firmware</string>
     <string name="mac_address">MAC Address</string>
     <string name="uptime">Up Time</string>
+    <string name="hostname">Host Name</string>
     
 </resources>
