@@ -85,6 +85,8 @@ public class DashboardFragment extends ListFragment {
 				"Non Operational"));
 		rows.add(new DashboardListRow(lGPIO,
 				resources.getString(R.string.gpio), "Partially Operational"));
+		rows.add(new DashboardListRow(lABOUT,
+				resources.getString(R.string.routerinfo), "In Progress"));
 		setListAdapter(new DashboardAdapter(getActivity(), rows));
 	}
 
