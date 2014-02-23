@@ -129,4 +129,10 @@
     <string name="splash_button_ecm">ECM</string>
     <string name="splash_button_local">Local</string>
 
+    <!--  Router Info -->
+    <string name="product">Product</string>
+    <string name="firmware">Firmware</string>
+    <string name="mac_address">MAC Address</string>
+    <string name="uptime">Up Time</string>
+    
 </resources>

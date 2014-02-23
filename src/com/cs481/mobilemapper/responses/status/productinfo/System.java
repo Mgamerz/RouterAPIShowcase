@@ -1,20 +1,41 @@
 
 package com.cs481.mobilemapper.responses.status.productinfo;
 
-import java.util.List;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class System{
+	@JsonProperty("boot")
    	private String boot;
-   	private Number context_switches;
+	
+	@JsonProperty("context_switches")
+   	private int context_switches;
+	
+	@JsonProperty("cpu")
    	private Cpu cpu;
+	
+	@JsonProperty("fw_upgrade_timeout")
    	private boolean fw_upgrade_timeout;
-   	private Number interrupts;
+	
+	@JsonProperty("interrupts")
+   	private int interrupts;
+	
+	@JsonProperty("load_avg")
    	private Load_avg load_avg;
+	
+	@JsonProperty("memory")
    	private Memory memory;
+	
+	@JsonProperty("serial")
    	private Serial serial;
-   	private Number time;
-   	private Number uptime;
-   	private Number wan_signal_strength;
+	
+	@JsonProperty("time")
+   	private int time;
+	
+	@JsonProperty("uptime")
+   	private int uptime;
+	
+	@JsonProperty("wan_signal_strength")
+   	private int wan_signal_strength;
 
  	public String getBoot(){
 		return this.boot;
@@ -22,10 +43,10 @@ public class System{
 	public void setBoot(String boot){
 		this.boot = boot;
 	}
- 	public Number getContext_switches(){
+ 	public int getContext_switches(){
 		return this.context_switches;
 	}
-	public void setContext_switches(Number context_switches){
+	public void setContext_switches(int context_switches){
 		this.context_switches = context_switches;
 	}
  	public Cpu getCpu(){
@@ -40,10 +61,10 @@ public class System{
 	public void setFw_upgrade_timeout(boolean fw_upgrade_timeout){
 		this.fw_upgrade_timeout = fw_upgrade_timeout;
 	}
- 	public Number getInterrupts(){
+ 	public int getInterrupts(){
 		return this.interrupts;
 	}
-	public void setInterrupts(Number interrupts){
+	public void setInterrupts(int interrupts){
 		this.interrupts = interrupts;
 	}
  	public Load_avg getLoad_avg(){
@@ -64,22 +85,22 @@ public class System{
 	public void setSerial(Serial serial){
 		this.serial = serial;
 	}
- 	public Number getTime(){
+ 	public int getTime(){
 		return this.time;
 	}
-	public void setTime(Number time){
+	public void setTime(int time){
 		this.time = time;
 	}
- 	public Number getUptime(){
+ 	public int getUptime(){
 		return this.uptime;
 	}
-	public void setUptime(Number uptime){
+	public void setUptime(int uptime){
 		this.uptime = uptime;
 	}
- 	public Number getWan_signal_strength(){
+ 	public int getWan_signal_strength(){
 		return this.wan_signal_strength;
 	}
-	public void setWan_signal_strength(Number wan_signal_strength){
+	public void setWan_signal_strength(int wan_signal_strength){
 		this.wan_signal_strength = wan_signal_strength;
 	}
 }

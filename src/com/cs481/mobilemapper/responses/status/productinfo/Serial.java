@@ -1,9 +1,10 @@
 
 package com.cs481.mobilemapper.responses.status.productinfo;
 
-import java.util.List;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Serial{
+	@JsonProperty("status")
    	private String status;
 
  	public String getStatus(){
