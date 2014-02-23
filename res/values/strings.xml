@@ -113,7 +113,7 @@
     <string name="gpio_get_null_response">GPIO response was null.</string>
 
     <!-- Router save profile dialog -->
-    <string name="save_profile">"Do you want to save this connection as a profile?"</string>
+    <string name="save_profile">Save connection as profile</string>
 
     <!-- PIN -->
     <string name="pin_actionbar_title">UNLOCK</string>
@@ -129,12 +129,15 @@
     <string name="splash_button_ecm">ECM</string>
     <string name="splash_button_local">Local</string>
 
-    <!--  Router Info -->
+    <!-- Router Info -->
     <string name="routerinfo">Router Information</string>
     <string name="product">Product</string>
     <string name="firmware">Firmware</string>
     <string name="mac_address">MAC Address</string>
     <string name="uptime">Up Time</string>
     <string name="hostname">Host Name</string>
-    
+
+    <!-- Color Strings (for the custom dialogs - doesn't support R.color values. -->
+    <string name="dialogcolor_title">#FFFFFF</string>
+
 </resources>

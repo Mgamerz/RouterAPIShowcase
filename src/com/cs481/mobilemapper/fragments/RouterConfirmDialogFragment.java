@@ -2,17 +2,16 @@ package com.cs481.mobilemapper.fragments;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.util.Log;
+import android.view.ContextThemeWrapper;
+import android.view.LayoutInflater;
 
 import com.cs481.mobilemapper.AuthInfo;
 import com.cs481.mobilemapper.CommandCenterActivity;
-import com.cs481.mobilemapper.LoginActivity;
 import com.cs481.mobilemapper.R;
 import com.cs481.mobilemapper.responses.ecm.routers.Router;
 
@@ -40,12 +39,16 @@ public class RouterConfirmDialogFragment extends DialogFragment {
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-    	Resources resources = getResources();
-    	//LoginActivity activity = (LoginActivity) getActivity();
-    	//authInfo = activity.getAuthInfo();
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
+		ContextThemeWrapper wrapper = new ContextThemeWrapper(getActivity(), android.R.style.Theme_Holo_Light);
+
+        AlertDialog.Builder  alertDialogBuilder = new AlertDialog.Builder(wrapper);
+
+        //HoloDialogBuilder  alertDialogBuilder = new HoloDialogBuilder(getActivity());
         alertDialogBuilder.setTitle(router.getName());
-        alertDialogBuilder.setMessage(String.format(resources.getString(R.string.confirm_router_management), router.getName()));
+        LayoutInflater inflater = getActivity().getLayoutInflater();
+        alertDialogBuilder.setView(inflater.inflate(R.layout.dialog_routerconfirm, null));
+        
+        //alertDialogBuilder.setTitleColor(getResources().getString(R.color.Black));
         //null should be your on click listener
         alertDialogBuilder.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
 			

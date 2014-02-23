@@ -6,8 +6,16 @@
 
     <TextView
         android:id="@+id/rcdialog_text"
+        style="@android:style/Theme.Light"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Placeholder Text" />
+        android:text="@string/confirm_router_management" />
+
+    <CheckBox
+        android:id="@+id/ecm_save_as_profile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#000000"
+        android:text="@string/save_profile" />
 
 </LinearLayout>

@@ -20,6 +20,7 @@ import com.cs481.mobilemapper.AuthInfo;
 import com.cs481.mobilemapper.CommandCenterActivity;
 import com.cs481.mobilemapper.R;
 import com.cs481.mobilemapper.Utility;
+import com.cs481.mobilemapper.dialog.HoloDialogBuilder;
 import com.cs481.mobilemapper.responses.status.wlan.WAP;
 
 public class WifiWanDialog extends DialogFragment {
@@ -60,8 +61,9 @@ public class WifiWanDialog extends DialogFragment {
 		// CommandCenterActivity activity = (CommandCenterActivity)
 		// getActivity();
 		// authInfo = activity.getAuthInfo();
-		AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+		HoloDialogBuilder dialogBuilder = new HoloDialogBuilder(
 				getActivity());
+		dialogBuilder.setTitleColor(getResources().getString(R.color.Black));
 		String title = wap.getSsid();
 		boolean hiddenSsid = false; // used to show the SSID field
 		if (title.equals("")) {
@@ -69,7 +71,7 @@ public class WifiWanDialog extends DialogFragment {
 			hiddenSsid = true;
 		}
 
-		alertDialogBuilder.setTitle(title);
+		dialogBuilder.setTitle(title);
 		LayoutInflater inflater = getActivity().getLayoutInflater();
 
 		// Inflate and set the layout for the dialog
@@ -103,7 +105,7 @@ public class WifiWanDialog extends DialogFragment {
 				.findViewById(R.id.wapconnect_signalstrength_value);
 		signalStrength.setText(signalString);
 
-		alertDialogBuilder.setPositiveButton(android.R.string.yes,
+		dialogBuilder.setPositiveButton(android.R.string.yes,
 				new DialogInterface.OnClickListener() {
 
 					@Override
@@ -114,7 +116,7 @@ public class WifiWanDialog extends DialogFragment {
 					}
 				});
 
-		alertDialogBuilder.setNegativeButton(android.R.string.no,
+		dialogBuilder.setNegativeButton(android.R.string.no,
 				new DialogInterface.OnClickListener() {
 
 					@Override
@@ -123,8 +125,8 @@ public class WifiWanDialog extends DialogFragment {
 					}
 				});
 
-		alertDialogBuilder.setView(dialogView);
-		return alertDialogBuilder.create();
+		dialogBuilder.setView(dialogView);
+		return dialogBuilder.create();
 	}
 
 	/**

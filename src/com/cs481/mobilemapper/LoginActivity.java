@@ -33,7 +33,7 @@ import com.cs481.mobilemapper.responses.ecm.routers.Routers;
 public class LoginActivity extends SpiceActivity {
 	Routers routers; // used if ECM login is called
 	private AuthInfo authInfo;
-	private String[] mPlanetTitles;
+	private String[] profilesArray;
 	private DrawerLayout mDrawerLayout;
 	private ListView mDrawerList;
 	private CharSequence mDrawerTitle;
@@ -78,13 +78,13 @@ public class LoginActivity extends SpiceActivity {
 			}
 		}
 
-		mPlanetTitles = getResources().getStringArray(R.array.profiles_array);
+		profilesArray = getResources().getStringArray(R.array.profiles_array);
 		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 		mDrawerList = (ListView) findViewById(R.id.left_drawer);
 
 		// Set the adapter for the list view
 		mDrawerList.setAdapter(new ArrayAdapter<String>(this,
-				R.layout.drawer_profile, mPlanetTitles));
+				R.layout.drawer_profile, profilesArray));
 		// Set the list's click listener
 		mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
 
@@ -211,7 +211,7 @@ public class LoginActivity extends SpiceActivity {
 		 */
 		// Highlight the selected item, update the title, and close the drawer
 		mDrawerList.setItemChecked(position, true);
-		setTitle(mPlanetTitles[position]);
+		setTitle(profilesArray[position]);
 		mDrawerLayout.closeDrawer(mDrawerList);
 	}
 

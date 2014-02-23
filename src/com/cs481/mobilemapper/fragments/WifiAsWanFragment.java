@@ -13,6 +13,7 @@ import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.util.Log;
+import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -255,7 +256,9 @@ public class WifiAsWanFragment extends ListFragment implements
 		String lastRequestCacheKey = request.createCacheKey();
 		Resources resources = getResources();
 		if (dialog) {
-			progressDialog = new ProgressDialog(getActivity());
+			ContextThemeWrapper wrapper = new ContextThemeWrapper(getActivity(), android.R.style.Theme_Holo_Light);
+
+			progressDialog = new ProgressDialog(wrapper);
 			progressDialog.setMessage(resources
 					.getString(R.string.wlan_reading));
 			progressDialog.show();

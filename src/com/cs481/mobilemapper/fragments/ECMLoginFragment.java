@@ -1,11 +1,13 @@
 package com.cs481.mobilemapper.fragments;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
+import android.view.ContextThemeWrapper;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -98,7 +100,10 @@ public class ECMLoginFragment extends Fragment {
 				authInfo);
 		String lastRequestCacheKey = request.createCacheKey();
 
-		progressDialog = new ProgressDialog(getActivity());
+
+		ContextThemeWrapper wrapper = new ContextThemeWrapper(getActivity(), android.R.style.Theme_Holo_Light);
+		
+		progressDialog = new ProgressDialog(wrapper);
 		progressDialog.setMessage(resources.getString(R.string.ecm_connecting));
 		progressDialog.show();
 		progressDialog.setCanceledOnTouchOutside(false);
