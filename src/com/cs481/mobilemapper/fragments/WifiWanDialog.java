@@ -57,10 +57,6 @@ public class WifiWanDialog extends DialogFragment {
 
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
-		// Resources resources = getResources();
-		// CommandCenterActivity activity = (CommandCenterActivity)
-		// getActivity();
-		// authInfo = activity.getAuthInfo();
 		HoloDialogBuilder dialogBuilder = new HoloDialogBuilder(
 				getActivity());
 		dialogBuilder.setTitleColor(getResources().getString(R.color.Black));

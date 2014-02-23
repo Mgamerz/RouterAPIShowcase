@@ -8,22 +8,23 @@
         android:id="@+id/routerrow_image"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"   
+        android:layout_centerVertical="true"
         android:contentDescription="@string/app_name"
-        android:src="@drawable/ic_router_dark"
-         />
+        android:src="@drawable/ic_router_dark" />
 
     <TextView
         android:id="@+id/routerrow_title"
+        style="@style/RedTextTheme"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@+id/routerrow_image"
         android:layout_marginLeft="5dp"
+        android:layout_toRightOf="@+id/routerrow_image"
         android:text="Router Name"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <TextView
         android:id="@+id/routerrow_subtitle"
+        style="@style/RedSubTextTheme"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/routerrow_title"

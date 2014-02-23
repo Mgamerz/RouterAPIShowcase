@@ -101,9 +101,9 @@ public class ECMLoginFragment extends Fragment {
 		String lastRequestCacheKey = request.createCacheKey();
 
 
-		ContextThemeWrapper wrapper = new ContextThemeWrapper(getActivity(), android.R.style.Theme_Holo_Light);
-		
+		ContextThemeWrapper wrapper = new ContextThemeWrapper(getActivity(), R.style.RedDialogTheme);
 		progressDialog = new ProgressDialog(wrapper);
+		//progressDialog = new ProgressDialog(getActivity());
 		progressDialog.setMessage(resources.getString(R.string.ecm_connecting));
 		progressDialog.show();
 		progressDialog.setCanceledOnTouchOutside(false);
@@ -131,7 +131,7 @@ public class ECMLoginFragment extends Fragment {
 		public void onRequestSuccess(Routers routers) {
 			// update your UI
 			progressDialog.dismiss();
-			LoginActivity activity = (LoginActivity) getActivity();
+			//LoginActivity activity = (LoginActivity) getActivity();
 			AuthInfo authInfo = new AuthInfo();
 			EditText usern = (EditText) getView().findViewById(
 					R.id.ecm_username);

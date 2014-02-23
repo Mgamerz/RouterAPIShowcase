@@ -15,14 +15,16 @@
 
     <TextView
         android:id="@+id/locallogin_header"
+        style="@style/RedTextTheme"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="Mobile Command Center"
+        android:text="@string/local_title"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <CheckBox
         android:id="@+id/use_default_gateway"
+        style="@style/RedCheckBoxTheme"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:checked="true"
@@ -30,15 +32,16 @@
 
     <LinearLayout
         android:id="@+id/nongateway_layout"
-        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:gravity="center"
-        android:orientation="vertical" >
+        android:orientation="vertical"
+        android:visibility="gone" >
 
         <CheckBox
             android:id="@+id/use_remote_admin"
+            style="@style/RedCheckBoxTheme"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:checked="true"
@@ -46,6 +49,7 @@
 
         <EditText
             android:id="@+id/router_ip"
+            style="@style/RedEditTextTheme"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:digits="0123456789."
@@ -58,6 +62,7 @@
 
     <EditText
         android:id="@+id/router_password"
+        style="@style/RedEditTextTheme"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"

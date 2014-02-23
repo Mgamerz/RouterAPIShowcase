@@ -66,7 +66,8 @@ public class WifiAsWanFragment extends ListFragment implements
 			waps = savedInstanceState.getParcelableArrayList("waps");
 			authInfo = savedInstanceState.getParcelable("authInfo");
 			shouldLoadData = savedInstanceState.getBoolean("shouldLoadData");
-			wifiStateEnabled = savedInstanceState.getBoolean("wifiStateEnabled");
+			wifiStateEnabled = savedInstanceState
+					.getBoolean("wifiStateEnabled");
 			wifiState = savedInstanceState.getBoolean("wifiState");
 		} else {
 			Bundle passedArgs = getArguments();
@@ -107,23 +108,24 @@ public class WifiAsWanFragment extends ListFragment implements
 		return inflater.inflate(R.layout.fragment_wlan, container, false);
 	}
 
-	   @Override
-	    public void onViewCreated(View view, Bundle savedInstanceState) {
-	        super.onViewCreated(view,savedInstanceState);
-	        
-	        // This is the View which is created by ListFragment
-	        ViewGroup viewGroup = (ViewGroup) view;
+	@Override
+	public void onViewCreated(View view, Bundle savedInstanceState) {
+		super.onViewCreated(view, savedInstanceState);
 
-	        // We need to create a PullToRefreshLayout manually
-	        mPullToRefreshLayout = new PullToRefreshLayout(viewGroup.getContext());
+		// This is the View which is created by ListFragment
+		ViewGroup viewGroup = (ViewGroup) view;
 
-	        // We can now setup the PullToRefreshLayout
-	        ActionBarPullToRefresh.from(getActivity())
-	                .insertLayoutInto(viewGroup)
-	                .theseChildrenArePullable(getListView(), getListView().getEmptyView())
-	                .listener(this)
-	                .setup(mPullToRefreshLayout);
-	    }
+		// We need to create a PullToRefreshLayout manually
+		mPullToRefreshLayout = new PullToRefreshLayout(viewGroup.getContext());
+
+		// We can now setup the PullToRefreshLayout
+		ActionBarPullToRefresh
+				.from(getActivity())
+				.insertLayoutInto(viewGroup)
+				.theseChildrenArePullable(getListView(),
+						getListView().getEmptyView()).listener(this)
+				.setup(mPullToRefreshLayout);
+	}
 
 	@Override
 	public void onStart() {
@@ -147,11 +149,13 @@ public class WifiAsWanFragment extends ListFragment implements
 	 */
 	private void setWifiState() {
 		// perform the request.
-		com.cs481.mobilemapper.responses.GetRequest request = new com.cs481.mobilemapper.responses.GetRequest(authInfo, "config/wlan", ConfigWlan.class, "wlanconfigget");
+		com.cs481.mobilemapper.responses.GetRequest request = new com.cs481.mobilemapper.responses.GetRequest(
+				authInfo, "config/wlan", ConfigWlan.class, "wlanconfigget");
 		String lastRequestCacheKey = request.createCacheKey();
 
 		spiceManager.execute(request, lastRequestCacheKey,
-				DurationInMillis.ALWAYS_EXPIRED, new WLANConfigGetRequestListener());
+				DurationInMillis.ALWAYS_EXPIRED,
+				new WLANConfigGetRequestListener());
 	}
 
 	public class WlanAdapter extends ArrayAdapter<WlanListRow> {
@@ -212,14 +216,15 @@ public class WifiAsWanFragment extends ListFragment implements
 
 	@Override
 	public void onRefreshStarted(View view) {
-		//readWlanConfig(false);
-		
-		com.cs481.mobilemapper.responses.GetRequest request = new com.cs481.mobilemapper.responses.GetRequest (
+		// readWlanConfig(false);
+
+		com.cs481.mobilemapper.responses.GetRequest request = new com.cs481.mobilemapper.responses.GetRequest(
 				authInfo, "config/wlan", ConfigWlan.class, "configwlanget");
 		String lastRequestCacheKey = request.createCacheKey();
 
 		spiceManager.execute(request, lastRequestCacheKey,
-				DurationInMillis.ALWAYS_EXPIRED, new WLANConfigGetRequestListener());
+				DurationInMillis.ALWAYS_EXPIRED,
+				new WLANConfigGetRequestListener());
 	}
 
 	@Override
@@ -230,8 +235,8 @@ public class WifiAsWanFragment extends ListFragment implements
 		// Get widget's instance
 		setWifiToggleListener();
 	}
-	
-	private void setWifiToggleListener(){
+
+	private void setWifiToggleListener() {
 		Switch wifiToggle = (Switch) menu.findItem(R.id.wifi_toggle)
 				.getActionView();
 		wifiToggle.setChecked(wifiState);
@@ -248,15 +253,16 @@ public class WifiAsWanFragment extends ListFragment implements
 
 		});
 	}
-	
 
 	private void readWlanConfig(boolean dialog) {
 		// perform the request.
-		com.cs481.mobilemapper.responses.GetRequest request = new com.cs481.mobilemapper.responses.GetRequest(authInfo, "status/wlan", StatusWlan.class, "statuswlanget");
+		com.cs481.mobilemapper.responses.GetRequest request = new com.cs481.mobilemapper.responses.GetRequest(
+				authInfo, "status/wlan", StatusWlan.class, "statuswlanget");
 		String lastRequestCacheKey = request.createCacheKey();
 		Resources resources = getResources();
 		if (dialog) {
-			ContextThemeWrapper wrapper = new ContextThemeWrapper(getActivity(), android.R.style.Theme_Holo_Light);
+			ContextThemeWrapper wrapper = new ContextThemeWrapper(
+					getActivity(), android.R.style.Theme_Holo_Light);
 
 			progressDialog = new ProgressDialog(wrapper);
 			progressDialog.setMessage(resources
@@ -267,10 +273,12 @@ public class WifiAsWanFragment extends ListFragment implements
 		}
 
 		spiceManager.execute(request, lastRequestCacheKey,
-				DurationInMillis.ALWAYS_EXPIRED, new WLANStatusGetRequestListener());
+				DurationInMillis.ALWAYS_EXPIRED,
+				new WLANStatusGetRequestListener());
 	}
 
-	private class WLANStatusGetRequestListener implements RequestListener<Response> {
+	private class WLANStatusGetRequestListener implements
+			RequestListener<Response> {
 
 		@Override
 		public void onRequestFailure(SpiceException e) {
@@ -301,21 +309,22 @@ public class WifiAsWanFragment extends ListFragment implements
 						+ mPullToRefreshLayout.isRefreshing());
 			} else {
 
-				Toast.makeText(getActivity(), response.getResponseInfo().getReason(),
+				Toast.makeText(getActivity(),
+						response.getResponseInfo().getReason(),
 						Toast.LENGTH_LONG).show();
 			}
 			mPullToRefreshLayout.setRefreshComplete();
 
 		}
 	}
-	
-	private class WLANConfigGetRequestListener implements RequestListener<Response> {
+
+	private class WLANConfigGetRequestListener implements
+			RequestListener<Response> {
 
 		@Override
 		public void onRequestFailure(SpiceException e) {
 			Log.i(CommandCenterActivity.TAG, "Failed to read WLAN!");
-			Toast.makeText(getActivity(),
-					"Failed to get the WLAN Config.",
+			Toast.makeText(getActivity(), "Failed to get the WLAN Config.",
 					Toast.LENGTH_SHORT).show();
 			mPullToRefreshLayout.setRefreshComplete();
 		}
@@ -335,14 +344,14 @@ public class WifiAsWanFragment extends ListFragment implements
 			mPullToRefreshLayout.setRefreshComplete();
 		}
 	}
-	
-	private class WLANConfigEnabledPutListener implements RequestListener<Response> {
+
+	private class WLANConfigEnabledPutListener implements
+			RequestListener<Response> {
 
 		@Override
 		public void onRequestFailure(SpiceException e) {
 			Log.i(CommandCenterActivity.TAG, "Failed to enable/disable WLAN!");
-			Toast.makeText(getActivity(),
-					"Failed to set the WLAN Config.",
+			Toast.makeText(getActivity(), "Failed to set the WLAN Config.",
 					Toast.LENGTH_SHORT).show();
 		}
 
@@ -361,7 +370,6 @@ public class WifiAsWanFragment extends ListFragment implements
 			mPullToRefreshLayout.setRefreshComplete();
 		}
 	}
-	
 
 	/**
 	 * Should be run when a WLAN object has been returned and the list of AP's
@@ -371,9 +379,9 @@ public class WifiAsWanFragment extends ListFragment implements
 	 */
 	public void updateWlanList(StatusWlan wlan) {
 		waps = wlan.getRadio().get(0).getSurvey(); // might need to
-																// try to add
-																// dual band
-																// support.
+													// try to add
+													// dual band
+													// support.
 		updateWapList(waps);
 	}
 
