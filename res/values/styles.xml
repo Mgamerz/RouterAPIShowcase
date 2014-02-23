@@ -60,7 +60,7 @@
 
     <!-- Dialog Theme -->
     <style name="RedDialogTheme" parent="@android:style/Theme.Holo.Light.Dialog">
-        <item name="android:textColorPrimary">#e6e6e6</item>
+        <item name="android:textColor">#550000</item>
     </style>
 
     <!-- Actionbar Item Theme -->

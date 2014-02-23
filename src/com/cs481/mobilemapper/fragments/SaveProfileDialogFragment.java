@@ -1,13 +1,5 @@
 package com.cs481.mobilemapper.fragments;
 
-import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
-import java.security.spec.KeySpec;
-
-import javax.crypto.SecretKey;
-import javax.crypto.SecretKeyFactory;
-import javax.crypto.spec.PBEKeySpec;
-
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
