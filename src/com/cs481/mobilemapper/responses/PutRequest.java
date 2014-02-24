@@ -27,16 +27,22 @@ public class PutRequest extends SpiceRequest<Response> {
 
 	private AuthInfo authInfo;
 	private String suburl;
-	private int classId;
 	private Class clazz;
 	private Object data;
 
+	/**
+	 * Creates a new PutRequest object. It is executed when spiceManager.execute() is called.
+	 * @param data Object to put to the network.
+	 * @param authInfo Auth info to authenticate to the router.
+	 * @param suburl Suburl to access of where to send the put. For example, "config/wlan" puts to that subtree.
+	 * @param classId
+	 * @param clazz
+	 */
 	public PutRequest(Object data, AuthInfo authInfo, String suburl,
-			int classId, Class clazz) {
+			 Class clazz) {
 		super(Response.class);
 		this.authInfo = authInfo;
 		this.suburl = suburl;
-		this.classId = classId;
 		this.data = data;
 		this.clazz = clazz;
 	}
@@ -50,7 +56,7 @@ public class PutRequest extends SpiceRequest<Response> {
 		Log.i(CommandCenterActivity.TAG, "Put Request to " + url);
 		HttpPut put = new HttpPut(url);
 		ObjectMapper mapper = new ObjectMapper();
-		String jsonStr = Utility.getPutString(data, clazz, classId, mapper);
+		String jsonStr = Utility.getPutString(data, clazz, mapper);
 		Log.w(CommandCenterActivity.TAG, "Putting data to network: " + jsonStr);
 		put = Utility.preparePutRequest(authInfo, put, jsonStr);
 

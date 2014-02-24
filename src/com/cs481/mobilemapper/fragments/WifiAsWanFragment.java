@@ -35,6 +35,8 @@ import com.cs481.mobilemapper.R;
 import com.cs481.mobilemapper.SpiceActivity;
 import com.cs481.mobilemapper.Utility;
 import com.cs481.mobilemapper.WlanListRow;
+import com.cs481.mobilemapper.responses.GetRequest;
+import com.cs481.mobilemapper.responses.PutRequest;
 import com.cs481.mobilemapper.responses.Response;
 import com.cs481.mobilemapper.responses.config.wlan.ConfigWlan;
 import com.cs481.mobilemapper.responses.status.wlan.StatusWlan;
@@ -216,15 +218,15 @@ public class WifiAsWanFragment extends ListFragment implements
 
 	@Override
 	public void onRefreshStarted(View view) {
-		// readWlanConfig(false);
+		readWlanConfig(false);
 
-		com.cs481.mobilemapper.responses.GetRequest request = new com.cs481.mobilemapper.responses.GetRequest(
+		/*GetRequest request = new GetRequest(
 				authInfo, "config/wlan", ConfigWlan.class, "configwlanget");
 		String lastRequestCacheKey = request.createCacheKey();
 
 		spiceManager.execute(request, lastRequestCacheKey,
 				DurationInMillis.ALWAYS_EXPIRED,
-				new WLANConfigGetRequestListener());
+				new WLANGetRequestListener());*/
 	}
 
 	@Override
@@ -246,9 +248,14 @@ public class WifiAsWanFragment extends ListFragment implements
 			@Override
 			public void onCheckedChanged(CompoundButton buttonView,
 					boolean isChecked) {
-				// TODO Auto-generated method stub
-				Toast.makeText(getActivity(), "wifi toggled", Toast.LENGTH_LONG)
-						.show();
+				Log.i(CommandCenterActivity.TAG, "Performing put request to enabled wlan"); 
+				PutRequest request = new PutRequest(Boolean.valueOf(isChecked),
+						authInfo, "config/wlan/radio/0/enabled", Boolean.class);
+				String lastRequestCacheKey = request.createCacheKey();
+
+				spiceManager.execute(request, lastRequestCacheKey,
+						DurationInMillis.ALWAYS_EXPIRED,
+						new WLANEnabledPutRequestListener());
 			}
 
 		});
@@ -315,6 +322,31 @@ public class WifiAsWanFragment extends ListFragment implements
 			}
 			mPullToRefreshLayout.setRefreshComplete();
 
+		}
+	}
+
+	private class WLANEnabledPutRequestListener implements
+			RequestListener<Response> {
+
+		@Override
+		public void onRequestFailure(SpiceException e) {
+			Log.i(CommandCenterActivity.TAG, "Failed to put the wifi status!");
+			Toast.makeText(getActivity(), "Failed to change the wifi status.",
+					Toast.LENGTH_SHORT).show();
+		}
+
+		@Override
+		public void onRequestSuccess(Response enabledPutResult) {
+			Log.i(CommandCenterActivity.TAG, "UPDATING SWITCH!");
+			Boolean bool = (Boolean) enabledPutResult.getData();
+			Switch wifiToggle = (Switch) menu.findItem(R.id.wifi_toggle)
+					.getActionView();
+			wifiToggle.setOnCheckedChangeListener(null);
+			wifiState = bool.booleanValue();
+			wifiStateEnabled = true;
+			wifiToggle.setEnabled(wifiStateEnabled);
+			wifiToggle.setChecked(wifiState);
+			setWifiToggleListener();
 		}
 	}
 

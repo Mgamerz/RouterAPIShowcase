@@ -216,7 +216,7 @@ public class Utility {
 		return signalQuality;
 	}
 
-	public static String getPutString(Object data, Class clazz, int classId,
+	public static String getPutString(Object data, Class clazz,
 			ObjectMapper mapper) {
 		// } else {
 		try {
