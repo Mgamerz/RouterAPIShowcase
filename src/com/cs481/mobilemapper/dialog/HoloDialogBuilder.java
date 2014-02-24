@@ -66,13 +66,19 @@ public class HoloDialogBuilder extends AlertDialog.Builder {
 
 	@Override
 	public HoloDialogBuilder setMessage(int textResId) {
+		mMessage.setVisibility(TextView.VISIBLE);
 		mMessage.setText(textResId);
 		return this;
 	}
 
 	@Override
 	public HoloDialogBuilder setMessage(CharSequence text) {
-		mMessage.setText(text);
+		if (text != null) {
+			mMessage.setVisibility(TextView.VISIBLE);
+			mMessage.setText(text);
+		} else {
+			mMessage.setVisibility(TextView.GONE);
+		}
 		return this;
 	}
 

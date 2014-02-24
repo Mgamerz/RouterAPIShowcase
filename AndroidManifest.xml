@@ -36,8 +36,8 @@
             android:name=".debug.DebugActivity"
             android:label="@string/debug_title" />
         <activity
-            android:name=".debug.DebugActivitySasa"
-            android:label="@string/debug_title" />
+            android:name=".PrefsActivity"
+            android:label="@string/prefs_title" />
         <activity
             android:name="CommandCenterActivity"
             android:label="@string/command_title" >

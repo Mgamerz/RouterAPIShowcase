@@ -121,7 +121,7 @@ public class WifiWanDialog extends DialogFragment {
 					}
 				});
 
-		dialogBuilder.setView(dialogView);
+		dialogBuilder.setCustomView(dialogView);
 		return dialogBuilder.create();
 	}
 

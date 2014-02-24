@@ -170,7 +170,6 @@ public class ECMRoutersFragment extends ListFragment implements
 				router_icon.setImageLevel(0); // 0 is online image (see
 												// drawable/ic_router xml file)
 			}
-
 			return rowView;
 		}
 	}

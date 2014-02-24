@@ -70,16 +70,19 @@ I should have probably just rewritten similar code, but i was feeling lazy. Mayb
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:orientation="vertical">
-            <TextView android:id="@+id/message"
+
+            <TextView
+                android:id="@+id/message"
                 style="?android:attr/textAppearanceMedium"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingStart="16dip"
-                android:paddingEnd="16dip"
-                android:paddingTop="8dip"
+                android:visibility="gone"
                 android:layout_marginLeft="16dip"
                 android:paddingBottom="8dip"
-                android:textIsSelectable="true"/>
+                android:paddingEnd="16dip"
+                android:paddingStart="8dip"
+                android:textIsSelectable="true" />
+
     </LinearLayout>
 
     <FrameLayout android:id="@+id/customPanel"

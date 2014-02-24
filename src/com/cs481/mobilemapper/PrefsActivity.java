@@ -1,11 +1,23 @@
 package com.cs481.mobilemapper;
 
-/**
- * Activity that runs the preferences.
- * It's here because dual-pane is really difficult with straight up preference fragments and managing the stack would be ugly.
- * @author Mgamerz
- *
- */
-public class PrefsActivity {
+import java.util.List;
 
+import android.preference.PreferenceActivity;
+
+import com.cs481.mobilemapper.fragments.preferences.RootPrefsFragment;
+
+public class PrefsActivity extends PreferenceActivity {
+	@Override
+	public void onBuildHeaders(List<Header> target) {
+		loadHeadersFromResource(R.xml.prefs_headers, target);
+	}
+
+	@Override
+	protected boolean isValidFragment(String fragmentName) {
+		if (RootPrefsFragment.class.getName().equals(fragmentName)) {
+			return true;
+		}
+		return false;
+
+	}
 }

@@ -37,7 +37,7 @@ public class CommandCenterActivity extends SpiceActivity {
 		authInfo.setUsername(intent.getStringExtra("user"));
 		authInfo.setPassword(intent.getStringExtra("pass"));
 
-		//Retain fragments on rotation
+		// Retain fragments on rotation
 		if (null == savedInstanceState) {
 			// set you initial fragment object
 
@@ -83,13 +83,19 @@ public class CommandCenterActivity extends SpiceActivity {
 		// handle item selection
 		switch (item.getItemId()) {
 		case R.id.action_logout:
-			Intent intent = new Intent(this, LoginActivity.class);
+			Intent logoutIntent = new Intent(this, LoginActivity.class);
 			Toast.makeText(this, "You have been logged out.",
 					Toast.LENGTH_SHORT).show();
-			startActivity(intent);
+			startActivity(logoutIntent);
 			finish();
 			overridePendingTransition(android.R.anim.fade_in,
 					android.R.anim.fade_out);
+			return true;
+		case R.id.action_settings:
+			Intent prefsIntent = new Intent(this, PrefsActivity.class);
+			Toast.makeText(this, "You have been logged out.",
+					Toast.LENGTH_SHORT).show();
+			startActivity(prefsIntent);
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
