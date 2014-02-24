@@ -14,6 +14,7 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
@@ -52,6 +53,20 @@ public class LoginActivity extends SpiceActivity {
 		super.onCreate(savedInstanceState);
 		Ln.getConfig().setLoggingLevel(Log.ERROR);
 
+		// set theme
+		SharedPreferences mPrefs = PreferenceManager
+				.getDefaultSharedPreferences(this);
+		String theme = mPrefs.getString(
+				getResources().getString(R.string.prefskey_theme), "0");
+		int themeid = Integer.parseInt(theme);
+		switch (themeid) {
+		case PrefsActivity.THEME_BLUE:
+			setTheme(R.style.BlueAppTheme);
+			break;
+		default:
+			setTheme(R.style.RedAppTheme);
+		}
+
 		setContentView(R.layout.activity_login);
 		// If this is the first time the app has run, there will be no salt key
 		// in the shared prefs.
@@ -87,8 +102,6 @@ public class LoginActivity extends SpiceActivity {
 
 		// Setup the list of items
 		ArrayList<Profile> profiles = Utility.getProfiles();
-
-
 
 		// PLACEHOLDER STUFF until melissa gets the DB up
 		profiles = new ArrayList<Profile>();
@@ -217,7 +230,7 @@ public class LoginActivity extends SpiceActivity {
 	private void selectItem(int position) {
 		// Highlight the selected item, update the title, and close the drawer
 		mDrawerList.setItemChecked(position, true);
-		//setTitle(profilesArray[position]);
+		// setTitle(profilesArray[position]);
 		mDrawerLayout.closeDrawer(mDrawerList);
 	}
 

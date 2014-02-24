@@ -15,7 +15,6 @@
 
     <!-- Local Login -->
     <string name="local_title">Direct Login</string>
-    <string name="login_title">Router Login</string>
     <string name="routerip_hint">Router IP</string>
     <string name="password_hint">Router Admin Password</string>
     <string name="default_gateway">Use Default Gateway</string>
@@ -51,6 +50,7 @@
     <string name="gpio">GPIO</string>
 
     <!-- WifiAsWan -->
+    <string name="wifiwan_title">WiFi as WAN</string>
     <string name="wifimenu_sort_signal">Sort by signal</string>
     <string name="wifi_sort_alphabetically">Sort by name</string>
     <string name="wlan_reading">Reading WLAN Configuration</string>
@@ -133,6 +133,7 @@
 
     <!-- Preferences -->
     <string name="prefs_title">Preferences</string>
+    <string name="prefskey_theme">current_theme</string>
 
     <string-array name="theme_names">
         <item>Red</item>
@@ -140,12 +141,11 @@
         <item>Green</item>
         <item>Black</item>
     </string-array>
-
-    <integer-array name="theme_values">
+    <string-array name="theme_values">
         <item>0</item>
         <item>1</item>
         <item>2</item>
         <item>3</item>
-    </integer-array>
+    </string-array>
 
 </resources>

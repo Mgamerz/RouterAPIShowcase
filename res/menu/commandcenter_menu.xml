@@ -1,12 +1,4 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
-
-    <item
-        android:id="@+id/search"
-        android:actionViewClass="android.widget.SearchView"
-        android:icon="@drawable/ic_search"
-        android:queryHint="@string/search_hint"
-        android:showAsAction="collapseActionView|ifRoom"
-        android:title="@string/search_title"/>
     
     <item
         android:id="@+id/action_settings"

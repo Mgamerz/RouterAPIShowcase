@@ -5,6 +5,6 @@
         android:title="Theme"
         android:entries="@array/theme_names"
         android:entryValues="@array/theme_values"
-        android:key="@+id/prefs_theme" />
+        android:key="@string/prefskey_theme" />
 
 </PreferenceScreen>

@@ -1,23 +1,19 @@
 package com.cs481.mobilemapper.activities;
 
-import android.app.SearchManager;
-import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.SearchView;
 import android.widget.Toast;
 
 import com.cs481.mobilemapper.AuthInfo;
 import com.cs481.mobilemapper.R;
-import com.cs481.mobilemapper.R.id;
-import com.cs481.mobilemapper.R.layout;
-import com.cs481.mobilemapper.R.menu;
 import com.cs481.mobilemapper.fragments.DashboardFragment;
 
 public class CommandCenterActivity extends SpiceActivity {
@@ -29,6 +25,20 @@ public class CommandCenterActivity extends SpiceActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		// set theme
+		SharedPreferences mPrefs = PreferenceManager
+				.getDefaultSharedPreferences(this);
+		String theme = mPrefs.getString(
+				getResources().getString(R.string.prefskey_theme), "0");
+		int themeid = Integer.parseInt(theme);
+		switch (themeid) {
+		case PrefsActivity.THEME_BLUE:
+			setTheme(R.style.BlueAppTheme);
+			break;
+		default:
+			setTheme(R.style.RedAppTheme);
+		}
+
 		setContentView(R.layout.activity_commandcenter);
 
 		Intent intent = getIntent();
@@ -59,6 +69,7 @@ public class CommandCenterActivity extends SpiceActivity {
 			// Commit to the UI
 			ft.commit();
 		}
+		getActionBar().setSubtitle("--Cloud Router testing--");
 		View dual = findViewById(R.id.rightside_fragment);
 		setDualPane(dual != null && dual.getVisibility() == View.VISIBLE);
 
@@ -72,13 +83,6 @@ public class CommandCenterActivity extends SpiceActivity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.commandcenter_menu, menu);
-
-		// Associate searchable configuration with the SearchView
-		SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-		SearchView searchView = (SearchView) menu.findItem(R.id.search)
-				.getActionView();
-		searchView.setSearchableInfo(searchManager
-				.getSearchableInfo(getComponentName()));
 		return true;
 	}
 

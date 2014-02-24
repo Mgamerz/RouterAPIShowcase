@@ -18,7 +18,7 @@
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/RedAppTheme" >
         <service
             android:name="com.cs481.mobilemapper.CCSpiceService"
             android:exported="false" />
@@ -43,9 +43,6 @@
         <activity
             android:name="com.cs481.mobilemapper.activities.CommandCenterActivity"
             android:label="@string/command_title" >
-            <meta-data
-                android:name="android.app.searchable"
-                android:resource="@xml/searchable" />
         </activity>
     </application>
 
