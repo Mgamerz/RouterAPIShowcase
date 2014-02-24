@@ -24,7 +24,7 @@
             android:exported="false" />
 
         <activity
-            android:name=".LoginActivity"
+            android:name="com.cs481.mobilemapper.activities.LoginActivity"
             android:label="@string/command_title" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -35,8 +35,7 @@
         <activity
             android:name=".debug.DebugActivity"
             android:label="@string/debug_title" />
-        <activity
-            android:name=".PrefsActivity"
+        <actcom.cs481.mobilemapper.activities.PrefsActivity     android:name=".PrefsActivity"
             android:label="@string/prefs_title" />
         <activity
             android:name="CommandCenterActivity"

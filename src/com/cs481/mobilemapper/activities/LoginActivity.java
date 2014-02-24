@@ -1,12 +1,14 @@
-package com.cs481.mobilemapper;
+package com.cs481.mobilemapper.activities;
 
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+import java.util.ArrayList;
 
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 
 import roboguice.util.temp.Ln;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
@@ -17,21 +19,28 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Base64;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 
+import com.cs481.mobilemapper.AuthInfo;
+import com.cs481.mobilemapper.Profile;
+import com.cs481.mobilemapper.R;
+import com.cs481.mobilemapper.Utility;
 import com.cs481.mobilemapper.debug.DebugActivity;
 import com.cs481.mobilemapper.fragments.SplashScreenFragment;
-import com.cs481.mobilemapper.responses.ecm.routers.Routers;
+import com.cs481.mobilemapper.listrows.ProfileListRow;
 
 public class LoginActivity extends SpiceActivity {
-	Routers routers; // used if ECM login is called
 	private AuthInfo authInfo;
-	private String[] profilesArray;
+	private ArrayList<Profile> profiles;
 	private DrawerLayout mDrawerLayout;
 	private ListView mDrawerList;
 	private CharSequence mDrawerTitle;
@@ -76,19 +85,44 @@ public class LoginActivity extends SpiceActivity {
 			}
 		}
 
-		profilesArray = getResources().getStringArray(R.array.profiles_array);
+		// Setup the list of items
+		ArrayList<Profile> profiles = Utility.getProfiles();
+
+
+
+		// PLACEHOLDER STUFF until melissa gets the DB up
+		profiles = new ArrayList<Profile>();
+		Profile profile = new Profile();
+		AuthInfo authInfo = new AuthInfo();
+		authInfo.setEcm(true);
+		profile.setProfileName("Saved Profile 1");
+		profile.setAuthInfo(authInfo);
+		profiles.add(profile);
+
+		profile = new Profile();
+		authInfo = new AuthInfo();
+		authInfo.setEcm(false);
+		profile.setProfileName("Saved Profile 2");
+		profile.setAuthInfo(authInfo);
+		profiles.add(profile);
+		// END PLACEHOLDER
+
 		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 		mDrawerList = (ListView) findViewById(R.id.left_drawer);
 
+		ArrayList<ProfileListRow> rows = new ArrayList<ProfileListRow>();
+
+		for (Profile prof : profiles) {
+			rows.add(new ProfileListRow(prof));
+		}
 		// Set the adapter for the list view
-		mDrawerList.setAdapter(new ArrayAdapter<String>(this,
-				R.layout.drawer_profile, profilesArray));
+		mDrawerList.setAdapter(new ProfileAdapter(this, rows));
 		// Set the list's click listener
 		mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
 
 		// Save layout on rotation
 		if (savedInstanceState == null) {
-			//LocalLoginFragment frFragment = new LocalLoginFragment();
+			// LocalLoginFragment frFragment = new LocalLoginFragment();
 			SplashScreenFragment frFragment = new SplashScreenFragment();
 
 			// In case this activity was started with special instructions from
@@ -160,15 +194,6 @@ public class LoginActivity extends SpiceActivity {
 		}
 	}
 
-	public void setRouters(Routers routers) {
-		// TODO Auto-generated method stub
-		this.routers = routers;
-	}
-
-	public Routers getRouters() {
-		return routers;
-	}
-
 	public void setAuthInfo(AuthInfo authInfo) {
 		// TODO Auto-generated method stub
 		this.authInfo = authInfo;
@@ -203,7 +228,7 @@ public class LoginActivity extends SpiceActivity {
 		 */
 		// Highlight the selected item, update the title, and close the drawer
 		mDrawerList.setItemChecked(position, true);
-		setTitle(profilesArray[position]);
+		//setTitle(profilesArray[position]);
 		mDrawerLayout.closeDrawer(mDrawerList);
 	}
 
@@ -211,38 +236,83 @@ public class LoginActivity extends SpiceActivity {
 	public void setTitle(CharSequence title) {
 		mTitle = title;
 		getActionBar().setTitle(mTitle);
-	}    
-	
+	}
+
 	@Override
 	protected void onPostCreate(Bundle savedInstanceState) {
-	    super.onPostCreate(savedInstanceState);
-	    // Sync the toggle state after onRestoreInstanceState has occurred.
-	    mDrawerToggle.syncState();
+		super.onPostCreate(savedInstanceState);
+		// Sync the toggle state after onRestoreInstanceState has occurred.
+		mDrawerToggle.syncState();
 	}
 
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
-	    super.onConfigurationChanged(newConfig);
-	    mDrawerToggle.onConfigurationChanged(newConfig);
+		super.onConfigurationChanged(newConfig);
+		mDrawerToggle.onConfigurationChanged(newConfig);
 	}
-	
+
 	/* Called whenever we call invalidateOptionsMenu() */
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        // If the nav drawer is open, hide action items related to the content view
-        boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerList);
-        MenuItem menuitem = menu.findItem(R.id.menu_switchtolocal);
-        if (menuitem != null){
-        	menuitem.setVisible(!drawerOpen);
-        }
-        
-        menuitem = menu.findItem(R.id.menu_switchtoecm);
-        if (menuitem != null){
-        	menuitem.setVisible(!drawerOpen);
-        }
-        
-        return super.onPrepareOptionsMenu(menu);
-    }
-	
-	
+	@Override
+	public boolean onPrepareOptionsMenu(Menu menu) {
+		// If the nav drawer is open, hide action items related to the content
+		// view
+		boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerList);
+		MenuItem menuitem = menu.findItem(R.id.menu_switchtolocal);
+		if (menuitem != null) {
+			menuitem.setVisible(!drawerOpen);
+		}
+
+		menuitem = menu.findItem(R.id.menu_switchtoecm);
+		if (menuitem != null) {
+			menuitem.setVisible(!drawerOpen);
+		}
+
+		return super.onPrepareOptionsMenu(menu);
+	}
+
+	// List adapter.
+	public class ProfileAdapter extends ArrayAdapter<ProfileListRow> {
+		private final Context context;
+		private final ArrayList<ProfileListRow> rows;
+
+		public ProfileAdapter(Context context, ArrayList<ProfileListRow> rows) {
+			super(context, R.layout.listrow_profiles, rows);
+			this.context = context;
+			this.rows = rows;
+		}
+
+		@Override
+		public ProfileListRow getItem(int position) {
+			return rows.get(position);
+		}
+
+		@Override
+		public View getView(int position, View convertView, ViewGroup parent) {
+			LayoutInflater inflater = (LayoutInflater) context
+					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+			View rowView = inflater.inflate(R.layout.listrow_profiles, parent,
+					false);
+
+			Profile profile = rows.get(position).getProfile();
+			// Title text
+			TextView title = (TextView) rowView
+					.findViewById(R.id.profilerow_title);
+			title.setText(profile.getProfileName());
+
+			// Profile image
+			ImageView profileIcon = (ImageView) rowView
+					.findViewById(R.id.profilerow_image);
+
+			if (profile.getAuthInfo().isEcm()) {
+				// set ecm cloud icon
+				profileIcon.setImageResource(R.drawable.ic_ecm_cloud_profile);
+			} else {
+				// We would add the local image here
+				profileIcon.setImageResource(R.drawable.ic_direct_wire_profile);
+			}
+
+			return rowView;
+		}
+	}
+
 }

@@ -19,9 +19,9 @@ import android.widget.Switch;
 import android.widget.Toast;
 
 import com.cs481.mobilemapper.AuthInfo;
-import com.cs481.mobilemapper.CommandCenterActivity;
 import com.cs481.mobilemapper.R;
-import com.cs481.mobilemapper.SpiceActivity;
+import com.cs481.mobilemapper.activities.CommandCenterActivity;
+import com.cs481.mobilemapper.activities.SpiceActivity;
 import com.cs481.mobilemapper.responses.Response;
 import com.cs481.mobilemapper.responses.control.gpio.GPIO;
 import com.cs481.mobilemapper.responses.control.led.LED;

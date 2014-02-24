@@ -30,11 +30,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cs481.mobilemapper.AuthInfo;
-import com.cs481.mobilemapper.CommandCenterActivity;
 import com.cs481.mobilemapper.R;
-import com.cs481.mobilemapper.SpiceActivity;
 import com.cs481.mobilemapper.Utility;
-import com.cs481.mobilemapper.WlanListRow;
+import com.cs481.mobilemapper.activities.CommandCenterActivity;
+import com.cs481.mobilemapper.activities.SpiceActivity;
+import com.cs481.mobilemapper.listrows.WlanListRow;
 import com.cs481.mobilemapper.responses.GetRequest;
 import com.cs481.mobilemapper.responses.PutRequest;
 import com.cs481.mobilemapper.responses.Response;

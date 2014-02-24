@@ -9,9 +9,9 @@ import org.apache.http.util.EntityUtils;
 import android.util.Log;
 
 import com.cs481.mobilemapper.AuthInfo;
-import com.cs481.mobilemapper.CommandCenterActivity;
 import com.cs481.mobilemapper.ConnectionInfo;
 import com.cs481.mobilemapper.Utility;
+import com.cs481.mobilemapper.activities.CommandCenterActivity;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.octo.android.robospice.request.SpiceRequest;

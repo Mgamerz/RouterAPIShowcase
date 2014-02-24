@@ -5,9 +5,9 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.cs481.mobilemapper.AuthInfo;
-import com.cs481.mobilemapper.CommandCenterActivity;
 import com.cs481.mobilemapper.R;
-import com.cs481.mobilemapper.SpiceActivity;
+import com.cs481.mobilemapper.activities.CommandCenterActivity;
+import com.cs481.mobilemapper.activities.SpiceActivity;
 import com.cs481.mobilemapper.responses.ecm.routers.Router;
 import com.cs481.mobilemapper.responses.ecm.routers.Routers;
 

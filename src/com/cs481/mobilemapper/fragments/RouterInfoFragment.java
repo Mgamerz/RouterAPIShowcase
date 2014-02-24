@@ -9,9 +9,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.cs481.mobilemapper.AuthInfo;
-import com.cs481.mobilemapper.CommandCenterActivity;
 import com.cs481.mobilemapper.R;
-import com.cs481.mobilemapper.SpiceActivity;
+import com.cs481.mobilemapper.activities.CommandCenterActivity;
+import com.cs481.mobilemapper.activities.SpiceActivity;
 import com.octo.android.robospice.SpiceManager;
 
 public class RouterInfoFragment extends Fragment {

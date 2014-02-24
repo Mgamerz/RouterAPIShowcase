@@ -1,4 +1,4 @@
-package com.cs481.mobilemapper;
+package com.cs481.mobilemapper.activities;
 
 import android.app.SearchManager;
 import android.content.Context;
@@ -13,6 +13,11 @@ import android.view.View;
 import android.widget.SearchView;
 import android.widget.Toast;
 
+import com.cs481.mobilemapper.AuthInfo;
+import com.cs481.mobilemapper.R;
+import com.cs481.mobilemapper.R.id;
+import com.cs481.mobilemapper.R.layout;
+import com.cs481.mobilemapper.R.menu;
 import com.cs481.mobilemapper.fragments.DashboardFragment;
 
 public class CommandCenterActivity extends SpiceActivity {

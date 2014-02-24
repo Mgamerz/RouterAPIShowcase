@@ -1,9 +1,11 @@
-package com.cs481.mobilemapper;
+package com.cs481.mobilemapper.activities;
 
 import java.util.List;
 
 import android.preference.PreferenceActivity;
 
+import com.cs481.mobilemapper.R;
+import com.cs481.mobilemapper.R.xml;
 import com.cs481.mobilemapper.fragments.preferences.RootPrefsFragment;
 
 public class PrefsActivity extends PreferenceActivity {

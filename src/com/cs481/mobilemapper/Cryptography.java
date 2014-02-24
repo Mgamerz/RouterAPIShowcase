@@ -16,6 +16,8 @@ import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 
+import com.cs481.mobilemapper.activities.CommandCenterActivity;
+
 import android.util.Log;
 
 public class Cryptography {

@@ -19,10 +19,10 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.cs481.mobilemapper.AuthInfo;
-import com.cs481.mobilemapper.CommandCenterActivity;
-import com.cs481.mobilemapper.LoginActivity;
 import com.cs481.mobilemapper.R;
-import com.cs481.mobilemapper.RouterListRow;
+import com.cs481.mobilemapper.activities.CommandCenterActivity;
+import com.cs481.mobilemapper.activities.LoginActivity;
+import com.cs481.mobilemapper.listrows.RouterListRow;
 import com.cs481.mobilemapper.responses.ecm.routers.Router;
 
 public class ECMRoutersFragment extends ListFragment implements

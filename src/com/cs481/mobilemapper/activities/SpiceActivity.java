@@ -1,8 +1,9 @@
-package com.cs481.mobilemapper;
+package com.cs481.mobilemapper.activities;
 
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 
+import com.cs481.mobilemapper.CCSpiceService;
 import com.octo.android.robospice.SpiceManager;
 
 

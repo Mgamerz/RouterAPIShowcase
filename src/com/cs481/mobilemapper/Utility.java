@@ -1,6 +1,7 @@
 package com.cs481.mobilemapper;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.Credentials;
@@ -16,6 +17,7 @@ import android.net.wifi.WifiManager;
 import android.text.format.Formatter;
 import android.util.Log;
 
+import com.cs481.mobilemapper.activities.CommandCenterActivity;
 import com.cs481.mobilemapper.responses.RootElement;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -247,5 +249,14 @@ public class Utility {
 	public static void saveProfile(Profile profile) {
 		// Melissa's code here
 		
+	}
+
+	/**
+	 * Reads the database list of profiles and returns rebuilt profile objects.
+	 * @return Arraylist of Profile objects read from the database.
+	 */
+	public static ArrayList<Profile> getProfiles() {
+		// Melissa's code here
+		return null;
 	}
 }

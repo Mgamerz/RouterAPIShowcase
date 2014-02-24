@@ -1,11 +1,17 @@
-package com.cs481.mobilemapper;
+package com.cs481.mobilemapper.listrows;
 
-import com.cs481.mobilemapper.responses.status.wlan.WAP;
-
-public class WlanListRow {
+public class DashboardListRow {
 	private String title = "";
 	private String subtitle = "";
-	private WAP wap;
+	private int id = -1;
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
 
 	public String getTitle() {
 		return title;
@@ -19,24 +25,16 @@ public class WlanListRow {
 		return subtitle;
 	}
 
-	public WAP getWap() {
-		return wap;
-	}
-
-	public void setWap(WAP wap) {
-		this.wap = wap;
-	}
-
 	public void setSubtitle(String subtitle) {
 		this.subtitle = subtitle;
 	}
 
-	public WlanListRow(String title) {
+	public DashboardListRow(String title) {
 		this.title = title;
 	}
 
-	public WlanListRow(WAP wap, String title, String subtitle) {
-		this.wap = wap;
+	public DashboardListRow(int lWLAN, String title, String subtitle) {
+		this.id = lWLAN;
 		this.title = title;
 		this.subtitle = subtitle;
 	}

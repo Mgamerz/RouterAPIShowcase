@@ -13,10 +13,10 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 
 import com.cs481.mobilemapper.AuthInfo;
-import com.cs481.mobilemapper.CommandCenterActivity;
 import com.cs481.mobilemapper.Profile;
 import com.cs481.mobilemapper.R;
 import com.cs481.mobilemapper.Utility;
+import com.cs481.mobilemapper.activities.CommandCenterActivity;
 import com.cs481.mobilemapper.dialog.HoloDialogBuilder;
 import com.cs481.mobilemapper.responses.ecm.routers.Router;
 

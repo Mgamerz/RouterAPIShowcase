@@ -16,10 +16,10 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.cs481.mobilemapper.AuthInfo;
-import com.cs481.mobilemapper.CommandCenterActivity;
-import com.cs481.mobilemapper.DashboardListRow;
 import com.cs481.mobilemapper.R;
-import com.cs481.mobilemapper.SpiceActivity;
+import com.cs481.mobilemapper.activities.CommandCenterActivity;
+import com.cs481.mobilemapper.activities.SpiceActivity;
+import com.cs481.mobilemapper.listrows.DashboardListRow;
 
 public class DashboardFragment extends ListFragment {
 	private final int lWLAN = 0;

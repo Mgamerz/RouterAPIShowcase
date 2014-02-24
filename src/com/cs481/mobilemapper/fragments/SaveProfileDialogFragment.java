@@ -11,9 +11,9 @@ import android.support.v4.app.DialogFragment;
 import android.util.Log;
 
 import com.cs481.mobilemapper.AuthInfo;
-import com.cs481.mobilemapper.CommandCenterActivity;
-import com.cs481.mobilemapper.LoginActivity;
 import com.cs481.mobilemapper.R;
+import com.cs481.mobilemapper.activities.CommandCenterActivity;
+import com.cs481.mobilemapper.activities.LoginActivity;
 import com.cs481.mobilemapper.responses.ecm.routers.Router;
 
 public class SaveProfileDialogFragment extends DialogFragment {
