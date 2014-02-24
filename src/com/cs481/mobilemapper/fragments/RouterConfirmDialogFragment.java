@@ -9,6 +9,7 @@ import android.support.v4.app.DialogFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.TextView;
 
 import com.cs481.mobilemapper.AuthInfo;
@@ -61,6 +62,10 @@ public class RouterConfirmDialogFragment extends DialogFragment {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				// TODO Auto-generated method stub
+				//Check to see if the 'save profile' is selected.
+				CheckBox sp = (CheckBox) v.findViewById(R.id.save_profile);
+				
+				
 				Intent intent = new Intent(getActivity(), CommandCenterActivity.class);
 				intent.putExtra("ip", "");
 				intent.putExtra("pass", authInfo.getPassword());
