@@ -10,17 +10,6 @@
 
     <!-- Login Activity -->
     <!-- Debugging strings -->
-    <string-array name="profiles_array">
-        <item>Band1</item>
-        <item>Band2</item>
-        <item>Corporate</item>
-        <item>Herp</item>
-        <item>Derp</item>
-        <item>Flerp</item>
-        <item>Citadel</item>
-        <item>Turian</item>
-    </string-array>
-
     <string name="drawer_open">Drawer Open</string>
     <string name="drawer_closed">Drawer Closed</string>
 
@@ -34,6 +23,7 @@
     <string name="connect">Connect</string>
     <string name="switch_to_ecm">Switch to ECM Login</string>
     <string name="locallogin_actionbar_title">Local Device Login</string>
+    <string name="saved_profiles_title">Saved Profiles</string>
 
     <!-- ECM Login -->
     <string name="ecm_title">Enterprise Cloud Manager</string>

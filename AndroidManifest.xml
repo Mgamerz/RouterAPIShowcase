@@ -33,12 +33,15 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".debug.DebugActivity"
+            android:name="com.cs481.mobilemapper.debug.DebugActivity"
             android:label="@string/debug_title" />
-        <actcom.cs481.mobilemapper.activities.PrefsActivity     android:name=".PrefsActivity"
+
+        <activity 
+            android:name="com.cs481.mobilemapper.activities.PrefsActivity"
             android:label="@string/prefs_title" />
+
         <activity
-            android:name="CommandCenterActivity"
+            android:name="com.cs481.mobilemapper.activities.CommandCenterActivity"
             android:label="@string/command_title" >
             <meta-data
                 android:name="android.app.searchable"
