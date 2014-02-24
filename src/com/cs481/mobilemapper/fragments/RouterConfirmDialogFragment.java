@@ -14,7 +14,9 @@ import android.widget.TextView;
 
 import com.cs481.mobilemapper.AuthInfo;
 import com.cs481.mobilemapper.CommandCenterActivity;
+import com.cs481.mobilemapper.Profile;
 import com.cs481.mobilemapper.R;
+import com.cs481.mobilemapper.Utility;
 import com.cs481.mobilemapper.dialog.HoloDialogBuilder;
 import com.cs481.mobilemapper.responses.ecm.routers.Router;
 
@@ -50,7 +52,7 @@ public class RouterConfirmDialogFragment extends DialogFragment {
         alertDialogBuilder.setDividerColor(resources.getString(R.color.Cradlepoint));
         
         LayoutInflater inflator = getActivity().getLayoutInflater();
-        View v = inflator.inflate(R.layout.dialog_routerconfirm, null);
+        final View v = inflator.inflate(R.layout.dialog_routerconfirm, null);
         TextView tv = (TextView) v.findViewById(R.id.rcdialog_text);
         String text = tv.getText().toString();
         text = String.format(text, router.getName());
@@ -63,8 +65,14 @@ public class RouterConfirmDialogFragment extends DialogFragment {
 			public void onClick(DialogInterface dialog, int which) {
 				// TODO Auto-generated method stub
 				//Check to see if the 'save profile' is selected.
-				CheckBox sp = (CheckBox) v.findViewById(R.id.save_profile);
-				
+				CheckBox sp = (CheckBox) v.findViewById(R.id.ecm_save_as_profile);
+				if (sp.isChecked()){
+					Profile profile = new Profile();
+					profile.setAuthInfo(authInfo);
+					profile.setProfileName(router.getName());
+					
+					Utility.saveProfile(profile);
+				}
 				
 				Intent intent = new Intent(getActivity(), CommandCenterActivity.class);
 				intent.putExtra("ip", "");

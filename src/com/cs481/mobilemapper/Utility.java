@@ -238,4 +238,14 @@ public class Utility {
 		// }
 		return null;
 	}
+
+	
+	/**
+	 * Saves a profile to the database.
+	 * @param profile Profile to be saved.
+	 */
+	public static void saveProfile(Profile profile) {
+		// Melissa's code here
+		
+	}
 }
