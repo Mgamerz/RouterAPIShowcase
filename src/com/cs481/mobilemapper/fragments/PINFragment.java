@@ -306,7 +306,7 @@ public class PINFragment extends Fragment implements OnClickListener {
 
 	private void testEncryptionDecryption(String hash) {
 		try {
-			String uuid = createLocalUUID();
+			String uuid = Cryptography.createLocalUUID(getActivity());
 			SecretKey secret = Cryptography.generateKey(currentPin,
 					uuid.getBytes("UTF-8"));
 			byte[] encrypted = Cryptography.encryptMsg(uuid, secret);
@@ -361,7 +361,7 @@ public class PINFragment extends Fragment implements OnClickListener {
 	 * @return
 	 */
 	private boolean testUnlockPin() {
-		String uuid = createLocalUUID(); // create a local-device only version
+		String uuid = Cryptography.createLocalUUID(getActivity()); // create a local-device only version
 											// so the app can't move to
 											// different devices.
 		SharedPreferences crypto = getActivity().getSharedPreferences(
@@ -385,7 +385,7 @@ public class PINFragment extends Fragment implements OnClickListener {
 					secret);
 			Log.i(CommandCenterActivity.TAG, "Decrypted back to: " + result);
 			//Log.i(CommandCenterActivity.TAG, "Compare against: "+crypto.getString("uuid", "FAILURE"));
-			if (result.equals(createLocalUUID())) {
+			if (result.equals(Cryptography.createLocalUUID(getActivity()))) {
 				return true;
 			}
 		} catch (NoSuchAlgorithmException e) {
@@ -430,7 +430,7 @@ public class PINFragment extends Fragment implements OnClickListener {
 		SharedPreferences crypto = getActivity().getSharedPreferences(
 				getResources().getString(R.string.crypto_prefsdb),
 				Context.MODE_PRIVATE);
-		String uuid = createLocalUUID();
+		String uuid = Cryptography.createLocalUUID(getActivity());
 		if (uuid != null) {
 			try {
 				SecretKey secret = Cryptography.generateKey(currentPin,
