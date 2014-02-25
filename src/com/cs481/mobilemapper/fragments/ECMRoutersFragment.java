@@ -179,17 +179,16 @@ public class ECMRoutersFragment extends ListFragment implements
 		RouterListRow row = (RouterListRow) (l.getAdapter().getItem(position));
 		Log.w(CommandCenterActivity.TAG, "Router ID clicked: " + row.getId());
 
-		LoginActivity activity = (LoginActivity) getActivity();
+		//LoginActivity activity = (LoginActivity) getActivity();
 
 		//authInfo = activity.getAuthInfo();
 		Log.i(CommandCenterActivity.TAG, "Authinfo: " + authInfo);
 		Log.i(CommandCenterActivity.TAG, "Router: " + row.getRouter());
 
 		authInfo.setRouterId(row.getRouter().getId());
-		activity.setAuthInfo(authInfo);
+		//activity.setAuthInfo(authInfo);
 		// activity.setRouter(row.getRouter());
-		RouterConfirmDialogFragment rcFragment = new RouterConfirmDialogFragment();
-		rcFragment.setData(row.getRouter(), authInfo);
+		RouterConfirmDialogFragment rcFragment = RouterConfirmDialogFragment.newInstance(row.getRouter(), authInfo);
 		rcFragment.show(getFragmentManager(), "RouterConfirm");
 	}
 }

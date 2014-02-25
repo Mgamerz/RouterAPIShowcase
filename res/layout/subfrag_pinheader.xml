@@ -4,6 +4,8 @@
     android:layout_height="wrap_content" >
 
     <TextView
+                    android:textColor="@color/White"
+        
         android:id="@+id/enterpin_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -11,20 +13,12 @@
         android:text="Enter your PIN to continue"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
-    <TextView
-        android:id="@+id/debug_enteredpin"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/enterpin_text"
-        android:layout_centerHorizontal="true"
-        android:text="Entered PIN" />
-
     <LinearLayout
         android:id="@+id/pinprogress_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/debug_enteredpin"
-        android:background="#333377"
+        android:layout_below="@id/enterpin_text"
+        android:background="@color/DarkSeaGreen"
         android:paddingLeft="5dp"
         android:paddingRight="5dp"
         android:orientation="horizontal" >

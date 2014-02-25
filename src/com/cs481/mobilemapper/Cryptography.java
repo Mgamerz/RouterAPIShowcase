@@ -16,9 +16,13 @@ import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 
-import com.cs481.mobilemapper.activities.CommandCenterActivity;
-
+import android.app.Activity;
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.provider.Settings.Secure;
 import android.util.Log;
+
+import com.cs481.mobilemapper.activities.CommandCenterActivity;
 
 public class Cryptography {
 	public static SecretKey generateKey(String code, byte[] salt)
@@ -75,4 +79,17 @@ public class Cryptography {
 
 		return decryptString;
 	}	
+	
+	public static String createLocalUUID(Activity activity) {
+		SharedPreferences crypto = activity.getSharedPreferences(
+				activity.getResources().getString(R.string.crypto_prefsdb),
+				Context.MODE_PRIVATE);
+		String uuid = crypto.getString("uuid", null);
+		
+		String device_uuid = Secure.getString(activity
+				.getContentResolver(), Secure.ANDROID_ID);
+		uuid = uuid + device_uuid; // device specific. Might want to make
+									// this more random.
+		return uuid;
+	}
 }

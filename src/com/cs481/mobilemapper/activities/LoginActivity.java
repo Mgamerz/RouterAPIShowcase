@@ -32,10 +32,12 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.cs481.mobilemapper.AuthInfo;
+import com.cs481.mobilemapper.Cryptography;
 import com.cs481.mobilemapper.Profile;
 import com.cs481.mobilemapper.R;
 import com.cs481.mobilemapper.Utility;
 import com.cs481.mobilemapper.debug.DebugActivity;
+import com.cs481.mobilemapper.fragments.PINFragment;
 import com.cs481.mobilemapper.fragments.SplashScreenFragment;
 import com.cs481.mobilemapper.listrows.ProfileListRow;
 
@@ -122,6 +124,7 @@ public class LoginActivity extends SpiceActivity {
 
 		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 		mDrawerList = (ListView) findViewById(R.id.left_drawer);
+		mDrawerList.setBackgroundResource(R.color.White);
 
 		ArrayList<ProfileListRow> rows = new ArrayList<ProfileListRow>();
 
@@ -208,14 +211,12 @@ public class LoginActivity extends SpiceActivity {
 		}
 	}
 
-	public void setAuthInfo(AuthInfo authInfo) {
-		// TODO Auto-generated method stub
-		this.authInfo = authInfo;
-	}
-
-	public AuthInfo getAuthInfo() {
-		return authInfo;
-	}
+	/*
+	 * public void setAuthInfo(AuthInfo authInfo) { // TODO Auto-generated
+	 * method stub this.authInfo = authInfo; }
+	 * 
+	 * public AuthInfo getAuthInfo() { return authInfo; }
+	 */
 
 	private class DrawerItemClickListener implements
 			ListView.OnItemClickListener {
@@ -232,6 +233,7 @@ public class LoginActivity extends SpiceActivity {
 		mDrawerList.setItemChecked(position, true);
 		// setTitle(profilesArray[position]);
 		mDrawerLayout.closeDrawer(mDrawerList);
+		startPIN();
 	}
 
 	@Override
@@ -317,4 +319,36 @@ public class LoginActivity extends SpiceActivity {
 		}
 	}
 
+	public void startPIN() {
+		PINFragment PIN = PINFragment.newInstance(false);
+		FragmentTransaction transaction = getSupportFragmentManager()
+				.beginTransaction();
+
+		transaction.replace(R.id.login_fragment, PIN);
+		transaction.addToBackStack(null);
+		transaction.commit();
+	}
+
+	public void closePIN(String pin){
+		getSupportFragmentManager().popBackStack();
+		getActionBar().show();
+		
+		
+		if (pin != null){
+			//pin was returned
+			
+			//Create the secret generator
+			try {
+			SecretKey secret = Cryptography.generateKey(pin,
+					Cryptography.createLocalUUID(this).getBytes("UTF-8"));
+			
+			String authUser = authInfo.getUsername();
+			String authPass = authInfo.getPassword();
+			
+			authUser = Cryptography.decryptMsg(Base64.decode(authUser, Base64.DEFAULT), secret);
+			} catch (Exception e){
+				
+			}
+		}
+	}
 }

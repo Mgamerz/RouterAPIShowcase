@@ -13,7 +13,7 @@
 
     <TextView
         android:id="@+id/profilerow_title"
-        style="@style/RedTextTheme"
+        android:textColor="@color/Black"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"

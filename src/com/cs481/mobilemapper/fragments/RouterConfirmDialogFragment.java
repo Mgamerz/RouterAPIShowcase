@@ -117,4 +117,13 @@ public class RouterConfirmDialogFragment extends DialogFragment {
 		this.router = router;
 		this.authInfo = authInfo;
 	}
+
+	public static RouterConfirmDialogFragment newInstance(Router router,
+			AuthInfo authInfo) {
+		// TODO Auto-generated method stub
+		RouterConfirmDialogFragment rcdf = new RouterConfirmDialogFragment();
+		rcdf.router = router;
+		rcdf.authInfo = authInfo;
+		return rcdf;
+	}
 }

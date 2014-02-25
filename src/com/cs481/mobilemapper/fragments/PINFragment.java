@@ -15,6 +15,7 @@ import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 
+import android.app.ActionBar;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
@@ -68,6 +69,13 @@ public class PINFragment extends Fragment implements OnClickListener {
 			currentPin = savedInstancedState.getString("pin");
 			attemptsRemaining = savedInstancedState.getInt("attemptsRemaining");
 		}
+	}
+	
+	@Override
+	public void onActivityCreated(Bundle savedInstanceState){
+		super.onActivityCreated(savedInstanceState);
+		ActionBar ab = getActivity().getActionBar();
+		ab.hide();
 	}
 
 	/**
@@ -159,9 +167,9 @@ public class PINFragment extends Fragment implements OnClickListener {
 	}
 
 	public void setupUI() {
-		TextView debugPin = (TextView) getView().findViewById(
-				R.id.debug_enteredpin);
-		debugPin.setText(currentPin);
+		//TextView debugPin = (TextView) getView().findViewById(
+		//		R.id.debug_enteredpin);
+		//debugPin.setText(currentPin);
 
 		// Make the numeric buttons have listeners
 		Button pinButton = (Button) getView().findViewById(R.id.pin0);
@@ -194,8 +202,8 @@ public class PINFragment extends Fragment implements OnClickListener {
 	@Override
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
-		TextView debugPin = (TextView) getView().findViewById(
-				R.id.debug_enteredpin);
+		//TextView debugPin = (TextView) getView().findViewById(
+		//		R.id.debug_enteredpin);
 
 		int buttonId = v.getId();
 		
@@ -246,7 +254,7 @@ public class PINFragment extends Fragment implements OnClickListener {
 			break;
 		}
 		updateProgress(currentPin);
-		debugPin.setText(currentPin);
+		//debugPin.setText(currentPin);
 	}
 
 	/**
@@ -294,18 +302,7 @@ public class PINFragment extends Fragment implements OnClickListener {
 		}
 	}
 
-	private String createLocalUUID() {
-		SharedPreferences crypto = getActivity().getSharedPreferences(
-				getResources().getString(R.string.crypto_prefsdb),
-				Context.MODE_PRIVATE);
-		String uuid = crypto.getString("uuid", null);
-		
-		String device_uuid = Secure.getString(getActivity()
-				.getContentResolver(), Secure.ANDROID_ID);
-		uuid = uuid + device_uuid; // device specific. Might want to make
-									// this more random.
-		return uuid;
-	}
+
 
 	private void testEncryptionDecryption(String hash) {
 		try {
