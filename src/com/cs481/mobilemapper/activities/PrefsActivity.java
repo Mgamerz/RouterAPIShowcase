@@ -17,7 +17,7 @@ public class PrefsActivity extends PreferenceActivity {
 	protected static final int THEME_BLACK = 3;
 
 	@Override
-	public void onCreate(Bundle savedInstanceState){
+	public void onCreate(Bundle savedInstanceState) {
 		// set theme
 		SharedPreferences mPrefs = PreferenceManager
 				.getDefaultSharedPreferences(this);
@@ -31,8 +31,10 @@ public class PrefsActivity extends PreferenceActivity {
 		default:
 			setTheme(R.style.RedAppTheme);
 		}
+		super.onCreate(savedInstanceState);
+
 	}
-	
+
 	@Override
 	public void onBuildHeaders(List<Header> target) {
 		loadHeadersFromResource(R.xml.prefs_headers, target);
