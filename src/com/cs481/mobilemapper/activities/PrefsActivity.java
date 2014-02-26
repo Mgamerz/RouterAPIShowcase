@@ -4,6 +4,8 @@ import java.util.List;
 
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
+import android.util.Log;
+import android.view.MenuItem;
 
 import com.cs481.mobilemapper.R;
 import com.cs481.mobilemapper.Utility;
@@ -18,8 +20,8 @@ public class PrefsActivity extends PreferenceActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		setTheme(Utility.getTheme(this));
+		getActionBar().setDisplayHomeAsUpEnabled(true);
 		super.onCreate(savedInstanceState);
-
 	}
 
 	@Override
@@ -29,10 +31,22 @@ public class PrefsActivity extends PreferenceActivity {
 
 	@Override
 	protected boolean isValidFragment(String fragmentName) {
+		Log.i(CommandCenterActivity.TAG,
+				"Validating: " + UIPrefsFragment.class.getName() + " vs "
+						+ fragmentName);
 		if (UIPrefsFragment.class.getName().equals(fragmentName)) {
 			return true;
 		}
 		return false;
+	}
 
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case android.R.id.home:
+			finish();
+			return true;
+		default:
+			return false;
+		}
 	}
 }

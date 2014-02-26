@@ -41,6 +41,7 @@
     <string name="command_title">Command Center</string>
     <string name="action_settings">App Settings</string>
     <string name="action_logout">Logout</string>
+    <string name="logged_out">You have been logged out.</string>
 
     <!-- Dashboard -->
     <string name="dashboard_title">Dashboard</string>

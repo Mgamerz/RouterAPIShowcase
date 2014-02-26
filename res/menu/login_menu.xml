@@ -21,6 +21,9 @@
         android:id="@+id/fr_debug_new"
         android:title="Debug - NewPin">
     </item>
-    <item android:id="@+id/fr_debug_sasa" android:title="Sasa Debug"></item>
+    <item
+        android:id="@+id/action_settings"
+        android:title="@string/action_settings">
+    </item>
 
 </menu>

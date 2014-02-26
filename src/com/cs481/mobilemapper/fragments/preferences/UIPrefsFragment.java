@@ -2,6 +2,7 @@ package com.cs481.mobilemapper.fragments.preferences;
 
 import android.os.Bundle;
 import android.preference.PreferenceFragment;
+import android.view.View;
 
 import com.cs481.mobilemapper.R;
 
@@ -18,5 +19,10 @@ public class UIPrefsFragment extends PreferenceFragment {
 
         // Load the preferences from an XML resource
         addPreferencesFromResource(R.xml.ui_prefs);
+    }
+    
+    @Override
+    public void onViewCreated(View v, Bundle savedInstanceState){
+    	//v.setBackgroundColor(getResources().getColor(R.color.DarkBlue));
     }
 }

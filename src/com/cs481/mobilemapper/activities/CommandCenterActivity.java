@@ -85,7 +85,7 @@ public class CommandCenterActivity extends SpiceActivity {
 		switch (item.getItemId()) {
 		case R.id.action_logout:
 			Intent logoutIntent = new Intent(this, LoginActivity.class);
-			Toast.makeText(this, "You have been logged out.",
+			Toast.makeText(this, getResources().getString(R.string.logged_out),
 					Toast.LENGTH_SHORT).show();
 			startActivity(logoutIntent);
 			finish();
@@ -94,8 +94,6 @@ public class CommandCenterActivity extends SpiceActivity {
 			return true;
 		case R.id.action_settings:
 			Intent prefsIntent = new Intent(this, PrefsActivity.class);
-			Toast.makeText(this, "You have been logged out.",
-					Toast.LENGTH_SHORT).show();
 			startActivity(prefsIntent);
 			return true;
 		default:

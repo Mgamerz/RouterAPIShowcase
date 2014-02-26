@@ -14,7 +14,6 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
@@ -187,12 +186,10 @@ public class LoginActivity extends SpiceActivity {
 			startActivity(intent);
 			return true;
 		}
-		case R.id.fr_debug_new: {
-			Intent intent = new Intent(this, DebugActivity.class);
-			intent.putExtra("create_new", true);
-			startActivity(intent);
+		case R.id.action_settings:
+			Intent prefsIntent = new Intent(this, PrefsActivity.class);
+			startActivity(prefsIntent);
 			return true;
-		}
 		default:
 			return super.onOptionsItemSelected(item);
 		}
