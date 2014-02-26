@@ -3,8 +3,7 @@ package com.cs481.mobilemapper.dialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.res.TypedArray;
-import android.graphics.Color;
+import android.content.res.Resources.Theme;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -26,9 +25,9 @@ import com.cs481.mobilemapper.activities.CommandCenterActivity;
 import com.cs481.mobilemapper.responses.status.wlan.WAP;
 
 public class WifiWanDialogFragment extends DialogFragment {
-	WAP wap;
-	AuthInfo authInfo;
-	Context context;
+	private WAP wap;
+	private AuthInfo authInfo;
+	private Context context;
 
 	/**
 	 * This constructor must be empty or the Fragment won't be able to start.
@@ -36,6 +35,15 @@ public class WifiWanDialogFragment extends DialogFragment {
 	public WifiWanDialogFragment() {
 		Log.i(CommandCenterActivity.TAG, "Created fragment.");
 		// context = getActivity();
+	}
+	
+	/**
+	 * This constructor must be empty or the Fragment won't be able to start.
+	 */
+	public static WifiWanDialogFragment newInstance(Context context) {
+		WifiWanDialogFragment wwdf = new WifiWanDialogFragment();
+		wwdf.context = context;
+		return wwdf;
 	}
 
 	@Override
@@ -62,17 +70,13 @@ public class WifiWanDialogFragment extends DialogFragment {
 		HoloDialogBuilder dialogBuilder = new HoloDialogBuilder(
 				getActivity());
 		
-		TypedValue typedValue = new TypedValue(); 
-		int[] colorAttr = new int[] { android.R.attr.th};
-		int rColorIndex = 0;
-		TypedArray a = context.obtainStyledAttributes(typedValue.data, colorAttr);
-		int colorid = a.getColor(rColorIndex, -1);
-		a.recycle();
-		
+		Theme theme = context.getTheme();
+		TypedValue typedValue = new TypedValue();
+		theme.resolveAttribute(android.R.attr.windowBackground, typedValue, true);
 		//Color color = getResources().getColor(colorid);
 		
-		dialogBuilder.setDividerColor(colorid);
-		dialogBuilder.setTitleColor(colorid);
+		dialogBuilder.setDividerColor(typedValue.resourceId);
+		dialogBuilder.setTitleColor(typedValue.resourceId);
 		//dialogBuilder.setTitleColor(getResources().getString(R.color.Black));
 		String title = wap.getSsid();
 		boolean hiddenSsid = false; // used to show the SSID field

@@ -378,32 +378,6 @@ public class WifiAsWanFragment extends ListFragment implements
 		}
 	}
 
-	private class WLANConfigEnabledPutListener implements
-			RequestListener<Response> {
-
-		@Override
-		public void onRequestFailure(SpiceException e) {
-			Log.i(CommandCenterActivity.TAG, "Failed to enable/disable WLAN!");
-			Toast.makeText(getActivity(), "Failed to set the WLAN Config.",
-					Toast.LENGTH_SHORT).show();
-		}
-
-		@Override
-		public void onRequestSuccess(Response wlanConfig) {
-			Log.i(CommandCenterActivity.TAG, "Updated the wlan config.");
-			ConfigWlan cwlan = (ConfigWlan) wlanConfig.getData();
-			Switch wifiToggle = (Switch) menu.findItem(R.id.wifi_toggle)
-					.getActionView();
-			wifiToggle.setOnCheckedChangeListener(null);
-			wifiState = cwlan.getRadios().get(0).getEnabled();
-			wifiStateEnabled = true;
-			wifiToggle.setEnabled(wifiStateEnabled);
-			wifiToggle.setChecked(wifiState);
-			setWifiToggleListener();
-			mPullToRefreshLayout.setRefreshComplete();
-		}
-	}
-
 	/**
 	 * Should be run when a WLAN object has been returned and the list of AP's
 	 * shoudl be updated
@@ -478,7 +452,7 @@ public class WifiAsWanFragment extends ListFragment implements
 		// getActivity();
 
 		// authInfo = activity.getAuthInfo();
-		WifiWanDialogFragment wwFragment = new WifiWanDialogFragment();
+		WifiWanDialogFragment wwFragment = WifiWanDialogFragment.newInstance(getActivity());
 		wwFragment.setData(row.getWap(), authInfo);
 		wwFragment
 				.show(getActivity().getSupportFragmentManager(), "WAPConfirm");
