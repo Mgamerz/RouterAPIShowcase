@@ -1,5 +1,5 @@
 
-package com.cs481.mobilemapper.responses.status.productinfo;
+package com.cs481.mobilemapper.responses.status.product_info;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -28,7 +28,7 @@ public class Memory{
 	@JsonProperty("commitlimit")
    	private int commitlimit;
 	
-	@JsonProperty("comitted_as")
+	@JsonProperty("committed_as")
    	private int committed_as;
 	
 	@JsonProperty("dirty")

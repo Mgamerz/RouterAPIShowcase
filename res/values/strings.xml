@@ -127,6 +127,11 @@
     <string name="mac_address">MAC Address</string>
     <string name="uptime">Up Time</string>
     <string name="hostname">Host Name</string>
+    <string name="product_info_fail">Failed to read Product Info</string>
+    <string name="info_reading">Reading Product Info</string>
+    <string name="fw_info_fail">Failed to read Firmware Info</string>
+    <string name="status_fail">Failed to read Status</string>
+    <string name="loading">Loading...</string>
 
     <!-- Color Strings (for the custom dialogs - doesn't support R.color values. -->
     <string name="dialogcolor_title">#FFFFFF</string>

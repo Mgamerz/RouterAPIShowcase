@@ -1,5 +1,5 @@
 
-package com.cs481.mobilemapper.responses.status.productinfo;
+package com.cs481.mobilemapper.responses.status.product_info;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -32,11 +32,11 @@ public class System{
    	private int time;
 	
 	@JsonProperty("uptime")
-   	private int uptime;
+   	private double uptime;
 	
 	@JsonProperty("wan_signal_strength")
    	private int wan_signal_strength;
-
+	
  	public String getBoot(){
 		return this.boot;
 	}
@@ -91,10 +91,10 @@ public class System{
 	public void setTime(int time){
 		this.time = time;
 	}
- 	public int getUptime(){
+ 	public double getUptime(){
 		return this.uptime;
 	}
-	public void setUptime(int uptime){
+	public void setUptime(double uptime){
 		this.uptime = uptime;
 	}
  	public int getWan_signal_strength(){

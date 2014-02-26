@@ -6,52 +6,94 @@
     android:fillViewport="true"
     android:scrollbars="none" >
 
-   <RelativeLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="10dp" >
 
-        <LinearLayout
-            android:id="@+id/wapconnect_ssidlayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical" >
-
-            <TextView
-                android:id="@+id/wapconnect_ssidset_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/product" />
-
-            <TextView
-                android:id="@+id/wapconnect_ssidset_field"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/firmware" />
-        </LinearLayout>
-
         <TextView
-            android:id="@+id/wapconnect_signalstrength_text"
+            android:id="@+id/product_text"
+            style="@style/RedTextTheme"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/wapconnect_ssidlayout"
+            android:text="@string/product" />
+
+        <TextView
+            android:id="@+id/product_value"
+            style="@style/RedTextTheme"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/mac_address_value"
+            android:text="@string/loading" />
+
+        <TextView
+            android:id="@+id/hostname_text"
+            style="@style/RedTextTheme"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/product_text"
+            android:text="@string/hostname" />
+
+        <TextView
+            android:id="@+id/hostname_value"
+            style="@style/RedTextTheme"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@id/mac_address_value"
+            android:layout_below="@id/product_text"
+            android:text="@string/loading" />
+
+        <TextView
+            android:id="@+id/firmware_text"
+            style="@style/RedTextTheme"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/hostname_text"
+            android:text="@string/firmware" />
+
+        <TextView
+            android:id="@+id/firmware_value"
+            style="@style/RedTextTheme"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@id/mac_address_value"
+            android:layout_below="@id/hostname_text"
+            android:text="@string/loading" />
+
+        <TextView
+            android:id="@+id/mac_address_text"
+            style="@style/RedTextTheme"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/firmware_text"
             android:text="@string/mac_address" />
 
         <TextView
-            android:id="@+id/wapconnect_signalstrength_value"
+            android:id="@+id/mac_address_value"
+            style="@style/RedTextTheme"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/wapconnect_signalstrength_text"
+            android:layout_below="@id/firmware_text"
+            android:layout_marginLeft="10dp"
+            android:layout_toRightOf="@id/mac_address_text"
+            android:text="@string/loading" />
+
+        <TextView
+            android:id="@+id/uptime_text"
+            style="@style/RedTextTheme"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/mac_address_text"
             android:text="@string/uptime" />
 
         <TextView
-            android:id="@+id/wapconnect_securitytype_text"
+            android:id="@+id/uptime_value"
+            style="@style/RedTextTheme"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/wapconnect_signalstrength_value"
-            android:layout_marginTop="5dp"
-            android:text="@string/hostname" />
-
+            android:layout_alignLeft="@id/mac_address_value"
+            android:layout_below="@id/mac_address_text"
+            android:text="@string/loading" />
     </RelativeLayout>
 
 </ScrollView>

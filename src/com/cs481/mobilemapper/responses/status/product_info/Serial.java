@@ -1,5 +1,5 @@
 
-package com.cs481.mobilemapper.responses.status.productinfo;
+package com.cs481.mobilemapper.responses.status.product_info;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

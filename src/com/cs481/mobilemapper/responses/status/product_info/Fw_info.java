@@ -1,5 +1,5 @@
 
-package com.cs481.mobilemapper.responses.status.productinfo;
+package com.cs481.mobilemapper.responses.status.product_info;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -34,12 +34,20 @@ public class Fw_info{
 	@JsonProperty("upgrade_major_version")
    	private int upgrade_major_version;
 	
-	@JsonProperty("upgrade_minor version")
+	@JsonProperty("upgrade_minor_version")
    	private int upgrade_minor_version;
 	
 	@JsonProperty("upgrade_patch_version")
    	private int upgrade_patch_version;
 
+	/** public String getFirmware()
+	 * 
+	 * @return
+	 */
+	public String getFirmware(){
+		return "" + major_version + "." + minor_version + "." + patch_version;
+	}
+	
  	public String getBuild_date(){
 		return this.build_date;
 	}
