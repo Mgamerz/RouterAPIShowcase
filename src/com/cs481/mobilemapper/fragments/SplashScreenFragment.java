@@ -8,8 +8,13 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 public class SplashScreenFragment extends Fragment {
     @Override
@@ -17,8 +22,8 @@ public class SplashScreenFragment extends Fragment {
         Bundle savedInstanceState) {
         // Inflate the layout for this fragment
     	View view = inflater.inflate(R.layout.fragment_splashscreen, container, false);
-        Button ecm_button = (Button) view.findViewById(R.id.button_ecm);
-        Button local_button = (Button) view.findViewById(R.id.button_local);
+        ImageView ecm_button = (ImageView) view.findViewById(R.id.button_ecm);
+        ImageView local_button = (ImageView) view.findViewById(R.id.button_local);
     	
         ecm_button.setOnClickListener(new OnClickListener(){
 			@Override
@@ -41,5 +46,14 @@ public class SplashScreenFragment extends Fragment {
         });
         
     	return view;
+    }
+    
+    // Called in LoginActivity
+    public void animate(){
+    	FrameLayout ecm = (FrameLayout) getView().findViewById(
+				R.id.button_ecm_layout);
+    	Animation shakeAnimation = AnimationUtils.loadAnimation(getActivity(),
+				R.anim.animation_shake);
+		ecm.startAnimation(shakeAnimation);
     }
 }
