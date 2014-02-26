@@ -36,10 +36,10 @@ import com.cs481.mobilemapper.activities.CommandCenterActivity;
 import com.cs481.mobilemapper.activities.SpiceActivity;
 import com.cs481.mobilemapper.dialog.WifiWanDialogFragment;
 import com.cs481.mobilemapper.listrows.WlanListRow;
-import com.cs481.mobilemapper.responses.GetRequest;
 import com.cs481.mobilemapper.responses.PutRequest;
 import com.cs481.mobilemapper.responses.Response;
 import com.cs481.mobilemapper.responses.config.wlan.ConfigWlan;
+import com.cs481.mobilemapper.responses.config.wwan.WANProfile;
 import com.cs481.mobilemapper.responses.status.wlan.StatusWlan;
 import com.cs481.mobilemapper.responses.status.wlan.WAP;
 import com.octo.android.robospice.SpiceManager;
@@ -380,9 +380,9 @@ public class WifiAsWanFragment extends ListFragment implements
 
 	/**
 	 * Should be run when a WLAN object has been returned and the list of AP's
-	 * shoudl be updated
+	 * should be updated
 	 * 
-	 * @param wlan
+	 * @param wlan wlan response object
 	 */
 	public void updateWlanList(StatusWlan wlan) {
 		waps = wlan.getRadio().get(0).getSurvey(); // might need to
@@ -452,7 +452,7 @@ public class WifiAsWanFragment extends ListFragment implements
 		// getActivity();
 
 		// authInfo = activity.getAuthInfo();
-		WifiWanDialogFragment wwFragment = WifiWanDialogFragment.newInstance(getActivity());
+		WifiWanDialogFragment wwFragment = WifiWanDialogFragment.newInstance(this);
 		wwFragment.setData(row.getWap(), authInfo);
 		wwFragment
 				.show(getActivity().getSupportFragmentManager(), "WAPConfirm");
@@ -476,5 +476,8 @@ public class WifiAsWanFragment extends ListFragment implements
 			adapter.notifyDataSetChanged();
 		}
 	}
-
+	
+	public void connectAsWAN(WANProfile wanprofile){
+		
+	}
 }

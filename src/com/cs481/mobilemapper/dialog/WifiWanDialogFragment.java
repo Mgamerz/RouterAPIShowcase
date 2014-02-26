@@ -1,7 +1,6 @@
 package com.cs481.mobilemapper.dialog;
 
 import android.app.Dialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.Resources.Theme;
 import android.graphics.Typeface;
@@ -22,12 +21,14 @@ import com.cs481.mobilemapper.AuthInfo;
 import com.cs481.mobilemapper.R;
 import com.cs481.mobilemapper.Utility;
 import com.cs481.mobilemapper.activities.CommandCenterActivity;
+import com.cs481.mobilemapper.fragments.WifiAsWanFragment;
+import com.cs481.mobilemapper.responses.config.wwan.WANProfile;
 import com.cs481.mobilemapper.responses.status.wlan.WAP;
 
 public class WifiWanDialogFragment extends DialogFragment {
 	private WAP wap;
 	private AuthInfo authInfo;
-	private Context context;
+	private WifiAsWanFragment hostingFragment;
 
 	/**
 	 * This constructor must be empty or the Fragment won't be able to start.
@@ -40,9 +41,9 @@ public class WifiWanDialogFragment extends DialogFragment {
 	/**
 	 * This constructor must be empty or the Fragment won't be able to start.
 	 */
-	public static WifiWanDialogFragment newInstance(Context context) {
+	public static WifiWanDialogFragment newInstance(WifiAsWanFragment wawf) {
 		WifiWanDialogFragment wwdf = new WifiWanDialogFragment();
-		wwdf.context = context;
+		wwdf.hostingFragment = wawf;
 		return wwdf;
 	}
 
@@ -70,7 +71,7 @@ public class WifiWanDialogFragment extends DialogFragment {
 		HoloDialogBuilder dialogBuilder = new HoloDialogBuilder(
 				getActivity());
 		
-		Theme theme = context.getTheme();
+		Theme theme = hostingFragment.getActivity().getTheme();
 		TypedValue typedValue = new TypedValue();
 		theme.resolveAttribute(android.R.attr.windowBackground, typedValue, true);
 		//Color color = getResources().getColor(colorid);
@@ -165,4 +166,29 @@ public class WifiWanDialogFragment extends DialogFragment {
 		this.wap = wap;
 		this.authInfo = authInfo;
 	}
+	
+	/**
+	 * This method sends a PUT request to the router, telling it to connect to a new AP as WAN.
+	 * 
+	 * @param wap
+	 */
+	public void connectAsWan(WAP wap){
+		//Construct a router WANProfile object
+		WANProfile wanprofile = new WANProfile();
+		wanprofile.setAuthmode(wap.getAuthmode());
+		wanprofile.setBssid(wap.getBssid());
+		wanprofile.setSsid(wap.getSsid());
+		wanprofile.setBssid(wap.getBssid());
+		wanprofile.setWpacipher("aes"); //TODO figure out what this means
+		wanprofile.setUid(wap.getBssid());
+		wanprofile.setEnabled(true);
+		
+		TextView tv = (TextView) getView().findViewById(R.id.wapconnect_password_field);
+		String pass = tv.getText().toString(); 
+		wanprofile.setWpapsk(pass);
+		
+		hostingFragment.connectAsWAN(wanprofile);
+	}
+	
+	
 }
