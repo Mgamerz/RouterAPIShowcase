@@ -304,6 +304,8 @@ public class LoginActivity extends SpiceActivity {
 	}
 
 	public void startPIN() {
+		mTitle = getActionBar().getTitle();
+		Log.i(CommandCenterActivity.TAG, "Title is: " + mTitle);
 		PINFragment PIN = PINFragment.newInstance(false);
 		FragmentTransaction transaction = getSupportFragmentManager()
 				.beginTransaction();
@@ -313,39 +315,46 @@ public class LoginActivity extends SpiceActivity {
 		transaction.commit();
 	}
 
-	public void closePIN(String pin){
-		//getSupportFragmentManager().popBackStack();
+	public void closePIN(String pin) {
+		// getSupportFragmentManager().popBackStack();
 
-		Log.i(CommandCenterActivity.TAG, "Action bar should be showing.");
+		Log.i(CommandCenterActivity.TAG, "Restoring title: " + mTitle);
 		getActionBar().show();
-		
-		if (pin != null){
-			//pin was returned
-			//Create the secret generator
-			try {
-			SecretKey secret = Cryptography.generateKey(pin,
-					Cryptography.createLocalUUID(this).getBytes("UTF-8"));
-			
-			String authUser = authInfo.getUsername();
-			String authPass = authInfo.getPassword();
-			
-			authUser = Cryptography.decryptMsg(Base64.decode(authUser, Base64.DEFAULT), secret);
-			authPass = Cryptography.decryptMsg(Base64.decode(authPass, Base64.DEFAULT), secret);
+		getActionBar().setTitle(mTitle);
 
-			} catch (Exception e){
-				Log.e(CommandCenterActivity.TAG, "An exception occured trying to decrypt the user credentials.");
+		if (pin != null) {
+			// pin was returned
+			// Create the secret generator
+			try {
+				SecretKey secret = Cryptography.generateKey(pin, Cryptography
+						.createLocalUUID(this).getBytes("UTF-8"));
+
+				String authUser = authInfo.getUsername();
+				String authPass = authInfo.getPassword();
+
+				authUser = Cryptography.decryptMsg(
+						Base64.decode(authUser, Base64.DEFAULT), secret);
+				authPass = Cryptography.decryptMsg(
+						Base64.decode(authPass, Base64.DEFAULT), secret);
+
+			} catch (Exception e) {
+				Log.e(CommandCenterActivity.TAG,
+						"An exception occured trying to decrypt the user credentials.");
 			}
 		}
 	}
-	
+
 	@Override
 	public void onBackPressed() {
-	    final PINFragment fragment = (PINFragment) getSupportFragmentManager().findFragmentByTag("PIN");
-	    Log.i(CommandCenterActivity.TAG, "BACK PRESSED");
-	    if (fragment != null) { // and then you define a method allowBackPressed with the logic to allow back pressed or not
+		final PINFragment fragment = (PINFragment) getSupportFragmentManager()
+				.findFragmentByTag("PIN");
+		if (fragment != null) { // and then you define a method allowBackPressed
+								// with the logic to allow back pressed or not
+			Log.i(CommandCenterActivity.TAG, "Back - restoring title to "+mTitle);
+			getActionBar().setTitle(mTitle);
 			getActionBar().show();
-	    }
-        super.onBackPressed();
+		}
+		super.onBackPressed();
 
 	}
 }

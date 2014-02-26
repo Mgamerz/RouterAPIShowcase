@@ -218,8 +218,8 @@ public class LocalLoginFragment extends Fragment {
 		} else {
 			EditText iptext = (EditText) getView().findViewById(R.id.router_ip);
 			routerip = iptext.getText().toString();
-			CheckBox remote = (CheckBox) getView().findViewById(
-					R.id.use_remote_admin);
+			//CheckBox remote = (CheckBox) getView().findViewById(
+			//		R.id.use_remote_admin);
 			// remoteBool = remote.isChecked();
 			port = 8080; // TODO add box for custom ports, perhaps SSL
 							// management
