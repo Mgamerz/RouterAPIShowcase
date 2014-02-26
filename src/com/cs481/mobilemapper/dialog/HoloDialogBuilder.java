@@ -52,6 +52,15 @@ public class HoloDialogBuilder extends AlertDialog.Builder {
 		mDivider.setBackgroundColor(Color.parseColor(colorString));
 		return this;
 	}
+	
+	/**
+	 * This method defines the divider color.
+	 * @param colorId R id that specifies the color value
+	 */
+	public HoloDialogBuilder setDividerColor(int colorId) {
+		mDivider.setBackgroundColor(colorId);
+		return this;
+	}
 
 	@Override
 	public HoloDialogBuilder setTitle(CharSequence text) {
@@ -61,6 +70,11 @@ public class HoloDialogBuilder extends AlertDialog.Builder {
 
 	public HoloDialogBuilder setTitleColor(String colorString) {
 		mTitle.setTextColor(Color.parseColor(colorString));
+		return this;
+	}
+	
+	public HoloDialogBuilder setTitleColor(int colorId) {
+		mTitle.setTextColor(colorId);
 		return this;
 	}
 

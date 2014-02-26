@@ -1,4 +1,4 @@
-package com.cs481.mobilemapper.fragments;
+package com.cs481.mobilemapper.dialog;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -17,7 +17,6 @@ import com.cs481.mobilemapper.Profile;
 import com.cs481.mobilemapper.R;
 import com.cs481.mobilemapper.Utility;
 import com.cs481.mobilemapper.activities.CommandCenterActivity;
-import com.cs481.mobilemapper.dialog.HoloDialogBuilder;
 import com.cs481.mobilemapper.responses.ecm.routers.Router;
 
 public class RouterConfirmDialogFragment extends DialogFragment {

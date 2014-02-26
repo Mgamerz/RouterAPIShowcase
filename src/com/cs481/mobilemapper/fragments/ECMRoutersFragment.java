@@ -24,6 +24,7 @@ import com.cs481.mobilemapper.R;
 import com.cs481.mobilemapper.activities.CommandCenterActivity;
 import com.cs481.mobilemapper.activities.LoginActivity;
 import com.cs481.mobilemapper.activities.SpiceActivity;
+import com.cs481.mobilemapper.dialog.RouterConfirmDialogFragment;
 import com.cs481.mobilemapper.listrows.RouterListRow;
 import com.cs481.mobilemapper.responses.ecm.routers.Router;
 

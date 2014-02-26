@@ -34,6 +34,7 @@ import com.cs481.mobilemapper.R;
 import com.cs481.mobilemapper.Utility;
 import com.cs481.mobilemapper.activities.CommandCenterActivity;
 import com.cs481.mobilemapper.activities.SpiceActivity;
+import com.cs481.mobilemapper.dialog.WifiWanDialogFragment;
 import com.cs481.mobilemapper.listrows.WlanListRow;
 import com.cs481.mobilemapper.responses.GetRequest;
 import com.cs481.mobilemapper.responses.PutRequest;
@@ -477,7 +478,7 @@ public class WifiAsWanFragment extends ListFragment implements
 		// getActivity();
 
 		// authInfo = activity.getAuthInfo();
-		WifiWanDialog wwFragment = new WifiWanDialog();
+		WifiWanDialogFragment wwFragment = new WifiWanDialogFragment();
 		wwFragment.setData(row.getWap(), authInfo);
 		wwFragment
 				.show(getActivity().getSupportFragmentManager(), "WAPConfirm");

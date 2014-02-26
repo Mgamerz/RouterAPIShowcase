@@ -1,4 +1,4 @@
-package com.cs481.mobilemapper.fragments;
+package com.cs481.mobilemapper.dialog;
 
 import android.app.AlertDialog;
 import android.app.Dialog;

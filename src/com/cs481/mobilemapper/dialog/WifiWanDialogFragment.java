@@ -1,18 +1,21 @@
-package com.cs481.mobilemapper.fragments;
+package com.cs481.mobilemapper.dialog;
 
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.res.TypedArray;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.text.SpannableString;
 import android.text.style.StyleSpan;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,10 +23,9 @@ import com.cs481.mobilemapper.AuthInfo;
 import com.cs481.mobilemapper.R;
 import com.cs481.mobilemapper.Utility;
 import com.cs481.mobilemapper.activities.CommandCenterActivity;
-import com.cs481.mobilemapper.dialog.HoloDialogBuilder;
 import com.cs481.mobilemapper.responses.status.wlan.WAP;
 
-public class WifiWanDialog extends DialogFragment {
+public class WifiWanDialogFragment extends DialogFragment {
 	WAP wap;
 	AuthInfo authInfo;
 	Context context;
@@ -31,7 +33,7 @@ public class WifiWanDialog extends DialogFragment {
 	/**
 	 * This constructor must be empty or the Fragment won't be able to start.
 	 */
-	public WifiWanDialog() {
+	public WifiWanDialogFragment() {
 		Log.i(CommandCenterActivity.TAG, "Created fragment.");
 		// context = getActivity();
 	}
@@ -59,7 +61,19 @@ public class WifiWanDialog extends DialogFragment {
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
 		HoloDialogBuilder dialogBuilder = new HoloDialogBuilder(
 				getActivity());
-		dialogBuilder.setTitleColor(getResources().getString(R.color.Black));
+		
+		TypedValue typedValue = new TypedValue(); 
+		int[] colorAttr = new int[] { android.R.attr.th};
+		int rColorIndex = 0;
+		TypedArray a = context.obtainStyledAttributes(typedValue.data, colorAttr);
+		int colorid = a.getColor(rColorIndex, -1);
+		a.recycle();
+		
+		//Color color = getResources().getColor(colorid);
+		
+		dialogBuilder.setDividerColor(colorid);
+		dialogBuilder.setTitleColor(colorid);
+		//dialogBuilder.setTitleColor(getResources().getString(R.color.Black));
 		String title = wap.getSsid();
 		boolean hiddenSsid = false; // used to show the SSID field
 		if (title.equals("")) {
@@ -81,6 +95,14 @@ public class WifiWanDialog extends DialogFragment {
 			layout.setVisibility(LinearLayout.GONE);
 			Log.i(CommandCenterActivity.TAG, "Layout visibility: "+layout.getVisibility());
 		}
+		
+		if (wap.getAuthmode().equals("none")){
+			RelativeLayout passwordLayout = (RelativeLayout) dialogView.findViewById(R.id.wapconnect_passwordlayout);
+			passwordLayout.setVisibility(RelativeLayout.GONE);
+		} else {
+			TextView warning = (TextView) dialogView.findViewById(R.id.wapconnect_insecure_text);
+			warning.setVisibility(TextView.GONE);
+		}
 
 		// Get dynamic content, set font to BOLD
 		SpannableString securityString = new SpannableString(wap.getAuthmode());
@@ -101,13 +123,13 @@ public class WifiWanDialog extends DialogFragment {
 				.findViewById(R.id.wapconnect_signalstrength_value);
 		signalStrength.setText(signalString);
 
-		dialogBuilder.setPositiveButton(android.R.string.yes,
+		dialogBuilder.setPositiveButton(R.string.connect,
 				new DialogInterface.OnClickListener() {
 
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
 						// TODO Auto-generated method stub
-						Toast.makeText(getActivity(), "Connecting as WAN...",
+						Toast.makeText(getActivity(), getResources().getString(R.string.connecting_as_wan),
 								Toast.LENGTH_LONG).show();
 					}
 				});
