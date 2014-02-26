@@ -75,7 +75,7 @@ public class AuthInfo implements Parcelable {
 		return routerport;
 	}
 
-	public void setRouterport(int routerport) {
+	public void setPort(int routerport) {
 		this.routerport = routerport;
 	}
 

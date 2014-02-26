@@ -1,0 +1,413 @@
+<?xml version="1.0" encoding="utf-8"?>
+<uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:ptr="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/ptr_layout"
+    android:padding="20dp"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+        <TableLayout
+            android:id="@+id/tableLayout1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:shrinkColumns="*"
+            android:stretchColumns="*" >
+
+            <TableRow
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal" >
+
+                <TextView
+                    android:id="@+id/powerled_text"
+                    style="@style/RedTextTheme"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/power_led_green"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                <Switch
+                    android:id="@+id/powerled_state"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:thumb="@drawable/greentheme_switch_inner_holo_light" />
+            </TableRow>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@android:color/darker_gray" />
+
+            <TableRow
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal" >
+
+                <TextView
+                    android:id="@+id/wifiledr_text"
+                    style="@style/RedTextTheme"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/wifi_led_red"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                <Switch
+                    android:id="@+id/wifiledr_state"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:thumb="@drawable/apptheme_switch_inner_holo_dark" />
+            </TableRow>
+
+            <TableRow
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal" >
+
+                <TextView
+                    android:id="@+id/wifiledg_text"
+                    style="@style/RedTextTheme"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/wifi_led_green"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                <Switch
+                    android:id="@+id/wifiledg_state"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:thumb="@drawable/greentheme_switch_inner_holo_light" />
+            </TableRow>
+
+            <TableRow
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal" >
+
+                <TextView
+                    android:id="@+id/wifiledb_text"
+                    style="@style/RedTextTheme"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/wifi_led_blue"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                <Switch
+                    android:id="@+id/wifiledb_state"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </TableRow>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@android:color/darker_gray" />
+
+            <TableRow
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal" >
+
+                <TextView
+                    android:id="@+id/ss0_text"
+                    style="@style/RedTextTheme"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/signalStrength0"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                <Switch
+                    android:id="@+id/ss0_state"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </TableRow>
+
+            <TableRow
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal" >
+
+                <TextView
+                    android:id="@+id/ss1_text"
+                    style="@style/RedTextTheme"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/signalStrength1"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                <Switch
+                    android:id="@+id/ss1_state"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </TableRow>
+
+            <TableRow
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal" >
+
+                <TextView
+                    android:id="@+id/ss2_text"
+                    style="@style/RedTextTheme"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/signalStrength2"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                <Switch
+                    android:id="@+id/ss2_state"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </TableRow>
+
+            <TableRow
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal" >
+
+                <TextView
+                    android:id="@+id/ss3_text"
+                    style="@style/RedTextTheme"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/signalStrength3"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                <Switch
+                    android:id="@+id/ss3_state"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </TableRow>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@android:color/darker_gray" />
+
+            <TableRow
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal" >
+
+                <TextView
+                    android:id="@+id/usb1ledr_text"
+                    style="@style/RedTextTheme"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/usb1_led_red"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                <Switch
+                    android:id="@+id/usb1ledr_state"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:thumb="@drawable/apptheme_switch_inner_holo_dark" />
+            </TableRow>
+
+            <TableRow
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal" >
+
+                <TextView
+                    android:id="@+id/usb1ledg_text"
+                    style="@style/RedTextTheme"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/usb1_led_green"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                <Switch
+                    android:id="@+id/usb1ledg_state"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:thumb="@drawable/greentheme_switch_inner_holo_light" />
+            </TableRow>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@android:color/darker_gray" />
+
+            <TableRow
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal" >
+
+                <TextView
+                    android:id="@+id/usb2ledr_text"
+                    style="@style/RedTextTheme"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/usb2_led_red"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                <Switch
+                    android:id="@+id/usb2ledr_state"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:thumb="@drawable/apptheme_switch_inner_holo_dark" />
+            </TableRow>
+
+            <TableRow
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal" >
+
+                <TextView
+                    android:id="@+id/usb2ledg_text"
+                    style="@style/RedTextTheme"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/usb2_led_green"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                <Switch
+                    android:id="@+id/usb2ledg_state"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:thumb="@drawable/greentheme_switch_inner_holo_light" />
+            </TableRow>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@android:color/darker_gray" />
+
+            <TableRow
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal" >
+
+                <TextView
+                    android:id="@+id/usb3ledr_text"
+                    style="@style/RedTextTheme"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/usb3_led_red"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                <Switch
+                    android:id="@+id/usb3ledr_state"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:thumb="@drawable/apptheme_switch_inner_holo_dark" />
+            </TableRow>
+
+            <TableRow
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal" >
+
+                <TextView
+                    android:id="@+id/usb3ledg_text"
+                    style="@style/RedTextTheme"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/usb3_led_green"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                <Switch
+                    android:id="@+id/usb3ledg_state"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:thumb="@drawable/greentheme_switch_inner_holo_light" />
+            </TableRow>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@android:color/darker_gray" />
+
+            <TableRow
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal" >
+
+                <TextView
+                    android:id="@+id/expansionbay1ledr_text"
+                    style="@style/RedTextTheme"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/expansionBay1_led_red"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                <Switch
+                    android:id="@+id/expansionbay1ledr_state"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:thumb="@drawable/apptheme_switch_inner_holo_dark" />
+            </TableRow>
+
+            <TableRow
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal" >
+
+                <TextView
+                    android:id="@+id/expansionbay1ledg_text"
+                    style="@style/RedTextTheme"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/expansionBay1_led_green"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                <Switch
+                    android:id="@+id/expansionbay1ledg_state"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:thumb="@drawable/greentheme_switch_inner_holo_light" />
+            </TableRow>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@android:color/darker_gray" />
+
+            <TableRow
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal" >
+
+                <TextView
+                    android:id="@+id/expansionbay2ledr_text"
+                    style="@style/RedTextTheme"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/expansionBay2_led_red"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                <Switch
+                    android:id="@+id/expansionbay2ledr_state"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:thumb="@drawable/apptheme_switch_inner_holo_dark" />
+            </TableRow>
+
+            <TableRow
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal" >
+
+                <TextView
+                    android:id="@+id/expansionbay2ledg_text"
+                    style="@style/RedTextTheme"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/expansionBay2_led_green"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                <Switch
+                    android:id="@+id/expansionbay2ledg_state"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:thumb="@drawable/greentheme_switch_inner_holo_light" />
+            </TableRow>
+        </TableLayout>
+    </ScrollView>
+
+</uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout>

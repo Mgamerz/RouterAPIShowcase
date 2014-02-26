@@ -25,6 +25,11 @@ import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
 
+/**
+ * [Description]
+ * @author Sean Wright
+ *
+ */
 public class RouterInfoFragment extends Fragment {
 	private AuthInfo authInfo;
 	private SpiceManager spiceManager;
@@ -80,6 +85,7 @@ public class RouterInfoFragment extends Fragment {
 		sa.setTitle(getResources().getString(R.string.routerinfo));
 		spiceManager = sa.getSpiceManager();
 		/* call the reading methods */
+		
 		readProductInfo(true);
 		readFWInfo();
 		readUptimeInfo();

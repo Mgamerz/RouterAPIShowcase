@@ -33,14 +33,16 @@ public class CommandCenterActivity extends SpiceActivity {
 
 		Intent intent = getIntent();
 		// Rebuild authInfo from the intent that put us here
-		authInfo = new AuthInfo();
+		authInfo = intent.getParcelableExtra("authInfo");
+		getActionBar().setSubtitle(intent.getStringExtra("ab_subtitle"));
+		/*authInfo = new AuthInfo();
 		authInfo.setEcm(intent.getBooleanExtra("ecm", false));
 		authInfo.setRemote(intent.getBooleanExtra("remote", false));
-		authInfo.setRouterport(intent.getIntExtra("port", 80));
+		authInfo.setPort(intent.getIntExtra("port", 80));
 		authInfo.setRouterId(intent.getStringExtra("id"));
 		authInfo.setRouterip(intent.getStringExtra("ip"));
 		authInfo.setUsername(intent.getStringExtra("user"));
-		authInfo.setPassword(intent.getStringExtra("pass"));
+		authInfo.setPassword(intent.getStringExtra("pass"));*/
 
 		// Retain fragments on rotation
 		if (null == savedInstanceState) {
@@ -59,7 +61,7 @@ public class CommandCenterActivity extends SpiceActivity {
 			// Commit to the UI
 			ft.commit();
 		}
-		getActionBar().setSubtitle("--Cloud Router testing--");
+		//getActionBar().setSubtitle("--Cloud Router testing--");
 		View dual = findViewById(R.id.rightside_fragment);
 		setDualPane(dual != null && dual.getVisibility() == View.VISIBLE);
 

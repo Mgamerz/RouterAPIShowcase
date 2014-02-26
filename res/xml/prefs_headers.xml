@@ -2,7 +2,7 @@
 <preference-headers xmlns:android="http://schemas.android.com/apk/res/android" >
     <header
         android:fragment="com.cs481.mobilemapper.fragments.preferences.RootPrefsFragment"
-        android:summary="SUMMARY"
-        android:title="@string/prefs_title" />
+        android:summary="@string/prefs_uisubtitle"
+        android:title="@string/prefs_uititle" />
 
 </preference-headers>

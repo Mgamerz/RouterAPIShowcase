@@ -7,7 +7,7 @@ import android.preference.PreferenceActivity;
 
 import com.cs481.mobilemapper.R;
 import com.cs481.mobilemapper.Utility;
-import com.cs481.mobilemapper.fragments.preferences.RootPrefsFragment;
+import com.cs481.mobilemapper.fragments.preferences.UIPrefsFragment;
 
 public class PrefsActivity extends PreferenceActivity {
 	public static final int THEME_RED = 0;
@@ -29,7 +29,7 @@ public class PrefsActivity extends PreferenceActivity {
 
 	@Override
 	protected boolean isValidFragment(String fragmentName) {
-		if (RootPrefsFragment.class.getName().equals(fragmentName)) {
+		if (UIPrefsFragment.class.getName().equals(fragmentName)) {
 			return true;
 		}
 		return false;

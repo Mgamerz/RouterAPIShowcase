@@ -52,14 +52,14 @@ public class Utility {
 	public static String normalizeECM(ObjectMapper mapper, String str) {
 		try {
 			JsonNode root = mapper.readTree(str);
-			// Log.w(CommandCenterActivity.TAG, "Json Tree:");
-			// Log.w(CommandCenterActivity.TAG, root.toString());
+			Log.w(CommandCenterActivity.TAG, "Json Tree:");
+			Log.w(CommandCenterActivity.TAG, root.toString());
 			root = root.get("data");
-			// Log.w(CommandCenterActivity.TAG, "Descend to data:");
-			// Log.w(CommandCenterActivity.TAG, root.toString());
+			Log.w(CommandCenterActivity.TAG, "Descend to data:");
+			Log.w(CommandCenterActivity.TAG, root.toString());
 			root = root.get(0);
-			// Log.w(CommandCenterActivity.TAG, "Descend to index 0:");
-			// Log.w(CommandCenterActivity.TAG, root.toString());
+			Log.w(CommandCenterActivity.TAG, "Descend to index 0:");
+			Log.w(CommandCenterActivity.TAG, root.toString());
 			return root.toString();
 		} catch (JsonProcessingException e) {
 			// TODO Auto-generated catch block
@@ -95,23 +95,22 @@ public class Utility {
 		AuthScope auth;
 		if (authInfo.isEcm()) {
 			ci.setAccessUrl(String.format(
-					"https://cradlepointecm.com/api/v1/remote/%s/?id=%s", url,
+					"https://cradlepointecm.com/api/v1/remote/%s?id=%s", url,
 					authInfo.getRouterId()));
 			auth = new AuthScope("cradlepointecm.com", 443);
 		} else {
-			if (authInfo.isRemote()) {
-				// Assuming it's a WAN.
-				ci.setAccessUrl(String.format("http://%s:%s/api/%s",
-						authInfo.getRouterip(), authInfo.getRouterport(), url));
-				auth = new AuthScope(authInfo.getRouterip(),
-						authInfo.getRouterport(), AuthScope.ANY_REALM);
-			} else {
-				// On the current LAN
-				ci.setAccessUrl(String.format("http://%s/api/%s",
-						authInfo.getRouterip(), url));
-				auth = new AuthScope(authInfo.getRouterip(), 80,
-						AuthScope.ANY_REALM);
-			}
+			// if (authInfo.isRemote()) {
+			// Assuming it's a WAN.
+			ci.setAccessUrl(String.format("http://%s:%s/api/%s",
+					authInfo.getRouterip(), authInfo.getRouterport(), url));
+			auth = new AuthScope(authInfo.getRouterip(),
+					authInfo.getRouterport(), AuthScope.ANY_REALM);
+			/*
+			 * } else { // On the current LAN
+			 * ci.setAccessUrl(String.format("http://%s/api/%s",
+			 * authInfo.getRouterip(), url)); auth = new
+			 * AuthScope(authInfo.getRouterip(), 80, AuthScope.ANY_REALM); }
+			 */
 
 		}
 		client.getCredentialsProvider().setCredentials(auth, defaultcreds);

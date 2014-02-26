@@ -34,7 +34,7 @@
 
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
 
-        <item name="android:windowBackground">@color/Green</item>
+        <item name="android:windowBackground">@color/DeepGreen</item>
         <item name="android:buttonStyle">@style/RedButtonTheme</item> <!-- Need a blue version. -->
     </style>
 
@@ -87,8 +87,8 @@
     </style>
 
     <!-- ListView Theme -->
-    <style name="RedListViewTheme" parent="@android:style/Widget.Holo.Light.ListView">
-        <item name="android:divider">#FFB2B2</item>
+    <style name="ListViewTheme" parent="@android:style/Widget.Holo.Light.ListView">
+        <item name="android:divider">@color/TransparentWhite</item>
         <item name="android:dividerHeight">1px</item>
     </style>
 

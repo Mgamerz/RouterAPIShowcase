@@ -21,8 +21,8 @@ import com.cs481.mobilemapper.dialog.HoloDialogBuilder;
 import com.cs481.mobilemapper.responses.ecm.routers.Router;
 
 public class RouterConfirmDialogFragment extends DialogFragment {
-	Router router;
-	AuthInfo authInfo;
+	private Router router;
+	private AuthInfo authInfo;
 
 	// Context context;
 
@@ -75,11 +75,13 @@ public class RouterConfirmDialogFragment extends DialogFragment {
 				}
 				
 				Intent intent = new Intent(getActivity(), CommandCenterActivity.class);
-				intent.putExtra("ip", "");
+				/*intent.putExtra("ip", "");
 				intent.putExtra("pass", authInfo.getPassword());
 				intent.putExtra("ecm", true);
 				intent.putExtra("id", router.getId());
-				intent.putExtra("user", authInfo.getUsername());
+				intent.putExtra("user", authInfo.getUsername());*/
+				intent.putExtra("authInfo", authInfo);
+				intent.putExtra("ab_subtitle", router.getName()); //changes subtitle.
 				startActivity(intent);
 				getActivity().finish();
 			}

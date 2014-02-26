@@ -1,5 +1,6 @@
 package com.cs481.mobilemapper.fragments;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
@@ -20,18 +21,32 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.Toast;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
+import com.cs481.mobilemapper.AuthInfo;
 import com.cs481.mobilemapper.R;
 import com.cs481.mobilemapper.Utility;
 import com.cs481.mobilemapper.activities.CommandCenterActivity;
 import com.cs481.mobilemapper.activities.SpiceActivity;
+import com.cs481.mobilemapper.responses.GetRequest;
+import com.cs481.mobilemapper.responses.Response;
+import com.cs481.mobilemapper.responses.status.product_info.Product_info;
+import com.octo.android.robospice.SpiceManager;
+import com.octo.android.robospice.persistence.DurationInMillis;
+import com.octo.android.robospice.persistence.exception.SpiceException;
+import com.octo.android.robospice.request.listener.RequestListener;
 
 public class LocalLoginFragment extends Fragment {
+
+	private SpiceManager spiceManager;
+	private ProgressDialog progressDialog;
+	private AuthInfo authInfo;
+
 	@Override
 	public void onCreate(Bundle savedInstancedState) {
 		super.onCreate(savedInstancedState);
@@ -51,7 +66,13 @@ public class LocalLoginFragment extends Fragment {
 		super.onStart();
 		Resources resources = getResources();
 		SpiceActivity sa = (SpiceActivity) getActivity();
-		sa.setTitle(resources.getString(R.string.locallogin_actionbar_title)); // TODO change to string resource
+		sa.setTitle(resources.getString(R.string.locallogin_actionbar_title)); // TODO
+																				// change
+																				// to
+																				// string
+																				// resource
+		spiceManager = sa.getSpiceManager();
+
 		EditText passw = (EditText) getView()
 				.findViewById(R.id.router_password);
 		final Button connect = (Button) getView().findViewById(
@@ -125,42 +146,21 @@ public class LocalLoginFragment extends Fragment {
 			@Override
 			public void onClick(View v) {
 				// collect information.
-				CheckBox gateway = (CheckBox) getView().findViewById(
-						R.id.use_default_gateway);
-				String routerip = "";
-				boolean remoteBool = false; // default to local admin
-				int port = 80; //default http port for local
-				if (gateway.isChecked()) {
-					routerip = Utility.getDefaultGateway(getActivity());
-				} else {
-					EditText iptext = (EditText) getView().findViewById(
-							R.id.router_ip);
-					routerip = iptext.getText().toString();
-					CheckBox remote = (CheckBox) getView().findViewById(
-							R.id.use_remote_admin);
-					remoteBool = remote.isChecked();
-					port = 8080; //TODO add box for custom ports, perhaps SSL management
-				}
+				/*
+				 * CheckBox gateway = (CheckBox) getView().findViewById(
+				 * R.id.use_default_gateway); String routerip = ""; boolean
+				 * remoteBool = false; // default to local admin int port = 80;
+				 * // default http port for local if (gateway.isChecked()) {
+				 * routerip = Utility.getDefaultGateway(getActivity()); } else {
+				 * EditText iptext = (EditText) getView().findViewById(
+				 * R.id.router_ip); routerip = iptext.getText().toString();
+				 * CheckBox remote = (CheckBox) getView().findViewById(
+				 * R.id.use_remote_admin); remoteBool = remote.isChecked(); port
+				 * = 8080; // TODO add box for custom ports, perhaps SSL //
+				 * management }
+				 */
+				testLogin(true);
 
-				// Prepare new intent.
-				Intent intent = new Intent(getActivity(),
-						CommandCenterActivity.class);
-				intent.putExtra("ip", routerip);
-				String password = ((EditText) getView().findViewById(
-						R.id.router_password)).getText().toString();
-				intent.putExtra("pass", password);
-
-				// Set ecm flags to false.
-				intent.putExtra("ecm", false);
-				intent.putExtra("port", port);
-				intent.putExtra("remote", remoteBool);
-				intent.putExtra("id", "NOT-ECM-MANAGED");
-				intent.putExtra("user", "admin");
-
-				// start the new activity, and prevent this one from being
-				// returned to unless logout is chosen.
-				startActivity(intent);
-				getActivity().finish();
 			}
 		});
 	}
@@ -194,12 +194,125 @@ public class LocalLoginFragment extends Fragment {
 			transaction.commit();
 			return true;
 		case R.id.menu_preenter_ip:
-			EditText iptext = (EditText) getView().findViewById(
-					R.id.router_ip);
+			EditText iptext = (EditText) getView().findViewById(R.id.router_ip);
 			iptext.setText("132.178.226.103");
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
+		}
+	}
+
+	private void testLogin(boolean dialog) {
+		// get necessary info
+		// collect information.
+		CheckBox gateway = (CheckBox) getView().findViewById(
+				R.id.use_default_gateway);
+		String routerip = "";
+		EditText passw = (EditText) getView()
+				.findViewById(R.id.router_password);
+		String password = passw.getText().toString();
+		// boolean remoteBool = false; // default to local admin
+		int port = 80; // default http port for local
+		if (gateway.isChecked()) {
+			routerip = Utility.getDefaultGateway(getActivity());
+		} else {
+			EditText iptext = (EditText) getView().findViewById(R.id.router_ip);
+			routerip = iptext.getText().toString();
+			CheckBox remote = (CheckBox) getView().findViewById(
+					R.id.use_remote_admin);
+			// remoteBool = remote.isChecked();
+			port = 8080; // TODO add box for custom ports, perhaps SSL
+							// management
+		}
+
+		// Build authInfo object
+		AuthInfo authInfo = new AuthInfo();
+		authInfo.setEcm(false);
+		authInfo.setPort(port);
+		authInfo.setRemote(false);
+		authInfo.setRouterip(routerip);
+		authInfo.setRouterId(null);
+		authInfo.setUsername("admin");
+		authInfo.setPassword(password);
+		this.authInfo = authInfo;
+
+		// Perform network check
+
+		GetRequest request = new GetRequest(authInfo, "status/product_info",
+				Product_info.class, "direct_login");
+		String lastRequestCacheKey = request.createCacheKey();
+
+		progressDialog = new ProgressDialog(getActivity(),
+				R.style.RedDialogTheme);
+		progressDialog.setMessage(getResources().getString(
+				R.string.connecting));
+		progressDialog.show();
+		progressDialog.setCanceledOnTouchOutside(false);
+		// progressDialog.setCancelable(false);
+
+		spiceManager.execute(request, lastRequestCacheKey,
+				DurationInMillis.ALWAYS_EXPIRED, new LoginGetRequestListener());
+
+	}
+
+	private class LoginGetRequestListener implements RequestListener<Response> {
+
+		@Override
+		public void onRequestFailure(SpiceException e) {
+			// update your UI
+			if (progressDialog != null) {
+				progressDialog.dismiss();
+			}
+			Log.i(CommandCenterActivity.TAG, "Failed to read Product Info!");
+
+			Toast.makeText(getActivity(),
+					getResources().getString(R.string.product_info_fail),
+					Toast.LENGTH_SHORT).show();
+		}
+
+		@Override
+		public void onRequestSuccess(Response response) {
+			 Product_info proin = (Product_info) response.getData();
+
+			// update your UI
+			if (progressDialog != null)
+				progressDialog.dismiss(); // update your UI
+			if (response.getResponseInfo() != null) {
+				if (response.getResponseInfo().getSuccess()) {
+					// login successful
+					// Prepare new intent.
+					Intent intent = new Intent(getActivity(),
+							CommandCenterActivity.class);
+					// intent.putExtra("ip", routerip);
+					// String password = ((EditText) getView().findViewById(
+					// R.id.router_password)).getText().toString();
+					// intent.putExtra("pass", password);
+
+					// Set ecm flags to false.
+					/*
+					 * intent.putExtra("ecm", false); intent.putExtra("port",
+					 * autInfo.ge); intent.putExtra("remote",
+					 * authInfo.isRemote()); intent.putExtra("id",
+					 * "NOT-ECM-MANAGED"); intent.putExtra("user", "admin");
+					 */
+					intent.putExtra("authInfo", authInfo);
+					intent.putExtra("ab_subtitle", proin.getProduct_name()); //changes subtitle.
+					// start the new activity, and prevent this one from being
+					// returned to unless logout is chosen.
+					startActivity(intent);
+					getActivity().finish();
+				} else {
+					Toast.makeText(getActivity(),
+							response.getResponseInfo().getReason(),
+							Toast.LENGTH_LONG).show();
+				}
+			} else {
+				Toast.makeText(
+						getActivity(),
+						getResources().getString(
+								R.string.gpio_get_null_response),
+						Toast.LENGTH_LONG).show();
+			}
 		}
 	}
 

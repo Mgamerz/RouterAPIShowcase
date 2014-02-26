@@ -9,6 +9,9 @@
     <string name="server_exception">Server returned exception</string>
 
     <!-- Login Activity -->
+
+    <string name="connecting">Connecting to router&#8230;</string>
+
     <!-- Debugging strings -->
     <string name="drawer_open">Drawer Open</string>
     <string name="drawer_closed">Drawer Closed</string>
@@ -138,6 +141,8 @@
 
     <!-- Preferences -->
     <string name="prefs_title">Preferences</string>
+    <string name="prefs_uisubtitle">Look &amp; feel</string>
+    <string name="prefs_uititle">User Interface</string>
     <string name="prefskey_theme">current_theme</string>
 
     <string-array name="theme_names">
