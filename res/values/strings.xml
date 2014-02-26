@@ -34,6 +34,7 @@
     <string name="ecm_password_hint">ECM Password</string>
     <string name="login">Login</string>
     <string name="ecm_actionbar_title">ECM Login</string>
+    <string name="ecmrouters_actionbar_title">ECM Routers</string>
     <string name="ecm_connecting">Connecting to ECM&#8230;</string>
     <string name="ecm_failed_get_routers">Failed to get list of routers from ECM</string>
 

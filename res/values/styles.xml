@@ -27,7 +27,8 @@
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
 
         <item name="android:windowBackground">@color/DeepBlue</item>
-        <item name="android:buttonStyle">@style/RedButtonTheme</item> <!-- Need a blue version. -->
+        <item name="android:buttonStyle">@style/RedButtonTheme</item>
+ <!-- Need a blue version. -->
     </style>
 
     <style name="GreenAppTheme" parent="@style/AppBaseTheme">
@@ -35,7 +36,8 @@
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
 
         <item name="android:windowBackground">@color/DeepGreen</item>
-        <item name="android:buttonStyle">@style/RedButtonTheme</item> <!-- Need a blue version. -->
+        <item name="android:buttonStyle">@style/RedButtonTheme</item>
+ <!-- Need a blue version. -->
     </style>
 
     <style name="BlackAppTheme" parent="@style/AppBaseTheme">
@@ -43,7 +45,8 @@
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
 
         <item name="android:windowBackground">@color/Black</item>
-        <item name="android:buttonStyle">@style/RedButtonTheme</item> <!-- Need a blue version. -->
+        <item name="android:buttonStyle">@style/RedButtonTheme</item>
+ <!-- Need a blue version. -->
     </style>
 
     <!-- Button theme -->
@@ -61,12 +64,12 @@
     </style>
 
     <!-- TextView (not dialog!) theme -->
-    <style name="RedTextTheme" parent="@android:style/Widget.TextView">
-        <item name="android:textColor">@color/White</item>
+    <style name="TextTheme" parent="@android:style/Widget.TextView">
+        <item name="android:textColor">@color/selector_textcolor</item>
     </style>
 
     <!-- TextView SUBTEXT (subtitle) (not dialog!) theme -->
-    <style name="RedSubTextTheme" parent="@android:style/Widget.TextView">
+    <style name="SubTextTheme" parent="@android:style/Widget.TextView">
         <item name="android:textColor">@color/DimmedWhite</item>
     </style>
 
@@ -90,6 +93,8 @@
     <style name="ListViewTheme" parent="@android:style/Widget.Holo.Light.ListView">
         <item name="android:divider">@color/TransparentWhite</item>
         <item name="android:dividerHeight">1px</item>
+        <item name="android:scrollbarSize">4dp</item>
+        <item name="android:scrollbarThumbVertical">@drawable/scrollbar</item>
     </style>
 
     <!-- Dialog Theme -->

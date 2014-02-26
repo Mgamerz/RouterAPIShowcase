@@ -7,7 +7,7 @@
 
     <TextView
         android:id="@+id/listview_title"
-        style="@style/RedTextTheme"
+        style="@style/TextTheme"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Item Header"
@@ -15,7 +15,7 @@
 
     <TextView
         android:id="@+id/listview_subtitle"
-        style="@style/RedSubTextTheme"
+        style="@style/SubTextTheme"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Other information here"

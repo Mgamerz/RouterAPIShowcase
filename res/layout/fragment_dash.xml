@@ -2,7 +2,6 @@
 <ListView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@android:id/list"
     style="@style/ListViewTheme"
-    android:padding="6dp"
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 

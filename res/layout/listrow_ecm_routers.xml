@@ -14,7 +14,8 @@
 
     <TextView
         android:id="@+id/routerrow_title"
-        style="@style/RedTextTheme"
+        style="@style/TextTheme"
+        android:duplicateParentState="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="5dp"
@@ -24,8 +25,9 @@
 
     <TextView
         android:id="@+id/routerrow_subtitle"
-        style="@style/RedSubTextTheme"
+        style="@style/SubTextTheme"
         android:layout_width="match_parent"
+        android:duplicateParentState="true"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/routerrow_title"
         android:layout_below="@+id/routerrow_title"

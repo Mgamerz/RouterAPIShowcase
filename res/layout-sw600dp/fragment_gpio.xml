@@ -25,7 +25,7 @@
 
                 <TextView
                     android:id="@+id/powerled_text"
-                    style="@style/RedTextTheme"
+                    style="@style/TextTheme"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/power_led_green"
@@ -50,7 +50,7 @@
 
                 <TextView
                     android:id="@+id/wifiledr_text"
-                    style="@style/RedTextTheme"
+                    style="@style/TextTheme"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/wifi_led_red"
@@ -70,7 +70,7 @@
 
                 <TextView
                     android:id="@+id/wifiledg_text"
-                    style="@style/RedTextTheme"
+                    style="@style/TextTheme"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/wifi_led_green"
@@ -90,7 +90,7 @@
 
                 <TextView
                     android:id="@+id/wifiledb_text"
-                    style="@style/RedTextTheme"
+                    style="@style/TextTheme"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/wifi_led_blue"
@@ -114,7 +114,7 @@
 
                 <TextView
                     android:id="@+id/ss0_text"
-                    style="@style/RedTextTheme"
+                    style="@style/TextTheme"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/signalStrength0"
@@ -133,7 +133,7 @@
 
                 <TextView
                     android:id="@+id/ss1_text"
-                    style="@style/RedTextTheme"
+                    style="@style/TextTheme"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/signalStrength1"
@@ -152,7 +152,7 @@
 
                 <TextView
                     android:id="@+id/ss2_text"
-                    style="@style/RedTextTheme"
+                    style="@style/TextTheme"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/signalStrength2"
@@ -171,7 +171,7 @@
 
                 <TextView
                     android:id="@+id/ss3_text"
-                    style="@style/RedTextTheme"
+                    style="@style/TextTheme"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/signalStrength3"
@@ -195,7 +195,7 @@
 
                 <TextView
                     android:id="@+id/usb1ledr_text"
-                    style="@style/RedTextTheme"
+                    style="@style/TextTheme"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/usb1_led_red"
@@ -215,7 +215,7 @@
 
                 <TextView
                     android:id="@+id/usb1ledg_text"
-                    style="@style/RedTextTheme"
+                    style="@style/TextTheme"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/usb1_led_green"
@@ -240,7 +240,7 @@
 
                 <TextView
                     android:id="@+id/usb2ledr_text"
-                    style="@style/RedTextTheme"
+                    style="@style/TextTheme"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/usb2_led_red"
@@ -260,7 +260,7 @@
 
                 <TextView
                     android:id="@+id/usb2ledg_text"
-                    style="@style/RedTextTheme"
+                    style="@style/TextTheme"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/usb2_led_green"
@@ -285,7 +285,7 @@
 
                 <TextView
                     android:id="@+id/usb3ledr_text"
-                    style="@style/RedTextTheme"
+                    style="@style/TextTheme"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/usb3_led_red"
@@ -305,7 +305,7 @@
 
                 <TextView
                     android:id="@+id/usb3ledg_text"
-                    style="@style/RedTextTheme"
+                    style="@style/TextTheme"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/usb3_led_green"
@@ -330,7 +330,7 @@
 
                 <TextView
                     android:id="@+id/expansionbay1ledr_text"
-                    style="@style/RedTextTheme"
+                    style="@style/TextTheme"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/expansionBay1_led_red"
@@ -350,7 +350,7 @@
 
                 <TextView
                     android:id="@+id/expansionbay1ledg_text"
-                    style="@style/RedTextTheme"
+                    style="@style/TextTheme"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/expansionBay1_led_green"
@@ -375,7 +375,7 @@
 
                 <TextView
                     android:id="@+id/expansionbay2ledr_text"
-                    style="@style/RedTextTheme"
+                    style="@style/TextTheme"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/expansionBay2_led_red"
@@ -395,7 +395,7 @@
 
                 <TextView
                     android:id="@+id/expansionbay2ledg_text"
-                    style="@style/RedTextTheme"
+                    style="@style/TextTheme"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/expansionBay2_led_green"

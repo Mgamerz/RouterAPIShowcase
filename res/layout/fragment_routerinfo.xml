@@ -13,14 +13,14 @@
 
         <TextView
             android:id="@+id/product_text"
-            style="@style/RedTextTheme"
+            style="@style/TextTheme"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/product" />
 
         <TextView
             android:id="@+id/product_value"
-            style="@style/RedTextTheme"
+            style="@style/TextTheme"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignLeft="@+id/mac_address_value"
@@ -28,7 +28,7 @@
 
         <TextView
             android:id="@+id/hostname_text"
-            style="@style/RedTextTheme"
+            style="@style/TextTheme"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/product_text"
@@ -36,7 +36,7 @@
 
         <TextView
             android:id="@+id/hostname_value"
-            style="@style/RedTextTheme"
+            style="@style/TextTheme"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignLeft="@id/mac_address_value"
@@ -45,7 +45,7 @@
 
         <TextView
             android:id="@+id/firmware_text"
-            style="@style/RedTextTheme"
+            style="@style/TextTheme"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/hostname_text"
@@ -53,7 +53,7 @@
 
         <TextView
             android:id="@+id/firmware_value"
-            style="@style/RedTextTheme"
+            style="@style/TextTheme"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignLeft="@id/mac_address_value"
@@ -62,7 +62,7 @@
 
         <TextView
             android:id="@+id/mac_address_text"
-            style="@style/RedTextTheme"
+            style="@style/TextTheme"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/firmware_text"
@@ -70,7 +70,7 @@
 
         <TextView
             android:id="@+id/mac_address_value"
-            style="@style/RedTextTheme"
+            style="@style/TextTheme"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/firmware_text"
@@ -80,7 +80,7 @@
 
         <TextView
             android:id="@+id/uptime_text"
-            style="@style/RedTextTheme"
+            style="@style/TextTheme"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/mac_address_text"
@@ -88,7 +88,7 @@
 
         <TextView
             android:id="@+id/uptime_value"
-            style="@style/RedTextTheme"
+            style="@style/TextTheme"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignLeft="@id/mac_address_value"

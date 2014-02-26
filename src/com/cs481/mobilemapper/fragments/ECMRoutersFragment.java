@@ -7,6 +7,7 @@ import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
 import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.util.Log;
@@ -22,6 +23,7 @@ import com.cs481.mobilemapper.AuthInfo;
 import com.cs481.mobilemapper.R;
 import com.cs481.mobilemapper.activities.CommandCenterActivity;
 import com.cs481.mobilemapper.activities.LoginActivity;
+import com.cs481.mobilemapper.activities.SpiceActivity;
 import com.cs481.mobilemapper.listrows.RouterListRow;
 import com.cs481.mobilemapper.responses.ecm.routers.Router;
 
@@ -94,6 +96,15 @@ public class ECMRoutersFragment extends ListFragment implements
 		outState.putParcelable("authInfo", authInfo);
 	}
 
+
+	@Override
+	public void onStart() {
+		super.onStart();
+		SpiceActivity sa = (SpiceActivity) getActivity();
+		Resources resources = getResources();
+		sa.setTitle(resources.getString(R.string.ecmrouters_actionbar_title)); // TODO change to string resource
+	}
+	
 	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
@@ -164,9 +175,24 @@ public class ECMRoutersFragment extends ListFragment implements
 			Router router = rows.get(position).getRouter();
 
 			if (router.getState().equals("offline")) {
+				rowView.setEnabled(false);
 				router_icon.setAlpha(.50f); // set transparency to half.
 			}
 			return rowView;
+		}
+		
+		/*@Override
+		public boolean areAllItemsEnabled() {
+			return false;
+		}*/
+		
+		@Override
+		public boolean isEnabled(int position) {
+			RouterListRow row = getItem(position);
+			if (row.getRouter().getState().equals("offline")){
+				return false;
+			}
+			return true;
 		}
 	}
 

@@ -15,7 +15,7 @@
 
     <TextView
         android:id="@+id/locallogin_header"
-        style="@style/RedTextTheme"
+        style="@style/TextTheme"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"

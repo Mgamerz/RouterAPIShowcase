@@ -6,7 +6,7 @@
 
     <TextView
         android:id="@+id/wlan_ssid_text"
-        style="@style/RedTextTheme"
+        style="@style/TextTheme"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="SSID"
@@ -14,7 +14,7 @@
 
     <TextView
         android:id="@+id/wlan_type_mode_text"
-        style="@style/RedTextTheme"
+        style="@style/TextTheme"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
