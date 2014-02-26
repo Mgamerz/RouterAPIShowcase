@@ -164,11 +164,7 @@ public class ECMRoutersFragment extends ListFragment implements
 			Router router = rows.get(position).getRouter();
 
 			if (router.getState().equals("offline")) {
-				router_icon.setImageLevel(1); // 1 is offline image (see
-												// drawable/ic_router xml file)
-			} else {
-				router_icon.setImageLevel(0); // 0 is online image (see
-												// drawable/ic_router xml file)
+				router_icon.setAlpha(.50f); // set transparency to half.
 			}
 			return rowView;
 		}

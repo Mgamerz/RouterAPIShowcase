@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:contentDescription="@string/app_name"
-        android:src="@drawable/ic_router_dark" />
+        android:src="@drawable/ic_router_online_dark" />
 
     <TextView
         android:id="@+id/routerrow_title"
