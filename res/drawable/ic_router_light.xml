@@ -4,8 +4,5 @@
     <item
         android:drawable="@drawable/ic_router_online_light"
         android:maxLevel="0"/>
-    <item
-        android:drawable="@drawable/ic_router_offline_light"
-        android:maxLevel="1"/>
-
+    
 </level-list>
