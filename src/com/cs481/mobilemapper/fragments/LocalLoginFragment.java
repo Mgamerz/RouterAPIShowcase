@@ -229,7 +229,6 @@ public class LocalLoginFragment extends Fragment {
 		AuthInfo authInfo = new AuthInfo();
 		authInfo.setEcm(false);
 		authInfo.setPort(port);
-		authInfo.setRemote(false);
 		authInfo.setRouterip(routerip);
 		authInfo.setRouterId(null);
 		authInfo.setUsername("admin");

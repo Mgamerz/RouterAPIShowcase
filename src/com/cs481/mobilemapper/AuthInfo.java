@@ -14,22 +14,12 @@ import android.os.Parcelable;
  */
 public class AuthInfo implements Parcelable {
 	private boolean ecm; //used to sort to table
-	private boolean remote; // changes what port to use if we are doing remote
-							// admin //not needed in DB
 
 	private String routerip; //direct only
 	private int routerport = 80; // default to http port 80 //direct only
 	private String username = "admin"; // default
 	private String password;
 	private String routerId; //ecm only
-
-	public boolean isRemote() {
-		return remote;
-	}
-
-	public void setRemote(boolean remote) {
-		this.remote = remote;
-	}
 
 	public String getRouterId() {
 		return routerId;
@@ -85,7 +75,6 @@ public class AuthInfo implements Parcelable {
 	
     protected AuthInfo(Parcel in) {
         ecm = in.readByte() != 0x00;
-        remote = in.readByte() != 0x00;
         routerip = in.readString();
         routerport = in.readInt();
         username = in.readString();
@@ -101,7 +90,6 @@ public class AuthInfo implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeByte((byte) (ecm ? 0x01 : 0x00));
-        dest.writeByte((byte) (remote ? 0x01 : 0x00));
         dest.writeString(routerip);
         dest.writeInt(routerport);
         dest.writeString(username);
