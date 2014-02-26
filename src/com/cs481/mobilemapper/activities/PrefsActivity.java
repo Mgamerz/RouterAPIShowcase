@@ -2,35 +2,22 @@ package com.cs481.mobilemapper.activities;
 
 import java.util.List;
 
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
-import android.preference.PreferenceManager;
 
 import com.cs481.mobilemapper.R;
+import com.cs481.mobilemapper.Utility;
 import com.cs481.mobilemapper.fragments.preferences.RootPrefsFragment;
 
 public class PrefsActivity extends PreferenceActivity {
-	protected static final int THEME_RED = 0;
-	protected static final int THEME_BLUE = 1;
-	protected static final int THEME_GREEN = 2;
-	protected static final int THEME_BLACK = 3;
+	public static final int THEME_RED = 0;
+	public static final int THEME_BLUE = 1;
+	public static final int THEME_GREEN = 2;
+	public static final int THEME_BLACK = 3;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-		// set theme
-		SharedPreferences mPrefs = PreferenceManager
-				.getDefaultSharedPreferences(this);
-		String theme = mPrefs.getString(
-				getResources().getString(R.string.prefskey_theme), "0");
-		int themeid = Integer.parseInt(theme);
-		switch (themeid) {
-		case PrefsActivity.THEME_BLUE:
-			setTheme(R.style.BlueAppTheme);
-			break;
-		default:
-			setTheme(R.style.RedAppTheme);
-		}
+		setTheme(Utility.getTheme(this));
 		super.onCreate(savedInstanceState);
 
 	}

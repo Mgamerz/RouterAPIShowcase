@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import com.cs481.mobilemapper.AuthInfo;
 import com.cs481.mobilemapper.R;
+import com.cs481.mobilemapper.Utility;
 import com.cs481.mobilemapper.fragments.DashboardFragment;
 
 public class CommandCenterActivity extends SpiceActivity {
@@ -25,19 +26,8 @@ public class CommandCenterActivity extends SpiceActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		// set theme
-		SharedPreferences mPrefs = PreferenceManager
-				.getDefaultSharedPreferences(this);
-		String theme = mPrefs.getString(
-				getResources().getString(R.string.prefskey_theme), "0");
-		int themeid = Integer.parseInt(theme);
-		switch (themeid) {
-		case PrefsActivity.THEME_BLUE:
-			setTheme(R.style.BlueAppTheme);
-			break;
-		default:
-			setTheme(R.style.RedAppTheme);
-		}
+		setTheme(Utility.getTheme(this));
+
 
 		setContentView(R.layout.activity_commandcenter);
 

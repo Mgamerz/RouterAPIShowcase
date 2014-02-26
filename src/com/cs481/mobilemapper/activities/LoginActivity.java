@@ -54,20 +54,7 @@ public class LoginActivity extends SpiceActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		Ln.getConfig().setLoggingLevel(Log.ERROR);
-
-		// set theme
-		SharedPreferences mPrefs = PreferenceManager
-				.getDefaultSharedPreferences(this);
-		String theme = mPrefs.getString(
-				getResources().getString(R.string.prefskey_theme), "0");
-		int themeid = Integer.parseInt(theme);
-		switch (themeid) {
-		case PrefsActivity.THEME_BLUE:
-			setTheme(R.style.BlueAppTheme);
-			break;
-		default:
-			setTheme(R.style.RedAppTheme);
-		}
+		setTheme(Utility.getTheme(this));
 
 		setContentView(R.layout.activity_login);
 		// If this is the first time the app has run, there will be no salt key
@@ -324,19 +311,19 @@ public class LoginActivity extends SpiceActivity {
 		FragmentTransaction transaction = getSupportFragmentManager()
 				.beginTransaction();
 
-		transaction.replace(R.id.login_fragment, PIN);
+		transaction.replace(R.id.login_fragment, PIN, "PIN");
 		transaction.addToBackStack(null);
 		transaction.commit();
 	}
 
 	public void closePIN(String pin){
-		getSupportFragmentManager().popBackStack();
+		//getSupportFragmentManager().popBackStack();
+
+		Log.i(CommandCenterActivity.TAG, "Action bar should be showing.");
 		getActionBar().show();
-		
 		
 		if (pin != null){
 			//pin was returned
-			
 			//Create the secret generator
 			try {
 			SecretKey secret = Cryptography.generateKey(pin,
@@ -346,9 +333,22 @@ public class LoginActivity extends SpiceActivity {
 			String authPass = authInfo.getPassword();
 			
 			authUser = Cryptography.decryptMsg(Base64.decode(authUser, Base64.DEFAULT), secret);
+			authPass = Cryptography.decryptMsg(Base64.decode(authPass, Base64.DEFAULT), secret);
+
 			} catch (Exception e){
-				
+				Log.e(CommandCenterActivity.TAG, "An exception occured trying to decrypt the user credentials.");
 			}
 		}
+	}
+	
+	@Override
+	public void onBackPressed() {
+	    final PINFragment fragment = (PINFragment) getSupportFragmentManager().findFragmentByTag("PIN");
+	    Log.i(CommandCenterActivity.TAG, "BACK PRESSED");
+	    if (fragment != null) { // and then you define a method allowBackPressed with the logic to allow back pressed or not
+			getActionBar().show();
+	    }
+        super.onBackPressed();
+
 	}
 }

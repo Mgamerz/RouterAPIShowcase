@@ -26,7 +26,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Vibrator;
-import android.provider.Settings.Secure;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -161,11 +160,12 @@ public class PINFragment extends Fragment implements OnClickListener {
 		Resources resources = getResources();
 		sa.setTitle(resources.getString(R.string.pin_actionbar_title));
 		setupUI();
+		
 		if (!currentPin.equals("")) {
 			updateProgress(currentPin);
 		}
 	}
-
+	
 	public void setupUI() {
 		//TextView debugPin = (TextView) getView().findViewById(
 		//		R.id.debug_enteredpin);

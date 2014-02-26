@@ -30,6 +30,22 @@
         <item name="android:buttonStyle">@style/RedButtonTheme</item> <!-- Need a blue version. -->
     </style>
 
+    <style name="GreenAppTheme" parent="@style/AppBaseTheme">
+
+        <!-- All customizations that are NOT specific to a particular API-level can go here. -->
+
+        <item name="android:windowBackground">@color/Green</item>
+        <item name="android:buttonStyle">@style/RedButtonTheme</item> <!-- Need a blue version. -->
+    </style>
+
+    <style name="BlackAppTheme" parent="@style/AppBaseTheme">
+
+        <!-- All customizations that are NOT specific to a particular API-level can go here. -->
+
+        <item name="android:windowBackground">@color/Black</item>
+        <item name="android:buttonStyle">@style/RedButtonTheme</item> <!-- Need a blue version. -->
+    </style>
+
     <!-- Button theme -->
     <style name="RedButtonTheme" parent="@android:style/Widget.Button">
         <item name="android:layout_width">wrap_content</item>

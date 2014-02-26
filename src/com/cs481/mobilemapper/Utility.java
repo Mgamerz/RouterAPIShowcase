@@ -10,21 +10,21 @@ import org.apache.http.client.methods.HttpPut;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.net.DhcpInfo;
 import android.net.wifi.WifiManager;
+import android.preference.PreferenceManager;
 import android.text.format.Formatter;
 import android.util.Log;
 
 import com.cs481.mobilemapper.activities.CommandCenterActivity;
-import com.cs481.mobilemapper.responses.RootElement;
+import com.cs481.mobilemapper.activities.PrefsActivity;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectWriter;
-import com.fasterxml.jackson.databind.node.JsonNodeFactory;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 
 /**
  * The utility class holds methods that are accessed by many classes.
@@ -155,10 +155,10 @@ public class Utility {
 
 		if (authInfo.isEcm()) {
 			// ECM prepare
-			//ObjectMapper mapper = new ObjectMapper();
+			// ObjectMapper mapper = new ObjectMapper();
 			put.setHeader("Content-Type", "application/json");
-			//JsonNode json = mapper.readTree(data);
-			//json = json.get("data");
+			// JsonNode json = mapper.readTree(data);
+			// json = json.get("data");
 			// Log.i(CommandCenterActivity.TAG, json.toString());
 			put.setEntity(new StringEntity(data, "UTF-8"));
 		} else {
@@ -241,22 +241,45 @@ public class Utility {
 		return null;
 	}
 
-	
 	/**
 	 * Saves a profile to the database.
-	 * @param profile Profile to be saved.
+	 * 
+	 * @param profile
+	 *            Profile to be saved.
 	 */
 	public static void saveProfile(Profile profile) {
 		// Melissa's code here
-		
+
 	}
 
 	/**
 	 * Reads the database list of profiles and returns rebuilt profile objects.
+	 * 
 	 * @return Arraylist of Profile objects read from the database.
 	 */
 	public static ArrayList<Profile> getProfiles() {
 		// Melissa's code here
 		return null;
+	}
+
+	public static int getTheme(Activity activity) {
+		// set theme
+		SharedPreferences mPrefs = PreferenceManager
+				.getDefaultSharedPreferences(activity);
+		String theme = mPrefs
+				.getString(
+						activity.getResources().getString(
+								R.string.prefskey_theme), "0");
+		int themeid = Integer.parseInt(theme);
+		switch (themeid) {
+		case PrefsActivity.THEME_BLUE:
+			return R.style.BlueAppTheme;
+		case PrefsActivity.THEME_GREEN:
+			return R.style.GreenAppTheme;
+		case PrefsActivity.THEME_BLACK:
+			return R.style.BlackAppTheme;
+		default:
+			return R.style.RedAppTheme;
+		}
 	}
 }
