@@ -325,7 +325,7 @@ public class RouterInfoFragment extends Fragment {
 				if (response.getResponseInfo().getSuccess()) {
 					View v = getView();
 					TextView textVal = (TextView) v.findViewById(R.id.numclients_value);
-					textVal.setText(dat.getClients().size());
+					textVal.setText(Integer.toString(dat.getClients().size()));
 				} else {
 					Toast.makeText(getActivity(), response.getResponseInfo().getReason(),
 							Toast.LENGTH_LONG).show();
