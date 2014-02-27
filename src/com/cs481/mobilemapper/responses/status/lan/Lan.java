@@ -1,55 +1,45 @@
+
 package com.cs481.mobilemapper.responses.status.lan;
 
-import com.cs481.mobilemapper.responses.RootElement;
-import com.cs481.mobilemapper.responses.status.wlan.StatusWlan;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.util.ArrayList;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class Lan extends RootElement {
-	@JsonProperty("data")
-	private StatusWlan data;
-
-	public StatusWlan getData() {
-		return this.data;
-	}
-
-	public void setData(StatusWlan data) {
-		this.data = data;
-	}
+public class Lan{
+	@JsonProperty("clients")
+   	private ArrayList<Client> clients;
 	
-	//RootElement
-	@JsonProperty("id")
-	private transient String id;
+	@JsonProperty("devices")
+   	private Devices devices;
+	
+	@JsonProperty("networks")
+   	private Networks networks;
+	
+	@JsonProperty("stats")
+   	private Stats stats;
 
-	@JsonIgnore
-	public String getId() {
-		return id;
+ 	public ArrayList<Client> getClients(){
+		return this.clients;
 	}
-
-	@JsonIgnore
-	public void setId(String id) {
-		this.id = id;
+	public void setClients(ArrayList<Client> clients){
+		this.clients = clients;
 	}
-
-	@JsonProperty("reason")
-	private transient String reason;
-
-	public String getReason() {
-		return reason;
+ 	public Devices getDevices(){
+		return this.devices;
 	}
-
-	public void setReason(String reason) {
-		this.reason = reason;
+	public void setDevices(Devices devices){
+		this.devices = devices;
 	}
-
-	@JsonProperty("success")
-	private transient boolean success;
-
-	public void setSuccess(boolean success) {
-		this.success = success;
+ 	public Networks getNetworks(){
+		return this.networks;
 	}
-
-	public boolean getSuccess() {
-		return success;
+	public void setNetworks(Networks networks){
+		this.networks = networks;
+	}
+ 	public Stats getStats(){
+		return this.stats;
+	}
+	public void setStats(Stats stats){
+		this.stats = stats;
 	}
 }

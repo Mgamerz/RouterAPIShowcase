@@ -139,7 +139,7 @@ public class RouterInfoFragment extends Fragment {
 	
 	private void readNumClientsInfo() {
 		//perform the request.
-		GetRequest request = new GetRequest(authInfo, "status/lan", com.cs481.mobilemapper.responses.status.lan.Data.class, "client_get");
+		GetRequest request = new GetRequest(authInfo, "status/lan", com.cs481.mobilemapper.responses.status.lan.Lan.class, "client_get");
 		String lastRequestCacheKey = request.createCacheKey();
 
 		spiceManager.execute(request, lastRequestCacheKey,
@@ -319,7 +319,7 @@ public class RouterInfoFragment extends Fragment {
 				if (response.getResponseInfo().getSuccess()) {
 					View v = getView();
 					TextView textVal = (TextView) v.findViewById(R.id.numclients_value);
-					textVal.setText(dat.getData().getClients().size());
+					textVal.setText(dat.getClients().size());
 				} else {
 					Toast.makeText(getActivity(), response.getResponseInfo().getReason(),
 							Toast.LENGTH_LONG).show();
