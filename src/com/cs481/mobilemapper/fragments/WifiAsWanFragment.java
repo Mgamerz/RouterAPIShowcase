@@ -1,12 +1,14 @@
 package com.cs481.mobilemapper.fragments;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 
 import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
 import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
 import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -50,8 +52,13 @@ import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
 
 public class WifiAsWanFragment extends ListFragment implements
-		OnRefreshListener {
+		OnRefreshListener, ActionBar.OnNavigationListener {
 	private static final int WANDIALOG_FRAGMENT = 0;
+
+	private final int WIFICLIENT_DISABLED = 0;
+	private final int WIFICLIENT_WAN = 1;
+	private final int WIFICLIENT_BRIDGE = 2;
+
 	private PullToRefreshLayout mPullToRefreshLayout;
 	private ProgressDialog progressDialog;
 	private SpiceManager spiceManager;
@@ -63,7 +70,7 @@ public class WifiAsWanFragment extends ListFragment implements
 	private boolean wifiState = false;
 	private boolean wifiStateEnabled = false;
 	private ArrayList<WANProfile> wanprofiles;
-
+	private SpinnerAdapter mSpinnerAdapter;
 	private Menu menu;
 
 	@Override
@@ -72,7 +79,8 @@ public class WifiAsWanFragment extends ListFragment implements
 		setHasOptionsMenu(true);
 		if (savedInstanceState != null) {
 			waps = savedInstanceState.getParcelableArrayList("waps");
-			wanprofiles = savedInstanceState.getParcelableArrayList("wanprofiles");
+			wanprofiles = savedInstanceState
+					.getParcelableArrayList("wanprofiles");
 			authInfo = savedInstanceState.getParcelable("authInfo");
 			shouldLoadData = savedInstanceState.getBoolean("shouldLoadData");
 			wifiStateEnabled = savedInstanceState
@@ -140,14 +148,32 @@ public class WifiAsWanFragment extends ListFragment implements
 	@Override
 	public void onStart() {
 		super.onStart();
-		// /You will setup the action bar with pull to refresh layout
+		// Setup navigation stuff.
+		// onStart is called before onResume()
+		ArrayList<String> values = new ArrayList<String>(
+				Arrays.asList(getResources().getStringArray(
+						R.array.wificlient_values)));
+		mSpinnerAdapter = new DropdownAdapter(getActivity(), values,
+				getActivity().getActionBar().getSubtitle().toString());
+
+	}
+
+	@Override
+	public void onResume() {
+		super.onResume();
 		SpiceActivity sa = (SpiceActivity) getActivity();
-		sa.setTitle(getResources().getString(R.string.wifiwan_title)); // TODO change to string resource
-		
-		//Setup navigation
-		SpinnerAdapter mSpinnerAdapter = ArrayAdapter.createFromResource(getActivity(), R.array.wificlient_values,
-		          android.R.layout.simple_spinner_dropdown_item);
-		
+		sa.getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST); // makes
+																				// the
+																				// dropdown
+																				// list
+																				// appear
+		sa.getActionBar().setListNavigationCallbacks(mSpinnerAdapter, this);
+		sa.getActionBar().setDisplayShowTitleEnabled(false);
+		sa.setTitle(getResources().getString(R.string.wifiwan_title)); // TODO
+																		// change
+																		// to
+																		// string
+																		// resource
 		spiceManager = sa.getSpiceManager();
 		if (shouldLoadData) {
 			readWlanWANConfig(true);
@@ -211,6 +237,98 @@ public class WifiAsWanFragment extends ListFragment implements
 			subtitle.setText(rows.get(position).getSubtitle());
 
 			return rowView;
+		}
+	}
+
+	public class DropdownAdapter extends ArrayAdapter<String> implements
+			SpinnerAdapter {
+		private final Context context;
+		private final ArrayList<String> rows;
+		private String subtitle;
+
+		public DropdownAdapter(Context context, ArrayList<String> rows,
+				String subtitle) {
+			super(context, R.layout.actionbar_spinner_item, rows);
+			this.context = context;
+			this.rows = rows;
+			this.subtitle = subtitle;
+		}
+
+		@Override
+		public String getItem(int position) {
+			return rows.get(position);
+		}
+
+		@Override
+		public View getView(int position, View convertView, ViewGroup parent) {
+			// actionbar view
+
+			LayoutInflater inflater = (LayoutInflater) context
+					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+			View rowView = inflater.inflate(R.layout.actionbar_spinner_item,
+					parent, false);
+			TextView title = (TextView) rowView
+					.findViewById(R.id.actionbar_title);
+			switch (position) {
+			case WIFICLIENT_WAN:
+				title.setText(context.getResources().getString(
+						R.string.wifiwan_title));
+				break;
+			case WIFICLIENT_BRIDGE:
+				title.setText(context.getResources().getString(
+						R.string.wifibridge_title));
+				break;
+			default:
+				title.setText(context.getResources().getString(
+						R.string.wificlient_title));
+				break;
+			}
+
+			TextView subtitleView = (TextView) rowView
+					.findViewById(R.id.actionbar_subtitle);
+			subtitleView.setText(subtitle);
+
+			return rowView;
+		}
+
+		@Override
+		public View getDropDownView(int position, View convertView,
+				ViewGroup parent) {
+			// Return a view which appears in the spinner list.
+
+			// Ignoring convertView to make things simpler, considering
+			// we have different types of views. If the list is long, think
+			// twice!
+
+			LayoutInflater inflater = (LayoutInflater) context
+					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+			View rowView = inflater.inflate(
+					android.R.layout.simple_spinner_dropdown_item, parent,
+					false);
+
+			TextView dropdownItem = (TextView) rowView
+					.findViewById(android.R.id.text1);
+			String text;
+			Log.i(CommandCenterActivity.TAG, "Inflating dropdown position "+position);
+			switch (position) {
+			case WIFICLIENT_WAN:
+				text = context.getResources().getString(R.string.wifiwan_title);
+				break;
+			case WIFICLIENT_BRIDGE:
+				text = context.getResources().getString(
+						R.string.wifibridge_title);
+				break;
+			default:
+				text = context.getResources().getString(
+						R.string.wificlient_title);
+				break;
+			}
+			dropdownItem.setText(text);
+			return dropdownItem;
+
+			// return super.getView(position, null, parent);
 		}
 	}
 
@@ -411,7 +529,7 @@ public class WifiAsWanFragment extends ListFragment implements
 
 	public void connectAsWAN(WANProfile wanprofile) {
 		Log.w(CommandCenterActivity.TAG, "Connecting as WAN.");
-		
+
 		for (WANProfile knownProfile : wanprofiles) {
 			if (wanprofile.equals(knownProfile)) {
 				Log.e(CommandCenterActivity.TAG,
@@ -423,8 +541,12 @@ public class WifiAsWanFragment extends ListFragment implements
 		// Profile is not yet defined. Do a POST to the router.
 		Log.i(CommandCenterActivity.TAG,
 				"Performing put request to enabled wlan");
-		PostRequest request = new PostRequest(wanprofile,
-				authInfo, "config/wwan/radio/0/profiles", WANProfile.class); //TODO will have to deal with dual band again.
+		PostRequest request = new PostRequest(wanprofile, authInfo,
+				"config/wwan/radio/0/profiles", WANProfile.class); // TODO will
+																	// have to
+																	// deal with
+																	// dual band
+																	// again.
 		String lastRequestCacheKey = request.createCacheKey();
 
 		spiceManager.execute(request, lastRequestCacheKey,
@@ -472,31 +594,41 @@ public class WifiAsWanFragment extends ListFragment implements
 		@Override
 		public void onRequestFailure(SpiceException e) {
 			Log.w(CommandCenterActivity.TAG, "Failed to post the WAN Profile!");
-			Toast.makeText(getActivity(),
-					"Failed to POST Profile to router.", Toast.LENGTH_SHORT)
-					.show();
+			Toast.makeText(getActivity(), "Failed to POST Profile to router.",
+					Toast.LENGTH_SHORT).show();
 		}
 
 		@Override
 		public void onRequestSuccess(Response wanProfileList) {
 			Log.i(CommandCenterActivity.TAG, "Posted the WAN profile.");
-			//WWAN wwan = (WWAN) wanProfileList.getData();
-			Toast.makeText(getActivity(), "POST successful.", Toast.LENGTH_LONG).show();
+			// WWAN wwan = (WWAN) wanProfileList.getData();
+			Toast.makeText(getActivity(), "POST successful.", Toast.LENGTH_LONG)
+					.show();
 		}
 	}
-	
+
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-	        switch(requestCode) {
-	            case WANDIALOG_FRAGMENT:
+		switch (requestCode) {
+		case WANDIALOG_FRAGMENT:
 
-	                if (resultCode == Activity.RESULT_OK) {
-	                    // After Ok code.
-	                } else if (resultCode == Activity.RESULT_CANCELED){
-	                    // After Cancel code.
-	                }
+			if (resultCode == Activity.RESULT_OK) {
+				// After Ok code.
+			} else if (resultCode == Activity.RESULT_CANCELED) {
+				// After Cancel code.
+			}
 
-	                break;
-	        }
-	    }
+			break;
+		}
+	}
+
+	@Override
+	public boolean onNavigationItemSelected(int itemPosition, long itemId) {
+		/*
+		 * switch (itemPosition) { case WIFICLIENT_DISABLED: case
+		 * WIFICLIENT_WAN: case WIFICLIENT_BRIDGE:
+		 * getActivity().setTitle(title); }
+		 */
+		return true;
+	}
 }

@@ -2,6 +2,7 @@ package com.cs481.mobilemapper.fragments;
 
 import java.util.ArrayList;
 
+import android.app.ActionBar;
 import android.content.Context;
 import android.content.res.Resources;
 import android.os.Bundle;
@@ -75,7 +76,14 @@ public class DashboardFragment extends ListFragment {
 		Resources resources = getResources();
 
 		sa.setTitle(resources.getString(R.string.dashboard_title));
-
+		sa.getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD); // makes
+																				// the
+																				// dropdown
+																				// list
+																				// appear
+		sa.getActionBar().setDisplayShowTitleEnabled(true);
+		
+		
 		ArrayList<DashboardListRow> rows = new ArrayList<DashboardListRow>();
 		rows.add(new DashboardListRow(lWLAN, resources
 				.getString(R.string.wireless), "Partially Operational"));
