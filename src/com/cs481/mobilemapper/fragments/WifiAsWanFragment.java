@@ -7,8 +7,10 @@ import java.util.Comparator;
 import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
 import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
 import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
@@ -36,10 +38,14 @@ import com.cs481.mobilemapper.activities.CommandCenterActivity;
 import com.cs481.mobilemapper.activities.SpiceActivity;
 import com.cs481.mobilemapper.dialog.WifiWanDialogFragment;
 import com.cs481.mobilemapper.listrows.WlanListRow;
+import com.cs481.mobilemapper.responses.GetRequest;
+import com.cs481.mobilemapper.responses.PostRequest;
 import com.cs481.mobilemapper.responses.PutRequest;
 import com.cs481.mobilemapper.responses.Response;
 import com.cs481.mobilemapper.responses.config.wlan.ConfigWlan;
+import com.cs481.mobilemapper.responses.config.wwan.Radio;
 import com.cs481.mobilemapper.responses.config.wwan.WANProfile;
+import com.cs481.mobilemapper.responses.config.wwan.WWAN;
 import com.cs481.mobilemapper.responses.status.wlan.StatusWlan;
 import com.cs481.mobilemapper.responses.status.wlan.WAP;
 import com.octo.android.robospice.SpiceManager;
@@ -49,6 +55,7 @@ import com.octo.android.robospice.request.listener.RequestListener;
 
 public class WifiAsWanFragment extends ListFragment implements
 		OnRefreshListener {
+	private static final int WANDIALOG_FRAGMENT = 0;
 	private PullToRefreshLayout mPullToRefreshLayout;
 	private ProgressDialog progressDialog;
 	private SpiceManager spiceManager;
@@ -59,6 +66,8 @@ public class WifiAsWanFragment extends ListFragment implements
 	private boolean shouldLoadData = true;
 	private boolean wifiState = false;
 	private boolean wifiStateEnabled = false;
+	private ArrayList<WANProfile> wanprofiles;
+
 	private Menu menu;
 
 	@Override
@@ -67,6 +76,7 @@ public class WifiAsWanFragment extends ListFragment implements
 		setHasOptionsMenu(true);
 		if (savedInstanceState != null) {
 			waps = savedInstanceState.getParcelableArrayList("waps");
+			wanprofiles = savedInstanceState.getParcelable("wanprofiles");
 			authInfo = savedInstanceState.getParcelable("authInfo");
 			shouldLoadData = savedInstanceState.getBoolean("shouldLoadData");
 			wifiStateEnabled = savedInstanceState
@@ -98,6 +108,7 @@ public class WifiAsWanFragment extends ListFragment implements
 		// Android.
 		Log.i(CommandCenterActivity.TAG, "Saving instance");
 		outState.putParcelableArrayList("waps", waps);
+		outState.putParcelableArrayList("wanprofiles", wanprofiles);
 		outState.putParcelable("authInfo", authInfo);
 		outState.putBoolean("shouldLoadData", shouldLoadData);
 		outState.putBoolean("wifiState", wifiState);
@@ -135,7 +146,7 @@ public class WifiAsWanFragment extends ListFragment implements
 		super.onStart();
 		// /You will setup the action bar with pull to refresh layout
 		SpiceActivity sa = (SpiceActivity) getActivity();
-		sa.setTitle("WLAN"); // TODO change to string resource
+		sa.setTitle(getResources().getString(R.string.wifiwan_title)); // TODO change to string resource
 		spiceManager = sa.getSpiceManager();
 		if (shouldLoadData) {
 			setWifiState();
@@ -221,13 +232,14 @@ public class WifiAsWanFragment extends ListFragment implements
 	public void onRefreshStarted(View view) {
 		readWlanConfig(false);
 
-		/*GetRequest request = new GetRequest(
-				authInfo, "config/wlan", ConfigWlan.class, "configwlanget");
-		String lastRequestCacheKey = request.createCacheKey();
-
-		spiceManager.execute(request, lastRequestCacheKey,
-				DurationInMillis.ALWAYS_EXPIRED,
-				new WLANGetRequestListener());*/
+		/*
+		 * GetRequest request = new GetRequest( authInfo, "config/wlan",
+		 * ConfigWlan.class, "configwlanget"); String lastRequestCacheKey =
+		 * request.createCacheKey();
+		 * 
+		 * spiceManager.execute(request, lastRequestCacheKey,
+		 * DurationInMillis.ALWAYS_EXPIRED, new WLANGetRequestListener());
+		 */
 	}
 
 	@Override
@@ -249,7 +261,8 @@ public class WifiAsWanFragment extends ListFragment implements
 			@Override
 			public void onCheckedChanged(CompoundButton buttonView,
 					boolean isChecked) {
-				Log.i(CommandCenterActivity.TAG, "Performing put request to enabled wlan"); 
+				Log.i(CommandCenterActivity.TAG,
+						"Performing put request to enabled wlan");
 				PutRequest request = new PutRequest(Boolean.valueOf(isChecked),
 						authInfo, "config/wlan/radio/0/enabled", Boolean.class);
 				String lastRequestCacheKey = request.createCacheKey();
@@ -264,9 +277,9 @@ public class WifiAsWanFragment extends ListFragment implements
 
 	private void readWlanConfig(boolean dialog) {
 		// perform the request.
-		com.cs481.mobilemapper.responses.GetRequest request = new com.cs481.mobilemapper.responses.GetRequest(
-				authInfo, "status/wlan", StatusWlan.class, "statuswlanget");
-		String lastRequestCacheKey = request.createCacheKey();
+		GetRequest wapListrequest = new GetRequest(authInfo, "status/wlan",
+				StatusWlan.class, "statuswlanget");
+		String lastRequestCacheKey = wapListrequest.createCacheKey();
 		Resources resources = getResources();
 		if (dialog) {
 			ContextThemeWrapper wrapper = new ContextThemeWrapper(
@@ -280,9 +293,18 @@ public class WifiAsWanFragment extends ListFragment implements
 			progressDialog.setCancelable(false);
 		}
 
-		spiceManager.execute(request, lastRequestCacheKey,
+		spiceManager.execute(wapListrequest, lastRequestCacheKey,
 				DurationInMillis.ALWAYS_EXPIRED,
 				new WLANStatusGetRequestListener());
+
+		// get wwan profiles
+
+		GetRequest profilesRequest = new GetRequest(authInfo, "config/wwan",
+				WWAN.class, "configwwanget");
+
+		spiceManager.execute(profilesRequest, profilesRequest.createCacheKey(),
+				DurationInMillis.ALWAYS_EXPIRED,
+				new WANProfilesGetRequestListener());
 	}
 
 	private class WLANStatusGetRequestListener implements
@@ -382,7 +404,8 @@ public class WifiAsWanFragment extends ListFragment implements
 	 * Should be run when a WLAN object has been returned and the list of AP's
 	 * should be updated
 	 * 
-	 * @param wlan wlan response object
+	 * @param wlan
+	 *            wlan response object
 	 */
 	public void updateWlanList(StatusWlan wlan) {
 		waps = wlan.getRadio().get(0).getSurvey(); // might need to
@@ -452,7 +475,8 @@ public class WifiAsWanFragment extends ListFragment implements
 		// getActivity();
 
 		// authInfo = activity.getAuthInfo();
-		WifiWanDialogFragment wwFragment = WifiWanDialogFragment.newInstance(this);
+		WifiWanDialogFragment wwFragment = WifiWanDialogFragment
+				.newInstance(this);
 		wwFragment.setData(row.getWap(), authInfo);
 		wwFragment
 				.show(getActivity().getSupportFragmentManager(), "WAPConfirm");
@@ -476,8 +500,95 @@ public class WifiAsWanFragment extends ListFragment implements
 			adapter.notifyDataSetChanged();
 		}
 	}
-	
-	public void connectAsWAN(WANProfile wanprofile){
+
+	public void connectAsWAN(WANProfile wanprofile) {
+		Log.w(CommandCenterActivity.TAG, "Connecting as WAN.");
 		
+		for (WANProfile knownProfile : wanprofiles) {
+			if (wanprofile.equals(knownProfile)) {
+				Log.e(CommandCenterActivity.TAG,
+						"This profile is already defined!");
+				return; // it's known
+			}
+		}
+
+		// Profile is not yet defined. Do a POST to the router.
+		Log.i(CommandCenterActivity.TAG,
+				"Performing put request to enabled wlan");
+		PostRequest request = new PostRequest(wanprofile,
+				authInfo, "config/wwan/radio/0/profiles", WANProfile.class); //TODO will have to deal with dual band again.
+		String lastRequestCacheKey = request.createCacheKey();
+
+		spiceManager.execute(request, lastRequestCacheKey,
+				DurationInMillis.ALWAYS_EXPIRED,
+				new WANProfilePostRequestListener());
+
 	}
+
+	private class WANProfilesGetRequestListener implements
+			RequestListener<Response> {
+
+		@Override
+		public void onRequestFailure(SpiceException e) {
+			Log.i(CommandCenterActivity.TAG, "Failed to read WAN Profile list!");
+			Toast.makeText(getActivity(),
+					"Failed to get the WAN Profile listg.", Toast.LENGTH_SHORT)
+					.show();
+		}
+
+		@Override
+		public void onRequestSuccess(Response wanProfileList) {
+			Log.i(CommandCenterActivity.TAG, "Got wan profiles list.");
+			WWAN wwan = (WWAN) wanProfileList.getData();
+			ArrayList<Radio> profileRadios = wwan.getRadios();
+			ArrayList<WANProfile> wanprofiles = new ArrayList<WANProfile>();
+
+			if (profileRadios != null) {
+				for (Radio radio : profileRadios) {
+					ArrayList<WANProfile> singleRadioProfiles = radio
+							.getProfiles();
+					if (singleRadioProfiles != null) {
+						for (WANProfile profile : singleRadioProfiles) {
+							wanprofiles.add(profile);
+						}
+					}
+				}
+			}
+			WifiAsWanFragment.this.wanprofiles = wanprofiles;
+		}
+	}
+
+	private class WANProfilePostRequestListener implements
+			RequestListener<Response> {
+
+		@Override
+		public void onRequestFailure(SpiceException e) {
+			Log.w(CommandCenterActivity.TAG, "Failed to post the WAN Profile!");
+			Toast.makeText(getActivity(),
+					"Failed to POST Profile to router.", Toast.LENGTH_SHORT)
+					.show();
+		}
+
+		@Override
+		public void onRequestSuccess(Response wanProfileList) {
+			Log.i(CommandCenterActivity.TAG, "Posted the WAN profile.");
+			//WWAN wwan = (WWAN) wanProfileList.getData();
+			Toast.makeText(getActivity(), "POST successful.", Toast.LENGTH_LONG).show();
+		}
+	}
+	
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+	        switch(requestCode) {
+	            case WANDIALOG_FRAGMENT:
+
+	                if (resultCode == Activity.RESULT_OK) {
+	                    // After Ok code.
+	                } else if (resultCode == Activity.RESULT_CANCELED){
+	                    // After Cancel code.
+	                }
+
+	                break;
+	        }
+	    }
 }

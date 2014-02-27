@@ -3,6 +3,8 @@ package com.cs481.mobilemapper.responses.status.lan;
 import java.util.ArrayList;
 
 public class InterfaceInfo {
+	
+	
 	private ArrayList<InterfaceInfo> devices;
 	private InterfaceInfo Interface;
 

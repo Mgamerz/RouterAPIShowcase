@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.Credentials;
 import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -165,7 +166,27 @@ public class Utility {
 			put.setEntity(new StringEntity("data=" + data, "UTF-8"));
 		}
 		return put;
+	}
+	
+	public static HttpPost preparePostRequest(AuthInfo authInfo, HttpPost post,
+			String data) throws JsonProcessingException, IOException {
+		// TODO Auto-generated method stub
+		// Log.i(CommandCenterActivity.TAG, "PPR: "+r.getData());
 
+		if (authInfo.isEcm()) {
+			// ECM prepare
+			// ObjectMapper mapper = new ObjectMapper();
+			post.setHeader("Content-Type", "application/json");
+			// JsonNode json = mapper.readTree(data);
+			// json = json.get("data");
+			// Log.i(CommandCenterActivity.TAG, json.toString());
+			post.setEntity(new StringEntity(data, "UTF-8"));
+		} else {
+			post.setHeader("Content-Type", "application/x-www-form-urlencoded");
+			post.setEntity(new StringEntity("data=" + data, "UTF-8"));
+		}
+		Log.i(CommandCenterActivity.TAG, "Final data going to the network: "+post.getEntity());
+		return post;
 	}
 
 	/**

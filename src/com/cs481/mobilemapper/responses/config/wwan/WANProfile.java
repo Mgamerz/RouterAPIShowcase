@@ -1,5 +1,7 @@
-
 package com.cs481.mobilemapper.responses.config.wwan;
+
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -9,7 +11,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * @author Mgamerz
  *
  */
-public class WANProfile{
+public class WANProfile implements Parcelable {
 	@JsonProperty("authmode")
    	private String authmode;
 	
@@ -73,4 +75,75 @@ public class WANProfile{
 	public void setWpapsk(String wpapsk){
 		this.wpapsk = wpapsk;
 	}
+
+    protected WANProfile(Parcel in) {
+        authmode = in.readString();
+        bssid = in.readString();
+        enabled = in.readByte() != 0x00;
+        ssid = in.readString();
+        uid = in.readString();
+        wpacipher = in.readString();
+        wpapsk = in.readString();
+    }
+
+    public WANProfile() {
+		// Required empty constructor
+	}
+	@Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(authmode);
+        dest.writeString(bssid);
+        dest.writeByte((byte) (enabled ? 0x01 : 0x00));
+        dest.writeString(ssid);
+        dest.writeString(uid);
+        dest.writeString(wpacipher);
+        dest.writeString(wpapsk);
+    }
+
+    @SuppressWarnings("unused")
+    public static final Parcelable.Creator<WANProfile> CREATOR = new Parcelable.Creator<WANProfile>() {
+        @Override
+        public WANProfile createFromParcel(Parcel in) {
+            return new WANProfile(in);
+        }
+
+        @Override
+		public WANProfile[] newArray(int size) {
+            return new WANProfile[size];
+        }
+    };
+
+    
+    //Auto Generated Eclipse equals and hash code.
+    
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((uid == null) ? 0 : uid.hashCode());
+		return result;
+	}
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		WANProfile other = (WANProfile) obj;
+		if (uid == null) {
+			if (other.uid != null)
+				return false;
+		} else if (!uid.equals(other.uid))
+			return false;
+		return true;
+	}
+    
+    
 }

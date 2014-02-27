@@ -71,7 +71,7 @@ public class WifiWanDialogFragment extends DialogFragment {
 		HoloDialogBuilder dialogBuilder = new HoloDialogBuilder(
 				getActivity());
 		
-		Theme theme = hostingFragment.getActivity().getTheme();
+		Theme theme = getActivity().getTheme();
 		TypedValue typedValue = new TypedValue();
 		theme.resolveAttribute(android.R.attr.windowBackground, typedValue, true);
 		//Color color = getResources().getColor(colorid);
@@ -127,7 +127,9 @@ public class WifiWanDialogFragment extends DialogFragment {
 		TextView signalStrength = (TextView) dialogView
 				.findViewById(R.id.wapconnect_signalstrength_value);
 		signalStrength.setText(signalString);
+		dialogBuilder.setCustomView(dialogView);
 
+		//setup buttons
 		dialogBuilder.setPositiveButton(R.string.connect,
 				new DialogInterface.OnClickListener() {
 
@@ -136,6 +138,7 @@ public class WifiWanDialogFragment extends DialogFragment {
 						// TODO Auto-generated method stub
 						Toast.makeText(getActivity(), getResources().getString(R.string.connecting_as_wan),
 								Toast.LENGTH_LONG).show();
+						connectAsWan(wap);
 					}
 				});
 
@@ -148,7 +151,6 @@ public class WifiWanDialogFragment extends DialogFragment {
 					}
 				});
 
-		dialogBuilder.setCustomView(dialogView);
 		return dialogBuilder.create();
 	}
 
@@ -183,7 +185,7 @@ public class WifiWanDialogFragment extends DialogFragment {
 		wanprofile.setUid(wap.getBssid());
 		wanprofile.setEnabled(true);
 		
-		TextView tv = (TextView) getView().findViewById(R.id.wapconnect_password_field);
+		TextView tv = (TextView) getDialog().findViewById(R.id.wapconnect_password_field);
 		String pass = tv.getText().toString(); 
 		wanprofile.setWpapsk(pass);
 		

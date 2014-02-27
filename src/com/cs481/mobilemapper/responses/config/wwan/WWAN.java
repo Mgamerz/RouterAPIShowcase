@@ -2,6 +2,7 @@ package com.cs481.mobilemapper.responses.config.wwan;
 
 import java.util.ArrayList;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class WWAN {
@@ -34,5 +35,18 @@ public class WWAN {
 
 	public void setSurvey_interval(Number survey_interval) {
 		this.survey_interval = survey_interval;
+	}
+	
+	@JsonIgnore
+	private transient String Exception;
+	
+	@JsonIgnore
+	public String getException() {
+		return Exception;
+	}
+
+	@JsonProperty("exception")
+	public void setException(String exception) {
+		this.Exception = exception;
 	}
 }

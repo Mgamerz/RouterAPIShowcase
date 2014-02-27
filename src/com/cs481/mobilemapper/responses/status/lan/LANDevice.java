@@ -4,12 +4,12 @@ package com.cs481.mobilemapper.responses.status.lan;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
- * This class is under /status/lan/networks - it only shows some of the network information.
+ * This class is under /status/lan/devices/DEVICENAME - it only shows some of the network information.
  * The other part is in the NetworkInterface part
  * @author Mgamerz
  *
  */
-public class NetworkDevice{
+public class LANDevice{
 	@JsonProperty("info")
    	private InterfaceInfo info;
 	
