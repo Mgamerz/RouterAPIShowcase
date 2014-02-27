@@ -173,9 +173,12 @@ public class RouterInfoFragment extends Fragment {
 				if (response.getResponseInfo().getSuccess()) {
 					View v = getView();
 					TextView textVal = (TextView) v.findViewById(R.id.product_value);
-					textVal.setText(proin.getProduct_name());
+					if(textVal!=null)
+						textVal.setText(proin.getProduct_name());
 					textVal = (TextView) v.findViewById(R.id.mac_address_value);
-					textVal.setText(proin.getMac0());
+					if(textVal!=null)
+						textVal.setText(proin.getMac0());
+					
 				} else {
 					Toast.makeText(getActivity(), response.getResponseInfo().getReason(),
 							Toast.LENGTH_LONG).show();
@@ -212,7 +215,9 @@ public class RouterInfoFragment extends Fragment {
 				if (response.getResponseInfo().getSuccess()) {
 					View v = getView();
 					TextView textVal = (TextView) v.findViewById(R.id.firmware_value);
-					textVal.setText(fw.getFirmware());
+					if(textVal!=null){
+						textVal.setText(fw.getFirmware());
+					}
 				} else {
 					Toast.makeText(getActivity(), response.getResponseInfo().getReason(),
 							Toast.LENGTH_LONG).show();
@@ -249,7 +254,9 @@ public class RouterInfoFragment extends Fragment {
 				if (response.getResponseInfo().getSuccess()) {
 					View v = getView();
 					TextView textVal = (TextView) v.findViewById(R.id.uptime_value);
-					textVal.setText(DurationFormatUtils.formatDuration((long)sys.getUptime()*1000, "d ' Days, ' H 'Hours, 'm 'Minutes, ' s 'Seconds'"));
+					if(textVal!=null){
+						textVal.setText(DurationFormatUtils.formatDuration((long)sys.getUptime()*1000, "d ' Days,' H 'Hours, 'm 'Minutes, ' s 'Seconds'"));
+					}
 				} else {
 					Toast.makeText(getActivity(), response.getResponseInfo().getReason(),
 							Toast.LENGTH_LONG).show();
@@ -286,7 +293,9 @@ public class RouterInfoFragment extends Fragment {
 				if (response.getResponseInfo().getSuccess()) {
 					View v = getView();
 					TextView textVal = (TextView) v.findViewById(R.id.hostname_value);
-					textVal.setText(con.getHostname());
+					if(textVal!=null){
+						textVal.setText(con.getHostname());
+					}
 				} else {
 					Toast.makeText(getActivity(), response.getResponseInfo().getReason(),
 							Toast.LENGTH_LONG).show();
@@ -317,7 +326,7 @@ public class RouterInfoFragment extends Fragment {
 		public void onRequestSuccess(Response response) {
 			com.cs481.mobilemapper.responses.status.lan.Lan dat = (com.cs481.mobilemapper.responses.status.lan.Lan) response.getData();
 			//Devices dat = (Devices) response.getData();
-			//Log.i(CommandCenterActivity.TAG, "Sucessfully parsed a Devices object");
+			//Log.i(CommandCenterActivity.TAG, "Successfully parsed a Devices object");
 			
 			// update your UI
 			if(progressDialog!=null) progressDialog.dismiss(); // update your UI
@@ -325,7 +334,9 @@ public class RouterInfoFragment extends Fragment {
 				if (response.getResponseInfo().getSuccess()) {
 					View v = getView();
 					TextView textVal = (TextView) v.findViewById(R.id.numclients_value);
-					textVal.setText(Integer.toString(dat.getClients().size()));
+					if(textVal!=null){
+						textVal.setText(Integer.toString(dat.getClients().size()));
+					}
 				} else {
 					Toast.makeText(getActivity(), response.getResponseInfo().getReason(),
 							Toast.LENGTH_LONG).show();
