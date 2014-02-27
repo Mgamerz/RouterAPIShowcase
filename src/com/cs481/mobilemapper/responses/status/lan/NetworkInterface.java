@@ -1,5 +1,6 @@
 package com.cs481.mobilemapper.responses.status.lan;
 
+import com.cs481.mobilemapper.responses.status.lan.networks.InterfaceInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**

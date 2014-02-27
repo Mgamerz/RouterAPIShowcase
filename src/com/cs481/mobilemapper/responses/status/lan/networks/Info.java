@@ -1,6 +1,6 @@
 package com.cs481.mobilemapper.responses.status.lan.networks;
 
-import java.util.List;
+import java.util.ArrayList;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -10,13 +10,13 @@ public class Info {
 	private Number uid;
 	
 	@JsonProperty("ip6_addresses")
-	private List ip6_addresses;
+	private ArrayList<String> ip6_addresses;
 	
 	@JsonProperty("ip_address")
 	private Number ip_address;
 	
 	@JsonProperty("ip_addresses")
-	private List ip_addresses;
+	private ArrayList<String> ip_addresses;
 	
 	@JsonProperty("hostname")
 	private String hostname;
@@ -41,11 +41,11 @@ public class Info {
 		this.uid = uid;
 	}
 
-	public List getIp6_addresses() {
+	public ArrayList<String> getIp6_addresses() {
 		return ip6_addresses;
 	}
 
-	public void setIp6_addresses(List ip6_addresses) {
+	public void setIp6_addresses(ArrayList<String> ip6_addresses) {
 		this.ip6_addresses = ip6_addresses;
 	}
 
@@ -57,11 +57,11 @@ public class Info {
 		this.ip_address = ip_address;
 	}
 
-	public List getIp_addresses() {
+	public ArrayList<String> getIp_addresses() {
 		return ip_addresses;
 	}
 
-	public void setIp_addresses(List ip_addresses) {
+	public void setIp_addresses(ArrayList<String> ip_addresses) {
 		this.ip_addresses = ip_addresses;
 	}
 
