@@ -1,7 +1,7 @@
 
 package com.cs481.mobilemapper.responses.status.lan;
 
-import com.cs481.mobilemapper.responses.status.lan.networks.InterfaceInfo;
+import com.cs481.mobilemapper.responses.status.lan.networks.Info;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
@@ -12,7 +12,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 public class LANDevice{
 	@JsonProperty("info")
-   	private InterfaceInfo info;
+   	private Info info;
 	
 	@JsonProperty("stats")
    	private Stats stats;
@@ -20,10 +20,10 @@ public class LANDevice{
 	@JsonProperty("status")
    	private Status status;
 
- 	public InterfaceInfo getInfo(){
+ 	public Info getInfo(){
 		return this.info;
 	}
-	public void setInfo(InterfaceInfo info){
+	public void setInfo(Info info){
 		this.info = info;
 	}
  	public Stats getStats(){

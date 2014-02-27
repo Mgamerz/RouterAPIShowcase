@@ -18,6 +18,7 @@ import com.cs481.mobilemapper.activities.CommandCenterActivity;
 import com.cs481.mobilemapper.activities.SpiceActivity;
 import com.cs481.mobilemapper.responses.GetRequest;
 import com.cs481.mobilemapper.responses.Response;
+import com.cs481.mobilemapper.responses.status.lan.Devices;
 import com.cs481.mobilemapper.responses.status.product_info.Fw_info;
 import com.cs481.mobilemapper.responses.status.product_info.Product_info;
 import com.octo.android.robospice.SpiceManager;
@@ -139,11 +140,14 @@ public class RouterInfoFragment extends Fragment {
 	
 	private void readNumClientsInfo() {
 		//perform the request.
-		GetRequest request = new GetRequest(authInfo, "status/lan", com.cs481.mobilemapper.responses.status.lan.Lan.class, "client_get");
+		//GetRequest request = new GetRequest(authInfo, "status/lan", com.cs481.mobilemapper.responses.status.lan.Lan.class, "client_get");
+		GetRequest request = new GetRequest(authInfo, "status/lan/devices/", com.cs481.mobilemapper.responses.status.lan.Devices.class, "client_get");
 		String lastRequestCacheKey = request.createCacheKey();
 
 		spiceManager.execute(request, lastRequestCacheKey,
 				DurationInMillis.ALWAYS_EXPIRED, new InfoGetClientListener());
+		
+		
 	}
 	
 	private class InfoGetRequestListener implements RequestListener<Response> {
@@ -311,15 +315,17 @@ public class RouterInfoFragment extends Fragment {
 
 		@Override
 		public void onRequestSuccess(Response response) {
-			com.cs481.mobilemapper.responses.status.lan.Lan dat = (com.cs481.mobilemapper.responses.status.lan.Lan) response.getData();
+			 //com.cs481.mobilemapper.responses.status.lan.Lan dat = (com.cs481.mobilemapper.responses.status.lan.Lan) response.getData();
+			Devices dat = (Devices) response.getData();
+			Log.i(CommandCenterActivity.TAG, "Sucessfully parsed a Devices object");
 			
 			// update your UI
 			if(progressDialog!=null) progressDialog.dismiss(); // update your UI
 			if (response.getResponseInfo() != null) {
 				if (response.getResponseInfo().getSuccess()) {
-					View v = getView();
-					TextView textVal = (TextView) v.findViewById(R.id.numclients_value);
-					textVal.setText(dat.getClients().size());
+				//	View v = getView();
+				//	TextView textVal = (TextView) v.findViewById(R.id.numclients_value);
+				//	textVal.setText(dat.getClients().size());
 				} else {
 					Toast.makeText(getActivity(), response.getResponseInfo().getReason(),
 							Toast.LENGTH_LONG).show();
