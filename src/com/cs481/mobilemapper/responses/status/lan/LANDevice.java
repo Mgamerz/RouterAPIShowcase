@@ -1,41 +1,46 @@
-
 package com.cs481.mobilemapper.responses.status.lan;
 
-import com.cs481.mobilemapper.responses.status.lan.networks.Info;
+import com.cs481.mobilemapper.responses.status.lan.networks.NetworkInterfaceDevice;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
- * This class is under /status/lan/devices/DEVICENAME - it only shows some of the network information.
- * The other part is in the NetworkInterface part
+ * This class is under /status/lan/devices/DEVICENAME - it only shows some of
+ * the network information. The other part is in the NetworkInterface part
+ * 
  * @author Mgamerz
- *
+ * 
  */
-public class LANDevice{
+public class LANDevice {
 	@JsonProperty("info")
-   	private Info info;
-	
-	@JsonProperty("stats")
-   	private Stats stats;
-	
-	@JsonProperty("status")
-   	private Status status;
+	private NetworkInterfaceDevice info;
 
- 	public Info getInfo(){
+	@JsonProperty("stats")
+	private Stats stats;
+
+	@JsonProperty("status")
+	private Status status;
+
+	public NetworkInterfaceDevice getInfo() {
 		return this.info;
 	}
-	public void setInfo(Info info){
+
+	public void setInfo(NetworkInterfaceDevice info) {
 		this.info = info;
 	}
- 	public Stats getStats(){
+
+	public Stats getStats() {
 		return this.stats;
 	}
-	public void setStats(Stats stats){
+
+	public void setStats(Stats stats) {
 		this.stats = stats;
 	}
- 	public Status getStatus(){
+
+	public Status getStatus() {
 		return this.status;
 	}
-	public void setStatus(Status status){
+
+	public void setStatus(Status status) {
 		this.status = status;
 	}
 }
