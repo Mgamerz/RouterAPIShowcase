@@ -4,6 +4,7 @@ package com.cs481.mobilemapper.responses.status.lan;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Stats{
+	
 	@JsonProperty("collisions")
    	private Number collisions;
 	
