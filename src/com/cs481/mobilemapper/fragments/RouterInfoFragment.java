@@ -140,8 +140,8 @@ public class RouterInfoFragment extends Fragment {
 	
 	private void readNumClientsInfo() {
 		//perform the request.
-		//GetRequest request = new GetRequest(authInfo, "status/lan", com.cs481.mobilemapper.responses.status.lan.Lan.class, "client_get");
-		GetRequest request = new GetRequest(authInfo, "status/lan/devices/", com.cs481.mobilemapper.responses.status.lan.Devices.class, "client_get");
+		GetRequest request = new GetRequest(authInfo, "status/lan", com.cs481.mobilemapper.responses.status.lan.Lan.class, "client_get");
+		//GetRequest request = new GetRequest(authInfo, "status/lan/devices/", com.cs481.mobilemapper.responses.status.lan.Devices.class, "client_get");
 		String lastRequestCacheKey = request.createCacheKey();
 
 		spiceManager.execute(request, lastRequestCacheKey,
@@ -315,17 +315,17 @@ public class RouterInfoFragment extends Fragment {
 
 		@Override
 		public void onRequestSuccess(Response response) {
-			 //com.cs481.mobilemapper.responses.status.lan.Lan dat = (com.cs481.mobilemapper.responses.status.lan.Lan) response.getData();
-			Devices dat = (Devices) response.getData();
-			Log.i(CommandCenterActivity.TAG, "Sucessfully parsed a Devices object");
+			com.cs481.mobilemapper.responses.status.lan.Lan dat = (com.cs481.mobilemapper.responses.status.lan.Lan) response.getData();
+			//Devices dat = (Devices) response.getData();
+			//Log.i(CommandCenterActivity.TAG, "Sucessfully parsed a Devices object");
 			
 			// update your UI
 			if(progressDialog!=null) progressDialog.dismiss(); // update your UI
 			if (response.getResponseInfo() != null) {
 				if (response.getResponseInfo().getSuccess()) {
-				//	View v = getView();
-				//	TextView textVal = (TextView) v.findViewById(R.id.numclients_value);
-				//	textVal.setText(dat.getClients().size());
+					View v = getView();
+					TextView textVal = (TextView) v.findViewById(R.id.numclients_value);
+					textVal.setText(dat.getClients().size());
 				} else {
 					Toast.makeText(getActivity(), response.getResponseInfo().getReason(),
 							Toast.LENGTH_LONG).show();
