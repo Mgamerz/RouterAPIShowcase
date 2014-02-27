@@ -100,7 +100,7 @@
             style="@style/TextTheme"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/uptime_text"
+            android:layout_below="@id/uptime_value"
             android:text="@string/num_clients" />
 
         <TextView
@@ -109,7 +109,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignLeft="@id/mac_address_value"
-            android:layout_below="@id/uptime_text"
+            android:layout_below="@id/uptime_value"
             android:text="@string/loading" />
     </RelativeLayout>
 
