@@ -1,9 +1,33 @@
 
 package com.cs481.mobilemapper.responses.status.lan;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
+
 public class Stats{
+	
+	@JsonProperty("obps")
+	private Number obps;
+	
+	@JsonProperty("omcasts")
+	private Number omcasts;
+	
+	@JsonProperty("ibps")
+	private Number ibps;
+	
+	@JsonProperty("ts")
+	private Number ts;
+	
+	@JsonProperty("noproto")
+	private Number noproto;
+	
+	@JsonProperty("bps")
+	private Number bps;
+	
+	@JsonProperty("imcasts")
+	private Number imcasts;
 	
 	@JsonProperty("collisions")
    	private Number collisions;
