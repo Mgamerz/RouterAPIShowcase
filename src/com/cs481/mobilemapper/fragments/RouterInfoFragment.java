@@ -89,6 +89,8 @@ public class RouterInfoFragment extends Fragment {
 		readProductInfo(true);
 		readFWInfo();
 		readUptimeInfo();
+		readHostNameInfo();
+		readNumClientsInfo();
 	}
 	
 	private void readProductInfo(boolean dialog) {
@@ -126,6 +128,24 @@ public class RouterInfoFragment extends Fragment {
 				DurationInMillis.ALWAYS_EXPIRED, new InfoGetSystemListener());
 	}
 	
+	private void readHostNameInfo() {
+		//perform the request.
+		GetRequest request = new GetRequest(authInfo, "status/wan/devices/ethernet-wan/config", com.cs481.mobilemapper.status.wan.devices.ethernetwan.Config.class, "config_get");
+		String lastRequestCacheKey = request.createCacheKey();
+
+		spiceManager.execute(request, lastRequestCacheKey,
+				DurationInMillis.ALWAYS_EXPIRED, new InfoGetConfigListener());
+	}
+	
+	private void readNumClientsInfo() {
+		//perform the request.
+		GetRequest request = new GetRequest(authInfo, "status/lan", com.cs481.mobilemapper.responses.status.lan.Data.class, "client_get");
+		String lastRequestCacheKey = request.createCacheKey();
+
+		spiceManager.execute(request, lastRequestCacheKey,
+				DurationInMillis.ALWAYS_EXPIRED, new InfoGetClientListener());
+	}
+	
 	private class InfoGetRequestListener implements RequestListener<Response> {
 
 		@Override
@@ -160,7 +180,7 @@ public class RouterInfoFragment extends Fragment {
 				Toast.makeText(
 						getActivity(),
 						getResources().getString(
-								R.string.gpio_get_null_response),
+								R.string.info_get_response_null),
 						Toast.LENGTH_LONG).show();
 			}
 		}
@@ -197,7 +217,7 @@ public class RouterInfoFragment extends Fragment {
 				Toast.makeText(
 						getActivity(),
 						getResources().getString(
-								R.string.gpio_get_null_response),
+								R.string.info_get_response_null),
 						Toast.LENGTH_LONG).show();
 			}
 		}
@@ -234,7 +254,81 @@ public class RouterInfoFragment extends Fragment {
 				Toast.makeText(
 						getActivity(),
 						getResources().getString(
-								R.string.gpio_get_null_response),
+								R.string.info_get_response_null),
+						Toast.LENGTH_LONG).show();
+			}
+		}
+	}	
+	
+	private class InfoGetConfigListener implements RequestListener<Response> {
+		@Override
+		public void onRequestFailure(SpiceException e) {
+			// update your UI
+			if(progressDialog!=null) progressDialog.dismiss();
+			Log.i(CommandCenterActivity.TAG, "Failed to read Config Info!");
+
+			Toast.makeText(getActivity(),
+					getResources().getString(R.string.config_fail),
+					Toast.LENGTH_SHORT).show();
+		}
+
+		@Override
+		public void onRequestSuccess(Response response) {
+			com.cs481.mobilemapper.status.wan.devices.ethernetwan.Config con = (com.cs481.mobilemapper.status.wan.devices.ethernetwan.Config) response.getData();
+			
+			// update your UI
+			if(progressDialog!=null) progressDialog.dismiss(); // update your UI
+			if (response.getResponseInfo() != null) {
+				if (response.getResponseInfo().getSuccess()) {
+					View v = getView();
+					TextView textVal = (TextView) v.findViewById(R.id.hostname_value);
+					textVal.setText(con.getHostname());
+				} else {
+					Toast.makeText(getActivity(), response.getResponseInfo().getReason(),
+							Toast.LENGTH_LONG).show();
+				}
+			} else {
+				Toast.makeText(
+						getActivity(),
+						getResources().getString(
+								R.string.info_get_response_null),
+						Toast.LENGTH_LONG).show();
+			}
+		}
+	}	
+	
+	private class InfoGetClientListener implements RequestListener<Response> {
+		@Override
+		public void onRequestFailure(SpiceException e) {
+			// update your UI
+			if(progressDialog!=null) progressDialog.dismiss();
+			Log.i(CommandCenterActivity.TAG, "Failed to read Client Info!");
+
+			Toast.makeText(getActivity(),
+					getResources().getString(R.string.config_fail),
+					Toast.LENGTH_SHORT).show();
+		}
+
+		@Override
+		public void onRequestSuccess(Response response) {
+			com.cs481.mobilemapper.responses.status.lan.Lan dat = (com.cs481.mobilemapper.responses.status.lan.Lan) response.getData();
+			
+			// update your UI
+			if(progressDialog!=null) progressDialog.dismiss(); // update your UI
+			if (response.getResponseInfo() != null) {
+				if (response.getResponseInfo().getSuccess()) {
+					View v = getView();
+					TextView textVal = (TextView) v.findViewById(R.id.numclients_value);
+					textVal.setText(dat.getData().getClients().size());
+				} else {
+					Toast.makeText(getActivity(), response.getResponseInfo().getReason(),
+							Toast.LENGTH_LONG).show();
+				}
+			} else {
+				Toast.makeText(
+						getActivity(),
+						getResources().getString(
+								R.string.info_get_response_null),
 						Toast.LENGTH_LONG).show();
 			}
 		}
