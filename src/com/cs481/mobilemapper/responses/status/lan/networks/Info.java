@@ -7,13 +7,13 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class Info {
 	
 	@JsonProperty("uid")
-	private Number uid;
+	private String uid;
 	
 	@JsonProperty("ip6_addresses")
 	private ArrayList<String> ip6_addresses;
 	
 	@JsonProperty("ip_address")
-	private Number ip_address;
+	private String ip_address;
 	
 	@JsonProperty("ip_addresses")
 	private ArrayList<String> ip_addresses;
@@ -33,11 +33,11 @@ public class Info {
 	@JsonProperty("name")
 	private String name;
 	
-	public Number getUid() {
+	public String getUid() {
 		return uid;
 	}
 
-	public void setUid(Number uid) {
+	public void setUid(String uid) {
 		this.uid = uid;
 	}
 
@@ -49,11 +49,11 @@ public class Info {
 		this.ip6_addresses = ip6_addresses;
 	}
 
-	public Number getIp_address() {
+	public String getIp_address() {
 		return ip_address;
 	}
 
-	public void setIp_address(Number ip_address) {
+	public void setIp_address(String ip_address) {
 		this.ip_address = ip_address;
 	}
 
