@@ -32,11 +32,13 @@ public class PostRequest extends SpiceRequest<Response> {
 
 	/**
 	 * Creates a new PostRequest object. It is executed when spiceManager.execute() is called.
+	 * 
+	 * The listener for this request should expect an integer result, which corresponds to what index it was just posted to.
+	 * 
 	 * @param data Object to post to the network.
 	 * @param authInfo Auth info to authenticate to the router.
 	 * @param suburl Suburl to access of where to send the post. For example, "config/wlan" posts to that subtree.
-	 * @param classId
-	 * @param clazz
+	 * @param clazz Class of object to put
 	 */
 	public PostRequest(Object data, AuthInfo authInfo, String suburl,
 			 Class clazz) {
@@ -56,7 +58,7 @@ public class PostRequest extends SpiceRequest<Response> {
 		Log.i(CommandCenterActivity.TAG, "Post Request to " + url);
 		HttpPost put = new HttpPost(url);
 		ObjectMapper mapper = new ObjectMapper();
-		String jsonStr = Utility.getPutString(data, clazz, mapper);
+		String jsonStr = Utility.getPutString(data, clazz, mapper); //works for put as well
 		Log.w(CommandCenterActivity.TAG, "Putting data to network: " + jsonStr);
 		put = Utility.preparePostRequest(authInfo, put, jsonStr);
 
@@ -71,8 +73,12 @@ public class PostRequest extends SpiceRequest<Response> {
 		JsonNode tree = mapper.readTree(responseString);
 		RootElement rr = mapper.readValue(responseString, RootElement.class);
 		tree = tree.get("data");
-		Object data = mapper.readValue(tree.toString(), clazz);
-		return new Response(rr, data);
+		
+		Integer postIndex = Integer.valueOf(tree.toString());
+		
+		Log.i(CommandCenterActivity.TAG, "Post result: "+tree);
+		//Object data = mapper.readValue(tree.toString(), clazz);
+		return new Response(rr, postIndex);
 	}
 
 	/**
