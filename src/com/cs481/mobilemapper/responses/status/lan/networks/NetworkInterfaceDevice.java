@@ -1,4 +1,4 @@
-package com.cs481.mobilemapper.responses.status.lan;
+package com.cs481.mobilemapper.responses.status.lan.networks;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

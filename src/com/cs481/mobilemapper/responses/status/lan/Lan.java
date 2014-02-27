@@ -3,6 +3,7 @@ package com.cs481.mobilemapper.responses.status.lan;
 
 import java.util.ArrayList;
 
+import com.cs481.mobilemapper.responses.status.lan.networks.Networks;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Lan{
