@@ -48,6 +48,13 @@ public class SplashScreenFragment extends Fragment {
     	return view;
     }
     
+    @Override
+    public void onStart(){
+    	super.onStart();
+    	//Should retreive the 'animation finished' boolean in a call before this (such as onCreateView()) so it doens't keep playing if the screen rotates.
+    	animate();
+    }
+    
     // Called in LoginActivity
     public void animate(){
     	FrameLayout ecm = (FrameLayout) getView().findViewById(

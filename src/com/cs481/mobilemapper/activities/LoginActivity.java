@@ -137,10 +137,10 @@ public class LoginActivity extends SpiceActivity {
 					.beginTransaction();
 
 			transaction.replace(R.id.login_fragment, frFragment);
+			//frFragment.animate();
 			transaction.commit();
 			
 			// CRASH HERE
-			//frFragment.animate();
 		}
 
 		mTitle = getTitle();
