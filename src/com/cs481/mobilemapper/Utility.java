@@ -185,7 +185,7 @@ public class Utility {
 			post.setHeader("Content-Type", "application/x-www-form-urlencoded");
 			post.setEntity(new StringEntity("data=" + data, "UTF-8"));
 		}
-		Log.i(CommandCenterActivity.TAG, "Final data going to the network: "+post.getEntity());
+		Log.i(CommandCenterActivity.TAG, "Final data going to the network: "+post.getEntity().toString());
 		return post;
 	}
 

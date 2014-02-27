@@ -54,8 +54,11 @@
     <string name="wan">WAN</string>
     <string name="gpio">GPIO</string>
 
-    <!-- WifiAsWan -->
+    <!-- Wifi Client Fragment -->
     <string name="wifiwan_title">WiFi as WAN</string>
+    <string name="wifibridge_title">WiFi as Bridge</string>
+    <string name="wificlient_title">WiFi Client</string>
+
     <string name="wifimenu_sort_signal">Sort by signal</string>
     <string name="wifi_sort_alphabetically">Sort by name</string>
     <string name="wlan_reading">Reading WLAN Configuration</string>
@@ -163,6 +166,13 @@
         <item>1</item>
         <item>2</item>
         <item>3</item>
+    </string-array>
+    
+    
+    <string-array name="wificlient_values">
+        <item>WiFi Client</item>
+        <item>WiFi as Bridge</item>
+        <item>WiFi as WAN</item>
     </string-array>
 
 </resources>

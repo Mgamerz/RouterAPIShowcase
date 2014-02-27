@@ -23,9 +23,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.SpinnerAdapter;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,7 +40,9 @@ import com.cs481.mobilemapper.dialog.WifiWanDialogFragment;
 import com.cs481.mobilemapper.listrows.WlanListRow;
 import com.cs481.mobilemapper.responses.GetRequest;
 import com.cs481.mobilemapper.responses.PostRequest;
+import com.cs481.mobilemapper.responses.PutRequest;
 import com.cs481.mobilemapper.responses.Response;
+import com.cs481.mobilemapper.responses.config.wlan.ConfigWlan;
 import com.cs481.mobilemapper.responses.config.wwan.Radio;
 import com.cs481.mobilemapper.responses.config.wwan.WANProfile;
 import com.cs481.mobilemapper.responses.config.wwan.WWAN;
@@ -49,7 +53,7 @@ import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
 
-public class WifiAsWanFragment extends ListFragment implements
+public class WifiFragment extends ListFragment implements
 		OnRefreshListener {
 	private static final int WANDIALOG_FRAGMENT = 0;
 	private PullToRefreshLayout mPullToRefreshLayout;
@@ -86,8 +90,8 @@ public class WifiAsWanFragment extends ListFragment implements
 		}
 	}
 
-	public static WifiAsWanFragment newInstance(AuthInfo authInfo) {
-		WifiAsWanFragment wawFrag = new WifiAsWanFragment();
+	public static WifiFragment newInstance(AuthInfo authInfo) {
+		WifiFragment wawFrag = new WifiFragment();
 
 		Bundle args = new Bundle();
 		args.putParcelable("authInfo", authInfo);
@@ -143,19 +147,29 @@ public class WifiAsWanFragment extends ListFragment implements
 		// /You will setup the action bar with pull to refresh layout
 		SpiceActivity sa = (SpiceActivity) getActivity();
 		sa.setTitle(getResources().getString(R.string.wifiwan_title)); // TODO change to string resource
-		
-		//Setup navigation
-		SpinnerAdapter mSpinnerAdapter = ArrayAdapter.createFromResource(getActivity(), R.array.wificlient_values,
-		          android.R.layout.simple_spinner_dropdown_item);
-		
 		spiceManager = sa.getSpiceManager();
 		if (shouldLoadData) {
-			readWlanWANConfig(true);
+			setWifiState();
+			readWlanConfig(true);
 			shouldLoadData = false;
 		} else {
 			Log.i(CommandCenterActivity.TAG, waps.toString());
 			updateWapList(waps);
 		}
+	}
+
+	/**
+	 * Set's a network operation to change the Wifi Toggle switch state
+	 */
+	private void setWifiState() {
+		// perform the request.
+		com.cs481.mobilemapper.responses.GetRequest request = new com.cs481.mobilemapper.responses.GetRequest(
+				authInfo, "config/wlan", ConfigWlan.class, "wlanconfigget");
+		String lastRequestCacheKey = request.createCacheKey();
+
+		spiceManager.execute(request, lastRequestCacheKey,
+				DurationInMillis.ALWAYS_EXPIRED,
+				new WLANConfigGetRequestListener());
 	}
 
 	public class WlanAdapter extends ArrayAdapter<WlanListRow> {
@@ -216,7 +230,7 @@ public class WifiAsWanFragment extends ListFragment implements
 
 	@Override
 	public void onRefreshStarted(View view) {
-		readWlanWANConfig(false);
+		readWlanConfig(false);
 
 		/*
 		 * GetRequest request = new GetRequest( authInfo, "config/wlan",
@@ -233,9 +247,35 @@ public class WifiAsWanFragment extends ListFragment implements
 		// super.onCreateOptionsMenu(menu, inflater);
 		this.menu = menu;
 		inflater.inflate(R.menu.wifiwan_menu, this.menu);
+		// Get widget's instance
+		setWifiToggleListener();
 	}
 
-	private void readWlanWANConfig(boolean dialog) {
+	private void setWifiToggleListener() {
+		Switch wifiToggle = (Switch) menu.findItem(R.id.wifi_toggle)
+				.getActionView();
+		wifiToggle.setChecked(wifiState);
+		wifiToggle.setEnabled(wifiStateEnabled);
+		wifiToggle.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+
+			@Override
+			public void onCheckedChanged(CompoundButton buttonView,
+					boolean isChecked) {
+				Log.i(CommandCenterActivity.TAG,
+						"Performing put request to enabled wlan");
+				PutRequest request = new PutRequest(Boolean.valueOf(isChecked),
+						authInfo, "config/wlan/radio/0/enabled", Boolean.class);
+				String lastRequestCacheKey = request.createCacheKey();
+
+				spiceManager.execute(request, lastRequestCacheKey,
+						DurationInMillis.ALWAYS_EXPIRED,
+						new WLANEnabledPutRequestListener());
+			}
+
+		});
+	}
+
+	private void readWlanConfig(boolean dialog) {
 		// perform the request.
 		GetRequest wapListrequest = new GetRequest(authInfo, "status/wlan",
 				StatusWlan.class, "statuswlanget");
@@ -305,6 +345,58 @@ public class WifiAsWanFragment extends ListFragment implements
 			}
 			mPullToRefreshLayout.setRefreshComplete();
 
+		}
+	}
+
+	private class WLANEnabledPutRequestListener implements
+			RequestListener<Response> {
+
+		@Override
+		public void onRequestFailure(SpiceException e) {
+			Log.i(CommandCenterActivity.TAG, "Failed to put the wifi status!");
+			Toast.makeText(getActivity(), "Failed to change the wifi status.",
+					Toast.LENGTH_SHORT).show();
+		}
+
+		@Override
+		public void onRequestSuccess(Response enabledPutResult) {
+			Log.i(CommandCenterActivity.TAG, "UPDATING SWITCH!");
+			Boolean bool = (Boolean) enabledPutResult.getData();
+			Switch wifiToggle = (Switch) menu.findItem(R.id.wifi_toggle)
+					.getActionView();
+			wifiToggle.setOnCheckedChangeListener(null);
+			wifiState = bool.booleanValue();
+			wifiStateEnabled = true;
+			wifiToggle.setEnabled(wifiStateEnabled);
+			wifiToggle.setChecked(wifiState);
+			setWifiToggleListener();
+		}
+	}
+
+	private class WLANConfigGetRequestListener implements
+			RequestListener<Response> {
+
+		@Override
+		public void onRequestFailure(SpiceException e) {
+			Log.i(CommandCenterActivity.TAG, "Failed to read WLAN!");
+			Toast.makeText(getActivity(), "Failed to get the WLAN Config.",
+					Toast.LENGTH_SHORT).show();
+			mPullToRefreshLayout.setRefreshComplete();
+		}
+
+		@Override
+		public void onRequestSuccess(Response wlanConfig) {
+			Log.i(CommandCenterActivity.TAG, "UPDATING SWITCH!");
+			ConfigWlan cwlan = (ConfigWlan) wlanConfig.getData();
+			Switch wifiToggle = (Switch) menu.findItem(R.id.wifi_toggle)
+					.getActionView();
+			wifiToggle.setOnCheckedChangeListener(null);
+			wifiState = cwlan.getRadios().get(0).getEnabled();
+			wifiStateEnabled = true;
+			wifiToggle.setEnabled(wifiStateEnabled);
+			wifiToggle.setChecked(wifiState);
+			setWifiToggleListener();
+			mPullToRefreshLayout.setRefreshComplete();
 		}
 	}
 
@@ -383,11 +475,11 @@ public class WifiAsWanFragment extends ListFragment implements
 		// getActivity();
 
 		// authInfo = activity.getAuthInfo();
-		WifiWanDialogFragment wwFragment = WifiWanDialogFragment
+		/*WifiWanDialogFragment wwFragment = WifiWanDialogFragment
 				.newInstance(this);
 		wwFragment.setData(row.getWap(), authInfo);
 		wwFragment
-				.show(getActivity().getSupportFragmentManager(), "WAPConfirm");
+				.show(getActivity().getSupportFragmentManager(), "WAPConfirm");*/
 	}
 
 	/**
@@ -462,7 +554,7 @@ public class WifiAsWanFragment extends ListFragment implements
 					}
 				}
 			}
-			WifiAsWanFragment.this.wanprofiles = wanprofiles;
+			WifiFragment.this.wanprofiles = wanprofiles;
 		}
 	}
 

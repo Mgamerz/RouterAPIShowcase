@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+    <item
+        android:id="@+id/wifimenu_sort_alphabetically"
+        android:title="@string/wifi_sort_alphabetically">
+    </item>
+    <item
+        android:id="@+id/wifimenu_sort_signal"
+        android:title="@string/wifimenu_sort_signal">
+    </item>
+
+</menu>
