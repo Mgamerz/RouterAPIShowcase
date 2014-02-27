@@ -3,9 +3,9 @@
     xmlns:ptr="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/wifi_as_wan_ptr_layout"
-    android:padding="6dp"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent"
+    android:padding="6dp" >
 
     <ListView
         android:id="@android:id/list"
@@ -13,5 +13,12 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
     </ListView>
+
+    <TextView
+        android:id="@id/android:empty"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#FF0000"
+        android:text="No access points or wireless is off." />
 
 </uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout>

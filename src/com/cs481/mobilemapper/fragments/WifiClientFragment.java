@@ -51,7 +51,7 @@ import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
 
-public class WifiAsWanFragment extends ListFragment implements
+public class WifiClientFragment extends ListFragment implements
 		OnRefreshListener, ActionBar.OnNavigationListener {
 	private static final int WANDIALOG_FRAGMENT = 0;
 
@@ -94,8 +94,8 @@ public class WifiAsWanFragment extends ListFragment implements
 		}
 	}
 
-	public static WifiAsWanFragment newInstance(AuthInfo authInfo) {
-		WifiAsWanFragment wawFrag = new WifiAsWanFragment();
+	public static WifiClientFragment newInstance(AuthInfo authInfo) {
+		WifiClientFragment wawFrag = new WifiClientFragment();
 
 		Bundle args = new Bundle();
 		args.putParcelable("authInfo", authInfo);
@@ -123,7 +123,7 @@ public class WifiAsWanFragment extends ListFragment implements
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		// Inflate the layout for this fragment
-		return inflater.inflate(R.layout.fragment_wlan, container, false);
+		return inflater.inflate(R.layout.fragment_wificlient, container, false);
 	}
 
 	@Override
@@ -311,7 +311,8 @@ public class WifiAsWanFragment extends ListFragment implements
 			TextView dropdownItem = (TextView) rowView
 					.findViewById(android.R.id.text1);
 			String text;
-			Log.i(CommandCenterActivity.TAG, "Inflating dropdown position "+position);
+			Log.i(CommandCenterActivity.TAG, "Inflating dropdown position "
+					+ position);
 			switch (position) {
 			case WIFICLIENT_WAN:
 				text = context.getResources().getString(R.string.wifiwan_title);
@@ -584,7 +585,7 @@ public class WifiAsWanFragment extends ListFragment implements
 					}
 				}
 			}
-			WifiAsWanFragment.this.wanprofiles = wanprofiles;
+			WifiClientFragment.this.wanprofiles = wanprofiles;
 		}
 	}
 
@@ -624,11 +625,40 @@ public class WifiAsWanFragment extends ListFragment implements
 
 	@Override
 	public boolean onNavigationItemSelected(int itemPosition, long itemId) {
+
 		/*
 		 * switch (itemPosition) { case WIFICLIENT_DISABLED: case
 		 * WIFICLIENT_WAN: case WIFICLIENT_BRIDGE:
 		 * getActivity().setTitle(title); }
 		 */
 		return true;
+	}
+
+	/**
+	 * Listener for a Client type change to Disabled, WAN or Bridge.
+	 * @author mjperez
+	 *
+	 */
+	private class ClientChangePutRequestListener implements
+			RequestListener<Response> {
+
+		@Override
+		public void onRequestFailure(SpiceException e) {
+			Log.w(CommandCenterActivity.TAG,
+					"Failed to update the WiFi Client type!");
+			Toast.makeText(getActivity(),
+					"Failed to update the WiFi Client type.",
+					Toast.LENGTH_SHORT).show();
+		}
+
+		@Override
+		public void onRequestSuccess(Response clientChange) {
+			Log.i(CommandCenterActivity.TAG, "Updated the WiFi Client type.");
+			 //WWAN wwan = (WWAN) wanProfileList.getData();
+			 
+			// oast.makeText(getActivity(), "POST successful.",
+			// Toast.LENGTH_LONG)
+			// .show();
+		}
 	}
 }

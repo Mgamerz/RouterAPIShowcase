@@ -25,7 +25,7 @@ import com.cs481.mobilemapper.fragments.WifiClientFragment;
 import com.cs481.mobilemapper.responses.config.wwan.WANProfile;
 import com.cs481.mobilemapper.responses.status.wlan.WAP;
 
-public class WifiWanDialogFragment extends DialogFragment {
+public class WifiClientChangeDialog extends DialogFragment {
 	private WAP wap;
 	private AuthInfo authInfo;
 	private WifiClientFragment hostingFragment;
@@ -33,7 +33,7 @@ public class WifiWanDialogFragment extends DialogFragment {
 	/**
 	 * This constructor must be empty or the Fragment won't be able to start.
 	 */
-	public WifiWanDialogFragment() {
+	public WifiClientChangeDialog() {
 		Log.i(CommandCenterActivity.TAG, "Created fragment.");
 		// context = getActivity();
 	}
@@ -41,8 +41,8 @@ public class WifiWanDialogFragment extends DialogFragment {
 	/**
 	 * This constructor must be empty or the Fragment won't be able to start.
 	 */
-	public static WifiWanDialogFragment newInstance(WifiClientFragment wawf) {
-		WifiWanDialogFragment wwdf = new WifiWanDialogFragment();
+	public static WifiClientChangeDialog newInstance(WifiClientFragment wawf) {
+		WifiClientChangeDialog wwdf = new WifiClientChangeDialog();
 		wwdf.hostingFragment = wawf;
 		return wwdf;
 	}
@@ -78,67 +78,19 @@ public class WifiWanDialogFragment extends DialogFragment {
 		
 		dialogBuilder.setDividerColor(typedValue.resourceId);
 		dialogBuilder.setTitleColor(typedValue.resourceId);
-		//dialogBuilder.setTitleColor(getResources().getString(R.color.Black));
-		String title = wap.getSsid();
-		boolean hiddenSsid = false; // used to show the SSID field
-		if (title.equals("")) {
-			title = "Hidden SSID";
-			hiddenSsid = true;
-		}
-
-		dialogBuilder.setTitle(title);
-		LayoutInflater inflater = getActivity().getLayoutInflater();
-
-		// Inflate and set the layout for the dialog
-		// Pass null as the parent view because its going in the dialog layout
-		View dialogView = inflater.inflate(R.layout.dialog_wifiwan, null);
-
-		if (!hiddenSsid) {
-			Log.i(CommandCenterActivity.TAG, "Not a hidden SSID");
-			LinearLayout layout = (LinearLayout) dialogView
-					.findViewById(R.id.wapconnect_ssidlayout);
-			layout.setVisibility(LinearLayout.GONE);
-			Log.i(CommandCenterActivity.TAG, "Layout visibility: "+layout.getVisibility());
-		}
-		
-		if (wap.getAuthmode().equals("none")){
-			RelativeLayout passwordLayout = (RelativeLayout) dialogView.findViewById(R.id.wapconnect_passwordlayout);
-			passwordLayout.setVisibility(RelativeLayout.GONE);
-		} else {
-			TextView warning = (TextView) dialogView.findViewById(R.id.wapconnect_insecure_text);
-			warning.setVisibility(TextView.GONE);
-		}
-
-		// Get dynamic content, set font to BOLD
-		SpannableString securityString = new SpannableString(wap.getAuthmode());
-		securityString.setSpan(new StyleSpan(Typeface.BOLD), 0,
-				securityString.length(), 0);
-
-		SpannableString signalString = new SpannableString(
-				Utility.rssiToSignalLiteral(wap.getRssi(), getResources()));
-		signalString.setSpan(new StyleSpan(Typeface.BOLD), 0,
-				signalString.length(), 0);
-
-		// Set the dynamic content
-		TextView securityType = (TextView) dialogView
-				.findViewById(R.id.wapconnect_securitytype_value);
-		securityType.setText(securityString);
-
-		TextView signalStrength = (TextView) dialogView
-				.findViewById(R.id.wapconnect_signalstrength_value);
-		signalStrength.setText(signalString);
-		dialogBuilder.setCustomView(dialogView);
+		dialogBuilder.setMessage(String.format("Are you sure you want to change the Wireless Client mode to %s","herp"));
 
 		//setup buttons
-		dialogBuilder.setPositiveButton(R.string.connect,
+		dialogBuilder.setPositiveButton(android.R.string.yes,
 				new DialogInterface.OnClickListener() {
 
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
 						// TODO Auto-generated method stub
-						Toast.makeText(getActivity(), getResources().getString(R.string.connecting_as_wan),
-								Toast.LENGTH_LONG).show();
-						connectAsWan(wap);
+						/*Toast.makeText(getActivity(), getResources().getString(R.string.connecting_as_wan),
+								Toast.LENGTH_LONG).show(); */
+						Toast.makeText(getActivity(), "Changing WiFi client mode...", Toast.LENGTH_LONG).show();
+						//hostingFragment.commitClientChange();
 					}
 				});
 
@@ -147,6 +99,7 @@ public class WifiWanDialogFragment extends DialogFragment {
 
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
+						//hostingFragment.revertClientChange();
 						dialog.dismiss();
 					}
 				});

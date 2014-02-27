@@ -169,7 +169,7 @@ public class DashboardFragment extends ListFragment {
 			break;
 		case lWLAN: {
 			Log.i(CommandCenterActivity.TAG, "WLAN WAS CLICKED");
-			WifiAsWanFragment wlanFragment = WifiAsWanFragment
+			WifiClientFragment wlanFragment = WifiClientFragment
 					.newInstance(authInfo);
 
 			// In case this activity was started with special instructions from
