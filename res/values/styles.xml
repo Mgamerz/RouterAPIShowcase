@@ -55,7 +55,7 @@
         <item name="android:textStyle">bold</item>
         <item name="android:shadowColor">#000</item>
         <item name="android:shadowRadius">2</item>
-        <item name="android:background">@drawable/red_button_theme</item>
+        <item name="android:background">@drawable/theme_button_red</item>
         <item name="android:layout_marginLeft">5dp</item>
     </style>
 
