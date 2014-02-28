@@ -30,7 +30,12 @@ public final class LogMessageDeserializer extends JsonDeserializer<LogMessage> {
 		logMessage.setSeverity(iterator.next().toString());
 		logMessage.setTag(iterator.next().toString());
 		logMessage.setMessage(iterator.next().toString());
-		logMessage.setUnknown(null);
+		JsonNode trace = iterator.next();
+		if (trace != null){
+			logMessage.setTrace(trace.toString());
+		} else {
+			logMessage.setTrace(null);
+		}
 		
 		
 		return logMessage;

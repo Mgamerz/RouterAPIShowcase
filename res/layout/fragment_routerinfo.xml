@@ -94,7 +94,7 @@
             android:layout_alignLeft="@id/mac_address_value"
             android:layout_below="@id/mac_address_text"
             android:text="@string/loading" />
-        
+
         <TextView
             android:id="@+id/numclients_text"
             style="@style/TextTheme"
@@ -111,6 +111,13 @@
             android:layout_alignLeft="@id/mac_address_value"
             android:layout_below="@id/uptime_value"
             android:text="@string/loading" />
+
+        <FrameLayout
+            android:id="@+id/log_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/numclients_value" >
+        </FrameLayout>
     </RelativeLayout>
 
 </ScrollView>

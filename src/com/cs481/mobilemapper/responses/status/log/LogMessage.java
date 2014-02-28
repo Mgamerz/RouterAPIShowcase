@@ -14,7 +14,7 @@ public class LogMessage {
 	private String severity;
 	private String tag;
 	private String message;
-	private Object unknown; // "null", not sure what this is.
+	private String trace; // traceback, can be null.
 
 	public double getTimeStamp() {
 		return timeStamp;
@@ -48,12 +48,12 @@ public class LogMessage {
 		this.message = message;
 	}
 
-	public Object getUnknown() {
-		return unknown;
+	public String getTrace() {
+		return trace;
 	}
 
-	public void setUnknown(Object unknown) {
-		this.unknown = unknown;
+	public void setTrace(String trace) {
+		this.trace = trace;
 	}
 
 	public LogMessage() {

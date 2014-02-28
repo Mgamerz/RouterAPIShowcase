@@ -12,7 +12,7 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * Jackson deserializer for our unkeyed log object.
@@ -32,12 +32,14 @@ public final class LogsDeserializer extends JsonDeserializer<Logs> {
 
 		// Build the log object manually...
 		Iterator<JsonNode> iterator = node.elements();
-
-		//while (iterator.hasNext()){
-			//JsonNode node = JsonNode.next();
-		//}
-		//timestamp
 		ArrayList<LogMessage> messages = new ArrayList<LogMessage>();
+		ObjectMapper mapper = new ObjectMapper();
+		while (iterator.hasNext()){
+			JsonNode logNode = iterator.next();
+			LogMessage message = mapper.readValue(logNode.toString(), LogMessage.class);
+			Log.i(CommandCenterActivity.TAG, message.toString());
+		}
+		//timestamp
 		
 		//ArrayList<JsonNode> logJson = iterator.next();
 		//new ArrayNode();

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="5dp" >
+
+    <TextView
+        android:id="@+id/listview_title"
+        style="@style/TextTheme"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Item Header"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <TextView
+        android:id="@+id/listview_subtitle"
+        style="@style/SubTextTheme"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Other information here"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+
+</LinearLayout>
