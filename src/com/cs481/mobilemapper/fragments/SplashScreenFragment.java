@@ -11,26 +11,37 @@ import android.view.View.OnClickListener;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
+/**
+ * This is the first screen the user sees.
+ * @author: Sasa Rkman
+ */
+
 public class SplashScreenFragment extends Fragment {
+	
+	// Has the fragment animated?
+	boolean hasAnimated = false;
 	
 	ImageView ecm_button;
     ImageView local_button;
     TextView ecm_text;
     TextView local_text;
+    
+	Animation zoomAnim;
+	Animation fadeAnim;
 	
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-        Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    	super.onCreate(savedInstanceState);
         // Inflate the layout for this fragment
     	View view = inflater.inflate(R.layout.fragment_splashscreen, container, false);
+    	
         ecm_button = (ImageView) view.findViewById(R.id.button_ecm);
         local_button = (ImageView) view.findViewById(R.id.button_local);
+        
+        // Used only in animate()
         ecm_text = (TextView) view.findViewById(R.id.text_ecm);
         local_text = (TextView) view.findViewById(R.id.text_local);
     	
@@ -54,26 +65,37 @@ public class SplashScreenFragment extends Fragment {
 			}
         });
         
+        // If an instance was saved, then fragment MUST have animated
+        if (savedInstanceState != null) {
+        	hasAnimated = true;
+        }
+        
     	return view;
     }
     
     @Override
     public void onStart(){
     	super.onStart();
-    	//Should retreive the 'animation finished' boolean in a call before this (such as onCreateView()) so it doens't keep playing if the screen rotates.
     	animate();
     }
     
-    // Called in LoginActivity
+    // Animates the fragment
     public void animate(){
-    	Animation zoomAnim = AnimationUtils.loadAnimation(getActivity(),R.anim.zoom_in);
-    	Animation fadeAnim = AnimationUtils.loadAnimation(getActivity(),R.anim.fade_in);
+    	zoomAnim = AnimationUtils.loadAnimation(getActivity(),R.anim.zoom_in);
+    	fadeAnim = AnimationUtils.loadAnimation(getActivity(),R.anim.fade_in);
+    	
+    	// This makes the fill effects of the animation permanent after initial rotation
+    	if(hasAnimated) {
+    		zoomAnim.setDuration(0);
+    		fadeAnim.setDuration(0);
+    	}
+    	
+    	// Start zoom in on the cloud and city images
 		ecm_button.startAnimation(zoomAnim);
 		local_button.startAnimation(zoomAnim);
+		
+		// Start fade in on the ECM and Local texts
 		ecm_text.startAnimation(fadeAnim);
 		local_text.startAnimation(fadeAnim);
-		
-		
-		//shakeAnimation.setFillAfter(true);
     }
 }
