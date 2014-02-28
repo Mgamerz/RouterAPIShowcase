@@ -7,7 +7,7 @@ import java.util.TimeZone;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
-@JsonDeserialize(using = LogDeserializer.class)
+@JsonDeserialize(using = LogMessageDeserializer.class)
 public class LogMessage {
 
 	private double timeStamp;
@@ -62,8 +62,8 @@ public class LogMessage {
 	
 	public String getDateString(){
 		//This might need to be localized.
-		long seconds = (long) getTimeStamp(); //we don't really care about milliseconds
-		long millis = seconds * 1000;
+		double seconds = getTimeStamp(); 
+		long millis = (long) (seconds * 1000); //saves some precision... not all of it as we don't have nanoseconds.
 		Date date = new Date(millis);
 		SimpleDateFormat sdf = new SimpleDateFormat("EEEE,MMMM d,yyyy h:mm:ss,a", Locale.ENGLISH);
 		sdf.setTimeZone(TimeZone.getTimeZone("UTC"));

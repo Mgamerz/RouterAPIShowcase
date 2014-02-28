@@ -1,38 +1,50 @@
 package com.cs481.mobilemapper.responses.status.log;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Iterator;
+
+import android.util.Log;
+
+import com.cs481.mobilemapper.activities.CommandCenterActivity;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
-
-import java.io.IOException;
-import java.util.Iterator;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 
 /**
  * Jackson deserializer for our unkeyed log object.
  */
-public final class LogDeserializer extends JsonDeserializer<LogMessage> {
+public final class LogsDeserializer extends JsonDeserializer<Logs> {
 	@Override
-	public LogMessage deserialize(final JsonParser jp,
+	public Logs deserialize(final JsonParser jp,
 			final DeserializationContext ctxt) throws IOException {
 
 		final JsonNode node = jp.readValueAs(JsonNode.class);
 		if (!node.isContainerNode() || !node.isArray())
 			throw new JsonMappingException("expected an array");
-		LogMessage logMessage = new LogMessage();
+		Logs logs = new Logs();
+
+		
+		Log.i(CommandCenterActivity.TAG, "Starting LOGS deserialization.");
 
 		// Build the log object manually...
 		Iterator<JsonNode> iterator = node.elements();
-		
+
+		//while (iterator.hasNext()){
+			//JsonNode node = JsonNode.next();
+		//}
 		//timestamp
-		logMessage.setTimeStamp(iterator.next().asDouble());
-		logMessage.setSeverity(iterator.next().toString());
-		logMessage.setTag(iterator.next().toString());
-		logMessage.setMessage(iterator.next().toString());
-		logMessage.setUnknown(null);
+		ArrayList<LogMessage> messages = new ArrayList<LogMessage>();
+		
+		//ArrayList<JsonNode> logJson = iterator.next();
+		//new ArrayNode();
+		
+		logs.setLogs(messages);
 		
 		
-		return logMessage;
+		return logs;
 	}
 }
