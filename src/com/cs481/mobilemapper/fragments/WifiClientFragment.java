@@ -44,6 +44,7 @@ import com.cs481.mobilemapper.dialog.WifiWanDialogFragment;
 import com.cs481.mobilemapper.listrows.WlanListRow;
 import com.cs481.mobilemapper.responses.GetRequest;
 import com.cs481.mobilemapper.responses.PostRequest;
+import com.cs481.mobilemapper.responses.PutRequest;
 import com.cs481.mobilemapper.responses.Response;
 import com.cs481.mobilemapper.responses.config.wwan.Radio;
 import com.cs481.mobilemapper.responses.config.wwan.WANProfile;
@@ -180,6 +181,11 @@ public class WifiClientFragment extends ListFragment implements
 																				// dropdown
 																				// list
 																				// appear
+		
+		//set the title before we set the callbacks.
+		sa.getActionBar().setSelectedNavigationItem(currentClientMode);
+		
+		
 		sa.getActionBar().setListNavigationCallbacks(mSpinnerAdapter, this);
 		sa.getActionBar().setDisplayShowTitleEnabled(false);
 		sa.setTitle(getResources().getString(R.string.wifiwan_title)); // TODO
@@ -190,11 +196,22 @@ public class WifiClientFragment extends ListFragment implements
 		spiceManager = sa.getSpiceManager();
 		if (shouldLoadData) {
 			readWlanWANConfig(true);
+			readClientMode();
 			shouldLoadData = false;
 		} else {
 			Log.i(CommandCenterActivity.TAG, waps.toString());
 			updateWapList(waps);
 		}
+	}
+
+	private void readClientMode() {
+		// TODO Auto-generated method stub
+		GetRequest clientModeReq = new GetRequest(authInfo,
+				"config/wwan/radio/0/mode", String.class, "ConfigClientGet");
+		String lastRequestCacheKey = clientModeReq.createCacheKey();
+		spiceManager.execute(clientModeReq, lastRequestCacheKey,
+				DurationInMillis.ALWAYS_EXPIRED,
+				new WIFIClientModeGetRequestListener());
 	}
 
 	public class WlanAdapter extends ArrayAdapter<WlanListRow> {
@@ -651,33 +668,65 @@ public class WifiClientFragment extends ListFragment implements
 
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		Log.i(CommandCenterActivity.TAG, "Activity result.");
 		switch (requestCode) {
 		case WAN_CHANGE_FRAGMENT:
 
 			if (resultCode == Activity.RESULT_OK) {
 				// After Ok code.
 				Log.i(CommandCenterActivity.TAG, "user pressed ok");
+				currentClientMode = getActivity().getActionBar()
+						.getSelectedNavigationIndex();
+				temporaryClientMode = -1;
+				
+				//Send data to server to change modes
+				String newMode = getClientMode();
+				PutRequest profilesRequest = new PutRequest(newMode, authInfo, "config/wwan/radio/0/mode", String.class);
+
+				spiceManager.execute(profilesRequest,
+						profilesRequest.createCacheKey(),
+						DurationInMillis.ALWAYS_EXPIRED,
+						new WIFIClientModePutRequestListener());
+
 			} else if (resultCode == Activity.RESULT_CANCELED) {
 				// After Cancel code.
 				Log.i(CommandCenterActivity.TAG, "user pressed cancel");
-
+				currentClientMode = temporaryClientMode;
+				temporaryClientMode = -1;
+				getActivity().getActionBar().setSelectedNavigationItem(
+						currentClientMode);
 			}
 
 			break;
 		}
 	}
 
+	/**
+	 * Translates the items in the dropdown list to their respected string names on the router. 
+	 * @return name of string to put to the router to set that mode.
+	 */
+	private String getClientMode() {
+		// TODO Auto-generated method stub
+		int selected = getActivity().getActionBar()
+				.getSelectedNavigationIndex();
+		Resources resources = getResources();
+		switch (selected) {
+		case WIFICLIENT_WAN:
+			return resources.getString(R.string.wwan);
+		case WIFICLIENT_BRIDGE:
+			return resources.getString(R.string.bridged);
+		default:
+			return resources.getString(R.string.disabled);
+		}
+	}
+
 	@Override
 	public boolean onNavigationItemSelected(int itemPosition, long itemId) {
-
-		/*
-		 * switch (itemPosition) { case WIFICLIENT_DISABLED: case
-		 * WIFICLIENT_WAN: case WIFICLIENT_BRIDGE:
-		 * getActivity().setTitle(title); }
-		 */
 		if (itemPosition == currentClientMode) {
 			return true; // nothing changed.
 		}
+		
+		Log.w(CommandCenterActivity.TAG, "Changing from mode "+currentClientMode+" to mode "+itemPosition);
 		temporaryClientMode = itemPosition;
 		FragmentTransaction ft = getActivity().getSupportFragmentManager()
 				.beginTransaction();
@@ -690,7 +739,7 @@ public class WifiClientFragment extends ListFragment implements
 
 		DialogFragment dialogFrag = WifiClientChangeDialog
 				.newInstance(dropdownToString(itemPosition));
-		dialogFrag.setTargetFragment(this, WAN_CONNECT_FRAGMENT);
+		dialogFrag.setTargetFragment(this, WAN_CHANGE_FRAGMENT);
 		dialogFrag.show(ft, "dialog");
 
 		return true;
@@ -702,7 +751,7 @@ public class WifiClientFragment extends ListFragment implements
 	 * @author mjperez
 	 * 
 	 */
-	private class ClientChangePutRequestListener implements
+	private class WIFIClientModePutRequestListener implements
 			RequestListener<Response> {
 
 		@Override
@@ -717,11 +766,7 @@ public class WifiClientFragment extends ListFragment implements
 		@Override
 		public void onRequestSuccess(Response clientChange) {
 			Log.i(CommandCenterActivity.TAG, "Updated the WiFi Client type.");
-			// WWAN wwan = (WWAN) wanProfileList.getData();
-
-			// oast.makeText(getActivity(), "POST successful.",
-			// Toast.LENGTH_LONG)
-			// .show();
+			
 		}
 	}
 }

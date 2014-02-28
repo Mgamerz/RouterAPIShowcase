@@ -65,6 +65,9 @@
     <string name="wlan_hidden_ssid">&lt;Hidden&gt;</string>
     <string name="wifi">WiFi</string>
     <string name="warning_clientchange">Router Client Mode Change</string>
+    <string name="disabled">disabled</string>
+    <string name="bridged">bridge</string>
+    <string name="wwan">wwan</string>
 
     <!-- WifiAsWanDialog -->
     <string name="excellent">Excellent</string>
