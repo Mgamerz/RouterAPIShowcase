@@ -255,7 +255,7 @@ public class RouterInfoFragment extends Fragment {
 					View v = getView();
 					TextView textVal = (TextView) v.findViewById(R.id.uptime_value);
 					if(textVal!=null){
-						textVal.setText(DurationFormatUtils.formatDuration((long)sys.getUptime()*1000, "d ' Days,' H 'Hours, 'm 'Minutes, ' s 'Seconds'"));
+						textVal.setText(DurationFormatUtils.formatDuration((long)sys.getUptime()*1000, "d 'Days,' H 'Hours, 'm 'Minutes, ' s 'Seconds'"));
 					}
 				} else {
 					Toast.makeText(getActivity(), response.getResponseInfo().getReason(),
