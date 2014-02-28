@@ -98,6 +98,9 @@ public class WifiClientFragment extends ListFragment implements
 			currentClientMode = savedInstanceState.getInt("currentClientMode");
 			temporaryClientMode = savedInstanceState
 					.getInt("temporaryClientMode");
+
+			Log.i(CommandCenterActivity.TAG, "current: " + currentClientMode
+					+ ", temp: " + temporaryClientMode);
 		} else {
 			Bundle passedArgs = getArguments();
 			if (passedArgs != null) {
@@ -181,11 +184,10 @@ public class WifiClientFragment extends ListFragment implements
 																				// dropdown
 																				// list
 																				// appear
-		
-		//set the title before we set the callbacks.
-		sa.getActionBar().setSelectedNavigationItem(currentClientMode);
-		
-		
+
+		// set the title before we set the callbacks.
+		// sa.getActionBar().setListNavigationCallbacks(mSpinnerAdapter, null);
+
 		sa.getActionBar().setListNavigationCallbacks(mSpinnerAdapter, this);
 		sa.getActionBar().setDisplayShowTitleEnabled(false);
 		sa.setTitle(getResources().getString(R.string.wifiwan_title)); // TODO
@@ -199,8 +201,15 @@ public class WifiClientFragment extends ListFragment implements
 			readClientMode();
 			shouldLoadData = false;
 		} else {
-			Log.i(CommandCenterActivity.TAG, waps.toString());
+			// Log.i(CommandCenterActivity.TAG, waps.toString());
 			updateWapList(waps);
+			if (temporaryClientMode != -1) {
+				sa.getActionBar().setSelectedNavigationItem(temporaryClientMode);
+			} else {
+				sa.getActionBar().setSelectedNavigationItem(currentClientMode);
+
+			}
+
 		}
 	}
 
@@ -671,17 +680,17 @@ public class WifiClientFragment extends ListFragment implements
 		Log.i(CommandCenterActivity.TAG, "Activity result.");
 		switch (requestCode) {
 		case WAN_CHANGE_FRAGMENT:
-
 			if (resultCode == Activity.RESULT_OK) {
 				// After Ok code.
 				Log.i(CommandCenterActivity.TAG, "user pressed ok");
 				currentClientMode = getActivity().getActionBar()
 						.getSelectedNavigationIndex();
 				temporaryClientMode = -1;
-				
-				//Send data to server to change modes
+
+				// Send data to server to change modes
 				String newMode = getClientMode();
-				PutRequest profilesRequest = new PutRequest(newMode, authInfo, "config/wwan/radio/0/mode", String.class);
+				PutRequest profilesRequest = new PutRequest(newMode, authInfo,
+						"config/wwan/radio/0/mode", String.class);
 
 				spiceManager.execute(profilesRequest,
 						profilesRequest.createCacheKey(),
@@ -690,9 +699,13 @@ public class WifiClientFragment extends ListFragment implements
 
 			} else if (resultCode == Activity.RESULT_CANCELED) {
 				// After Cancel code.
-				Log.i(CommandCenterActivity.TAG, "user pressed cancel");
-				currentClientMode = temporaryClientMode;
+				Log.i(CommandCenterActivity.TAG,
+						"user pressed cancel, mode now " + currentClientMode);
+				//currentClientMode = temporaryClientMode;
 				temporaryClientMode = -1;
+				Log.i(CommandCenterActivity.TAG, "reverted mode, mode now "
+						+ currentClientMode);
+
 				getActivity().getActionBar().setSelectedNavigationItem(
 						currentClientMode);
 			}
@@ -702,7 +715,9 @@ public class WifiClientFragment extends ListFragment implements
 	}
 
 	/**
-	 * Translates the items in the dropdown list to their respected string names on the router. 
+	 * Translates the items in the dropdown list to their respected string names
+	 * on the router.
+	 * 
 	 * @return name of string to put to the router to set that mode.
 	 */
 	private String getClientMode() {
@@ -725,8 +740,9 @@ public class WifiClientFragment extends ListFragment implements
 		if (itemPosition == currentClientMode) {
 			return true; // nothing changed.
 		}
-		
-		Log.w(CommandCenterActivity.TAG, "Changing from mode "+currentClientMode+" to mode "+itemPosition);
+
+		Log.w(CommandCenterActivity.TAG, "Changing from mode "
+				+ currentClientMode + " to mode " + itemPosition);
 		temporaryClientMode = itemPosition;
 		FragmentTransaction ft = getActivity().getSupportFragmentManager()
 				.beginTransaction();
@@ -766,7 +782,7 @@ public class WifiClientFragment extends ListFragment implements
 		@Override
 		public void onRequestSuccess(Response clientChange) {
 			Log.i(CommandCenterActivity.TAG, "Updated the WiFi Client type.");
-			
+
 		}
 	}
 }

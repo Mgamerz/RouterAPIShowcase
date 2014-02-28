@@ -1,7 +1,6 @@
 package com.cs481.mobilemapper.activities;
 
 import android.support.v4.app.FragmentActivity;
-import android.util.Log;
 
 import com.cs481.mobilemapper.CCSpiceService;
 import com.octo.android.robospice.SpiceManager;
@@ -19,7 +18,6 @@ public class SpiceActivity extends FragmentActivity {
 	@Override
 	protected void onStart() {
 	  super.onStart();
-	  Log.i(CommandCenterActivity.TAG, "Spice manager: "+spiceManager);
 	  spiceManager.start(this);
 	}
 

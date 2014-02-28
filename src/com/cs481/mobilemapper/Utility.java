@@ -53,14 +53,14 @@ public class Utility {
 	public static String normalizeECM(ObjectMapper mapper, String str) {
 		try {
 			JsonNode root = mapper.readTree(str);
-			Log.w(CommandCenterActivity.TAG, "Json Tree:");
-			Log.w(CommandCenterActivity.TAG, root.toString());
+			//Log.w(CommandCenterActivity.TAG, "Json Tree:");
+			//Log.w(CommandCenterActivity.TAG, root.toString());
 			root = root.get("data");
-			Log.w(CommandCenterActivity.TAG, "Descend to data:");
-			Log.w(CommandCenterActivity.TAG, root.toString());
+			//Log.w(CommandCenterActivity.TAG, "Descend to data:");
+			//Log.w(CommandCenterActivity.TAG, root.toString());
 			root = root.get(0);
-			Log.w(CommandCenterActivity.TAG, "Descend to index 0:");
-			Log.w(CommandCenterActivity.TAG, root.toString());
+			//Log.w(CommandCenterActivity.TAG, "Descend to index 0:");
+			//Log.w(CommandCenterActivity.TAG, root.toString());
 			return root.toString();
 		} catch (JsonProcessingException e) {
 			// TODO Auto-generated catch block
