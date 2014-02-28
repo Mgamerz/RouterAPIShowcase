@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center"
+    android:gravity="top|center"
     android:orientation="vertical" >
 
     <FrameLayout
@@ -13,10 +13,21 @@
 
         <ImageView
             android:id="@+id/button_ecm"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:layout_gravity="center"
             android:src="@drawable/ic_splash_clouds" />
+
+        <TextView
+            android:id="@+id/text_ecm"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top|center"
+            android:visibility="invisible"
+            android:text="@string/splash_text_ecm"
+            android:textColor="@color/White"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+
     </FrameLayout>
 
     <FrameLayout
@@ -27,10 +38,21 @@
 
         <ImageView
             android:id="@+id/button_local"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:layout_gravity="center"
             android:src="@drawable/ic_splash_city" />
+
+        <TextView
+            android:id="@+id/text_local"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|center"
+            android:visibility="invisible"
+            android:text="@string/splash_text_local"
+            android:textColor="@color/White"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+
     </FrameLayout>
 
 </LinearLayout>

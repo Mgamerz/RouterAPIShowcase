@@ -132,6 +132,8 @@
     <!-- Splash Screen -->
     <string name="splash_button_ecm">ECM</string>
     <string name="splash_button_local">Local</string>
+    <string name="splash_text_ecm">ECM</string>
+    <string name="splash_text_local">Local</string>
 
     <!-- Router Info -->
     <string name="routerinfo">Router Information</string>
