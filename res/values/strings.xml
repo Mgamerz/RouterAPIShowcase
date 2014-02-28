@@ -58,13 +58,13 @@
     <string name="wifiwan_title">WiFi as WAN</string>
     <string name="wifibridge_title">WiFi as Bridge</string>
     <string name="wificlient_title">WiFi Client</string>
-
     <string name="wifimenu_sort_signal">Sort by signal</string>
     <string name="wifi_sort_alphabetically">Sort by name</string>
     <string name="wlan_reading">Reading WLAN Configuration</string>
     <string name="wlan_get_config_failure">Failed to read WLANconfiguration</string>
     <string name="wlan_hidden_ssid">&lt;Hidden&gt;</string>
     <string name="wifi">WiFi</string>
+    <string name="warning_clientchange">Router Client Mode Change</string>
 
     <!-- WifiAsWanDialog -->
     <string name="excellent">Excellent</string>
@@ -80,8 +80,7 @@
     <string name="security_type">SecurityType</string>
     <string name="password">Password</string>
     <string name="show_password">Show Password</string>
-        <string name="wan_allow_roaming">Match only the SSID</string>
-    
+    <string name="wan_allow_roaming">Match only the SSID</string>
     <string name="connecting_as_wan">Connecting as WAN&#8230;</string>
 
     <!-- LED Control -->
@@ -169,8 +168,6 @@
         <item>2</item>
         <item>3</item>
     </string-array>
-    
-    
     <string-array name="wificlient_values">
         <item>WiFi Client</item>
         <item>WiFi as Bridge</item>

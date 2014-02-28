@@ -35,6 +35,7 @@ public class WifiWanDialogFragment extends DialogFragment {
 	private AuthInfo authInfo;
 	private WifiClientFragment hostingFragment;
 
+
 	/**
 	 * This constructor must be empty or the Fragment won't be able to start.
 	 */

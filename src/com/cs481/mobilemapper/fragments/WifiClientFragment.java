@@ -15,6 +15,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.ListFragment;
 import android.util.Log;
 import android.view.ContextThemeWrapper;
@@ -36,6 +39,7 @@ import com.cs481.mobilemapper.R;
 import com.cs481.mobilemapper.Utility;
 import com.cs481.mobilemapper.activities.CommandCenterActivity;
 import com.cs481.mobilemapper.activities.SpiceActivity;
+import com.cs481.mobilemapper.dialog.WifiClientChangeDialog;
 import com.cs481.mobilemapper.dialog.WifiWanDialogFragment;
 import com.cs481.mobilemapper.listrows.WlanListRow;
 import com.cs481.mobilemapper.responses.GetRequest;
@@ -53,11 +57,13 @@ import com.octo.android.robospice.request.listener.RequestListener;
 
 public class WifiClientFragment extends ListFragment implements
 		OnRefreshListener, ActionBar.OnNavigationListener {
-	private static final int WANDIALOG_FRAGMENT = 0;
 
 	private final int WIFICLIENT_DISABLED = 0;
 	private final int WIFICLIENT_WAN = 1;
 	private final int WIFICLIENT_BRIDGE = 2;
+
+	public static final int WAN_CONNECT_FRAGMENT = 1;
+	public static final int WAN_CHANGE_FRAGMENT = 2;
 
 	private PullToRefreshLayout mPullToRefreshLayout;
 	private ProgressDialog progressDialog;
@@ -71,6 +77,8 @@ public class WifiClientFragment extends ListFragment implements
 	private boolean wifiStateEnabled = false;
 	private ArrayList<WANProfile> wanprofiles;
 	private SpinnerAdapter mSpinnerAdapter;
+	private int temporaryClientMode = -1;
+	private int currentClientMode = 0;
 	private Menu menu;
 
 	@Override
@@ -86,6 +94,9 @@ public class WifiClientFragment extends ListFragment implements
 			wifiStateEnabled = savedInstanceState
 					.getBoolean("wifiStateEnabled");
 			wifiState = savedInstanceState.getBoolean("wifiState");
+			currentClientMode = savedInstanceState.getInt("currentClientMode");
+			temporaryClientMode = savedInstanceState
+					.getInt("temporaryClientMode");
 		} else {
 			Bundle passedArgs = getArguments();
 			if (passedArgs != null) {
@@ -117,6 +128,8 @@ public class WifiClientFragment extends ListFragment implements
 		outState.putBoolean("shouldLoadData", shouldLoadData);
 		outState.putBoolean("wifiState", wifiState);
 		outState.putBoolean("wifiStateEnabled", wifiStateEnabled);
+		outState.putInt("currentClientMode", currentClientMode);
+		outState.putInt("temporaryClientMode", temporaryClientMode);
 	}
 
 	@Override
@@ -270,20 +283,7 @@ public class WifiClientFragment extends ListFragment implements
 					parent, false);
 			TextView title = (TextView) rowView
 					.findViewById(R.id.actionbar_title);
-			switch (position) {
-			case WIFICLIENT_WAN:
-				title.setText(context.getResources().getString(
-						R.string.wifiwan_title));
-				break;
-			case WIFICLIENT_BRIDGE:
-				title.setText(context.getResources().getString(
-						R.string.wifibridge_title));
-				break;
-			default:
-				title.setText(context.getResources().getString(
-						R.string.wificlient_title));
-				break;
-			}
+			title.setText(dropdownToString(position));
 
 			TextView subtitleView = (TextView) rowView
 					.findViewById(R.id.actionbar_subtitle);
@@ -310,26 +310,22 @@ public class WifiClientFragment extends ListFragment implements
 
 			TextView dropdownItem = (TextView) rowView
 					.findViewById(android.R.id.text1);
-			String text;
-			Log.i(CommandCenterActivity.TAG, "Inflating dropdown position "
-					+ position);
-			switch (position) {
-			case WIFICLIENT_WAN:
-				text = context.getResources().getString(R.string.wifiwan_title);
-				break;
-			case WIFICLIENT_BRIDGE:
-				text = context.getResources().getString(
-						R.string.wifibridge_title);
-				break;
-			default:
-				text = context.getResources().getString(
-						R.string.wificlient_title);
-				break;
-			}
+			String text = dropdownToString(position);
 			dropdownItem.setText(text);
 			return dropdownItem;
 
 			// return super.getView(position, null, parent);
+		}
+	}
+
+	private String dropdownToString(int position) {
+		switch (position) {
+		case WIFICLIENT_WAN:
+			return getResources().getString(R.string.wifiwan_title);
+		case WIFICLIENT_BRIDGE:
+			return getResources().getString(R.string.wifibridge_title);
+		default:
+			return getResources().getString(R.string.wificlient_title);
 		}
 	}
 
@@ -414,8 +410,53 @@ public class WifiClientFragment extends ListFragment implements
 				StatusWlan wlan = (StatusWlan) response.getData();
 				Log.i(CommandCenterActivity.TAG, "WLAN request successful");
 				updateWlanList(wlan);
-				Log.i(CommandCenterActivity.TAG, "isRefresh(): "
-						+ mPullToRefreshLayout.isRefreshing());
+			} else {
+
+				Toast.makeText(getActivity(),
+						response.getResponseInfo().getReason(),
+						Toast.LENGTH_LONG).show();
+			}
+			mPullToRefreshLayout.setRefreshComplete();
+
+		}
+	}
+
+	private class WIFIClientModeGetRequestListener implements
+			RequestListener<Response> {
+
+		@Override
+		public void onRequestFailure(SpiceException e) {
+			Resources resources = getResources();
+			Log.i(CommandCenterActivity.TAG,
+					"Failed to read the client wan mode!");
+			Toast.makeText(getActivity(),
+					resources.getString(R.string.wlan_get_config_failure),
+					Toast.LENGTH_SHORT).show();
+			mPullToRefreshLayout.setRefreshComplete();
+		}
+
+		@Override
+		public void onRequestSuccess(Response response) {
+			// update your UI
+
+			if (response.getResponseInfo().getSuccess()) {
+				String currentMode = (String) response.getData();
+
+				// convert string to position of the dropdown list.
+				int position = 0;
+				if (currentMode.equals("bridge")) {
+					position = WIFICLIENT_BRIDGE;
+				} else if (currentMode.equals("wwan")) {
+					position = WIFICLIENT_WAN;
+				} else {
+					position = WIFICLIENT_DISABLED;
+				}
+
+				getActivity().getActionBar()
+						.setSelectedNavigationItem(position);
+				currentClientMode = position;
+				Log.i(CommandCenterActivity.TAG,
+						"WWAN Mode get request successful");
 			} else {
 
 				Toast.makeText(getActivity(),
@@ -611,12 +652,15 @@ public class WifiClientFragment extends ListFragment implements
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		switch (requestCode) {
-		case WANDIALOG_FRAGMENT:
+		case WAN_CHANGE_FRAGMENT:
 
 			if (resultCode == Activity.RESULT_OK) {
 				// After Ok code.
+				Log.i(CommandCenterActivity.TAG, "user pressed ok");
 			} else if (resultCode == Activity.RESULT_CANCELED) {
 				// After Cancel code.
+				Log.i(CommandCenterActivity.TAG, "user pressed cancel");
+
 			}
 
 			break;
@@ -631,13 +675,32 @@ public class WifiClientFragment extends ListFragment implements
 		 * WIFICLIENT_WAN: case WIFICLIENT_BRIDGE:
 		 * getActivity().setTitle(title); }
 		 */
+		if (itemPosition == currentClientMode) {
+			return true; // nothing changed.
+		}
+		temporaryClientMode = itemPosition;
+		FragmentTransaction ft = getActivity().getSupportFragmentManager()
+				.beginTransaction();
+		Fragment prev = getActivity().getSupportFragmentManager()
+				.findFragmentByTag("dialog");
+		if (prev != null) {
+			ft.remove(prev);
+		}
+		ft.addToBackStack(null);
+
+		DialogFragment dialogFrag = WifiClientChangeDialog
+				.newInstance(dropdownToString(itemPosition));
+		dialogFrag.setTargetFragment(this, WAN_CONNECT_FRAGMENT);
+		dialogFrag.show(ft, "dialog");
+
 		return true;
 	}
 
 	/**
 	 * Listener for a Client type change to Disabled, WAN or Bridge.
+	 * 
 	 * @author mjperez
-	 *
+	 * 
 	 */
 	private class ClientChangePutRequestListener implements
 			RequestListener<Response> {
@@ -654,8 +717,8 @@ public class WifiClientFragment extends ListFragment implements
 		@Override
 		public void onRequestSuccess(Response clientChange) {
 			Log.i(CommandCenterActivity.TAG, "Updated the WiFi Client type.");
-			 //WWAN wwan = (WWAN) wanProfileList.getData();
-			 
+			// WWAN wwan = (WWAN) wanProfileList.getData();
+
 			// oast.makeText(getActivity(), "POST successful.",
 			// Toast.LENGTH_LONG)
 			// .show();
