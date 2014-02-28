@@ -15,15 +15,24 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 public class SplashScreenFragment extends Fragment {
+	
+	ImageView ecm_button;
+    ImageView local_button;
+    TextView ecm_text;
+    TextView local_text;
+	
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
         Bundle savedInstanceState) {
         // Inflate the layout for this fragment
     	View view = inflater.inflate(R.layout.fragment_splashscreen, container, false);
-        ImageView ecm_button = (ImageView) view.findViewById(R.id.button_ecm);
-        ImageView local_button = (ImageView) view.findViewById(R.id.button_local);
+        ecm_button = (ImageView) view.findViewById(R.id.button_ecm);
+        local_button = (ImageView) view.findViewById(R.id.button_local);
+        ecm_text = (TextView) view.findViewById(R.id.text_ecm);
+        local_text = (TextView) view.findViewById(R.id.text_local);
     	
         ecm_button.setOnClickListener(new OnClickListener(){
 			@Override
@@ -57,10 +66,14 @@ public class SplashScreenFragment extends Fragment {
     
     // Called in LoginActivity
     public void animate(){
-    	FrameLayout ecm = (FrameLayout) getView().findViewById(
-				R.id.button_ecm_layout);
-    	Animation shakeAnimation = AnimationUtils.loadAnimation(getActivity(),
-				R.anim.animation_shake);
-		ecm.startAnimation(shakeAnimation);
+    	Animation zoomAnim = AnimationUtils.loadAnimation(getActivity(),R.anim.zoom_in);
+    	Animation fadeAnim = AnimationUtils.loadAnimation(getActivity(),R.anim.fade_in);
+		ecm_button.startAnimation(zoomAnim);
+		local_button.startAnimation(zoomAnim);
+		ecm_text.startAnimation(fadeAnim);
+		local_text.startAnimation(fadeAnim);
+		
+		
+		//shakeAnimation.setFillAfter(true);
     }
 }
