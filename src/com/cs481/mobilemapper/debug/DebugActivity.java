@@ -8,12 +8,8 @@ import com.cs481.mobilemapper.AuthInfo;
 import com.cs481.mobilemapper.R;
 import com.cs481.mobilemapper.activities.CommandCenterActivity;
 import com.cs481.mobilemapper.activities.SpiceActivity;
-import com.cs481.mobilemapper.responses.ecm.routers.Router;
-import com.cs481.mobilemapper.responses.ecm.routers.Routers;
 
 public class DebugActivity extends SpiceActivity {
-	private Routers routers; //used if ECM login is called
-	private Router router;
 	private AuthInfo authInfo;
 	public boolean create_new = false;
 
@@ -37,22 +33,5 @@ public class DebugActivity extends SpiceActivity {
 	@Override
 	public void onStart() {
 		super.onStart();
-	}
-
-	public Routers getRouters() {
-		return routers;
-	}
-
-	public void setRouters(Routers routers) {
-		this.routers = routers;
-	}
-
-	public void setRouter(Router router) {
-		// TODO Auto-generated method stub
-		this.router = router;
-	}
-
-	public Router getRouter() {
-		return router;
 	}
 }
