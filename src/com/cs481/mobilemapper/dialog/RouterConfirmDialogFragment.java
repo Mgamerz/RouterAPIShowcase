@@ -47,8 +47,10 @@ public class RouterConfirmDialogFragment extends DialogFragment {
         HoloDialogBuilder  alertDialogBuilder = new HoloDialogBuilder(getActivity());
         alertDialogBuilder.setTitle(router.getName());
         Resources resources = getResources();
-        alertDialogBuilder.setTitleColor(resources.getString(R.color.Cradlepoint));
-        alertDialogBuilder.setDividerColor(resources.getString(R.color.Cradlepoint));
+        
+        // THIS MAY NEED TO GET CHANGED (following two lines):
+        alertDialogBuilder.setTitleColor(resources.getString(R.color.CradlepointRed));
+        alertDialogBuilder.setDividerColor(resources.getString(R.color.CradlepointRed));
         
         LayoutInflater inflator = getActivity().getLayoutInflater();
         final View v = inflator.inflate(R.layout.dialog_routerconfirm, null);
