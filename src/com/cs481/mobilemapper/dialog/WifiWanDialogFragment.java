@@ -126,7 +126,7 @@ public class WifiWanDialogFragment extends DialogFragment {
 				       if(isChecked) {
 		                    password.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
 		                } else {
-		                    password.setInputType(129);
+		                    password.setInputType(129); //mask password. don't know why its a number
 		                }
 					
 				}

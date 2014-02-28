@@ -33,6 +33,15 @@
         android:text="Signal Strength" />
 
     <TextView
+        android:id="@+id/wapconnect_signalstrength_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/wapconnect_securitytype_value"
+        android:layout_alignTop="@+id/wapconnect_signalstrength_text"
+        android:text="SSValue"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <TextView
         android:id="@+id/wapconnect_securitytype_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -52,42 +61,53 @@
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <TextView
-        android:id="@+id/wapconnect_password_text"
+        android:id="@+id/wapconnect_insecure_text"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@id/wapconnect_securitytype_text"
-        android:layout_below="@+id/wapconnect_securitytype_value"
-        android:layout_marginTop="10dp"
-        android:text="Password" />
-
-    <EditText
-        android:id="@+id/wapconnect_password_field"
-        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/wapconnect_securitytype_value"
-        android:layout_alignLeft="@id/wapconnect_securitytype_value"
-        android:ems="10"
-        android:hint="Password"
-        android:inputType="textPersonName" >
-
-        <requestFocus />
-    </EditText>
+        android:text="@string/wan_connection_insecure" />
 
     <CheckBox
-        android:id="@+id/wapconnect_showpassword"
+        android:id="@+id/wapconnect_roaming"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/wapconnect_password_field"
+        android:layout_below="@+id/wapconnect_insecure_text"
         android:paddingLeft="10dp"
-        android:text="Show password" />
+        android:text="@string/wan_allow_roaming" />
 
-    <TextView
-        android:id="@+id/wapconnect_signalstrength_value"
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:id="@+id/wapconnect_passwordlayout"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/wapconnect_securitytype_value"
-        android:layout_alignTop="@+id/wapconnect_signalstrength_text"
-        android:text="SSValue"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:layout_below="@id/wapconnect_roaming"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/wapconnect_password_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_marginTop="10dp"
+            android:text="@string/password" />
+
+        <EditText
+            android:id="@+id/wapconnect_password_field"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/wapconnect_password_text"
+            android:ems="10"
+            android:hint="@string/password"
+            android:inputType="textPassword" >
+        </EditText>
+
+        <CheckBox
+            android:id="@+id/wapconnect_showpassword"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/wapconnect_password_field"
+            android:paddingLeft="10dp"
+            android:layout_centerHorizontal="true"
+            android:text="@string/show_password" />
+    </RelativeLayout>
 
 </RelativeLayout>
