@@ -78,6 +78,16 @@ public class WAP implements Parcelable {
 	public void setType(String type){
 		this.type = type;
 	}
+	
+	/**
+	 * Get's the cipher that this WAP uses when authenticating. It is the final part of the 'authmode' variable.
+	 * @return cipher string
+	 */
+    public String getCipher(){
+    	String[] parts = authmode.split("/");
+    	String cipher = parts[parts.length-1];
+    	return cipher;
+    }
 
 	public WAP(){
 		//empty constructor for jackson
@@ -123,4 +133,16 @@ public class WAP implements Parcelable {
             return new WAP[size];
         }
     };
+
+    /**
+     * Returns the authentication type on this network, like wpa2psk, or wep. It removes the cipher.
+     * @return
+     */
+	public String getSecurityType() {
+    	String[] parts = authmode.split("/");
+    	String security = parts[0];
+    	return security;
+	}
+    
+
 }

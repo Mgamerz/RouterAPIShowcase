@@ -69,12 +69,20 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/wapconnect_securitytype_value"
             android:text="@string/wan_connection_insecure" />
+        
+        <CheckBox
+                android:id="@+id/wapconnect_roaming"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/wapconnect_insecure_text"
+                android:paddingLeft="10dp"
+                android:text="@string/wan_allow_roaming" />
 
         <RelativeLayout
             android:id="@+id/wapconnect_passwordlayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/wapconnect_insecure_text"
+            android:layout_below="@id/wapconnect_roaming"
             android:orientation="vertical" >
 
             <TextView

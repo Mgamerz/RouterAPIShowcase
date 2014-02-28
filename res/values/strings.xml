@@ -80,6 +80,8 @@
     <string name="security_type">SecurityType</string>
     <string name="password">Password</string>
     <string name="show_password">Show Password</string>
+        <string name="wan_allow_roaming">Match only the SSID</string>
+    
     <string name="connecting_as_wan">Connecting as WAN&#8230;</string>
 
     <!-- LED Control -->
