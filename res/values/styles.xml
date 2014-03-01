@@ -1,114 +1,118 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-<!--
+    <!--
     Base application theme, dependent on API level. This theme is replaced
     by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
--->
-<style name="AppBaseTheme" parent="@android:Theme.Holo.Light">
-    <!--
+    -->
+    <style name="AppBaseTheme" parent="@android:Theme.Holo.Light">
+        <!--
         Theme customizations available in newer API levels can go in
         res/values-vXX/styles.xml, while customizations related to
         backward-compatibility can go here.
-    -->
-</style>
+        -->
+    </style>
 
-<!-- Mobile Mapper code goes below. -->
-<!-- Application theme. -->
-<style name="RedAppTheme" parent="@style/AppBaseTheme">
-    <item name="android:windowBackground">@color/CradlepointRed</item>
-    <item name="android:buttonStyle">@style/RedButtonTheme</item>
-</style>
+    <!-- Mobile Mapper code goes below. -->
+    <!-- Application theme. -->
+    <style name="RedAppTheme" parent="@style/AppBaseTheme">
+        <item name="android:windowBackground">@color/CradlepointRed</item>
+        <item name="android:buttonStyle">@style/RedButtonTheme</item>
+    </style>
 
-<style name="BlueAppTheme" parent="@style/AppBaseTheme">
-    <item name="android:windowBackground">@color/CradlepointBlue</item>
-    <item name="android:buttonStyle">@style/BlueButtonTheme</item>
-</style>
+    <style name="BlueAppTheme" parent="@style/AppBaseTheme">
+        <item name="android:windowBackground">@color/CradlepointBlue</item>
+        <item name="android:buttonStyle">@style/BlueButtonTheme</item>
+    </style>
 
-<style name="GreenAppTheme" parent="@style/AppBaseTheme">
-    <item name="android:windowBackground">@color/CradlepointGreen</item>
-    <item name="android:buttonStyle">@style/GreenButtonTheme</item>
-</style>
+    <style name="GreenAppTheme" parent="@style/AppBaseTheme">
+        <item name="android:windowBackground">@color/CradlepointGreen</item>
+        <item name="android:buttonStyle">@style/GreenButtonTheme</item>
+    </style>
 
-<style name="BlackAppTheme" parent="@style/AppBaseTheme">
-    <item name="android:windowBackground">@color/Black</item>
-    <item name="android:buttonStyle">@style/BlackButtonTheme</item>
-</style>
+    <style name="BlackAppTheme" parent="@style/AppBaseTheme">
+        <item name="android:windowBackground">@color/Black</item>
+        <item name="android:buttonStyle">@style/BlackButtonTheme</item>
+    </style>
 
+    <!-- Button theme -->
+    <style name="ButtonTheme" parent="@android:style/Widget.Button">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">#FFF</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:shadowColor">#000</item>
+        <item name="android:shadowRadius">2</item>
+    </style>
 
+    <!-- Button sub themes -->
+    <style name="RedButtonTheme" parent="@style/ButtonTheme">
+        <item name="android:background">@drawable/theme_button_red</item>
+    </style>
 
-<!-- Button theme -->
-<style name="ButtonTheme" parent="@android:style/Widget.Button">
-    <item name="android:layout_width">wrap_content</item>
-    <item name="android:layout_height">wrap_content</item>
-    <item name="android:textColor">#FFF</item>
-    <item name="android:gravity">center</item>
-    <item name="android:textSize">12sp</item>
-    <item name="android:textStyle">bold</item>
-    <item name="android:shadowColor">#000</item>
-    <item name="android:shadowRadius">2</item>
-</style>
+    <style name="BlueButtonTheme" parent="@style/ButtonTheme">
+        <item name="android:background">@drawable/theme_button_blue</item>
+    </style>
 
-<!-- Button sub themes -->
-<style name="RedButtonTheme" parent="@style/ButtonTheme">
-    <item name="android:background">@drawable/theme_button_red</item>
-</style>
-<style name="BlueButtonTheme" parent="@style/ButtonTheme">
-    <item name="android:background">@drawable/theme_button_blue</item>
-</style>
-<style name="GreenButtonTheme" parent="@style/ButtonTheme">
-    <item name="android:background">@drawable/theme_button_green</item>
-</style>
-<style name="BlackButtonTheme" parent="@style/ButtonTheme">
-    <item name="android:background">@drawable/theme_button_black</item>
-</style>
+    <style name="GreenButtonTheme" parent="@style/ButtonTheme">
+        <item name="android:background">@drawable/theme_button_green</item>
+    </style>
 
-<!-- TextView (not dialog!) theme -->
-<style name="TextTheme" parent="@android:style/Widget.TextView">
-    <item name="android:textColor">@color/selector_textcolor</item>
-</style>
+    <style name="BlackButtonTheme" parent="@style/ButtonTheme">
+        <item name="android:background">@drawable/theme_button_black</item>
+    </style>
 
-<!-- TextView SUBTEXT (subtitle) (not dialog!) theme -->
-<style name="SubTextTheme" parent="@android:style/Widget.TextView">
-    <item name="android:textColor">@color/DimmedWhite</item>
-</style>
+    <!-- TextView (not dialog!) theme -->
+    <style name="TextTheme" parent="@android:style/Widget.TextView">
+        <item name="android:textColor">@color/selector_textcolor</item>
+    </style>
 
-<!-- Hint Text -->
-<style name="RedHintTextTheme" parent="@android:style/Widget.TextView">
-    <item name="android:textColor">@color/White</item>
-</style>
+    <!-- TextView SUBTEXT (subtitle) (not dialog!) theme -->
+    <style name="SubTextTheme" parent="@android:style/Widget.TextView">
+        <item name="android:textColor">@color/DimmedWhite</item>
+    </style>
 
-<!-- EditText theme -->
-<style name="RedEditTextTheme" parent="@android:style/Widget.EditText">
-    <item name="android:textColor">@color/White</item>
-    <item name="android:textColorHint">#CCCCCC</item>
-</style>
+    <!-- Hint Text -->
+    <style name="RedHintTextTheme" parent="@android:style/Widget.TextView">
+        <item name="android:textColor">@color/White</item>
+    </style>
 
-<!-- Checkbox Theme -->
-<style name="RedCheckBoxTheme" parent="@android:style/Widget.CompoundButton.CheckBox">
-    <item name="android:textColor">@color/White</item>
-</style>
+    <!-- EditText theme -->
+    <style name="RedEditTextTheme" parent="@android:style/Widget.EditText">
+        <item name="android:textColor">@color/White</item>
+        <item name="android:textColorHint">#CCCCCC</item>
+        <item name="android:textCursorDrawable">@null</item>
+        <item name="android:editTextBackground">@drawable/edittext_dark</item>
+    </style>
 
-<!-- ListView Theme -->
-<style name="ListViewTheme" parent="@android:style/Widget.Holo.Light.ListView">
-    <item name="android:divider">@color/TransparentWhite</item>
-    <item name="android:dividerHeight">1px</item>
-    <item name="android:scrollbarSize">4dp</item>
-    <item name="android:scrollbarThumbVertical">@drawable/scrollbar</item>
-</style>
+    <!-- Checkbox Theme -->
+    <style name="RedCheckBoxTheme" parent="@android:style/Widget.CompoundButton.CheckBox">
+        <item name="android:textColor">@color/White</item>
+    </style>
 
-<!-- Dialog Theme -->
-<style name="RedDialogTheme" parent="@android:style/Theme.Holo.Light.Dialog">
+    <!-- ListView Theme -->
+    <style name="ListViewTheme" parent="@android:style/Widget.Holo.Light.ListView">
+        <item name="android:divider">@color/TransparentWhite</item>
+        <item name="android:dividerHeight">1px</item>
+        <item name="android:scrollbarSize">4dp</item>
+        <item name="android:listSelector">@drawable/listview_background</item>
+        <item name="android:scrollbarThumbVertical">@drawable/scrollbar</item>
+    </style>
 
-    <!-- <item name="android:windowContentOverlay">@null</item> -->
-    <item name="android:windowBackground">@android:color/transparent</item>
-    <!-- <item name="android:colorBackground">@null</item> -->
-    <item name="android:textColor">#550000</item>
-</style>
+    <!-- Dialog Theme -->
+    <style name="RedDialogTheme" parent="@android:style/Theme.Holo.Light.Dialog">
 
-<!-- Actionbar Item Theme -->
-<style name="RedActionBarItemTheme">
-    <item name="android:text">@color/Black</item>
-    <item name="android:textColor">@color/Black</item>
-</style>
+        <!-- <item name="android:windowContentOverlay">@null</item> -->
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <!-- <item name="android:colorBackground">@null</item> -->
+        <item name="android:textColor">#550000</item>
+    </style>
+
+    <!-- Actionbar Item Theme -->
+    <style name="RedActionBarItemTheme">
+        <item name="android:text">@color/Black</item>
+        <item name="android:textColor">@color/Black</item>
+    </style>
 
 </resources>

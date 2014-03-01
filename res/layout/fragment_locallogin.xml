@@ -50,10 +50,10 @@
         <EditText
             android:id="@+id/router_ip"
             style="@style/RedEditTextTheme"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:digits="0123456789."
-            android:ems="10"
+            android:ems="16"
             android:gravity="center"
             android:hint="@string/routerip_hint"
             android:inputType="numberDecimal"
@@ -72,8 +72,6 @@
         android:imeActionLabel="@string/connect"
         android:imeOptions="actionSend"
         android:inputType="textPassword" >
-
-        <requestFocus />
     </EditText>
 
     <LinearLayout

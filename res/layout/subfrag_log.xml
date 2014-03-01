@@ -10,18 +10,33 @@
     <ListView
         android:id="@android:id/list"
         style="@style/ListViewTheme"
-        android:paddingBottom="0dp"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+        android:layout_height="match_parent"
+        android:paddingBottom="0dp" >
     </ListView>
 
-    <TextView
+    <LinearLayout
         android:id="@id/android:empty"
-        style="@style/TextTheme"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="center"
         android:gravity="center"
-        android:text="No logs to display right now." />
+        android:orientation="horizontal" >
+
+        <ProgressBar
+            android:id="@+id/log_loadingprogressbar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center" />
+
+        <TextView
+            android:id="@+id/log_loadingtext"
+            style="@style/TextTheme"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="@string/loading_logs" />
+    </LinearLayout>
 
 </uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout>

@@ -18,8 +18,9 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -53,11 +54,11 @@ public class LogSubfragment extends ListFragment implements OnRefreshListener {
 		if (savedInstanceState != null) {
 			logs = savedInstanceState.getParcelableArrayList("logs");
 			shouldLoadData = savedInstanceState.getBoolean("shouldLoadData");
+			authInfo = savedInstanceState.getParcelable("authInfo");
 		} else {
 			Bundle passedArgs = getArguments();
 			if (passedArgs != null) {
 				authInfo = passedArgs.getParcelable("authInfo");
-
 			}
 		}
 	}
@@ -89,6 +90,7 @@ public class LogSubfragment extends ListFragment implements OnRefreshListener {
 														// the logs object. The
 														// LogMessage object
 														// must be parcelable
+		outState.putParcelable("authInfo", authInfo);
 	}
 
 	@Override
@@ -204,6 +206,12 @@ public class LogSubfragment extends ListFragment implements OnRefreshListener {
 					resources.getString(R.string.log_get_failed),
 					Toast.LENGTH_SHORT).show();
 			mPullToRefreshLayout.setRefreshComplete();
+			
+			ProgressBar bar = (ProgressBar) getView().findViewById(R.id.log_loadingprogressbar);
+			bar.setVisibility(ProgressBar.GONE);
+			
+			TextView message = (TextView) getView().findViewById(R.id.log_loadingtext);
+			message.setText(getActivity().getResources().getString(R.string.log_get_failed));
 		}
 
 		@Override
@@ -243,14 +251,20 @@ public class LogSubfragment extends ListFragment implements OnRefreshListener {
 
 	@Override
 	public boolean onContextItemSelected(MenuItem item) {
+		AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item
+				.getMenuInfo(); // info is the item in the adapter that was
+								// selected (long pressed.)
+		LogMessage messageSelected = logs.get(info.position);
 		switch (item.getItemId()) {
 		case R.id.contextmenu_copy:
 			// Gets a handle to the clipboard service.
-			ClipboardManager clipboard = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
+			ClipboardManager clipboard = (ClipboardManager) getActivity()
+					.getSystemService(Context.CLIPBOARD_SERVICE);
 			// Creates a new text clip to put on the clipboard
-			//ClipData clip = ClipData.newPlainText("logmessage",
-			//		);
-			//clipboard.setPrimaryClip(clip);
+			ClipData clip = ClipData.newPlainText("logmessage",
+					messageSelected.toString());
+			clipboard.setPrimaryClip(clip);
+			Toast.makeText(getActivity(), getActivity().getResources().getString(R.string.log_copied), Toast.LENGTH_LONG).show();
 			return true;
 		default:
 			return false;

@@ -9,6 +9,8 @@
     <color name="CradlepointGreenHigh">#5DF934</color>
     <color name="White">#FFFFFF</color>
     <color name="DimmedWhite">#BBBBBB</color>
+    <color name="TransparentWhite">#22FFFFFF</color>
+    <color name="SelectedWhite">#10FFFFFF</color>
     <color name="Ivory">#FFFFF0</color>
     <color name="LightYellow">#FFFFE0</color>
     <color name="Yellow">#FFFF00</color>
