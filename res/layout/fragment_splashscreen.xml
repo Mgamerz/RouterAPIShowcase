@@ -16,7 +16,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center"
-            android:alpha="0.5"
             android:src="@drawable/ic_splash_clouds" />
 
         <TextView
@@ -41,7 +40,6 @@
             android:id="@+id/button_local"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:alpha="0.5"
             android:src="@drawable/ic_splash_city" />
 
         <TextView

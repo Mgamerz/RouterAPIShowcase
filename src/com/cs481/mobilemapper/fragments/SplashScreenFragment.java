@@ -4,7 +4,9 @@ import com.cs481.mobilemapper.R;
 import com.cs481.mobilemapper.dialog.PreferredConnectionDialog;
 import com.cs481.mobilemapper.dialog.RouterConfirmDialogFragment;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
@@ -47,13 +49,16 @@ public class SplashScreenFragment extends Fragment {
         ecm_text = (TextView) view.findViewById(R.id.text_ecm);
         local_text = (TextView) view.findViewById(R.id.text_local);
     	
+        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
+        
         ecm_button.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View arg) {
 				// Display the preferred connection dialog
-				// if(SHOW AGAIN?)...
-				PreferredConnectionDialog rcFragment = PreferredConnectionDialog.newInstance("ECM");
-				rcFragment.show(getFragmentManager(), "PreferredConnection");		
+				if(!prefs.getBoolean("prefs_connection_dontAskAgain", false)) {
+					PreferredConnectionDialog rcFragment = PreferredConnectionDialog.newInstance("ECM");
+					rcFragment.show(getActivity().getSupportFragmentManager(), "PreferredConnection");	
+				}
 				
 				// Load the ECM login fragment
 				ECMLoginFragment ecmLoginFragment = new ECMLoginFragment();
@@ -67,9 +72,10 @@ public class SplashScreenFragment extends Fragment {
 			@Override
 			public void onClick(View arg) {
 				// Display the preferred connection dialog
-				// if(SHOW AGAIN?)...
-				PreferredConnectionDialog rcFragment = PreferredConnectionDialog.newInstance("Local Router");
-				rcFragment.show(getFragmentManager(), "PreferredConnection");
+				if(!prefs.getBoolean("prefs_connection_dontAskAgain", false)) {
+					PreferredConnectionDialog rcFragment = PreferredConnectionDialog.newInstance("Local Router");
+					rcFragment.show(getActivity().getSupportFragmentManager(), "PreferredConnection");	
+				}
 				
 				// Load the local login fragment
 				LocalLoginFragment localLoginFragment = new LocalLoginFragment();

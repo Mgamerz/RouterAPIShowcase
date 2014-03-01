@@ -1,11 +1,15 @@
 package com.cs481.mobilemapper.dialog;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.DialogFragment;
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -39,7 +43,7 @@ public class PreferredConnectionDialog extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         HoloDialogBuilder alertDialogBuilder = new HoloDialogBuilder(getActivity());
         alertDialogBuilder.setTitle(connectionType + " Connection");
-        Resources resources = getResources();
+        final Resources resources = getResources();
         
         // THIS MAY NEED TO GET CHANGED (following two lines):
         alertDialogBuilder.setTitleColor(resources.getString(R.color.CradlepointRed));
@@ -53,11 +57,17 @@ public class PreferredConnectionDialog extends DialogFragment {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				//Check to see if the 'save profile' is selected.
-				CheckBox askAgain = (CheckBox) v.findViewById(R.id.checkbox_donotaskagain);
-				if (askAgain.isChecked()){
-					Profile profile = new Profile();
-					Utility.saveProfile(profile);
+				CheckBox dontAskAgain = (CheckBox) v.findViewById(R.id.checkbox_donotaskagain);
+			
+				SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
+				SharedPreferences.Editor editor = prefs.edit();
+				
+				if (dontAskAgain.isChecked()){
+					editor.putBoolean("prefs_connection_dontAskAgain", true);
 				}
+				
+				editor.putString("prefs_connection_type", connectionType);
+				editor.commit();
 				
 				Intent intent = new Intent(getActivity(), CommandCenterActivity.class);
 				intent.putExtra("ab_subtitle", connectionType); //changes subtitle.
