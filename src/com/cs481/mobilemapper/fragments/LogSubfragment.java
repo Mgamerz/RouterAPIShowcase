@@ -5,12 +5,17 @@ import java.util.ArrayList;
 import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
 import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
 import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -22,9 +27,6 @@ import com.cs481.mobilemapper.AuthInfo;
 import com.cs481.mobilemapper.R;
 import com.cs481.mobilemapper.activities.CommandCenterActivity;
 import com.cs481.mobilemapper.activities.SpiceActivity;
-import com.cs481.mobilemapper.fragments.WifiClientFragment.WlanAdapter;
-import com.cs481.mobilemapper.listrows.LogListRow;
-import com.cs481.mobilemapper.listrows.WlanListRow;
 import com.cs481.mobilemapper.responses.GetRequest;
 import com.cs481.mobilemapper.responses.Response;
 import com.cs481.mobilemapper.responses.status.log.LogMessage;
@@ -34,8 +36,7 @@ import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
 
-public class LogSubfragment extends ListFragment implements
-		OnRefreshListener {
+public class LogSubfragment extends ListFragment implements OnRefreshListener {
 
 	private PullToRefreshLayout mPullToRefreshLayout;
 	private SpiceManager spiceManager;
@@ -48,6 +49,7 @@ public class LogSubfragment extends ListFragment implements
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setHasOptionsMenu(true);
+
 		if (savedInstanceState != null) {
 			logs = savedInstanceState.getParcelableArrayList("logs");
 			shouldLoadData = savedInstanceState.getBoolean("shouldLoadData");
@@ -70,6 +72,11 @@ public class LogSubfragment extends ListFragment implements
 		return wawFrag;
 	}
 
+	public void onActivityCreated(Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
+		registerForContextMenu(getListView());
+	}
+
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
@@ -78,7 +85,10 @@ public class LogSubfragment extends ListFragment implements
 		// Android.
 		Log.i(CommandCenterActivity.TAG, "Saving logs instance");
 		outState.putBoolean("shouldLoadData", shouldLoadData);
-		outState.putParcelableArrayList("logs", logs); //This is how to save the logs object. The LogMessage object must be parcelable
+		outState.putParcelableArrayList("logs", logs); // This is how to save
+														// the logs object. The
+														// LogMessage object
+														// must be parcelable
 	}
 
 	@Override
@@ -127,16 +137,14 @@ public class LogSubfragment extends ListFragment implements
 	 */
 	private void readLogs() {
 		// TODO Auto-generated method stub
-		GetRequest clientModeReq = new GetRequest(authInfo,
-				"status/log", Logs.class, "LogsGet");
+		GetRequest clientModeReq = new GetRequest(authInfo, "status/log",
+				Logs.class, "LogsGet");
 		String lastRequestCacheKey = clientModeReq.createCacheKey();
 		spiceManager.execute(clientModeReq, lastRequestCacheKey,
-				DurationInMillis.ALWAYS_EXPIRED,
-				new LogsGetRequestListener());
+				DurationInMillis.ALWAYS_EXPIRED, new LogsGetRequestListener());
 	}
 
-	
-	//This adapter needs to be finished.
+	// This adapter needs to be finished.
 	public class LogAdapter extends ArrayAdapter<LogMessage> {
 		private final Context context;
 		private final ArrayList<LogMessage> rows;
@@ -157,19 +165,22 @@ public class LogSubfragment extends ListFragment implements
 			LayoutInflater inflater = (LayoutInflater) context
 					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-			View rowView = inflater.inflate(R.layout.listrow_log,
-					parent, false);
+			View rowView = inflater
+					.inflate(R.layout.listrow_log, parent, false);
 
-			//Setup log stuff here. rowView is the container for each individual log in the list, so you can call
+			// Setup log stuff here. rowView is the container for each
+			// individual log in the list, so you can call
 			// v.findViewById(<id here>) to find sub elements to set.
-			
+
 			LogMessage log = rows.get(position);
-			
-			TextView messageView = (TextView) rowView.findViewById(R.id.log_message);
+
+			TextView messageView = (TextView) rowView
+					.findViewById(R.id.log_message);
 			TextView tagView = (TextView) rowView.findViewById(R.id.log_tag);
-			TextView severityView = (TextView) rowView.findViewById(R.id.log_severity);
+			TextView severityView = (TextView) rowView
+					.findViewById(R.id.log_severity);
 			TextView timeView = (TextView) rowView.findViewById(R.id.log_time);
-			
+
 			messageView.setText(log.getMessage());
 			tagView.setText(log.getTag());
 			severityView.setText(log.getSeverity());
@@ -183,8 +194,7 @@ public class LogSubfragment extends ListFragment implements
 		readLogs();
 	}
 
-	private class LogsGetRequestListener implements
-			RequestListener<Response> {
+	private class LogsGetRequestListener implements RequestListener<Response> {
 
 		@Override
 		public void onRequestFailure(SpiceException e) {
@@ -211,10 +221,10 @@ public class LogSubfragment extends ListFragment implements
 			mPullToRefreshLayout.setRefreshComplete();
 		}
 	}
-	
+
 	private void updateLogsList(ArrayList<LogMessage> logs) {
 		// TODO Auto-generated method stub
-		//this.logs = logs;
+		// this.logs = logs;
 		this.logs = logs;
 		if (adapter == null) {
 			adapter = new LogAdapter(getActivity(), logs);
@@ -223,10 +233,27 @@ public class LogSubfragment extends ListFragment implements
 		adapter.notifyDataSetChanged();
 	}
 
+	@Override
+	public void onCreateContextMenu(ContextMenu menu, View v,
+			ContextMenu.ContextMenuInfo menuInfo) {
+		// when a context menu is being created
+		MenuInflater inflater = getActivity().getMenuInflater();
+		inflater.inflate(R.menu.log_contextmenu, menu);
+	}
 
 	@Override
-	public void onListItemClick(ListView l, View v, int position, long id) {
-		LogListRow row = (LogListRow) (l.getAdapter().getItem(position));
-		//do something here. it might be best to do onLongClick() instead
+	public boolean onContextItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case R.id.contextmenu_copy:
+			// Gets a handle to the clipboard service.
+			ClipboardManager clipboard = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
+			// Creates a new text clip to put on the clipboard
+			//ClipData clip = ClipData.newPlainText("logmessage",
+			//		);
+			//clipboard.setPrimaryClip(clip);
+			return true;
+		default:
+			return false;
+		}
 	}
 }

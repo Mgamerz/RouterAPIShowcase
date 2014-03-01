@@ -68,11 +68,6 @@ public class PreferredConnectionDialog extends DialogFragment {
 				
 				editor.putString("prefs_connection_type", connectionType);
 				editor.commit();
-				
-				Intent intent = new Intent(getActivity(), CommandCenterActivity.class);
-				intent.putExtra("ab_subtitle", connectionType); //changes subtitle.
-				startActivity(intent);
-				getActivity().finish();
 			}
 		});
         

@@ -183,5 +183,6 @@
         <item>WiFi as Bridge</item>
         <item>WiFi as WAN</item>
     </string-array>
+        <string name="contextmenu_copy">Copy Log Message</string>
 
 </resources>
