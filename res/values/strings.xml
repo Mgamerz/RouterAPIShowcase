@@ -134,6 +134,10 @@
     <string name="splash_button_local">Local</string>
     <string name="splash_text_ecm">ECM</string>
     <string name="splash_text_local">Local</string>
+    
+    <!-- Preferred Connection Dialog -->
+    <string name="text_preferredconnection">Is this your preferred connection?</string>
+    <string name="checkbox_donotaskagain">Do not ask again</string>
 
     <!-- Router Info -->
     <string name="routerinfo">Router Information</string>

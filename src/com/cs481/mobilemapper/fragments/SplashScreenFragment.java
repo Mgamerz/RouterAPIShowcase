@@ -1,6 +1,8 @@
 package com.cs481.mobilemapper.fragments;
 
 import com.cs481.mobilemapper.R;
+import com.cs481.mobilemapper.dialog.PreferredConnectionDialog;
+import com.cs481.mobilemapper.dialog.RouterConfirmDialogFragment;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -48,6 +50,12 @@ public class SplashScreenFragment extends Fragment {
         ecm_button.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View arg) {
+				// Display the preferred connection dialog
+				// if(SHOW AGAIN?)...
+				PreferredConnectionDialog rcFragment = PreferredConnectionDialog.newInstance("ECM");
+				rcFragment.show(getFragmentManager(), "PreferredConnection");		
+				
+				// Load the ECM login fragment
 				ECMLoginFragment ecmLoginFragment = new ECMLoginFragment();
 				FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
 				transaction.replace(R.id.login_fragment, ecmLoginFragment);
@@ -58,6 +66,12 @@ public class SplashScreenFragment extends Fragment {
         local_button.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View arg) {
+				// Display the preferred connection dialog
+				// if(SHOW AGAIN?)...
+				PreferredConnectionDialog rcFragment = PreferredConnectionDialog.newInstance("Local Router");
+				rcFragment.show(getFragmentManager(), "PreferredConnection");
+				
+				// Load the local login fragment
 				LocalLoginFragment localLoginFragment = new LocalLoginFragment();
 				FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
 				transaction.replace(R.id.login_fragment, localLoginFragment);
