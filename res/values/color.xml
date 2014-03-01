@@ -153,6 +153,5 @@
     <color name="Navy">#000080</color>
     <color name="Black">#000000</color>
     <color name="SubtitleBlack">#99000000</color>
-    <color name="TransparentWhite">#99FFFFFF</color>
 
 </resources>
