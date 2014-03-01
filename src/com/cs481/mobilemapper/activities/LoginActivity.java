@@ -8,6 +8,7 @@ import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 
 import roboguice.util.temp.Ln;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -29,6 +30,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.cs481.mobilemapper.AuthInfo;
 import com.cs481.mobilemapper.Cryptography;
@@ -38,7 +40,12 @@ import com.cs481.mobilemapper.Utility;
 import com.cs481.mobilemapper.debug.DebugActivity;
 import com.cs481.mobilemapper.fragments.PINFragment;
 import com.cs481.mobilemapper.fragments.SplashScreenFragment;
-import com.cs481.mobilemapper.listrows.ProfileListRow;
+import com.cs481.mobilemapper.responses.GetRequest;
+import com.cs481.mobilemapper.responses.Response;
+import com.cs481.mobilemapper.responses.status.product_info.Product_info;
+import com.octo.android.robospice.persistence.DurationInMillis;
+import com.octo.android.robospice.persistence.exception.SpiceException;
+import com.octo.android.robospice.request.listener.RequestListener;
 
 public class LoginActivity extends SpiceActivity {
 	private AuthInfo authInfo;
@@ -47,7 +54,10 @@ public class LoginActivity extends SpiceActivity {
 	private ListView mDrawerList;
 	private CharSequence mDrawerTitle;
 	private CharSequence mTitle;
+	private ProfileAdapter adapter;
 	private ActionBarDrawerToggle mDrawerToggle;
+	private Profile unlockProfile;
+	private ProgressDialog progressDialog;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -89,14 +99,17 @@ public class LoginActivity extends SpiceActivity {
 		}
 
 		// Setup the list of items
-		ArrayList<Profile> profiles = Utility.getProfiles();
+		profiles = Utility.getProfiles();
 
 		// PLACEHOLDER STUFF until melissa gets the DB up
 		profiles = new ArrayList<Profile>();
 		Profile profile = new Profile();
 		AuthInfo authInfo = new AuthInfo();
 		authInfo.setEcm(true);
-		profile.setProfileName("Saved Profile 1");
+		authInfo.setPassword("CradeDVS554$");
+		authInfo.setUsername("mperez");
+		authInfo.setRouterId("25716");
+		profile.setProfileName("Cloud Router");
 		profile.setAuthInfo(authInfo);
 		profiles.add(profile);
 
@@ -110,15 +123,11 @@ public class LoginActivity extends SpiceActivity {
 
 		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 		mDrawerList = (ListView) findViewById(R.id.left_drawer);
-		mDrawerList.setBackgroundResource(R.color.White);
+		mDrawerList.setBackgroundResource(R.color.ActionbarWhite);
 
-		ArrayList<ProfileListRow> rows = new ArrayList<ProfileListRow>();
-
-		for (Profile prof : profiles) {
-			rows.add(new ProfileListRow(prof));
-		}
 		// Set the adapter for the list view
-		mDrawerList.setAdapter(new ProfileAdapter(this, rows));
+		adapter = new ProfileAdapter(this, profiles);
+		mDrawerList.setAdapter(adapter);
 		// Set the list's click listener
 		mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
 
@@ -137,9 +146,9 @@ public class LoginActivity extends SpiceActivity {
 					.beginTransaction();
 
 			transaction.replace(R.id.login_fragment, frFragment);
-			//frFragment.animate();
+			// frFragment.animate();
 			transaction.commit();
-			
+
 			// CRASH HERE
 		}
 
@@ -198,13 +207,6 @@ public class LoginActivity extends SpiceActivity {
 		}
 	}
 
-	/*
-	 * public void setAuthInfo(AuthInfo authInfo) { // TODO Auto-generated
-	 * method stub this.authInfo = authInfo; }
-	 * 
-	 * public AuthInfo getAuthInfo() { return authInfo; }
-	 */
-
 	private class DrawerItemClickListener implements
 			ListView.OnItemClickListener {
 		@Override
@@ -220,7 +222,8 @@ public class LoginActivity extends SpiceActivity {
 		mDrawerList.setItemChecked(position, true);
 		// setTitle(profilesArray[position]);
 		mDrawerLayout.closeDrawer(mDrawerList);
-		startPIN();
+		Profile profile = profiles.get(position);
+		startPINDecrypt(profile);
 	}
 
 	@Override
@@ -262,18 +265,18 @@ public class LoginActivity extends SpiceActivity {
 	}
 
 	// List adapter.
-	public class ProfileAdapter extends ArrayAdapter<ProfileListRow> {
+	public class ProfileAdapter extends ArrayAdapter<Profile> {
 		private final Context context;
-		private final ArrayList<ProfileListRow> rows;
+		private final ArrayList<Profile> rows;
 
-		public ProfileAdapter(Context context, ArrayList<ProfileListRow> rows) {
+		public ProfileAdapter(Context context, ArrayList<Profile> rows) {
 			super(context, R.layout.listrow_profiles, rows);
 			this.context = context;
 			this.rows = rows;
 		}
 
 		@Override
-		public ProfileListRow getItem(int position) {
+		public Profile getItem(int position) {
 			return rows.get(position);
 		}
 
@@ -284,7 +287,7 @@ public class LoginActivity extends SpiceActivity {
 			View rowView = inflater.inflate(R.layout.listrow_profiles, parent,
 					false);
 
-			Profile profile = rows.get(position).getProfile();
+			Profile profile = rows.get(position);
 			// Title text
 			TextView title = (TextView) rowView
 					.findViewById(R.id.profilerow_title);
@@ -306,10 +309,33 @@ public class LoginActivity extends SpiceActivity {
 		}
 	}
 
-	public void startPIN() {
+	/**
+	 * Creates a new PIN that allows you to attempt to decrypt a profile.
+	 * 
+	 * @param profile
+	 */
+	public void startPINDecrypt(Profile profile) {
 		mTitle = getActionBar().getTitle();
 		Log.i(CommandCenterActivity.TAG, "Title is: " + mTitle);
 		PINFragment PIN = PINFragment.newInstance(false);
+
+		FragmentTransaction transaction = getSupportFragmentManager()
+				.beginTransaction();
+
+		transaction.replace(R.id.login_fragment, PIN, "PIN");
+		transaction.addToBackStack(null);
+		transaction.commit();
+		unlockProfile = profile; // unlocking this profile once complete.
+	}
+
+	/**
+	 * Sets up the interface for creating a NEW PIN. If the old one exists this
+	 * will prevent them from being decrypted.
+	 */
+	public void startPINCreate() {
+		mTitle = getActionBar().getTitle();
+		PINFragment PIN = PINFragment.newInstance(true);
+
 		FragmentTransaction transaction = getSupportFragmentManager()
 				.beginTransaction();
 
@@ -318,31 +344,116 @@ public class LoginActivity extends SpiceActivity {
 		transaction.commit();
 	}
 
-	public void closePIN(String pin) {
-		// getSupportFragmentManager().popBackStack();
-
-		Log.i(CommandCenterActivity.TAG, "Restoring title: " + mTitle);
+	public void onPINResult(String pin) {
 		getActionBar().show();
 		getActionBar().setTitle(mTitle);
+		
+		if (pin == null) {
+			// denied.
+			return;
+		}
 
-		if (pin != null) {
-			// pin was returned
-			// Create the secret generator
-			try {
-				SecretKey secret = Cryptography.generateKey(pin, Cryptography
-						.createLocalUUID(this).getBytes("UTF-8"));
+		getSupportFragmentManager().popBackStack(); // get rid of the pin
+													// fragment
 
-				String authUser = authInfo.getUsername();
-				String authPass = authInfo.getPassword();
+		// login
+		try {
+			AuthInfo profileAuth = unlockProfile.getAuthInfo();
+			String uuid = Cryptography.createLocalUUID(this);
+			SecretKey secret = Cryptography.generateKey(pin,
+					uuid.getBytes("UTF-8"));
 
-				authUser = Cryptography.decryptMsg(
-						Base64.decode(authUser, Base64.DEFAULT), secret);
-				authPass = Cryptography.decryptMsg(
-						Base64.decode(authPass, Base64.DEFAULT), secret);
+			profileAuth.setUsername(Cryptography.decryptMsg(
+					Base64.decode(profileAuth.getUsername(), Base64.DEFAULT),
+					secret));
+			profileAuth.setPassword(Cryptography.decryptMsg(
+					Base64.decode(profileAuth.getPassword(), Base64.DEFAULT),
+					secret));
 
-			} catch (Exception e) {
-				Log.e(CommandCenterActivity.TAG,
-						"An exception occured trying to decrypt the user credentials.");
+			// connection goes here.
+
+			// Login via ECM.
+			if (profileAuth.isEcm()) {
+				Intent intent = new Intent(this, CommandCenterActivity.class);
+				intent.putExtra("authInfo", authInfo);
+				intent.putExtra("ab_subtitle", unlockProfile.getProfileName()); // changes
+																				// subtitle.
+				startActivity(intent);
+				finish();
+				return; // makes sure nothing else happens in this method if it
+						// tries to continue execution.
+			} else {
+				// It's a direct login
+				// Perform a credential login before we load up the management interface.
+
+				GetRequest request = new GetRequest(authInfo, "status/product_info",
+						Product_info.class, "direct_login");
+				String lastRequestCacheKey = request.createCacheKey();
+
+				progressDialog = new ProgressDialog(this,
+						R.style.DialogTheme);
+				progressDialog.setMessage(getResources().getString(
+						R.string.connecting));
+				progressDialog.show();
+				progressDialog.setCanceledOnTouchOutside(false);
+				
+				//fire off the request.
+				spiceManager.execute(request, lastRequestCacheKey,
+						DurationInMillis.ALWAYS_EXPIRED, new LoginGetRequestListener());
+			}
+
+		} catch (Exception e) {
+			// failed to decrypt due to 1-million possible errors.
+			Log.e(CommandCenterActivity.TAG,
+					"The supplied PIN was unable to decrypt the username and/or password, logging in has been cancelled.");
+		}
+	}
+
+	private class LoginGetRequestListener implements RequestListener<Response> {
+
+		@Override
+		public void onRequestFailure(SpiceException e) {
+			// update your UI
+			if (progressDialog != null) {
+				progressDialog.dismiss();
+			}
+			Log.i(CommandCenterActivity.TAG, "Failed to log in!");
+			Toast.makeText(LoginActivity.this,
+					getResources().getString(R.string.direct_login_fail),
+					Toast.LENGTH_SHORT).show();
+		}
+
+		@Override
+		public void onRequestSuccess(Response response) {
+			Product_info proin = (Product_info) response.getData();
+
+			// update your UI
+			if (progressDialog != null)
+				progressDialog.dismiss(); // update your UI
+			if (response.getResponseInfo() != null) {
+				if (response.getResponseInfo().getSuccess()) {
+					// login successful
+					// Prepare new intent.
+					Intent intent = new Intent(LoginActivity.this,
+							CommandCenterActivity.class);
+					intent.putExtra("authInfo", authInfo);
+					intent.putExtra("ab_subtitle", proin.getProduct_name()); // changes
+																				// subtitle.
+					// start the new activity, and prevent this one from being
+					// returned to unless logout is chosen.
+					startActivity(intent);
+					finish();
+				} else {
+					Toast.makeText(LoginActivity.this,
+							response.getResponseInfo().getReason(),
+							Toast.LENGTH_LONG).show();
+				}
+			} else {
+				Toast.makeText(
+						LoginActivity.this,
+						getResources().getString(
+								R.string.gpio_get_null_response),
+						Toast.LENGTH_LONG).show();
 			}
 		}
 	}
@@ -353,7 +464,8 @@ public class LoginActivity extends SpiceActivity {
 				.findFragmentByTag("PIN");
 		if (fragment != null) { // and then you define a method allowBackPressed
 								// with the logic to allow back pressed or not
-			Log.i(CommandCenterActivity.TAG, "Back - restoring title to "+mTitle);
+			Log.i(CommandCenterActivity.TAG, "Back - restoring title to "
+					+ mTitle);
 			getActionBar().setTitle(mTitle);
 			getActionBar().show();
 		}

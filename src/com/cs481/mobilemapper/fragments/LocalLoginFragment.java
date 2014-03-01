@@ -262,10 +262,9 @@ public class LocalLoginFragment extends Fragment {
 			if (progressDialog != null) {
 				progressDialog.dismiss();
 			}
-			Log.i(CommandCenterActivity.TAG, "Failed to read Product Info!");
-
+			Log.i(CommandCenterActivity.TAG, "Failed to log in!");
 			Toast.makeText(getActivity(),
-					getResources().getString(R.string.product_info_fail),
+					getResources().getString(R.string.direct_login_fail),
 					Toast.LENGTH_SHORT).show();
 		}
 

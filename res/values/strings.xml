@@ -26,6 +26,7 @@
     <string name="switch_to_ecm">Switch to ECM Login</string>
     <string name="locallogin_actionbar_title">Local Device Login</string>
     <string name="saved_profiles_title">Saved Profiles</string>
+    <string name="direct_login_fail">Login failed. Check your credentials.</string>
 
     <!-- ECM Login -->
     <string name="ecm_title">Enterprise Cloud Manager</string>

@@ -47,6 +47,7 @@ import android.widget.Toast;
 import com.cs481.mobilemapper.Cryptography;
 import com.cs481.mobilemapper.R;
 import com.cs481.mobilemapper.activities.CommandCenterActivity;
+import com.cs481.mobilemapper.activities.LoginActivity;
 import com.cs481.mobilemapper.activities.SpiceActivity;
 
 public class PINFragment extends Fragment implements OnClickListener {
@@ -543,8 +544,8 @@ public class PINFragment extends Fragment implements OnClickListener {
 		} else {
 			// PIN is being validated
 			if (testUnlockPin()) {
-				Toast.makeText(getActivity(), "PIN unlocked successfully",
-						Toast.LENGTH_LONG).show();
+				
+				LoginActivity hostingActivity = (LoginActivity) getActivity();
 			} else {
 				wrongPIN();
 			}
