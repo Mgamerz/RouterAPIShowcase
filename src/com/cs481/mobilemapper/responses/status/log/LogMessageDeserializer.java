@@ -27,9 +27,9 @@ public final class LogMessageDeserializer extends JsonDeserializer<LogMessage> {
 		
 		//timestamp
 		logMessage.setTimeStamp(iterator.next().asDouble());
-		logMessage.setSeverity(iterator.next().toString());
-		logMessage.setTag(iterator.next().toString());
-		logMessage.setMessage(iterator.next().toString());
+		logMessage.setSeverity(removeQuotes(iterator.next().toString()));
+		logMessage.setTag(removeQuotes(iterator.next().toString()));
+		logMessage.setMessage(removeQuotes(iterator.next().toString()));
 		JsonNode trace = iterator.next();
 		if (trace != null){
 			logMessage.setTrace(trace.toString());
@@ -39,5 +39,9 @@ public final class LogMessageDeserializer extends JsonDeserializer<LogMessage> {
 		
 		
 		return logMessage;
+	}
+	
+	private String removeQuotes(String str){
+		return str.replaceAll("(^\")|(\"$)","");
 	}
 }

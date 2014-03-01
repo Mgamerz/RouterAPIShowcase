@@ -15,13 +15,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cs481.mobilemapper.AuthInfo;
 import com.cs481.mobilemapper.R;
 import com.cs481.mobilemapper.activities.CommandCenterActivity;
 import com.cs481.mobilemapper.activities.SpiceActivity;
+import com.cs481.mobilemapper.fragments.WifiClientFragment.WlanAdapter;
 import com.cs481.mobilemapper.listrows.LogListRow;
+import com.cs481.mobilemapper.listrows.WlanListRow;
 import com.cs481.mobilemapper.responses.GetRequest;
 import com.cs481.mobilemapper.responses.Response;
 import com.cs481.mobilemapper.responses.status.log.LogMessage;
@@ -37,7 +40,7 @@ public class LogSubfragment extends ListFragment implements
 	private PullToRefreshLayout mPullToRefreshLayout;
 	private SpiceManager spiceManager;
 	private AuthInfo authInfo;
-	private ArrayList<LogListRow> rows; //this will be needed for... something...
+	private LogAdapter adapter;
 	private ArrayList<LogMessage> logs;
 	private boolean shouldLoadData = true;
 
@@ -46,7 +49,7 @@ public class LogSubfragment extends ListFragment implements
 		super.onCreate(savedInstanceState);
 		setHasOptionsMenu(true);
 		if (savedInstanceState != null) {
-			//logs = savedInstanceState.getParcelableArrayList("logs");
+			logs = savedInstanceState.getParcelableArrayList("logs");
 			shouldLoadData = savedInstanceState.getBoolean("shouldLoadData");
 		} else {
 			Bundle passedArgs = getArguments();
@@ -75,7 +78,7 @@ public class LogSubfragment extends ListFragment implements
 		// Android.
 		Log.i(CommandCenterActivity.TAG, "Saving logs instance");
 		outState.putBoolean("shouldLoadData", shouldLoadData);
-		//outState.putParcelableArrayList("logs", logs); //This is how to save the logs object. The LogMessage object must be parcelable
+		outState.putParcelableArrayList("logs", logs); //This is how to save the logs object. The LogMessage object must be parcelable
 	}
 
 	@Override
@@ -110,6 +113,7 @@ public class LogSubfragment extends ListFragment implements
 		SpiceActivity sa = (SpiceActivity) getActivity();
 		spiceManager = sa.getSpiceManager();
 		if (shouldLoadData) {
+			Log.i(CommandCenterActivity.TAG, "Reading logs, should load data.");
 			readLogs();
 			shouldLoadData = false;
 		} else {
@@ -133,18 +137,18 @@ public class LogSubfragment extends ListFragment implements
 
 	
 	//This adapter needs to be finished.
-	public class LogAdapter extends ArrayAdapter<LogListRow> {
+	public class LogAdapter extends ArrayAdapter<LogMessage> {
 		private final Context context;
-		private final ArrayList<LogListRow> rows;
+		private final ArrayList<LogMessage> rows;
 
-		public LogAdapter(Context context, ArrayList<LogListRow> rows) {
+		public LogAdapter(Context context, ArrayList<LogMessage> rows) {
 			super(context, R.layout.listrow_log, rows);
 			this.context = context;
 			this.rows = rows;
 		}
 
 		@Override
-		public LogListRow getItem(int position) {
+		public LogMessage getItem(int position) {
 			return rows.get(position);
 		}
 
@@ -159,6 +163,17 @@ public class LogSubfragment extends ListFragment implements
 			//Setup log stuff here. rowView is the container for each individual log in the list, so you can call
 			// v.findViewById(<id here>) to find sub elements to set.
 			
+			LogMessage log = rows.get(position);
+			
+			TextView messageView = (TextView) rowView.findViewById(R.id.log_message);
+			TextView tagView = (TextView) rowView.findViewById(R.id.log_tag);
+			TextView severityView = (TextView) rowView.findViewById(R.id.log_severity);
+			TextView timeView = (TextView) rowView.findViewById(R.id.log_time);
+			
+			messageView.setText(log.getMessage());
+			tagView.setText(log.getTag());
+			severityView.setText(log.getSeverity());
+			timeView.setText(log.getDateString());
 			return rowView;
 		}
 	}
@@ -184,29 +199,28 @@ public class LogSubfragment extends ListFragment implements
 		@Override
 		public void onRequestSuccess(Response response) {
 			// update your UI
-
 			if (response.getResponseInfo().getSuccess()) {
 				Logs logs = (Logs) response.getData();
 				Log.i(CommandCenterActivity.TAG, "Logs get request successful");
 				updateLogsList(logs.getLogs());
 			} else {
-
 				Toast.makeText(getActivity(),
 						response.getResponseInfo().getReason(),
 						Toast.LENGTH_LONG).show();
 			}
 			mPullToRefreshLayout.setRefreshComplete();
-
 		}
-
-
 	}
 	
 	private void updateLogsList(ArrayList<LogMessage> logs) {
 		// TODO Auto-generated method stub
+		//this.logs = logs;
 		this.logs = logs;
-		
-		//notify data set changed.
+		if (adapter == null) {
+			adapter = new LogAdapter(getActivity(), logs);
+			setListAdapter(adapter);
+		}
+		adapter.notifyDataSetChanged();
 	}
 
 

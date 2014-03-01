@@ -5,10 +5,13 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 @JsonDeserialize(using = LogMessageDeserializer.class)
-public class LogMessage {
+public class LogMessage implements Parcelable {
 
 	private double timeStamp;
 	private String severity;
@@ -65,7 +68,7 @@ public class LogMessage {
 		double seconds = getTimeStamp(); 
 		long millis = (long) (seconds * 1000); //saves some precision... not all of it as we don't have nanoseconds.
 		Date date = new Date(millis);
-		SimpleDateFormat sdf = new SimpleDateFormat("EEEE,MMMM d,yyyy h:mm:ss,a", Locale.ENGLISH);
+		SimpleDateFormat sdf = new SimpleDateFormat("EEEE,MMMM d h:mm:ssa", Locale.ENGLISH);
 		sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
 		return sdf.format(date);
 	}
@@ -82,4 +85,39 @@ public class LogMessage {
 		str.append(getMessage());		
 		return str.toString();
 	}
+
+    protected LogMessage(Parcel in) {
+        timeStamp = in.readDouble();
+        severity = in.readString();
+        tag = in.readString();
+        message = in.readString();
+        trace = in.readString();
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeDouble(timeStamp);
+        dest.writeString(severity);
+        dest.writeString(tag);
+        dest.writeString(message);
+        dest.writeString(trace);
+    }
+
+    @SuppressWarnings("unused")
+    public static final Parcelable.Creator<LogMessage> CREATOR = new Parcelable.Creator<LogMessage>() {
+        @Override
+        public LogMessage createFromParcel(Parcel in) {
+            return new LogMessage(in);
+        }
+
+        @Override
+        public LogMessage[] newArray(int size) {
+            return new LogMessage[size];
+        }
+    };
 }

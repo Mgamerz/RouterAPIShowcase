@@ -37,7 +37,7 @@ public final class LogsDeserializer extends JsonDeserializer<Logs> {
 		while (iterator.hasNext()){
 			JsonNode logNode = iterator.next();
 			LogMessage message = mapper.readValue(logNode.toString(), LogMessage.class);
-			Log.i(CommandCenterActivity.TAG, message.toString());
+			messages.add(message);
 		}
 		//timestamp
 		
