@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ScrollView01"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    android:scrollbars="none" >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <RelativeLayout
+            android:id="@+id/routerinfo_infolayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+
+            <TextView
+                android:id="@+id/product_text"
+                style="@style/TextTheme"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/product" />
+
+            <TextView
+                android:id="@+id/product_value"
+                style="@style/TextTheme"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/mac_address_value"
+                android:text="@string/loading" />
+
+            <TextView
+                android:id="@+id/hostname_text"
+                style="@style/TextTheme"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/product_text"
+                android:text="@string/hostname" />
+
+            <TextView
+                android:id="@+id/hostname_value"
+                style="@style/TextTheme"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@id/mac_address_value"
+                android:layout_below="@id/product_text"
+                android:text="@string/loading" />
+
+            <TextView
+                android:id="@+id/firmware_text"
+                style="@style/TextTheme"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/hostname_text"
+                android:text="@string/firmware" />
+
+            <TextView
+                android:id="@+id/firmware_value"
+                style="@style/TextTheme"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@id/mac_address_value"
+                android:layout_below="@id/hostname_text"
+                android:text="@string/loading" />
+
+            <TextView
+                android:id="@+id/mac_address_text"
+                style="@style/TextTheme"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/firmware_text"
+                android:text="@string/mac_address" />
+
+            <TextView
+                android:id="@+id/mac_address_value"
+                style="@style/TextTheme"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/firmware_text"
+                android:layout_marginLeft="10dp"
+                android:layout_toRightOf="@id/mac_address_text"
+                android:text="@string/loading" />
+
+            <TextView
+                android:id="@+id/uptime_text"
+                style="@style/TextTheme"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/mac_address_text"
+                android:text="@string/uptime" />
+
+            <TextView
+                android:id="@+id/uptime_value"
+                style="@style/TextTheme"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@id/mac_address_value"
+                android:layout_below="@id/mac_address_text"
+                android:text="@string/loading" />
+
+            <TextView
+                android:id="@+id/numclients_text"
+                style="@style/TextTheme"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/uptime_value"
+                android:text="@string/num_clients" />
+
+            <TextView
+                android:id="@+id/numclients_value"
+                style="@style/TextTheme"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@id/mac_address_value"
+                android:layout_below="@id/uptime_value"
+                android:text="@string/loading" />
+        </RelativeLayout>
+
+        <FrameLayout
+            android:id="@+id/log_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_toRightOf="@id/routerinfo_infolayout" >
+        </FrameLayout>
+    </RelativeLayout>
+
+</ScrollView>

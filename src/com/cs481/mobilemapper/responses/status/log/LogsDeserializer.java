@@ -18,35 +18,33 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  * Jackson deserializer for our unkeyed log object.
  */
 public final class LogsDeserializer extends JsonDeserializer<Logs> {
+	public final static int MAX_LOGS = 150;
 	@Override
-	public Logs deserialize(final JsonParser jp,
-			final DeserializationContext ctxt) throws IOException {
-
+	public Logs deserialize(final JsonParser jp, final DeserializationContext ctxt) throws IOException {
+											// under the 1MB parcel limit.
 		final JsonNode node = jp.readValueAs(JsonNode.class);
 		if (!node.isContainerNode() || !node.isArray())
 			throw new JsonMappingException("expected an array");
 		Logs logs = new Logs();
 
-		
 		Log.i(CommandCenterActivity.TAG, "Starting LOGS deserialization.");
 
 		// Build the log object manually...
 		Iterator<JsonNode> iterator = node.elements();
 		ArrayList<LogMessage> messages = new ArrayList<LogMessage>();
 		ObjectMapper mapper = new ObjectMapper();
-		while (iterator.hasNext()){
+		int numMessages = 0;
+		while (iterator.hasNext() && numMessages < MAX_LOGS) {
+			Log.w(CommandCenterActivity.TAG, "Adding log message "+numMessages);
 			JsonNode logNode = iterator.next();
-			LogMessage message = mapper.readValue(logNode.toString(), LogMessage.class);
+			LogMessage message = mapper.readValue(logNode.toString(),
+					LogMessage.class);
 			messages.add(message);
+			numMessages++;
 		}
-		//timestamp
-		
-		//ArrayList<JsonNode> logJson = iterator.next();
-		//new ArrayNode();
-		
+
 		logs.setLogs(messages);
-		
-		
+
 		return logs;
 	}
 }

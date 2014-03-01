@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import android.app.ActionBar;
 import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.ListFragment;
@@ -29,12 +30,15 @@ public class DashboardFragment extends ListFragment {
 	private final int lGPIO = 3;
 	private final int lABOUT = 4;
 	private AuthInfo authInfo;
+	private int currentSelection = -1;
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		if (savedInstanceState != null) {
 			// rows = savedInstanceState.getP
 			authInfo = savedInstanceState.getParcelable("authInfo");
+			currentSelection = savedInstanceState
+					.getInt("currentSelection", -1);
 		} else {
 			Bundle passedArgs = getArguments();
 			if (passedArgs != null) {
@@ -50,6 +54,7 @@ public class DashboardFragment extends ListFragment {
 		// Save data on rotate. This bundle will be passed to onCreate() by
 		// Android.
 		outState.putParcelable("authInfo", authInfo);
+		outState.putInt("currentSelection", currentSelection);
 	}
 
 	@Override
@@ -77,13 +82,12 @@ public class DashboardFragment extends ListFragment {
 
 		sa.setTitle(resources.getString(R.string.dashboard_title));
 		sa.getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD); // makes
-																				// the
-																				// dropdown
-																				// list
-																				// appear
+																					// the
+																					// dropdown
+																					// list
+																					// appear
 		sa.getActionBar().setDisplayShowTitleEnabled(true);
-		
-		
+
 		ArrayList<DashboardListRow> rows = new ArrayList<DashboardListRow>();
 		rows.add(new DashboardListRow(lWLAN, resources
 				.getString(R.string.wireless), "Partially Operational"));
@@ -93,9 +97,16 @@ public class DashboardFragment extends ListFragment {
 				"Non Operational"));
 		rows.add(new DashboardListRow(lGPIO,
 				resources.getString(R.string.gpio), "Fully Operational"));
-		rows.add(new DashboardListRow(lABOUT,
-				resources.getString(R.string.routerinfo), "In Progress"));
+		rows.add(new DashboardListRow(lABOUT, resources
+				.getString(R.string.routerinfo), "In Progress"));
 		setListAdapter(new DashboardAdapter(getActivity(), rows));
+
+		boolean isDualPane = (getActivity().findViewById(
+				R.id.rightside_fragment) == null);
+		if (isDualPane) {
+			getListView().setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+			getListView().setItemChecked(currentSelection, true);
+		}
 	}
 
 	public class DashboardAdapter extends ArrayAdapter<DashboardListRow> {
@@ -126,6 +137,18 @@ public class DashboardFragment extends ListFragment {
 			TextView subtitle = (TextView) rowView
 					.findViewById(R.id.listview_subtitle);
 			subtitle.setText(rows.get(position).getSubtitle());
+			
+			
+            // Highlight selected item
+            if (position == currentSelection) {
+                rowView.setBackgroundColor((rowView.getResources()
+                       .getColor(R.color.TransparentWhite)));
+            } else {
+                Drawable sel = rowView.getResources().getDrawable(
+                        R.drawable.listview_background);
+                rowView.setBackgroundDrawable(sel); //have to use because we use API 14 and 15. Only added in 16.
+            }
+			
 			return rowView;
 		}
 	}
@@ -205,8 +228,8 @@ public class DashboardFragment extends ListFragment {
 			// firstFragment.setArguments(getIntent().getExtras());
 
 			// Add the fragment to the 'fragment_container' FrameLayout
-			FragmentTransaction transaction = getActivity().getSupportFragmentManager()
-					.beginTransaction();
+			FragmentTransaction transaction = getActivity()
+					.getSupportFragmentManager().beginTransaction();
 
 			// check if the parent activity is dual pane based.
 			CommandCenterActivity parent = (CommandCenterActivity) getActivity();
@@ -224,7 +247,10 @@ public class DashboardFragment extends ListFragment {
 
 		default:
 			super.onListItemClick(l, v, position, id);
+			return;
 		}
+		currentSelection = position;
+		getListView().setItemChecked(currentSelection, true);
 
 	}
 

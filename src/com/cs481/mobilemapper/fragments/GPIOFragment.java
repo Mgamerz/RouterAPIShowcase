@@ -63,7 +63,7 @@ public class GPIOFragment extends Fragment implements OnRefreshListener,
 		String lastRequestCacheKey = request.createCacheKey();
 
 		if (dialog) {
-			progressDialog = new ProgressDialog(getActivity(), R.style.RedDialogTheme);
+			progressDialog = new ProgressDialog(getActivity(), R.style.DialogTheme);
 			progressDialog.setMessage(getResources().getString(
 					R.string.gpio_reading));
 			progressDialog.show();

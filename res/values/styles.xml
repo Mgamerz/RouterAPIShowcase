@@ -70,30 +70,25 @@
 
     <!-- TextView SUBTEXT (subtitle) (not dialog!) theme -->
     <style name="SubTextTheme" parent="@android:style/Widget.TextView">
-        <item name="android:textColor">@color/DimmedWhite</item>
-    </style>
-
-    <!-- Hint Text -->
-    <style name="RedHintTextTheme" parent="@android:style/Widget.TextView">
-        <item name="android:textColor">@color/White</item>
+        <item name="android:textColor">@color/selector_subtextcolor</item>
     </style>
 
     <!-- EditText theme -->
-    <style name="RedEditTextTheme" parent="@android:style/Widget.EditText">
+    <style name="EditTextTheme" parent="@android:style/Widget.EditText">
         <item name="android:textColor">@color/White</item>
         <item name="android:textColorHint">#CCCCCC</item>
         <item name="android:background">@drawable/apptheme_edit_text_holo_dark</item>
     </style>
 
     <!-- Checkbox Theme -->
-    <style name="RedCheckBoxTheme" parent="@android:style/Widget.CompoundButton.CheckBox">
+    <style name="CheckBoxTheme" parent="@android:style/Widget.CompoundButton.CheckBox">
         <item name="android:textColor">@color/White</item>
         <item name="android:button">@drawable/apptheme_btn_check_holo_dark</item>
     </style>
 
     <!-- ListView Theme -->
     <style name="ListViewTheme" parent="@android:style/Widget.Holo.Light.ListView">
-        <item name="android:divider">@color/TransparentWhite</item>
+        <item name="android:divider">@color/SubtextWhite</item>
         <item name="android:dividerHeight">1px</item>
         <item name="android:scrollbarSize">4dp</item>
         <item name="android:listSelector">@drawable/listview_background</item>
@@ -101,7 +96,7 @@
     </style>
 
     <!-- Dialog Theme -->
-    <style name="RedDialogTheme" parent="@android:style/Theme.Holo.Light.Dialog">
+    <style name="DialogTheme" parent="@android:style/Theme.Holo.Light.Dialog">
 
         <!-- <item name="android:windowContentOverlay">@null</item> -->
         <item name="android:windowBackground">@android:color/transparent</item>

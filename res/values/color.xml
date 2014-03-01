@@ -7,10 +7,21 @@
     <color name="CradlepointBlueHigh">#3181F9</color>
     <color name="CradlepointGreen">#3EA822</color>
     <color name="CradlepointGreenHigh">#5DF934</color>
-    <color name="White">#FFFFFF</color>
-    <color name="DimmedWhite">#BBBBBB</color>
-    <color name="TransparentWhite">#22FFFFFF</color>
-    <color name="SelectedWhite">#10FFFFFF</color>
+
+    <!-- Various shades of white for text-->
+    <color name="White">#FFFFFF</color> <!-- normal text -->
+    <!-- <color name="DimmedWhite">#AAFFFFFF</color>  Subtext -->
+    <color name="TransparentWhite">#22FFFFFF</color> <!-- Disabled -->
+    <color name="SelectedWhite">#10FFFFFF</color> <!-- listrow selection -->
+
+    <color name="TextWhite">#FFFFFF</color>
+    <color name="TextDisabledWhite">#90FFFFFF</color>
+
+    <color name="SubtextWhite">#BBFFFFFF</color>
+    <color name="SubtextDisabledWhite">#80FFFFFF</color>
+    
+    
+    
     <color name="Ivory">#FFFFF0</color>
     <color name="LightYellow">#FFFFE0</color>
     <color name="Yellow">#FFFF00</color>

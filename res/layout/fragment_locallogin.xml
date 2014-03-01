@@ -24,7 +24,7 @@
 
     <CheckBox
         android:id="@+id/use_default_gateway"
-        style="@style/RedCheckBoxTheme"
+        style="@style/CheckBoxTheme"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:checked="true"
@@ -41,7 +41,7 @@
 
         <CheckBox
             android:id="@+id/use_remote_admin"
-            style="@style/RedCheckBoxTheme"
+            style="@style/CheckBoxTheme"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:checked="true"
@@ -49,7 +49,7 @@
 
         <EditText
             android:id="@+id/router_ip"
-            style="@style/RedEditTextTheme"
+            style="@style/EditTextTheme"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:digits="0123456789."
@@ -62,7 +62,7 @@
 
     <EditText
         android:id="@+id/router_password"
-        style="@style/RedEditTextTheme"
+        style="@style/EditTextTheme"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"

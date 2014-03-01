@@ -37,6 +37,7 @@ public class RouterInfoFragment extends Fragment {
 	private AuthInfo authInfo;
 	private SpiceManager spiceManager;
 	private ProgressDialog progressDialog;
+	private boolean shouldLoadData = true;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -45,6 +46,8 @@ public class RouterInfoFragment extends Fragment {
 		if (savedInstanceState != null) {
 			/* save whatever data */
 			authInfo = savedInstanceState.getParcelable("authInfo");
+			shouldLoadData = savedInstanceState.getBoolean("shouldLoadData",
+					true);
 		} else {
 			Bundle passedArgs = getArguments();
 			if (passedArgs != null) {
@@ -72,6 +75,7 @@ public class RouterInfoFragment extends Fragment {
 		Log.i(CommandCenterActivity.TAG, "Saving instance");
 		/* put whatever data */
 		outState.putParcelable("authInfo", authInfo);
+		outState.putBoolean("shouldLoadData", shouldLoadData);
 	}
 
 	@Override
@@ -80,8 +84,9 @@ public class RouterInfoFragment extends Fragment {
 		// Inflate the layout for this fragment
 		View v = inflater.inflate(R.layout.fragment_routerinfo, container,
 				false);
-		
-		//If savedinstancestate is not null, then this fragment will already be created and should be automatically reattached for us.
+
+		// If savedinstancestate is not null, then this fragment will already be
+		// created and should be automatically reattached for us.
 		if (savedInstanceState == null) {
 			FragmentManager fm = getActivity().getSupportFragmentManager();
 			FragmentTransaction ft = fm.beginTransaction();
@@ -100,11 +105,14 @@ public class RouterInfoFragment extends Fragment {
 		spiceManager = sa.getSpiceManager();
 		/* call the reading methods */
 
-		readProductInfo(true);
-		readFWInfo();
-		readUptimeInfo();
-		readHostNameInfo();
-		readNumClientsInfo();
+		if (shouldLoadData) {
+			readProductInfo(true);
+			readFWInfo();
+			readUptimeInfo();
+			readHostNameInfo();
+			readNumClientsInfo();
+			shouldLoadData = false;
+		}
 	}
 
 	private void readProductInfo(boolean dialog) {
@@ -115,7 +123,7 @@ public class RouterInfoFragment extends Fragment {
 
 		if (dialog) {
 			progressDialog = new ProgressDialog(getActivity(),
-					R.style.RedDialogTheme);
+					R.style.DialogTheme);
 			progressDialog.setMessage(getResources().getString(
 					R.string.info_reading));
 			progressDialog.show();

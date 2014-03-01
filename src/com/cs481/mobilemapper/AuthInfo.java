@@ -20,6 +20,19 @@ public class AuthInfo implements Parcelable {
 	private String username = "admin"; // default
 	private String password;
 	private String routerId; //ecm only
+	private boolean https;
+
+	public boolean isHttps() {
+		return https;
+	}
+
+	public void setHttps(boolean https) {
+		this.https = https;
+	}
+
+	public void setRouterport(int routerport) {
+		this.routerport = routerport;
+	}
 
 	public String getRouterId() {
 		return routerId;
@@ -80,6 +93,7 @@ public class AuthInfo implements Parcelable {
         username = in.readString();
         password = in.readString();
         routerId = in.readString();
+        https = in.readByte() != 0x00;
     }
 
     @Override
@@ -95,6 +109,7 @@ public class AuthInfo implements Parcelable {
         dest.writeString(username);
         dest.writeString(password);
         dest.writeString(routerId);
+        dest.writeByte((byte) (https ? 0x01 : 0x00));
     }
 
     @SuppressWarnings("unused")

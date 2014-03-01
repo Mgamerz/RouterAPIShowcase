@@ -101,7 +101,7 @@ public class ECMLoginFragment extends Fragment {
 		String lastRequestCacheKey = request.createCacheKey();
 
 
-		ContextThemeWrapper wrapper = new ContextThemeWrapper(getActivity(), R.style.RedDialogTheme);
+		ContextThemeWrapper wrapper = new ContextThemeWrapper(getActivity(), R.style.DialogTheme);
 		progressDialog = new ProgressDialog(wrapper);
 		//progressDialog = new ProgressDialog(getActivity());
 		progressDialog.setMessage(resources.getString(R.string.ecm_connecting));

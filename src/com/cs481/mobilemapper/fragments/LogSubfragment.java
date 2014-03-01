@@ -146,7 +146,6 @@ public class LogSubfragment extends ListFragment implements OnRefreshListener {
 				DurationInMillis.ALWAYS_EXPIRED, new LogsGetRequestListener());
 	}
 
-	// This adapter needs to be finished.
 	public class LogAdapter extends ArrayAdapter<LogMessage> {
 		private final Context context;
 		private final ArrayList<LogMessage> rows;
@@ -186,7 +185,7 @@ public class LogSubfragment extends ListFragment implements OnRefreshListener {
 			messageView.setText(log.getMessage());
 			tagView.setText(log.getTag());
 			severityView.setText(log.getSeverity());
-			timeView.setText(log.getDateString());
+			timeView.setText(log.getDateString());			
 			return rowView;
 		}
 	}
@@ -232,12 +231,15 @@ public class LogSubfragment extends ListFragment implements OnRefreshListener {
 
 	private void updateLogsList(ArrayList<LogMessage> logs) {
 		// TODO Auto-generated method stub
-		// this.logs = logs;
+		Log.i(CommandCenterActivity.TAG, "Updating adapter with new log information.");
+		Log.i(CommandCenterActivity.TAG, "Number of logs: "+logs.size());
 		this.logs = logs;
 		if (adapter == null) {
-			adapter = new LogAdapter(getActivity(), logs);
+			Log.i(CommandCenterActivity.TAG, "created new adapter.");
+			adapter = new LogAdapter(getActivity(), this.logs);
 			setListAdapter(adapter);
 		}
+		Log.i(CommandCenterActivity.TAG, "notifying adapter of new dataset");
 		adapter.notifyDataSetChanged();
 	}
 

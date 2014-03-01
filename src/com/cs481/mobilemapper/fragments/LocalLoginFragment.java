@@ -242,7 +242,7 @@ public class LocalLoginFragment extends Fragment {
 		String lastRequestCacheKey = request.createCacheKey();
 
 		progressDialog = new ProgressDialog(getActivity(),
-				R.style.RedDialogTheme);
+				R.style.DialogTheme);
 		progressDialog.setMessage(getResources().getString(
 				R.string.connecting));
 		progressDialog.show();

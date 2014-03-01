@@ -23,7 +23,7 @@
 
     <EditText
         android:id="@+id/ecm_username"
-        style="@style/RedEditTextTheme"
+        style="@style/EditTextTheme"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
@@ -36,7 +36,7 @@
 
     <EditText
         android:id="@+id/ecm_password"
-        style="@style/RedEditTextTheme"
+        style="@style/EditTextTheme"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
