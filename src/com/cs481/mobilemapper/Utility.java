@@ -284,6 +284,7 @@ public class Utility {
 	 * @return Arraylist of Profile objects read from the database.
 	 */
 	public static ArrayList<Profile> getProfiles() {
+		//TODO Need help here. I don't understand what activity/context to pass on to this db as param
 		/*DatabaseAdapter dbAdapter = new DatabaseAdapter(ActivityName.this);
 		dbAdapter.getProfiles())
 			

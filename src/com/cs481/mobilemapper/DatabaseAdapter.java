@@ -142,7 +142,7 @@ public class DatabaseAdapter {
 	String select = "SELECT * FROM ECM WHERE routerid = ?"
 	String[] arguments = { }
 	return db.rawQuery(select, arguments);*/
-	public ArrayList<Profile> getProfiles() {
+	public ArrayList<Profile> getEcmProfiles() {
 		String select = "SELECT * FROM ECM";
 		ArrayList<Profile> profileArrayList = null;
 		Cursor c = db.rawQuery(select, null);
@@ -155,6 +155,7 @@ public class DatabaseAdapter {
 			while (c.isAfterLast() == false) {
 				Profile profile = new Profile();
 				AuthInfo authInfo = new AuthInfo();
+				
 				profile.setProfileName(c.getString(c.getColumnIndex(TABLE_ECM_ROW_PROFILE_NAME)));
 				authInfo.setUsername(c.getString(c.getColumnIndex(TABLE_ECM_ROW_USERNAME)));
 				authInfo.setPassword(c.getString(c.getColumnIndex(TABLE_ECM_ROW_PASSWORD)));
@@ -164,7 +165,40 @@ public class DatabaseAdapter {
 				profileArrayList.add(profile);
 				c.moveToNext();
 			}
+		}
 
+		return profileArrayList;
+
+	}
+	
+	public ArrayList<Profile> getDirectProfiles() {
+		String select = "SELECT * FROM DIRECT";
+		ArrayList<Profile> profileArrayList = null;
+		Cursor c = db.rawQuery(select, null);
+		/*
+		 * DIRECT - TABLE_DIRECT_ROW_PROFILE_NAME, TABLE_DIRECT_ROW_USERNAME,
+		 * TABLE_DIRECT_ROW_PASSWORD, TABLE_DIRECT_ROW_ROUTERIP,
+		 * TABLE_DIRECT_ROW_ROUTERPORT, TABLE_DIRECT_ROW_HTTPS
+		 */
+		if (c != null && c.moveToFirst()) {
+			profileArrayList = new ArrayList<Profile>();
+			while (c.isAfterLast() == false) {
+				Profile profile = new Profile();
+				AuthInfo authInfo = new AuthInfo();
+				
+				profile.setProfileName(c.getString(c.getColumnIndex(TABLE_DIRECT_ROW_PROFILE_NAME)));
+				authInfo.setUsername(c.getString(c.getColumnIndex(TABLE_DIRECT_ROW_USERNAME)));
+				authInfo.setPassword(c.getString(c.getColumnIndex(TABLE_DIRECT_ROW_PASSWORD)));
+				authInfo.setRouterip(c.getString(c.getColumnIndex(TABLE_DIRECT_ROW_ROUTERIP)));
+				authInfo.setRouterport(c.getInt(c.getColumnIndex(TABLE_DIRECT_ROW_ROUTERPORT)));
+				boolean value = c.getInt(c.getColumnIndex(TABLE_DIRECT_ROW_HTTPS))>0;
+				authInfo.setHttps(value);
+				
+				profile.setAuthInfo(authInfo);
+
+				profileArrayList.add(profile);
+				c.moveToNext();
+			}
 		}
 
 		return profileArrayList;
