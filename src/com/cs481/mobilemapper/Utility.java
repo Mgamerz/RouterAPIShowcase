@@ -267,9 +267,15 @@ public class Utility {
 	 * @param profile
 	 *            Profile to be saved.
 	 */
-	public static void saveProfile(Profile profile) {
-		// Melissa's code here
-
+	public static boolean saveProfile(Profile profile) {
+		//TODO Need help here. I don't understand what activity/context to pass on to this db as param
+		/*DatabaseAdapter dbAdapter = new DatabaseAdapter(ActivityName.this);
+		if(dbAdapter.insertProfile(profile) > 0){
+			return true;
+		}
+		else*/
+			return false;
+		
 	}
 
 	/**
@@ -278,7 +284,11 @@ public class Utility {
 	 * @return Arraylist of Profile objects read from the database.
 	 */
 	public static ArrayList<Profile> getProfiles() {
-		// Melissa's code here
+		//TODO Need help here. I don't understand what activity/context to pass on to this db as param
+		/*DatabaseAdapter dbAdapter = new DatabaseAdapter(ActivityName.this);
+		dbAdapter.getProfiles())
+			
+		*/
 		return null;
 	}
 

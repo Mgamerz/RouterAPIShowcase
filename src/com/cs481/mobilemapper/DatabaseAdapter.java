@@ -1,26 +1,29 @@
 package com.cs481.mobilemapper;
 
+import java.util.ArrayList;
+
+import com.cs481.mobilemapper.activities.CommandCenterActivity;
+
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 public class DatabaseAdapter {
-	
-	private static final String TAG = "DBAdapter";
 
 	private static final String DATABASE_NAME = "RouterDB";
 	private static final String DATABASE_TABLE_ECM = "ECM";
 	private static final String DATABASE_TABLE_DIRECT = "Direct";
 	private static final int DATABASE_VERSION = 1;
-	
+	/* ECM - TABLE_ECM_ROW_PROFILE_NAME, TABLE_ECM_ROW_USERNAME, TABLE_ECM_ROW_PASSWORD, TABLE_ECM_ROW_ROUTERID*/
 	private final static String TABLE_ECM_ROW_PROFILE_NAME = "profilename";
 	private final static String TABLE_ECM_ROW_USERNAME = "username";
 	private final static String TABLE_ECM_ROW_PASSWORD = "password";
 	private final static String TABLE_ECM_ROW_ROUTERID = "routerid";
-	
+	/* DIRECT - TABLE_DIRECT_ROW_PROFILE_NAME, TABLE_DIRECT_ROW_USERNAME, TABLE_DIRECT_ROW_PASSWORD, TABLE_DIRECT_ROW_ROUTERIP, TABLE_DIRECT_ROW_ROUTERPORT, TABLE_DIRECT_ROW_HTTPS */
 	private final static String TABLE_DIRECT_ROW_PROFILE_NAME = "profilename";
 	private final static String TABLE_DIRECT_ROW_USERNAME = "username";
 	private final static String TABLE_DIRECT_ROW_PASSWORD = "password";
@@ -56,6 +59,7 @@ public class DatabaseAdapter {
 					TABLE_ECM_ROW_PASSWORD + " text," +
 					TABLE_ECM_ROW_ROUTERID + " text primary key not null" +
 					");";
+			
 			String directTableQueryString = 	
 					"create table " +
 					DATABASE_TABLE_DIRECT +
@@ -75,7 +79,7 @@ public class DatabaseAdapter {
 		@Override
 		public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 			// TODO Need to fix all of this for our database
-			 Log.w(TAG, "Upgrading database from version " + oldVersion
+			 Log.i(CommandCenterActivity.TAG, "Upgrading database from version " + oldVersion
 		              + " to "
 		              + newVersion + ", which will destroy all old data");
 		        db.execSQL("DROP TABLE IF EXISTS ECM");
@@ -97,7 +101,9 @@ public class DatabaseAdapter {
 	    DBHelper.close();
 	}
 	
-	public long insertProfile(Profile profile, boolean ecm) {
+	public long insertProfile(Profile profile) {
+		boolean ecm = profile.getAuthInfo().isEcm();
+		open();
 		if (ecm) {
 			return insertProfileEcm(profile);
 		} else
@@ -133,17 +139,69 @@ public class DatabaseAdapter {
 	}
 	/*
 	"SELECT * FROM user WHERE email=:email AND password=:password";
-	public int getProfile()
-	{
-	    Cursor cursor = db.rawQuery(
-	                "SELECT COUNT(Quote) FROM tblRandomQuotes", null);
-	            if(cursor.moveToFirst()) {
-	                return cursor.getInt(0);
-	            }
-	            return cursor.getInt(0);
-	 
+	String select = "SELECT * FROM ECM WHERE routerid = ?"
+	String[] arguments = { }
+	return db.rawQuery(select, arguments);*/
+	public ArrayList<Profile> getEcmProfiles() {
+		String select = "SELECT * FROM ECM";
+		ArrayList<Profile> profileArrayList = null;
+		Cursor c = db.rawQuery(select, null);
+		/*
+		 * ECM - TABLE_ECM_ROW_PROFILE_NAME, TABLE_ECM_ROW_USERNAME,
+		 * TABLE_ECM_ROW_PASSWORD, TABLE_ECM_ROW_ROUTERID
+		 */
+		if (c != null && c.moveToFirst()) {
+			profileArrayList = new ArrayList<Profile>();
+			while (c.isAfterLast() == false) {
+				Profile profile = new Profile();
+				AuthInfo authInfo = new AuthInfo();
+				
+				profile.setProfileName(c.getString(c.getColumnIndex(TABLE_ECM_ROW_PROFILE_NAME)));
+				authInfo.setUsername(c.getString(c.getColumnIndex(TABLE_ECM_ROW_USERNAME)));
+				authInfo.setPassword(c.getString(c.getColumnIndex(TABLE_ECM_ROW_PASSWORD)));
+				authInfo.setRouterId(c.getString(c.getColumnIndex(TABLE_ECM_ROW_ROUTERID)));
+				profile.setAuthInfo(authInfo);
+
+				profileArrayList.add(profile);
+				c.moveToNext();
+			}
+		}
+
+		return profileArrayList;
+
 	}
 	
-*/
+	public ArrayList<Profile> getDirectProfiles() {
+		String select = "SELECT * FROM DIRECT";
+		ArrayList<Profile> profileArrayList = null;
+		Cursor c = db.rawQuery(select, null);
+		/*
+		 * DIRECT - TABLE_DIRECT_ROW_PROFILE_NAME, TABLE_DIRECT_ROW_USERNAME,
+		 * TABLE_DIRECT_ROW_PASSWORD, TABLE_DIRECT_ROW_ROUTERIP,
+		 * TABLE_DIRECT_ROW_ROUTERPORT, TABLE_DIRECT_ROW_HTTPS
+		 */
+		if (c != null && c.moveToFirst()) {
+			profileArrayList = new ArrayList<Profile>();
+			while (c.isAfterLast() == false) {
+				Profile profile = new Profile();
+				AuthInfo authInfo = new AuthInfo();
+				
+				profile.setProfileName(c.getString(c.getColumnIndex(TABLE_DIRECT_ROW_PROFILE_NAME)));
+				authInfo.setUsername(c.getString(c.getColumnIndex(TABLE_DIRECT_ROW_USERNAME)));
+				authInfo.setPassword(c.getString(c.getColumnIndex(TABLE_DIRECT_ROW_PASSWORD)));
+				authInfo.setRouterip(c.getString(c.getColumnIndex(TABLE_DIRECT_ROW_ROUTERIP)));
+				authInfo.setRouterport(c.getInt(c.getColumnIndex(TABLE_DIRECT_ROW_ROUTERPORT)));
+				boolean value = c.getInt(c.getColumnIndex(TABLE_DIRECT_ROW_HTTPS))>0;
+				authInfo.setHttps(value);
+				
+				profile.setAuthInfo(authInfo);
 
+				profileArrayList.add(profile);
+				c.moveToNext();
+			}
+		}
+
+		return profileArrayList;
+
+	}
 }
