@@ -1,6 +1,5 @@
 package com.cs481.mobilemapper.fragments;
 
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
@@ -16,9 +15,10 @@ import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 
 import android.app.ActionBar;
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.PorterDuff.Mode;
 import android.graphics.drawable.GradientDrawable;
@@ -47,8 +47,6 @@ import android.widget.Toast;
 import com.cs481.mobilemapper.Cryptography;
 import com.cs481.mobilemapper.R;
 import com.cs481.mobilemapper.activities.CommandCenterActivity;
-import com.cs481.mobilemapper.activities.LoginActivity;
-import com.cs481.mobilemapper.activities.SpiceActivity;
 
 public class PINFragment extends Fragment implements OnClickListener {
 	String currentPin = "", verifyPin = ""; // pin that has been currently entered
@@ -157,9 +155,6 @@ public class PINFragment extends Fragment implements OnClickListener {
 	@Override
 	public void onStart() {
 		super.onStart();
-		SpiceActivity sa = (SpiceActivity) getActivity();
-		Resources resources = getResources();
-		sa.setTitle(resources.getString(R.string.pin_actionbar_title));
 		setupUI();
 		
 		if (!currentPin.equals("")) {
@@ -416,9 +411,6 @@ public class PINFragment extends Fragment implements OnClickListener {
 		} catch (UnsupportedEncodingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
 		return false;
 	}
@@ -439,7 +431,7 @@ public class PINFragment extends Fragment implements OnClickListener {
 				Log.w(CommandCenterActivity.TAG, "Unlocking: "+currentPin+" with salt "+uuid);
 
 				byte[] encrypted = Cryptography.encryptMsg(uuid, secret);
-				//Log.i(CommandCenterActivity.TAG, "Encrypted to: "
+				//Log.i(CommandCenterActsivity.TAG, "Encrypted to: "
 				//		+ new String(encrypted, "UTF-8"));
 				SharedPreferences.Editor editor = crypto.edit();
 				String putdata = Base64.encodeToString(encrypted, Base64.DEFAULT);
@@ -450,14 +442,6 @@ public class PINFragment extends Fragment implements OnClickListener {
 				
 				//Test decrypting the validator object
 				String validation = crypto.getString("validator", "FAILURE");
-				Log.i(CommandCenterActivity.TAG, "B64-G: "+validation);
-				
-				//Log.i(CommandCenterActivity.TAG, "Testing validator: "+validation);
-				
-				//SecretKey decryptSecret = Cryptography.generateKey(currentPin,
-				//		uuid.getBytes("UTF-8"));
-				//Log.i(CommandCenterActivity.TAG, "Encrypted byte arrays are equal: "+Arrays.equals(validation.getBytes("UTF-8"), encrypted));
-
 				String result = Cryptography.decryptMsg(Base64.decode(validation, Base64.DEFAULT), secret);
 				
 				Log.i(CommandCenterActivity.TAG, "Decrypted to: "+result);
@@ -520,7 +504,7 @@ public class PINFragment extends Fragment implements OnClickListener {
 				// PIN is being created
 				TextView instructions = (TextView) getView().findViewById(
 						R.id.enterpin_text);
-				instructions.setText("Re-enter PIN to verify");
+				instructions.setText(getActivity().getResources().getString(R.string.pin_verify));
 				verifyPin = currentPin; //compare against
 				currentPin = "";
 				verify = true;
@@ -544,8 +528,10 @@ public class PINFragment extends Fragment implements OnClickListener {
 		} else {
 			// PIN is being validated
 			if (testUnlockPin()) {
-				
-				LoginActivity hostingActivity = (LoginActivity) getActivity();
+				Intent returnIntent = new Intent();
+				returnIntent.putExtra("pin", currentPin);
+				getActivity().setResult(Activity.RESULT_OK, returnIntent);
+				getActivity().finish();
 			} else {
 				wrongPIN();
 			}

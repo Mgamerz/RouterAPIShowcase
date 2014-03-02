@@ -69,10 +69,15 @@ public class RouterConfirmDialogFragment extends DialogFragment {
 				CheckBox sp = (CheckBox) v.findViewById(R.id.ecm_save_as_profile);
 				if (sp.isChecked()){
 					Profile profile = new Profile();
+					AuthInfo encryptedAuthInfo = Utility.encryptAuthInfo(getActivity(), authInfo);
+					
 					profile.setAuthInfo(authInfo);
+					
+					
+					
 					profile.setProfileName(router.getName());
 					
-					Utility.saveProfile(profile);
+					Utility.saveProfile(getActivity(), profile);
 				}
 				
 				Intent intent = new Intent(getActivity(), CommandCenterActivity.class);

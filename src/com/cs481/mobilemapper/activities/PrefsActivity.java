@@ -9,6 +9,7 @@ import android.view.MenuItem;
 
 import com.cs481.mobilemapper.R;
 import com.cs481.mobilemapper.Utility;
+import com.cs481.mobilemapper.fragments.preferences.SecurityPrefsFragment;
 import com.cs481.mobilemapper.fragments.preferences.UIPrefsFragment;
 
 public class PrefsActivity extends PreferenceActivity {
@@ -34,7 +35,8 @@ public class PrefsActivity extends PreferenceActivity {
 		Log.i(CommandCenterActivity.TAG,
 				"Validating: " + UIPrefsFragment.class.getName() + " vs "
 						+ fragmentName);
-		if (UIPrefsFragment.class.getName().equals(fragmentName)) {
+		if (UIPrefsFragment.class.getName().equals(fragmentName)||
+				SecurityPrefsFragment.class.getName().equals(fragmentName)) {
 			return true;
 		}
 		return false;

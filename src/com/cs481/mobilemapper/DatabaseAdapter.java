@@ -2,8 +2,6 @@ package com.cs481.mobilemapper;
 
 import java.util.ArrayList;
 
-import com.cs481.mobilemapper.activities.CommandCenterActivity;
-
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -11,6 +9,8 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
+
+import com.cs481.mobilemapper.activities.CommandCenterActivity;
 
 public class DatabaseAdapter {
 
@@ -143,15 +143,14 @@ public class DatabaseAdapter {
 	String[] arguments = { }
 	return db.rawQuery(select, arguments);*/
 	public ArrayList<Profile> getEcmProfiles() {
-		String select = "SELECT * FROM ECM";
-		ArrayList<Profile> profileArrayList = null;
-		Cursor c = db.rawQuery(select, null);
+		String select = "SELECT * FROM ?";
+		ArrayList<Profile> profileArrayList = new ArrayList<Profile>();
+		Cursor c = db.rawQuery(select, new String[]{ "ECM" });
 		/*
 		 * ECM - TABLE_ECM_ROW_PROFILE_NAME, TABLE_ECM_ROW_USERNAME,
 		 * TABLE_ECM_ROW_PASSWORD, TABLE_ECM_ROW_ROUTERID
 		 */
 		if (c != null && c.moveToFirst()) {
-			profileArrayList = new ArrayList<Profile>();
 			while (c.isAfterLast() == false) {
 				Profile profile = new Profile();
 				AuthInfo authInfo = new AuthInfo();
@@ -172,16 +171,15 @@ public class DatabaseAdapter {
 	}
 	
 	public ArrayList<Profile> getDirectProfiles() {
-		String select = "SELECT * FROM DIRECT";
-		ArrayList<Profile> profileArrayList = null;
-		Cursor c = db.rawQuery(select, null);
+		String select = "SELECT * FROM ?";
+		ArrayList<Profile> profileArrayList = new ArrayList<Profile>();
+		Cursor c = db.rawQuery(select, new String[]{ "DIRECT" });
 		/*
 		 * DIRECT - TABLE_DIRECT_ROW_PROFILE_NAME, TABLE_DIRECT_ROW_USERNAME,
 		 * TABLE_DIRECT_ROW_PASSWORD, TABLE_DIRECT_ROW_ROUTERIP,
 		 * TABLE_DIRECT_ROW_ROUTERPORT, TABLE_DIRECT_ROW_HTTPS
 		 */
 		if (c != null && c.moveToFirst()) {
-			profileArrayList = new ArrayList<Profile>();
 			while (c.isAfterLast() == false) {
 				Profile profile = new Profile();
 				AuthInfo authInfo = new AuthInfo();
@@ -202,6 +200,18 @@ public class DatabaseAdapter {
 		}
 
 		return profileArrayList;
-
+	}
+	
+	/**
+	 * Gets a list of all profiles stored in the database and return sit as an arraylist
+	 * @return Arraylist of all profiles stored in the database, or an empty one if there are none.
+	 */
+	public ArrayList<Profile> getProfiles(){
+		ArrayList<Profile> allProfiles = new ArrayList<Profile>();
+		
+		allProfiles.addAll(getDirectProfiles());
+		allProfiles.addAll(getEcmProfiles());
+		
+		return allProfiles;
 	}
 }

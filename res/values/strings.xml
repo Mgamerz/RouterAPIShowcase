@@ -122,6 +122,7 @@
 
     <!-- PIN -->
     <string name="pin_actionbar_title">UNLOCK</string>
+    <string name="pin_verify">Enter PIN again to verify</string>
     <string name="pin_verify_fail">Pin did not match</string>
 
     <!-- Router Confirm Dialog -->
@@ -135,7 +136,7 @@
     <string name="splash_button_local">Local</string>
     <string name="splash_text_ecm">ECM</string>
     <string name="splash_text_local">Local</string>
-    
+
     <!-- Preferred Connection Dialog -->
     <string name="text_preferredconnection">Is this your preferred connection?</string>
     <string name="checkbox_donotaskagain">Do not ask again</string>
@@ -168,6 +169,10 @@
     <string name="prefs_title">Preferences</string>
     <string name="prefs_uisubtitle">Look &amp; feel</string>
     <string name="prefs_uititle">User Interface</string>
+    <string name="prefs_securitysubtitle">App Security</string>
+    <string name="prefs_securitytitle">Security</string>
+
+    <!-- Prefs keys -->
     <string name="prefskey_theme">current_theme</string>
 
     <string-array name="theme_names">
@@ -187,6 +192,9 @@
         <item>WiFi as Bridge</item>
         <item>WiFi as WAN</item>
     </string-array>
-        <string name="contextmenu_copy">Copy Log Message</string>
+
+    <string name="contextmenu_copy">Copy Log Message</string>
+    <string name="prefs_delete_profiles">Delete saved profiles</string>
+    <string name="prefs_create_pin">Create a PIN</string>
 
 </resources>

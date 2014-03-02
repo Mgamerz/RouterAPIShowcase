@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <Preference
+        android:key="@+id/prefs_create_pin"
+        android:title="@string/prefs_create_pin" />
+    <Preference
+        android:key="@+id/prefs_delete_profiles"
+        android:title="@string/prefs_delete_profiles" />
+
+</PreferenceScreen>

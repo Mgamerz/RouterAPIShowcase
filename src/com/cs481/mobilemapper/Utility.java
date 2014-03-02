@@ -18,6 +18,7 @@ import android.content.res.Resources;
 import android.net.DhcpInfo;
 import android.net.wifi.WifiManager;
 import android.preference.PreferenceManager;
+import android.support.v4.app.FragmentActivity;
 import android.text.format.Formatter;
 import android.util.Log;
 
@@ -53,14 +54,14 @@ public class Utility {
 	public static String normalizeECM(ObjectMapper mapper, String str) {
 		try {
 			JsonNode root = mapper.readTree(str);
-			//Log.w(CommandCenterActivity.TAG, "Json Tree:");
-			//Log.w(CommandCenterActivity.TAG, root.toString());
+			// Log.w(CommandCenterActivity.TAG, "Json Tree:");
+			// Log.w(CommandCenterActivity.TAG, root.toString());
 			root = root.get("data");
-			//Log.w(CommandCenterActivity.TAG, "Descend to data:");
-			//Log.w(CommandCenterActivity.TAG, root.toString());
+			// Log.w(CommandCenterActivity.TAG, "Descend to data:");
+			// Log.w(CommandCenterActivity.TAG, root.toString());
 			root = root.get(0);
-			//Log.w(CommandCenterActivity.TAG, "Descend to index 0:");
-			//Log.w(CommandCenterActivity.TAG, root.toString());
+			// Log.w(CommandCenterActivity.TAG, "Descend to index 0:");
+			// Log.w(CommandCenterActivity.TAG, root.toString());
 			return root.toString();
 		} catch (JsonProcessingException e) {
 			// TODO Auto-generated catch block
@@ -167,7 +168,7 @@ public class Utility {
 		}
 		return put;
 	}
-	
+
 	public static HttpPost preparePostRequest(AuthInfo authInfo, HttpPost post,
 			String data) throws JsonProcessingException, IOException {
 		// TODO Auto-generated method stub
@@ -185,7 +186,8 @@ public class Utility {
 			post.setHeader("Content-Type", "application/x-www-form-urlencoded");
 			post.setEntity(new StringEntity("data=" + data, "UTF-8"));
 		}
-		Log.i(CommandCenterActivity.TAG, "Final data going to the network: "+post.getEntity().toString());
+		Log.i(CommandCenterActivity.TAG, "Final data going to the network: "
+				+ post.getEntity().toString());
 		return post;
 	}
 
@@ -267,15 +269,16 @@ public class Utility {
 	 * @param profile
 	 *            Profile to be saved.
 	 */
-	public static boolean saveProfile(Profile profile) {
-		//TODO Need help here. I don't understand what activity/context to pass on to this db as param
-		/*DatabaseAdapter dbAdapter = new DatabaseAdapter(ActivityName.this);
-		if(dbAdapter.insertProfile(profile) > 0){
+	public static boolean saveProfile(Context context, Profile profile) {
+		// TODO Need help here. I don't understand what activity/context to pass
+		// on to this db as param
+		DatabaseAdapter dbAdapter = new DatabaseAdapter(context);
+		if (dbAdapter.insertProfile(profile) > 0) {
 			return true;
-		}
-		else*/
+		} else {
 			return false;
-		
+		}
+
 	}
 
 	/**
@@ -283,13 +286,11 @@ public class Utility {
 	 * 
 	 * @return Arraylist of Profile objects read from the database.
 	 */
-	public static ArrayList<Profile> getProfiles() {
-		//TODO Need help here. I don't understand what activity/context to pass on to this db as param
-		/*DatabaseAdapter dbAdapter = new DatabaseAdapter(ActivityName.this);
-		dbAdapter.getProfiles())
-			
-		*/
-		return null;
+	public static ArrayList<Profile> getProfiles(Context context) {
+
+		Log.i(CommandCenterActivity.TAG, "Context for profiles: "+context);
+		DatabaseAdapter dbAdapter = new DatabaseAdapter(context);
+		return dbAdapter.getDirectProfiles();
 	}
 
 	public static int getTheme(Activity activity) {
@@ -311,5 +312,13 @@ public class Utility {
 		default:
 			return R.style.RedAppTheme;
 		}
+	}
+
+	public static AuthInfo encryptAuthInfo(Context context,
+			AuthInfo authInfo) {
+		
+		
+		
+		return null;
 	}
 }

@@ -44,6 +44,7 @@
             android:name="com.cs481.mobilemapper.activities.CommandCenterActivity"
             android:label="@string/command_title" >
         </activity>
+        <activity android:name=".activities.PINActivity"></activity>
     </application>
 
 </manifest>

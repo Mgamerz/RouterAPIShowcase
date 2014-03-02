@@ -48,6 +48,8 @@ import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
 
 public class LoginActivity extends SpiceActivity {
+	private final static int PIN_UNLOCK = 0;
+
 	private AuthInfo authInfo;
 	private ArrayList<Profile> profiles;
 	private DrawerLayout mDrawerLayout;
@@ -99,10 +101,10 @@ public class LoginActivity extends SpiceActivity {
 		}
 
 		// Setup the list of items
-		profiles = Utility.getProfiles();
+		//profiles = Utility.getProfiles(this);
 
 		// PLACEHOLDER STUFF until melissa gets the DB up
-		profiles = new ArrayList<Profile>();
+		 profiles = new ArrayList<Profile>();
 		Profile profile = new Profile();
 		AuthInfo authInfo = new AuthInfo();
 		authInfo.setEcm(true);
@@ -118,7 +120,7 @@ public class LoginActivity extends SpiceActivity {
 		authInfo.setEcm(false);
 		profile.setProfileName("Saved Profile 2");
 		profile.setAuthInfo(authInfo);
-		profiles.add(profile);
+		profiles.add(profile); 
 		// END PLACEHOLDER
 
 		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -315,98 +317,87 @@ public class LoginActivity extends SpiceActivity {
 	 * @param profile
 	 */
 	public void startPINDecrypt(Profile profile) {
-		mTitle = getActionBar().getTitle();
-		Log.i(CommandCenterActivity.TAG, "Title is: " + mTitle);
-		PINFragment PIN = PINFragment.newInstance(false);
-
-		FragmentTransaction transaction = getSupportFragmentManager()
-				.beginTransaction();
-
-		transaction.replace(R.id.login_fragment, PIN, "PIN");
-		transaction.addToBackStack(null);
-		transaction.commit();
 		unlockProfile = profile; // unlocking this profile once complete.
+		Intent intent = new Intent(this, PINActivity.class);
+		intent.putExtra("createpin", false); // verify
+		intent.putExtra("ab_subtitle", unlockProfile.getProfileName()); // changes
+																		// subtitle.
+		startActivityForResult(intent, PIN_UNLOCK);
 	}
 
-	/**
-	 * Sets up the interface for creating a NEW PIN. If the old one exists this
-	 * will prevent them from being decrypted.
-	 */
-	public void startPINCreate() {
-		mTitle = getActionBar().getTitle();
-		PINFragment PIN = PINFragment.newInstance(true);
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-		FragmentTransaction transaction = getSupportFragmentManager()
-				.beginTransaction();
+		if (requestCode == PIN_UNLOCK) {
+			// Make sure the request was successful
+			if (resultCode == RESULT_OK) {
 
-		transaction.replace(R.id.login_fragment, PIN, "PIN");
-		transaction.addToBackStack(null);
-		transaction.commit();
-	}
+				String pin = data.getExtras().getString("pin");
 
-	public void onPINResult(String pin) {
-		getActionBar().show();
-		getActionBar().setTitle(mTitle);
-		
-		if (pin == null) {
-			// denied.
-			return;
-		}
+				if (pin == null) {
+					// denied or back
+					return;
+				}
 
-		getSupportFragmentManager().popBackStack(); // get rid of the pin
-													// fragment
+				// login
+				try {
+					AuthInfo profileAuth = unlockProfile.getAuthInfo();
+					/* String uuid = Cryptography.createLocalUUID(this);
+					SecretKey secret = Cryptography.generateKey(pin,
+							uuid.getBytes("UTF-8"));
 
-		// login
-		try {
-			AuthInfo profileAuth = unlockProfile.getAuthInfo();
-			String uuid = Cryptography.createLocalUUID(this);
-			SecretKey secret = Cryptography.generateKey(pin,
-					uuid.getBytes("UTF-8"));
+					profileAuth.setUsername(Cryptography.decryptMsg(Base64
+							.decode(profileAuth.getUsername(), Base64.DEFAULT),
+							secret));
+					profileAuth.setPassword(Cryptography.decryptMsg(Base64
+							.decode(profileAuth.getPassword(), Base64.DEFAULT),
+							secret)); */
 
-			profileAuth.setUsername(Cryptography.decryptMsg(
-					Base64.decode(profileAuth.getUsername(), Base64.DEFAULT),
-					secret));
-			profileAuth.setPassword(Cryptography.decryptMsg(
-					Base64.decode(profileAuth.getPassword(), Base64.DEFAULT),
-					secret));
+					// connection goes here.
 
-			// connection goes here.
+					// Login via ECM.
+					if (profileAuth.isEcm()) {
+						Intent intent = new Intent(this,
+								CommandCenterActivity.class);
+						intent.putExtra("authInfo", profileAuth);
+						intent.putExtra("ab_subtitle",
+								unlockProfile.getProfileName()); // changes
+																	// subtitle.
+						startActivity(intent);
+						finish();
+						return; // makes sure nothing else happens in this
+								// method if it
+								// tries to continue execution.
+					} else {
+						// It's a direct login
+						// Perform a credential login before we load up the
+						// management interface.
 
-			// Login via ECM.
-			if (profileAuth.isEcm()) {
-				Intent intent = new Intent(this, CommandCenterActivity.class);
-				intent.putExtra("authInfo", authInfo);
-				intent.putExtra("ab_subtitle", unlockProfile.getProfileName()); // changes
-																				// subtitle.
-				startActivity(intent);
-				finish();
-				return; // makes sure nothing else happens in this method if it
-						// tries to continue execution.
-			} else {
-				// It's a direct login
-				// Perform a credential login before we load up the management interface.
+						GetRequest request = new GetRequest(authInfo,
+								"status/product_info", Product_info.class,
+								"direct_login");
+						String lastRequestCacheKey = request.createCacheKey();
 
-				GetRequest request = new GetRequest(authInfo, "status/product_info",
-						Product_info.class, "direct_login");
-				String lastRequestCacheKey = request.createCacheKey();
+						progressDialog = new ProgressDialog(this,
+								R.style.DialogTheme);
+						progressDialog.setMessage(getResources().getString(
+								R.string.connecting));
+						progressDialog.show();
+						progressDialog.setCanceledOnTouchOutside(false);
 
-				progressDialog = new ProgressDialog(this,
-						R.style.DialogTheme);
-				progressDialog.setMessage(getResources().getString(
-						R.string.connecting));
-				progressDialog.show();
-				progressDialog.setCanceledOnTouchOutside(false);
-				
-				//fire off the request.
-				spiceManager.execute(request, lastRequestCacheKey,
-						DurationInMillis.ALWAYS_EXPIRED, new LoginGetRequestListener());
-			}
+						// fire off the request.
+						spiceManager.execute(request, lastRequestCacheKey,
+								DurationInMillis.ALWAYS_EXPIRED,
+								new LoginGetRequestListener());
+					}
 
-		} catch (Exception e) {
-			// failed to decrypt due to 1-million possible errors.
-			Log.e(CommandCenterActivity.TAG,
-					"The supplied PIN was unable to decrypt the username and/or password, logging in has been cancelled.");
-		}
+				} catch (Exception e) {
+					// failed to decrypt due to 1-million possible errors.
+					Log.e(CommandCenterActivity.TAG,
+							"The supplied PIN was unable to decrypt the username and/or password, logging in has been cancelled.");
+				}
+			} //end OK result
+		} //end PIN activity
 	}
 
 	private class LoginGetRequestListener implements RequestListener<Response> {
