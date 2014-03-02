@@ -108,7 +108,7 @@ public class LoginActivity extends SpiceActivity {
 		Profile profile = new Profile();
 		AuthInfo authInfo = new AuthInfo();
 		authInfo.setEcm(true);
-		authInfo.setPassword("CradeDVS554$");
+		authInfo.setPassword("BLANK");
 		authInfo.setUsername("mperez");
 		authInfo.setRouterId("25716");
 		profile.setProfileName("Cloud Router");
