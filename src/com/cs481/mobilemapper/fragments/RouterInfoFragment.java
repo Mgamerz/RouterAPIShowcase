@@ -38,6 +38,12 @@ public class RouterInfoFragment extends Fragment {
 	private SpiceManager spiceManager;
 	private ProgressDialog progressDialog;
 	private boolean shouldLoadData = true;
+	private String product;
+	private String hostname;
+	private String firmware;
+	private String mac_address;
+	private String uptime;
+	private String numclients;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -45,6 +51,12 @@ public class RouterInfoFragment extends Fragment {
 		setHasOptionsMenu(true);
 		if (savedInstanceState != null) {
 			/* save whatever data */
+			product = savedInstanceState.getString("product");
+			hostname = savedInstanceState.getString("hostname");
+			firmware = savedInstanceState.getString("firmware");
+			mac_address = savedInstanceState.getString("mac_address");
+			uptime = savedInstanceState.getString("uptime");
+			numclients = savedInstanceState.getString("numclients");
 			authInfo = savedInstanceState.getParcelable("authInfo");
 			shouldLoadData = savedInstanceState.getBoolean("shouldLoadData",
 					true);
@@ -74,6 +86,12 @@ public class RouterInfoFragment extends Fragment {
 		// Android.
 		Log.i(CommandCenterActivity.TAG, "Saving instance");
 		/* put whatever data */
+		outState.putString("product", product);
+		outState.putString("hostname", hostname);
+		outState.putString("firmware", firmware);
+		outState.putString("mac_address", mac_address);
+		outState.putString("uptime", uptime);
+		outState.putString("numclients", numclients);
 		outState.putParcelable("authInfo", authInfo);
 		outState.putBoolean("shouldLoadData", shouldLoadData);
 	}
@@ -93,6 +111,21 @@ public class RouterInfoFragment extends Fragment {
 			Fragment logFrag = LogSubfragment.newInstance(authInfo);
 			ft.add(R.id.log_container, logFrag);
 			ft.commit();
+		}
+		else{
+			Log.i(CommandCenterActivity.TAG, "Restoring saved values from the previous layout.");
+			TextView textVal = (TextView) v.findViewById(R.id.product_value);
+			textVal.setText(product);
+			textVal = (TextView) v.findViewById(R.id.hostname_value);
+			textVal.setText(hostname);
+			textVal = (TextView) v.findViewById(R.id.firmware_value);
+			textVal.setText(firmware);
+			textVal = (TextView) v.findViewById(R.id.mac_address_value);
+			textVal.setText(mac_address);
+			textVal = (TextView) v.findViewById(R.id.uptime_value);
+			textVal.setText(uptime);
+			textVal = (TextView) v.findViewById(R.id.numclients_value);
+			textVal.setText(numclients);
 		}
 		return v;
 	}
@@ -216,7 +249,10 @@ public class RouterInfoFragment extends Fragment {
 					textVal = (TextView) v.findViewById(R.id.mac_address_value);
 					if (textVal != null)
 						textVal.setText(proin.getMac0());
-
+					
+					product = proin.getProduct_name();
+					mac_address = proin.getMac0();
+					
 				} else {
 					Toast.makeText(getActivity(),
 							response.getResponseInfo().getReason(),
@@ -265,6 +301,7 @@ public class RouterInfoFragment extends Fragment {
 							response.getResponseInfo().getReason(),
 							Toast.LENGTH_LONG).show();
 				}
+				firmware = fw.getFirmware();
 			} else {
 				Toast.makeText(
 						getActivity(),
@@ -302,9 +339,10 @@ public class RouterInfoFragment extends Fragment {
 					TextView textVal = (TextView) v
 							.findViewById(R.id.uptime_value);
 					if (textVal != null) {
-						textVal.setText(DurationFormatUtils.formatDuration(
+						uptime = (DurationFormatUtils.formatDuration(
 								(long) sys.getUptime() * 1000,
-								"d 'Days,' H 'Hours, 'm 'Minutes, ' s 'Seconds'"));
+								"d'd,' H'h, ' m'm, ' s's'"));
+						textVal.setText(uptime);
 					}
 				} else {
 					Toast.makeText(getActivity(),
@@ -350,6 +388,7 @@ public class RouterInfoFragment extends Fragment {
 					if (textVal != null) {
 						textVal.setText(con.getHostname());
 					}
+					hostname = con.getHostname();
 				} else {
 					Toast.makeText(getActivity(),
 							response.getResponseInfo().getReason(),
@@ -398,6 +437,7 @@ public class RouterInfoFragment extends Fragment {
 						textVal.setText(Integer.toString(dat.getClients()
 								.size()));
 					}
+					numclients = Integer.toString(dat.getClients().size());
 				} else {
 					Toast.makeText(getActivity(),
 							response.getResponseInfo().getReason(),

@@ -61,6 +61,7 @@ public class LogSubfragment extends ListFragment implements OnRefreshListener {
 				authInfo = passedArgs.getParcelable("authInfo");
 			}
 		}
+		Log.i(CommandCenterActivity.TAG, "Creating a new log fragment.");
 	}
 
 	public static LogSubfragment newInstance(AuthInfo authInfo) {

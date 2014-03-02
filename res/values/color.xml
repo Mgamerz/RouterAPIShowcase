@@ -10,7 +10,7 @@
 
     <!-- Various shades of white for text-->
     <color name="White">#FFFFFF</color> <!-- normal text -->
-    <!-- <color name="DimmedWhite">#AAFFFFFF</color>  Subtext -->
+    <color name="DimmedWhite">#AAFFFFFF</color>
     <color name="TransparentWhite">#22FFFFFF</color> <!-- Disabled -->
     <color name="SelectedWhite">#10FFFFFF</color> <!-- listrow selection -->
 
