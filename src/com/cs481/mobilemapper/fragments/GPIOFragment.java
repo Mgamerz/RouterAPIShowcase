@@ -22,6 +22,7 @@ import com.cs481.mobilemapper.AuthInfo;
 import com.cs481.mobilemapper.R;
 import com.cs481.mobilemapper.activities.CommandCenterActivity;
 import com.cs481.mobilemapper.activities.SpiceActivity;
+import com.cs481.mobilemapper.responses.PutRequest;
 import com.cs481.mobilemapper.responses.Response;
 import com.cs481.mobilemapper.responses.control.gpio.GPIO;
 import com.cs481.mobilemapper.responses.control.led.LED;
@@ -442,7 +443,7 @@ public class GPIOFragment extends Fragment implements OnRefreshListener,
 			}
 
 			// perform the request.
-			com.cs481.mobilemapper.responses.PutRequest request = new com.cs481.mobilemapper.responses.PutRequest(gpio, authInfo, "control/gpio", com.cs481.mobilemapper.responses.control.gpio.GPIO.class
+			PutRequest request = new PutRequest(gpio, authInfo, "control/gpio", com.cs481.mobilemapper.responses.control.gpio.GPIO.class
 					);
 			String lastRequestCacheKey = request.createCacheKey();
 

@@ -87,6 +87,7 @@ public class LogSubfragment extends ListFragment implements OnRefreshListener {
 		// Android.
 		Log.i(CommandCenterActivity.TAG, "Saving logs instance");
 		outState.putBoolean("shouldLoadData", shouldLoadData);
+		if(logs==null) { logs = new ArrayList<LogMessage>(); }
 		outState.putParcelableArrayList("logs", logs); // This is how to save
 														// the logs object. The
 														// LogMessage object
@@ -233,7 +234,7 @@ public class LogSubfragment extends ListFragment implements OnRefreshListener {
 	private void updateLogsList(ArrayList<LogMessage> logs) {
 		// TODO Auto-generated method stub
 		Log.i(CommandCenterActivity.TAG, "Updating adapter with new log information.");
-		Log.i(CommandCenterActivity.TAG, "Number of logs: "+logs.size());
+		//Log.i(CommandCenterActivity.TAG, "Number of logs: "+logs.size());
 		this.logs = logs;
 		if (adapter == null) {
 			Log.i(CommandCenterActivity.TAG, "created new adapter.");

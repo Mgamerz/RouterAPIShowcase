@@ -35,7 +35,7 @@ public final class LogsDeserializer extends JsonDeserializer<Logs> {
 		ObjectMapper mapper = new ObjectMapper();
 		int numMessages = 0;
 		while (iterator.hasNext() && numMessages < MAX_LOGS) {
-			Log.w(CommandCenterActivity.TAG, "Adding log message "+numMessages);
+			//Log.w(CommandCenterActivity.TAG, "Adding log message "+numMessages);
 			JsonNode logNode = iterator.next();
 			LogMessage message = mapper.readValue(logNode.toString(),
 					LogMessage.class);

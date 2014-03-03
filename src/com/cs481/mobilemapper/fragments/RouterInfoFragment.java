@@ -38,12 +38,6 @@ public class RouterInfoFragment extends Fragment {
 	private SpiceManager spiceManager;
 	private ProgressDialog progressDialog;
 	private boolean shouldLoadData = true;
-	private String product;
-	private String hostname;
-	private String firmware;
-	private String mac_address;
-	private String uptime;
-	private String numclients;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -51,12 +45,6 @@ public class RouterInfoFragment extends Fragment {
 		setHasOptionsMenu(true);
 		if (savedInstanceState != null) {
 			/* save whatever data */
-			product = savedInstanceState.getString("product");
-			hostname = savedInstanceState.getString("hostname");
-			firmware = savedInstanceState.getString("firmware");
-			mac_address = savedInstanceState.getString("mac_address");
-			uptime = savedInstanceState.getString("uptime");
-			numclients = savedInstanceState.getString("numclients");
 			authInfo = savedInstanceState.getParcelable("authInfo");
 			shouldLoadData = savedInstanceState.getBoolean("shouldLoadData",
 					true);
@@ -86,12 +74,26 @@ public class RouterInfoFragment extends Fragment {
 		// Android.
 		Log.i(CommandCenterActivity.TAG, "Saving instance");
 		/* put whatever data */
-		outState.putString("product", product);
-		outState.putString("hostname", hostname);
-		outState.putString("firmware", firmware);
-		outState.putString("mac_address", mac_address);
-		outState.putString("uptime", uptime);
-		outState.putString("numclients", numclients);
+		
+		View v = getView();
+		TextView textVal = (TextView) v.findViewById(R.id.product_value);
+		outState.putString("product", textVal.getText().toString());
+		
+		textVal = (TextView) v.findViewById(R.id.hostname_value);
+		outState.putString("hostname", textVal.getText().toString());
+		
+		textVal = (TextView) v.findViewById(R.id.firmware_value);
+		outState.putString("firmware", textVal.getText().toString());
+		
+		textVal = (TextView) v.findViewById(R.id.mac_address_value);
+		outState.putString("mac_address", textVal.getText().toString());
+		
+		textVal = (TextView) v.findViewById(R.id.uptime_value);
+		outState.putString("uptime", textVal.getText().toString());
+		
+		textVal = (TextView) v.findViewById(R.id.numclients_value);
+		outState.putString("numclients", textVal.getText().toString());
+		
 		outState.putParcelable("authInfo", authInfo);
 		outState.putBoolean("shouldLoadData", shouldLoadData);
 	}
@@ -106,6 +108,7 @@ public class RouterInfoFragment extends Fragment {
 		// If savedinstancestate is not null, then this fragment will already be
 		// created and should be automatically reattached for us.
 		if (savedInstanceState == null) {
+			Log.i(CommandCenterActivity.TAG, "Saved Instance state was null.");
 			FragmentManager fm = getActivity().getSupportFragmentManager();
 			FragmentTransaction ft = fm.beginTransaction();
 			Fragment logFrag = LogSubfragment.newInstance(authInfo);
@@ -114,18 +117,24 @@ public class RouterInfoFragment extends Fragment {
 		}
 		else{
 			Log.i(CommandCenterActivity.TAG, "Restoring saved values from the previous layout.");
+			
 			TextView textVal = (TextView) v.findViewById(R.id.product_value);
-			textVal.setText(product);
+			textVal.setText(savedInstanceState.getString("product"));
+			
 			textVal = (TextView) v.findViewById(R.id.hostname_value);
-			textVal.setText(hostname);
+			textVal.setText(savedInstanceState.getString("hostname"));
+			
 			textVal = (TextView) v.findViewById(R.id.firmware_value);
-			textVal.setText(firmware);
+			textVal.setText(savedInstanceState.getString("firmware"));
+			
 			textVal = (TextView) v.findViewById(R.id.mac_address_value);
-			textVal.setText(mac_address);
+			textVal.setText(savedInstanceState.getString("mac_address"));
+			
 			textVal = (TextView) v.findViewById(R.id.uptime_value);
-			textVal.setText(uptime);
+			textVal.setText(savedInstanceState.getString("uptime"));
+			
 			textVal = (TextView) v.findViewById(R.id.numclients_value);
-			textVal.setText(numclients);
+			textVal.setText(savedInstanceState.getString("numclients"));
 		}
 		return v;
 	}
@@ -248,11 +257,7 @@ public class RouterInfoFragment extends Fragment {
 						textVal.setText(proin.getProduct_name());
 					textVal = (TextView) v.findViewById(R.id.mac_address_value);
 					if (textVal != null)
-						textVal.setText(proin.getMac0());
-					
-					product = proin.getProduct_name();
-					mac_address = proin.getMac0();
-					
+						textVal.setText(proin.getMac0());	
 				} else {
 					Toast.makeText(getActivity(),
 							response.getResponseInfo().getReason(),
@@ -301,7 +306,6 @@ public class RouterInfoFragment extends Fragment {
 							response.getResponseInfo().getReason(),
 							Toast.LENGTH_LONG).show();
 				}
-				firmware = fw.getFirmware();
 			} else {
 				Toast.makeText(
 						getActivity(),
@@ -339,10 +343,9 @@ public class RouterInfoFragment extends Fragment {
 					TextView textVal = (TextView) v
 							.findViewById(R.id.uptime_value);
 					if (textVal != null) {
-						uptime = (DurationFormatUtils.formatDuration(
+						textVal.setText((DurationFormatUtils.formatDuration(
 								(long) sys.getUptime() * 1000,
-								"d'd,' H'h, ' m'm, ' s's'"));
-						textVal.setText(uptime);
+								"d'd,' H'h, ' m'm, ' s's'")));
 					}
 				} else {
 					Toast.makeText(getActivity(),
@@ -388,7 +391,6 @@ public class RouterInfoFragment extends Fragment {
 					if (textVal != null) {
 						textVal.setText(con.getHostname());
 					}
-					hostname = con.getHostname();
 				} else {
 					Toast.makeText(getActivity(),
 							response.getResponseInfo().getReason(),
@@ -437,7 +439,6 @@ public class RouterInfoFragment extends Fragment {
 						textVal.setText(Integer.toString(dat.getClients()
 								.size()));
 					}
-					numclients = Integer.toString(dat.getClients().size());
 				} else {
 					Toast.makeText(getActivity(),
 							response.getResponseInfo().getReason(),
