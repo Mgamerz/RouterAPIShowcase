@@ -35,10 +35,12 @@ import com.cs481.mobilemapper.responses.status.log.Logs;
 import com.octo.android.robospice.SpiceManager;
 import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
+import com.octo.android.robospice.request.listener.PendingRequestListener;
 import com.octo.android.robospice.request.listener.RequestListener;
 
 public class LogSubfragment extends ListFragment implements OnRefreshListener {
 
+	private static final String CACHEKEY_LOGS = "logs_get";
 	private PullToRefreshLayout mPullToRefreshLayout;
 	private SpiceManager spiceManager;
 	private AuthInfo authInfo;
@@ -120,18 +122,18 @@ public class LogSubfragment extends ListFragment implements OnRefreshListener {
 						getListView().getEmptyView()).listener(this)
 				.setup(mPullToRefreshLayout);
 	}
-
+	
 	@Override
-	public void onResume() {
-		super.onResume();
+	public void onStart(){
+		super.onStart();
 		SpiceActivity sa = (SpiceActivity) getActivity();
 		spiceManager = sa.getSpiceManager();
+		spiceManager.addListenerIfPending(Response.class, CACHEKEY_LOGS, new LogsGetRequestListener());
 		if (shouldLoadData) {
 			Log.i(CommandCenterActivity.TAG, "Reading logs, should load data.");
 			readLogs();
 			shouldLoadData = false;
 		} else {
-			// Log.i(CommandCenterActivity.TAG, waps.toString());
 			updateLogsList(logs);
 		}
 	}
@@ -142,10 +144,10 @@ public class LogSubfragment extends ListFragment implements OnRefreshListener {
 	private void readLogs() {
 		// TODO Auto-generated method stub
 		GetRequest clientModeReq = new GetRequest(authInfo, "status/log",
-				Logs.class, "LogsGet");
+				Logs.class, CACHEKEY_LOGS);
 		String lastRequestCacheKey = clientModeReq.createCacheKey();
 		spiceManager.execute(clientModeReq, lastRequestCacheKey,
-				DurationInMillis.ALWAYS_EXPIRED, new LogsGetRequestListener());
+				SpiceActivity.DURATION_3SECS, new LogsGetRequestListener());
 	}
 
 	public class LogAdapter extends ArrayAdapter<LogMessage> {
@@ -197,7 +199,7 @@ public class LogSubfragment extends ListFragment implements OnRefreshListener {
 		readLogs();
 	}
 
-	private class LogsGetRequestListener implements RequestListener<Response> {
+	private class LogsGetRequestListener implements RequestListener<Response>, PendingRequestListener<Response> {
 
 		@Override
 		public void onRequestFailure(SpiceException e) {
@@ -229,12 +231,18 @@ public class LogSubfragment extends ListFragment implements OnRefreshListener {
 			}
 			mPullToRefreshLayout.setRefreshComplete();
 		}
+
+		@Override
+		public void onRequestNotFound() {
+			// TODO Auto-generated method stub
+			Log.w(CommandCenterActivity.TAG, "No request pending to listen to for logs.");
+		}
 	}
 
 	private void updateLogsList(ArrayList<LogMessage> logs) {
 		// TODO Auto-generated method stub
 		Log.i(CommandCenterActivity.TAG, "Updating adapter with new log information.");
-		//Log.i(CommandCenterActivity.TAG, "Number of logs: "+logs.size());
+		Log.i(CommandCenterActivity.TAG, "Number of logs: "+logs.size());
 		this.logs = logs;
 		if (adapter == null) {
 			Log.i(CommandCenterActivity.TAG, "created new adapter.");

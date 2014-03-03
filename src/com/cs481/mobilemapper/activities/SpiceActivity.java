@@ -13,7 +13,7 @@ import com.octo.android.robospice.SpiceManager;
 public class SpiceActivity extends FragmentActivity {
 	//use JacksonSpringAndroidSpiceService.class instead of JsonSpiceService.class
 	protected SpiceManager spiceManager = new SpiceManager(CCSpiceService.class);
-
+	public final static long DURATION_3SECS = 3000L;
 
 	@Override
 	protected void onStart() {

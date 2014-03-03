@@ -126,6 +126,9 @@ public class WifiClientFragment extends ListFragment implements
 		// Save data on rotate. This bundle will be passed to onCreate() by
 		// Android.
 		Log.i(CommandCenterActivity.TAG, "Saving instance");
+		if (waps == null) {
+			waps = new ArrayList<WAP>(); //prevents null pointer on iteration
+		}
 		outState.putParcelableArrayList("waps", waps);
 		outState.putParcelableArrayList("wanprofiles", wanprofiles);
 		outState.putParcelable("authInfo", authInfo);

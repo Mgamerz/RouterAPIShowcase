@@ -25,6 +25,7 @@ import com.cs481.mobilemapper.responses.status.product_info.Product_info;
 import com.octo.android.robospice.SpiceManager;
 import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
+import com.octo.android.robospice.request.listener.PendingRequestListener;
 import com.octo.android.robospice.request.listener.RequestListener;
 
 /**
@@ -34,6 +35,13 @@ import com.octo.android.robospice.request.listener.RequestListener;
  * 
  */
 public class RouterInfoFragment extends Fragment {
+	private final static String CACHEKEY_PRODUCT = "productinfo_get";
+	private final static String CACHEKEY_HOSTNAME = "hostname_get";
+	private final static String CACHEKEY_FIRMWARE = "firmware_get";
+	private final static String CACHEKEY_MACADDRESS = "macaddress_get";
+	private final static String CACHEKEY_UPTIME = "uptime_get";
+	private final static String CACHEKEY_CLIENTS = "numclients_get";
+
 	private AuthInfo authInfo;
 	private SpiceManager spiceManager;
 	private ProgressDialog progressDialog;
@@ -74,26 +82,26 @@ public class RouterInfoFragment extends Fragment {
 		// Android.
 		Log.i(CommandCenterActivity.TAG, "Saving instance");
 		/* put whatever data */
-		
+
 		View v = getView();
 		TextView textVal = (TextView) v.findViewById(R.id.product_value);
 		outState.putString("product", textVal.getText().toString());
-		
+
 		textVal = (TextView) v.findViewById(R.id.hostname_value);
 		outState.putString("hostname", textVal.getText().toString());
-		
+
 		textVal = (TextView) v.findViewById(R.id.firmware_value);
 		outState.putString("firmware", textVal.getText().toString());
-		
+
 		textVal = (TextView) v.findViewById(R.id.mac_address_value);
 		outState.putString("mac_address", textVal.getText().toString());
-		
+
 		textVal = (TextView) v.findViewById(R.id.uptime_value);
 		outState.putString("uptime", textVal.getText().toString());
-		
+
 		textVal = (TextView) v.findViewById(R.id.numclients_value);
 		outState.putString("numclients", textVal.getText().toString());
-		
+
 		outState.putParcelable("authInfo", authInfo);
 		outState.putBoolean("shouldLoadData", shouldLoadData);
 	}
@@ -109,30 +117,30 @@ public class RouterInfoFragment extends Fragment {
 		// created and should be automatically reattached for us.
 		if (savedInstanceState == null) {
 			Log.i(CommandCenterActivity.TAG, "Saved Instance state was null.");
-			FragmentManager fm = getActivity().getSupportFragmentManager();
+			FragmentManager fm = getChildFragmentManager(); //doing a subfragment
 			FragmentTransaction ft = fm.beginTransaction();
 			Fragment logFrag = LogSubfragment.newInstance(authInfo);
 			ft.add(R.id.log_container, logFrag);
 			ft.commit();
-		}
-		else{
-			Log.i(CommandCenterActivity.TAG, "Restoring saved values from the previous layout.");
-			
+		} else {
+			Log.i(CommandCenterActivity.TAG,
+					"Restoring saved values from the previous layout.");
+
 			TextView textVal = (TextView) v.findViewById(R.id.product_value);
 			textVal.setText(savedInstanceState.getString("product"));
-			
+
 			textVal = (TextView) v.findViewById(R.id.hostname_value);
 			textVal.setText(savedInstanceState.getString("hostname"));
-			
+
 			textVal = (TextView) v.findViewById(R.id.firmware_value);
 			textVal.setText(savedInstanceState.getString("firmware"));
-			
+
 			textVal = (TextView) v.findViewById(R.id.mac_address_value);
 			textVal.setText(savedInstanceState.getString("mac_address"));
-			
+
 			textVal = (TextView) v.findViewById(R.id.uptime_value);
 			textVal.setText(savedInstanceState.getString("uptime"));
-			
+
 			textVal = (TextView) v.findViewById(R.id.numclients_value);
 			textVal.setText(savedInstanceState.getString("numclients"));
 		}
@@ -145,6 +153,19 @@ public class RouterInfoFragment extends Fragment {
 		SpiceActivity sa = (SpiceActivity) getActivity();
 		sa.setTitle(getResources().getString(R.string.routerinfo));
 		spiceManager = sa.getSpiceManager();
+		spiceManager.addListenerIfPending(Response.class, CACHEKEY_PRODUCT,
+				new InfoGetRequestListener());
+		spiceManager.addListenerIfPending(Response.class, CACHEKEY_HOSTNAME,
+				new InfoGetConfigListener());
+		spiceManager.addListenerIfPending(Response.class, CACHEKEY_FIRMWARE,
+				new InfoGetFWListener());
+		spiceManager.addListenerIfPending(Response.class, CACHEKEY_MACADDRESS,
+				new InfoGetSystemListener());
+		spiceManager.addListenerIfPending(Response.class, CACHEKEY_UPTIME,
+				new InfoGetSystemListener());
+		spiceManager.addListenerIfPending(Response.class, CACHEKEY_CLIENTS,
+				new InfoGetClientListener());
+
 		/* call the reading methods */
 
 		if (shouldLoadData) {
@@ -160,7 +181,7 @@ public class RouterInfoFragment extends Fragment {
 	private void readProductInfo(boolean dialog) {
 		// perform the request.
 		GetRequest request = new GetRequest(authInfo, "status/product_info",
-				Product_info.class, "product_infoget");
+				Product_info.class, CACHEKEY_PRODUCT);
 		String lastRequestCacheKey = request.createCacheKey();
 
 		if (dialog) {
@@ -170,7 +191,6 @@ public class RouterInfoFragment extends Fragment {
 					R.string.info_reading));
 			progressDialog.show();
 			progressDialog.setCanceledOnTouchOutside(false);
-			progressDialog.setCancelable(false);
 		}
 		spiceManager.execute(request, lastRequestCacheKey,
 				DurationInMillis.ALWAYS_EXPIRED, new InfoGetRequestListener());
@@ -179,7 +199,7 @@ public class RouterInfoFragment extends Fragment {
 	private void readFWInfo() {
 		// perform the request.
 		GetRequest request = new GetRequest(authInfo, "status/fw_info",
-				Fw_info.class, "fw_infoget");
+				Fw_info.class, CACHEKEY_FIRMWARE);
 		String lastRequestCacheKey = request.createCacheKey();
 
 		spiceManager.execute(request, lastRequestCacheKey,
@@ -192,11 +212,11 @@ public class RouterInfoFragment extends Fragment {
 				authInfo,
 				"status/system",
 				com.cs481.mobilemapper.responses.status.product_info.System.class,
-				"system_get");
+				CACHEKEY_UPTIME);
 		String lastRequestCacheKey = request.createCacheKey();
 
 		spiceManager.execute(request, lastRequestCacheKey,
-				DurationInMillis.ALWAYS_EXPIRED, new InfoGetSystemListener());
+				DurationInMillis.ONE_SECOND, new InfoGetSystemListener());
 	}
 
 	private void readHostNameInfo() {
@@ -205,7 +225,7 @@ public class RouterInfoFragment extends Fragment {
 				authInfo,
 				"status/wan/devices/ethernet-wan/config",
 				com.cs481.mobilemapper.status.wan.devices.ethernetwan.Config.class,
-				"config_get");
+				CACHEKEY_HOSTNAME);
 		String lastRequestCacheKey = request.createCacheKey();
 
 		spiceManager.execute(request, lastRequestCacheKey,
@@ -216,7 +236,7 @@ public class RouterInfoFragment extends Fragment {
 		// perform the request.
 		GetRequest request = new GetRequest(authInfo, "status/lan",
 				com.cs481.mobilemapper.responses.status.lan.Lan.class,
-				"client_get");
+				CACHEKEY_CLIENTS);
 		// GetRequest request = new GetRequest(authInfo, "status/lan/devices/",
 		// com.cs481.mobilemapper.responses.status.lan.Devices.class,
 		// "client_get");
@@ -227,7 +247,8 @@ public class RouterInfoFragment extends Fragment {
 
 	}
 
-	private class InfoGetRequestListener implements RequestListener<Response> {
+	private class InfoGetRequestListener implements RequestListener<Response>,
+			PendingRequestListener<Response> {
 
 		@Override
 		public void onRequestFailure(SpiceException e) {
@@ -257,7 +278,7 @@ public class RouterInfoFragment extends Fragment {
 						textVal.setText(proin.getProduct_name());
 					textVal = (TextView) v.findViewById(R.id.mac_address_value);
 					if (textVal != null)
-						textVal.setText(proin.getMac0());	
+						textVal.setText(proin.getMac0());
 				} else {
 					Toast.makeText(getActivity(),
 							response.getResponseInfo().getReason(),
@@ -271,9 +292,16 @@ public class RouterInfoFragment extends Fragment {
 						Toast.LENGTH_LONG).show();
 			}
 		}
+
+		@Override
+		public void onRequestNotFound() {
+			// TODO Auto-generated method stub
+			// we don't really care i guess.
+		}
 	}
 
-	private class InfoGetFWListener implements RequestListener<Response> {
+	private class InfoGetFWListener implements RequestListener<Response>,
+			PendingRequestListener<Response> {
 		@Override
 		public void onRequestFailure(SpiceException e) {
 			// update your UI
@@ -314,9 +342,15 @@ public class RouterInfoFragment extends Fragment {
 						Toast.LENGTH_LONG).show();
 			}
 		}
+
+		@Override
+		public void onRequestNotFound() {
+			// TODO Auto-generated method stub
+
+		}
 	}
 
-	private class InfoGetSystemListener implements RequestListener<Response> {
+	private class InfoGetSystemListener implements RequestListener<Response>, PendingRequestListener<Response> {
 		@Override
 		public void onRequestFailure(SpiceException e) {
 			// update your UI
@@ -360,9 +394,16 @@ public class RouterInfoFragment extends Fragment {
 						Toast.LENGTH_LONG).show();
 			}
 		}
+
+		@Override
+		public void onRequestNotFound() {
+			// TODO Auto-generated method stub
+			
+		}
 	}
 
-	private class InfoGetConfigListener implements RequestListener<Response> {
+	private class InfoGetConfigListener implements RequestListener<Response>,
+			PendingRequestListener<Response> {
 		@Override
 		public void onRequestFailure(SpiceException e) {
 			// update your UI
@@ -404,9 +445,16 @@ public class RouterInfoFragment extends Fragment {
 						Toast.LENGTH_LONG).show();
 			}
 		}
+
+		@Override
+		public void onRequestNotFound() {
+			// TODO Auto-generated method stub
+
+		}
 	}
 
-	private class InfoGetClientListener implements RequestListener<Response> {
+	private class InfoGetClientListener implements RequestListener<Response>,
+			PendingRequestListener<Response> {
 		@Override
 		public void onRequestFailure(SpiceException e) {
 			// update your UI
@@ -451,6 +499,12 @@ public class RouterInfoFragment extends Fragment {
 								R.string.info_get_response_null),
 						Toast.LENGTH_LONG).show();
 			}
+		}
+
+		@Override
+		public void onRequestNotFound() {
+			// TODO Auto-generated method stub
+
 		}
 	}
 }
