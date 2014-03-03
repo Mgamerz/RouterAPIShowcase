@@ -20,6 +20,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.provider.Settings.Secure;
+import android.util.Base64;
 import android.util.Log;
 
 import com.cs481.mobilemapper.activities.CommandCenterActivity;
@@ -55,7 +56,7 @@ public class Cryptography {
 		cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
 		cipher.init(Cipher.ENCRYPT_MODE, secret);
 		byte[] cipherText = cipher.doFinal(message.getBytes("UTF-8"));
-		Log.i(CommandCenterActivity.TAG, "Encrypted ciphertext "+ new String(cipherText, "UTF-8"));
+		Log.i(CommandCenterActivity.TAG, "Encrypted ciphertext to"+ Base64.decode(cipherText, Base64.DEFAULT));
 		return cipherText;
 	}
 
@@ -69,7 +70,7 @@ public class Cryptography {
 		 * Decrypt the message, given derived encContentValues and
 		 * initialization vector.
 		 */
-		Log.i(CommandCenterActivity.TAG, "Decrypting "+ new String(cipherText, "UTF-8"));
+		Log.i(CommandCenterActivity.TAG, "Decrypting"+ Base64.decode(cipherText, Base64.DEFAULT));
 
 		Cipher cipher = null;
 		cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");

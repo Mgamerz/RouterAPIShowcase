@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.cs481.mobilemapper.AuthInfo;
 import com.cs481.mobilemapper.Profile;
@@ -78,69 +79,84 @@ public class RouterConfirmDialogFragment extends DialogFragment {
 					}
 				});
 
-		final AlertDialog d = alertDialogBuilder.create();
-		d.setOnShowListener(new DialogInterface.OnShowListener() {
-
-			@Override
-			public void onShow(DialogInterface dialog) {
-				Log.i(CommandCenterActivity.TAG, "Showing dialog!");
-				Button b = d.getButton(AlertDialog.BUTTON_POSITIVE);
-				b.setOnClickListener(new View.OnClickListener() {
-
-					@Override
-					public void onClick(View view) {
-						// TODO Do something
-						// TODO Auto-generated method stub
-						// Check to see if the 'save profile' is selected.
-						CheckBox sp = (CheckBox) v
-								.findViewById(R.id.ecm_save_as_profile);
-						if (sp.isChecked()) {
-							Intent intent = new Intent(getActivity(), PINActivity.class);
-							intent.putExtra("createpin", false); // verify
-							startActivityForResult(intent, LoginActivity.PIN_UNLOCK);
-						} else {
-
-							Intent intent = new Intent(getActivity(),
-									CommandCenterActivity.class);
-							intent.putExtra("authInfo", authInfo);
-							intent.putExtra("ab_subtitle", router.getName()); // changes
-																				// subtitle.
-							startActivity(intent);
-							getActivity().finish();
-
-							// Dismiss once everything is OK.
-							d.dismiss();
-						}
-					}
-				});
-			}
-		});
-
 		return alertDialogBuilder.create();
 	}
 
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		switch (requestCode) {
+		case LoginActivity.PROFILE_PIN_ENCRYPT:
+			Log.i(CommandCenterActivity.TAG,
+					"ACTIVITY HAS FINISHED, RESULT METHOD() IN FRAGMENT");
+			if (requestCode == LoginActivity.PROFILE_PIN_ENCRYPT) {
+				// Make sure the request was successful
+				if (resultCode == Activity.RESULT_OK) {
+					AuthInfo encryptedInfo = Utility.encryptAuthInfo(
+							getActivity(), data.getExtras().getString("pin"),
+							authInfo);
+					if (encryptedInfo != null) {
+						Profile profile = new Profile();
+						profile.setAuthInfo(encryptedInfo);
+						profile.setProfileName(router.getName());
+						Utility.saveProfile(getActivity(), profile);
+					} else {
+						Toast.makeText(getActivity(), "Error saving profile.", Toast.LENGTH_LONG).show();
+					}
+					dismiss();
+					Intent intent = new Intent(getActivity(),
+							CommandCenterActivity.class);
+					intent.putExtra("authInfo", authInfo);
+					intent.putExtra("ab_subtitle", router.getName()); // changes
+																		// subtitle.
+					startActivity(intent);
+					getActivity().finish();
+					return; // makes sure nothing else happens in this
+				} // end pin
+				break;
+			}
+		default:
+			super.onActivityResult(requestCode, resultCode, data);
+		}
+	}
 
-		if (requestCode == LoginActivity.PIN_UNLOCK) {
-			// Make sure the request was successful
-			if (resultCode == Activity.RESULT_OK) {
-				AuthInfo encryptedInfo = Utility.encryptAuthInfo(getActivity(),
-						data.getExtras().getString("pin"), authInfo);
-				Profile profile = new Profile();
-				profile.setAuthInfo(encryptedInfo);
-				profile.setProfileName(router.getName());
-				Utility.saveProfile(getActivity(), profile);
-				dismiss();
-				Intent intent = new Intent(getActivity(),
-						CommandCenterActivity.class);
-				intent.putExtra("authInfo", authInfo);
-				intent.putExtra("ab_subtitle", router.getName()); // changes
-																	// subtitle.
-				startActivity(intent);
-				getActivity().finish();
-				return; // makes sure nothing else happens in this
-			} // end pin
+	@Override
+	public void onStart() {
+		super.onStart(); // super.onStart() is where dialog.show() is actually
+							// called on the underlying dialog, so we have to do
+							// it after this point
+		AlertDialog d = (AlertDialog) getDialog();
+		if (d != null) {
+			Button positiveButton = (Button) d
+					.getButton(Dialog.BUTTON_POSITIVE);
+			positiveButton.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					// TODO Do something
+					// TODO Auto-generated method stub
+					// Check to see if the 'save profile' is selected.
+					CheckBox sp = (CheckBox) getDialog().findViewById(
+							R.id.ecm_save_as_profile);
+					if (sp.isChecked()) {
+						Intent intent = new Intent(getActivity(),
+								PINActivity.class);
+						intent.putExtra("createpin", false); // verify
+						startActivityForResult(intent,
+								LoginActivity.PROFILE_PIN_ENCRYPT);
+					} else {
+
+						Intent intent = new Intent(getActivity(),
+								CommandCenterActivity.class);
+						intent.putExtra("authInfo", authInfo);
+						intent.putExtra("ab_subtitle", router.getName()); // changes
+																			// subtitle.
+						startActivity(intent);
+						getActivity().finish();
+
+						// Dismiss once everything is OK.
+						dismiss();
+					}
+				}
+			});
 		}
 	}
 

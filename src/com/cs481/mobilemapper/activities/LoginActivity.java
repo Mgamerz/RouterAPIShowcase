@@ -48,7 +48,8 @@ import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
 
 public class LoginActivity extends SpiceActivity {
-	public final static int PIN_UNLOCK = 0;
+	public final static int PROFILE_PIN_DECRYPT = 0;
+	public final static int PROFILE_PIN_ENCRYPT = 0;
 
 	private AuthInfo authInfo;
 	private ArrayList<Profile> profiles;
@@ -64,6 +65,11 @@ public class LoginActivity extends SpiceActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		if (savedInstanceState != null){
+			unlockProfile = savedInstanceState.getParcelable("unlockProfile");
+			authInfo = savedInstanceState.getParcelable("authInfo");
+		}
+		
 		Ln.getConfig().setLoggingLevel(Log.ERROR);
 		setTheme(Utility.getTheme(this));
 
@@ -167,6 +173,12 @@ public class LoginActivity extends SpiceActivity {
 
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 		getActionBar().setHomeButtonEnabled(true);
+	}
+	
+	public void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		outState.putParcelable("authInfo", authInfo);
+		outState.putParcelable("unlockProfile", unlockProfile);
 	}
 
 	public boolean onOptionsItemSelected(MenuItem item) {
@@ -302,13 +314,14 @@ public class LoginActivity extends SpiceActivity {
 		unlockProfile = profile; // unlocking this profile once complete.
 		Intent intent = new Intent(this, PINActivity.class);
 		intent.putExtra("createpin", false); // verify
-		startActivityForResult(intent, PIN_UNLOCK);
+		startActivityForResult(intent, PROFILE_PIN_DECRYPT);
 	}
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-		if (requestCode == PIN_UNLOCK) {
+		switch (requestCode) {
+		case PROFILE_PIN_DECRYPT: {
 			// Make sure the request was successful
 			if (resultCode == RESULT_OK) {
 
@@ -322,18 +335,20 @@ public class LoginActivity extends SpiceActivity {
 				// login
 				try {
 					AuthInfo profileAuth = unlockProfile.getAuthInfo();
-					/* String uuid = Cryptography.createLocalUUID(this);
+					// connection goes here.
+					String uuid = Cryptography.createLocalUUID(this);
 					SecretKey secret = Cryptography.generateKey(pin,
 							uuid.getBytes("UTF-8"));
+					String decryptedUsername = Cryptography.decryptMsg(Base64
+							.decode(unlockProfile.getAuthInfo().getUsername(), Base64.DEFAULT),
+							secret);
+					String decryptedPassword = Cryptography.decryptMsg(Base64
+							.decode(unlockProfile.getAuthInfo().getPassword(), Base64.DEFAULT),
+							secret);
+					profileAuth.setPassword(decryptedPassword);
+					profileAuth.setUsername(decryptedUsername);
 
-					profileAuth.setUsername(Cryptography.decryptMsg(Base64
-							.decode(profileAuth.getUsername(), Base64.DEFAULT),
-							secret));
-					profileAuth.setPassword(Cryptography.decryptMsg(Base64
-							.decode(profileAuth.getPassword(), Base64.DEFAULT),
-							secret)); */
-
-					// connection goes here.
+					// Log.
 
 					// Login via ECM.
 					if (profileAuth.isEcm()) {
@@ -375,9 +390,15 @@ public class LoginActivity extends SpiceActivity {
 					// failed to decrypt due to 1-million possible errors.
 					Log.e(CommandCenterActivity.TAG,
 							"The supplied PIN was unable to decrypt the username and/or password, logging in has been cancelled.");
+					e.printStackTrace();
 				}
-			} //end OK result
-		} //end PIN activity
+			} // end OK result
+			break;
+		} // end PIN activity case
+
+		default:
+			super.onActivityResult(requestCode, resultCode, data);
+		}
 	}
 
 	private class LoginGetRequestListener implements RequestListener<Response> {

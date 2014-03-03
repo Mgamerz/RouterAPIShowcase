@@ -349,7 +349,8 @@ public class Utility {
 		} catch (Exception e) {
 			Log.e(CommandCenterActivity.TAG,
 					"Unable to encrypt auth info, object cannot be saved.");
-			Log.e(CommandCenterActivity.TAG, e.getMessage());
+			e.printStackTrace();
+			//Log.e(CommandCenterActivity.TAG, e.getSta);
 			return null;
 		}
 	}
