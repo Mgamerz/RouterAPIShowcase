@@ -87,6 +87,7 @@ public class LoginActivity extends SpiceActivity {
 				resources.getString(R.string.crypto_prefsdb), MODE_PRIVATE);
 		String uuid = crypto.getString("uuid", null);
 		if (uuid == null) {
+			Log.i(CommandCenterActivity.TAG, "UUID is null - app should be running from a fresh data set.");
 			// writing
 			SecureRandom secureRandom = new SecureRandom();
 			// Do *not* seed secureRandom! Automatically seeded from system.

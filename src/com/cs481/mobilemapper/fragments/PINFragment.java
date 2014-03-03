@@ -513,8 +513,10 @@ public class PINFragment extends Fragment implements OnClickListener {
 				//This is the verify stage
 				if (currentPin.equals(verifyPin)){
 					savePIN();
-					Toast.makeText(getActivity(), "PIN verification object saved to SharedPrefs",
-							Toast.LENGTH_LONG).show();
+					//Toast.makeText(getActivity(), "PIN verification object saved to SharedPrefs",
+					Intent returnIntent = new Intent();
+					returnIntent.putExtra("pin", currentPin);
+					getActivity().setResult(Activity.RESULT_OK, returnIntent);
 					getActivity().finish();
 				} else {
 					wrongPIN();

@@ -166,7 +166,7 @@ public class DashboardFragment extends ListFragment {
 		// case lWAN:
 		case lGPIO: {
 			// Create a new Fragment to be placed in the activity layout
-			GPIOFragment gpioFragment = new GPIOFragment();
+			GPIOFragment gpioFragment = GPIOFragment.newInstance(authInfo);
 
 			// In case this activity was started with special instructions from
 			// an

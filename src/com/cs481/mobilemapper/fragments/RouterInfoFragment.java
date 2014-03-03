@@ -379,7 +379,7 @@ public class RouterInfoFragment extends Fragment {
 					if (textVal != null) {
 						textVal.setText((DurationFormatUtils.formatDuration(
 								(long) sys.getUptime() * 1000,
-								"d'd,' H'h, ' m'm, ' s's'")));
+								"d'd,' H'h, 'm'm, 's's'")));
 					}
 				} else {
 					Toast.makeText(getActivity(),

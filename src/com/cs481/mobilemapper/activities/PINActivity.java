@@ -1,12 +1,14 @@
 package com.cs481.mobilemapper.activities;
 
-import android.content.Intent;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 
 import com.cs481.mobilemapper.R;
+import com.cs481.mobilemapper.Utility;
 import com.cs481.mobilemapper.fragments.PINFragment;
 
 
@@ -20,10 +22,20 @@ public class PINActivity extends FragmentActivity {
 
 	public void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
+		setTheme(Utility.getTheme(this));
 		setContentView(R.layout.activity_pin);
 		
-		Intent intent = getIntent();
-		boolean createpin = intent.getExtras().getBoolean("createpin");
+		SharedPreferences crypto = getSharedPreferences(
+				getResources().getString(R.string.crypto_prefsdb),
+				Context.MODE_PRIVATE);
+		String verify = crypto.getString("validator", null); // this should turn
+															// into the uuid
+															// stored in the
+															// prefs.
+		boolean createpin = false; //default to validate mode.
+		if (verify == null){
+			createpin = true;
+		}
 		
 		// Retain fragments on rotation
 		if (null == savedInstanceState) {

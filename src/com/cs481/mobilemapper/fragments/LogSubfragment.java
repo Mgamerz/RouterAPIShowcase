@@ -33,7 +33,6 @@ import com.cs481.mobilemapper.responses.Response;
 import com.cs481.mobilemapper.responses.status.log.LogMessage;
 import com.cs481.mobilemapper.responses.status.log.Logs;
 import com.octo.android.robospice.SpiceManager;
-import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.PendingRequestListener;
 import com.octo.android.robospice.request.listener.RequestListener;
@@ -41,12 +40,17 @@ import com.octo.android.robospice.request.listener.RequestListener;
 public class LogSubfragment extends ListFragment implements OnRefreshListener {
 
 	private static final String CACHEKEY_LOGS = "logs_get";
+	private static final int LOG_FAILED = 0;
+	private static final int LOG_LOADING = 1;
+	private static final int LOG_LOADED = 2;
 	private PullToRefreshLayout mPullToRefreshLayout;
 	private SpiceManager spiceManager;
 	private AuthInfo authInfo;
 	private LogAdapter adapter;
 	private ArrayList<LogMessage> logs;
 	private boolean shouldLoadData = true;
+	private int logState = 0;
+	private LogsGetRequestListener rl;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -57,6 +61,7 @@ public class LogSubfragment extends ListFragment implements OnRefreshListener {
 			logs = savedInstanceState.getParcelableArrayList("logs");
 			shouldLoadData = savedInstanceState.getBoolean("shouldLoadData");
 			authInfo = savedInstanceState.getParcelable("authInfo");
+			logState = savedInstanceState.getInt("logState", LOG_LOADING);
 		} else {
 			Bundle passedArgs = getArguments();
 			if (passedArgs != null) {
@@ -89,12 +94,17 @@ public class LogSubfragment extends ListFragment implements OnRefreshListener {
 		// Android.
 		Log.i(CommandCenterActivity.TAG, "Saving logs instance");
 		outState.putBoolean("shouldLoadData", shouldLoadData);
-		if(logs==null) { logs = new ArrayList<LogMessage>(); }
+		if (logs == null) {
+			Log.i(CommandCenterActivity.TAG,
+					"Logs are null, creating empty list.");
+			logs = new ArrayList<LogMessage>();
+		}
 		outState.putParcelableArrayList("logs", logs); // This is how to save
 														// the logs object. The
 														// LogMessage object
 														// must be parcelable
 		outState.putParcelable("authInfo", authInfo);
+		outState.putInt("logState", logState);
 	}
 
 	@Override
@@ -122,16 +132,20 @@ public class LogSubfragment extends ListFragment implements OnRefreshListener {
 						getListView().getEmptyView()).listener(this)
 				.setup(mPullToRefreshLayout);
 	}
-	
+
 	@Override
-	public void onStart(){
+	public void onStart() {
 		super.onStart();
 		SpiceActivity sa = (SpiceActivity) getActivity();
 		spiceManager = sa.getSpiceManager();
-		spiceManager.addListenerIfPending(Response.class, CACHEKEY_LOGS, new LogsGetRequestListener());
+		rl = new LogsGetRequestListener();
+
+		//spiceManager.getFromCache(Response.class, CACHEKEY_LOGS,
+		//		SpiceActivity.DURATION_3SECS, rl);
+		spiceManager.addListenerIfPending(Response.class, CACHEKEY_LOGS, rl);
 		if (shouldLoadData) {
 			Log.i(CommandCenterActivity.TAG, "Reading logs, should load data.");
-			readLogs();
+			readLogs(rl);
 			shouldLoadData = false;
 		} else {
 			updateLogsList(logs);
@@ -140,14 +154,16 @@ public class LogSubfragment extends ListFragment implements OnRefreshListener {
 
 	/**
 	 * Read's the logs off the server.
+	 * 
+	 * @param rl
 	 */
-	private void readLogs() {
+	private void readLogs(LogsGetRequestListener rl) {
 		// TODO Auto-generated method stub
 		GetRequest clientModeReq = new GetRequest(authInfo, "status/log",
 				Logs.class, CACHEKEY_LOGS);
 		String lastRequestCacheKey = clientModeReq.createCacheKey();
 		spiceManager.execute(clientModeReq, lastRequestCacheKey,
-				SpiceActivity.DURATION_3SECS, new LogsGetRequestListener());
+				SpiceActivity.DURATION_3SECS, rl);
 	}
 
 	public class LogAdapter extends ArrayAdapter<LogMessage> {
@@ -189,17 +205,18 @@ public class LogSubfragment extends ListFragment implements OnRefreshListener {
 			messageView.setText(log.getMessage());
 			tagView.setText(log.getTag());
 			severityView.setText(log.getSeverity());
-			timeView.setText(log.getDateString());			
+			timeView.setText(log.getDateString());
 			return rowView;
 		}
 	}
 
 	@Override
 	public void onRefreshStarted(View view) {
-		readLogs();
+		readLogs(rl);
 	}
 
-	private class LogsGetRequestListener implements RequestListener<Response>, PendingRequestListener<Response> {
+	private class LogsGetRequestListener implements RequestListener<Response>,
+			PendingRequestListener<Response> {
 
 		@Override
 		public void onRequestFailure(SpiceException e) {
@@ -209,48 +226,74 @@ public class LogSubfragment extends ListFragment implements OnRefreshListener {
 					resources.getString(R.string.log_get_failed),
 					Toast.LENGTH_SHORT).show();
 			mPullToRefreshLayout.setRefreshComplete();
-			
-			ProgressBar bar = (ProgressBar) getView().findViewById(R.id.log_loadingprogressbar);
+
+			ProgressBar bar = (ProgressBar) getView().findViewById(
+					R.id.log_loadingprogressbar);
 			bar.setVisibility(ProgressBar.GONE);
-			
-			TextView message = (TextView) getView().findViewById(R.id.log_loadingtext);
-			message.setText(getActivity().getResources().getString(R.string.log_get_failed));
+
+			TextView message = (TextView) getView().findViewById(
+					R.id.log_loadingtext);
+			message.setText(getActivity().getResources().getString(
+					R.string.log_get_failed));
 		}
 
 		@Override
 		public void onRequestSuccess(Response response) {
 			// update your UI
-			Log.i(CommandCenterActivity.TAG, "Logs get request has completed");
+			if (response != null) { //can be null if its not in the cache.
+				Log.i(CommandCenterActivity.TAG,
+						"Logs get request has completed");
 
-			if (response.getResponseInfo().getSuccess()) {
-				Logs logs = (Logs) response.getData();
-				Log.i(CommandCenterActivity.TAG, "Logs get request successful");
-				updateLogsList(logs.getLogs());
-			} else {
-				Toast.makeText(getActivity(),
-						response.getResponseInfo().getReason(),
-						Toast.LENGTH_LONG).show();
+				if (response.getResponseInfo().getSuccess()) {
+					Logs logs = (Logs) response.getData();
+					Log.i(CommandCenterActivity.TAG,
+							"Logs get request successful");
+					updateLogsList(logs.getLogs());
+				} else {
+					Toast.makeText(getActivity(),
+							response.getResponseInfo().getReason(),
+							Toast.LENGTH_LONG).show();
+				}
+				mPullToRefreshLayout.setRefreshComplete();
 			}
-			mPullToRefreshLayout.setRefreshComplete();
 		}
 
 		@Override
 		public void onRequestNotFound() {
 			// TODO Auto-generated method stub
-			Log.w(CommandCenterActivity.TAG, "No request pending to listen to for logs.");
+			Log.w(CommandCenterActivity.TAG,
+					"No request pending to listen to for logs.");
 		}
 	}
 
 	private void updateLogsList(ArrayList<LogMessage> logs) {
 		// TODO Auto-generated method stub
-		Log.i(CommandCenterActivity.TAG, "Updating adapter with new log information.");
-		Log.i(CommandCenterActivity.TAG, "Number of logs: "+logs.size());
-		this.logs = logs;
+		Log.i(CommandCenterActivity.TAG,
+				"Updating adapter with new log information.");
+		/* if (this.logs == null){
+			Log.i(CommandCenterActivity.TAG, "Creating empty log list. It was previously null");
+			this.logs = new ArrayList<LogMessage>();
+		} */
+		
 		if (adapter == null) {
-			Log.i(CommandCenterActivity.TAG, "created new adapter.");
-			adapter = new LogAdapter(getActivity(), logs);
+			adapter = new LogAdapter(getActivity(), logs); // nothing in it
+																// right now as
+																// we will add
+																// it below
+																// (performance
+																// gain)
+			Log.i(CommandCenterActivity.TAG, "created new adapter :" + adapter);
+
 			setListAdapter(adapter);
+		} else {
+			adapter.clear(); //clear if the adapter might have already had data in it.
 		}
+		//Log.i(CommandCenterActivity.TAG, "Number of preclear: " + logs.size()+ " and instance v: "+this.logs.size());
+		//Log.i(CommandCenterActivity.TAG, "Number of postclear: " + logs.size()+ " and instance v: "+this.logs.size());
+
+		
+		adapter.addAll(logs);
+		this.logs = logs;
 		Log.i(CommandCenterActivity.TAG, "notifying adapter of new dataset");
 		adapter.notifyDataSetChanged();
 	}
@@ -278,7 +321,10 @@ public class LogSubfragment extends ListFragment implements OnRefreshListener {
 			ClipData clip = ClipData.newPlainText("logmessage",
 					messageSelected.toString());
 			clipboard.setPrimaryClip(clip);
-			Toast.makeText(getActivity(), getActivity().getResources().getString(R.string.log_copied), Toast.LENGTH_LONG).show();
+			Toast.makeText(
+					getActivity(),
+					getActivity().getResources().getString(R.string.log_copied),
+					Toast.LENGTH_LONG).show();
 			return true;
 		default:
 			return false;

@@ -30,7 +30,7 @@ public class SpiceActivity extends FragmentActivity {
 	/**
 	 * As the parent activites of most fragments we are going to use, we should have a way to share a spice manager with the children fragments.
 	 * This method allows fragments to find their parents spicemanager.
-	 * @return
+	 * @return Activity spicemanager
 	 */
 	public SpiceManager getSpiceManager(){
 		return spiceManager;
