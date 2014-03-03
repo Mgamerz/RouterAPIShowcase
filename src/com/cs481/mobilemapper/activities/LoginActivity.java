@@ -48,7 +48,7 @@ import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
 
 public class LoginActivity extends SpiceActivity {
-	private final static int PIN_UNLOCK = 0;
+	public final static int PIN_UNLOCK = 0;
 
 	private AuthInfo authInfo;
 	private ArrayList<Profile> profiles;
@@ -101,26 +101,8 @@ public class LoginActivity extends SpiceActivity {
 		}
 
 		// Setup the list of items
-		//profiles = Utility.getProfiles(this);
+		profiles = Utility.getProfiles(this);
 
-		// PLACEHOLDER STUFF until melissa gets the DB up
-		 profiles = new ArrayList<Profile>();
-		Profile profile = new Profile();
-		AuthInfo authInfo = new AuthInfo();
-		authInfo.setEcm(true);
-		authInfo.setPassword("BLANK");
-		authInfo.setUsername("mperez");
-		authInfo.setRouterId("25716");
-		profile.setProfileName("Cloud Router");
-		profile.setAuthInfo(authInfo);
-		profiles.add(profile);
-
-		profile = new Profile();
-		authInfo = new AuthInfo();
-		authInfo.setEcm(false);
-		profile.setProfileName("Saved Profile 2");
-		profile.setAuthInfo(authInfo);
-		profiles.add(profile); 
 		// END PLACEHOLDER
 
 		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -320,8 +302,6 @@ public class LoginActivity extends SpiceActivity {
 		unlockProfile = profile; // unlocking this profile once complete.
 		Intent intent = new Intent(this, PINActivity.class);
 		intent.putExtra("createpin", false); // verify
-		intent.putExtra("ab_subtitle", unlockProfile.getProfileName()); // changes
-																		// subtitle.
 		startActivityForResult(intent, PIN_UNLOCK);
 	}
 

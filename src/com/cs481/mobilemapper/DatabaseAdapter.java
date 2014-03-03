@@ -40,7 +40,7 @@ public class DatabaseAdapter {
 	{
 	    this.context = ctx;
 	    DBHelper = new DatabaseHelper(context);
-	}
+	    }
 	private static class DatabaseHelper extends SQLiteOpenHelper {
 		public DatabaseHelper(Context context) {
 			super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -111,15 +111,12 @@ public class DatabaseAdapter {
 	}
 
 	public long insertProfileEcm(Profile profile) {
-
 		AuthInfo authInfo = profile.getAuthInfo();
-
 		ContentValues values = new ContentValues();
 		values.put(TABLE_ECM_ROW_PROFILE_NAME, profile.getProfileName());
 		values.put(TABLE_ECM_ROW_USERNAME, authInfo.getUsername());
 		values.put(TABLE_ECM_ROW_PASSWORD, authInfo.getPassword());
 		values.put(TABLE_ECM_ROW_ROUTERID, authInfo.getRouterId());
-
 		return db.insert(DATABASE_TABLE_ECM, null, values);
 	}
 
@@ -143,9 +140,9 @@ public class DatabaseAdapter {
 	String[] arguments = { }
 	return db.rawQuery(select, arguments);*/
 	public ArrayList<Profile> getEcmProfiles() {
-		String select = "SELECT * FROM ?";
+		String select = "SELECT * FROM ECM";
 		ArrayList<Profile> profileArrayList = new ArrayList<Profile>();
-		Cursor c = db.rawQuery(select, new String[]{ "ECM" });
+		Cursor c = db.rawQuery(select, null);
 		/*
 		 * ECM - TABLE_ECM_ROW_PROFILE_NAME, TABLE_ECM_ROW_USERNAME,
 		 * TABLE_ECM_ROW_PASSWORD, TABLE_ECM_ROW_ROUTERID
@@ -159,21 +156,20 @@ public class DatabaseAdapter {
 				authInfo.setUsername(c.getString(c.getColumnIndex(TABLE_ECM_ROW_USERNAME)));
 				authInfo.setPassword(c.getString(c.getColumnIndex(TABLE_ECM_ROW_PASSWORD)));
 				authInfo.setRouterId(c.getString(c.getColumnIndex(TABLE_ECM_ROW_ROUTERID)));
+				authInfo.setEcm(true);
 				profile.setAuthInfo(authInfo);
 
 				profileArrayList.add(profile);
 				c.moveToNext();
 			}
 		}
-
 		return profileArrayList;
-
 	}
 	
 	public ArrayList<Profile> getDirectProfiles() {
-		String select = "SELECT * FROM ?";
+		String select = "SELECT * FROM DIRECT";
 		ArrayList<Profile> profileArrayList = new ArrayList<Profile>();
-		Cursor c = db.rawQuery(select, new String[]{ "DIRECT" });
+		Cursor c = db.rawQuery(select, null);
 		/*
 		 * DIRECT - TABLE_DIRECT_ROW_PROFILE_NAME, TABLE_DIRECT_ROW_USERNAME,
 		 * TABLE_DIRECT_ROW_PASSWORD, TABLE_DIRECT_ROW_ROUTERIP,
@@ -191,7 +187,8 @@ public class DatabaseAdapter {
 				authInfo.setRouterport(c.getInt(c.getColumnIndex(TABLE_DIRECT_ROW_ROUTERPORT)));
 				boolean value = c.getInt(c.getColumnIndex(TABLE_DIRECT_ROW_HTTPS))>0;
 				authInfo.setHttps(value);
-				
+				authInfo.setEcm(false);
+
 				profile.setAuthInfo(authInfo);
 
 				profileArrayList.add(profile);

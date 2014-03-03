@@ -3,6 +3,8 @@ package com.cs481.mobilemapper;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import javax.crypto.SecretKey;
+
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.Credentials;
 import org.apache.http.auth.UsernamePasswordCredentials;
@@ -17,9 +19,11 @@ import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.net.DhcpInfo;
 import android.net.wifi.WifiManager;
+import android.os.Parcel;
 import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentActivity;
 import android.text.format.Formatter;
+import android.util.Base64;
 import android.util.Log;
 
 import com.cs481.mobilemapper.activities.CommandCenterActivity;
@@ -288,9 +292,12 @@ public class Utility {
 	 */
 	public static ArrayList<Profile> getProfiles(Context context) {
 
-		Log.i(CommandCenterActivity.TAG, "Context for profiles: "+context);
+		Log.i(CommandCenterActivity.TAG, "Context for profiles: " + context);
 		DatabaseAdapter dbAdapter = new DatabaseAdapter(context);
-		return dbAdapter.getDirectProfiles();
+		dbAdapter.open();
+		ArrayList<Profile> profiles = dbAdapter.getProfiles();
+		dbAdapter.close();
+		return profiles;
 	}
 
 	public static int getTheme(Activity activity) {
@@ -314,11 +321,36 @@ public class Utility {
 		}
 	}
 
-	public static AuthInfo encryptAuthInfo(Context context,
-			AuthInfo authInfo) {
-		
-		
-		
-		return null;
+	public static AuthInfo encryptAuthInfo(Context context, String pin,
+			AuthInfo unencryptedAuthInfo) {
+		// make a clone of the original so it doesn't change what the original
+		// reference points to.
+		Parcel p = Parcel.obtain();
+		p.writeValue(unencryptedAuthInfo);
+		p.setDataPosition(0);
+		AuthInfo authInfo = (AuthInfo) p.readValue(AuthInfo.class
+				.getClassLoader());
+		p.recycle();
+		try {
+			String uuid = Cryptography.createLocalUUID(context);
+			SecretKey secret = Cryptography.generateKey(pin,
+					uuid.getBytes("UTF-8"));
+			byte[] encryptedUsername = Cryptography.encryptMsg(
+					authInfo.getUsername(), secret);
+			byte[] encryptedPassword = Cryptography.encryptMsg(
+					authInfo.getPassword(), secret);
+
+			authInfo.setUsername(Base64.encodeToString(encryptedUsername,
+					Base64.DEFAULT));
+			authInfo.setPassword(Base64.encodeToString(encryptedPassword,
+					Base64.DEFAULT));
+			return authInfo;
+
+		} catch (Exception e) {
+			Log.e(CommandCenterActivity.TAG,
+					"Unable to encrypt auth info, object cannot be saved.");
+			Log.e(CommandCenterActivity.TAG, e.getMessage());
+			return null;
+		}
 	}
 }

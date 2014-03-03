@@ -80,13 +80,13 @@ public class Cryptography {
 		return decryptString;
 	}	
 	
-	public static String createLocalUUID(Activity activity) {
-		SharedPreferences crypto = activity.getSharedPreferences(
-				activity.getResources().getString(R.string.crypto_prefsdb),
+	public static String createLocalUUID(Context context) {
+		SharedPreferences crypto = context.getSharedPreferences(
+				context.getResources().getString(R.string.crypto_prefsdb),
 				Context.MODE_PRIVATE);
 		String uuid = crypto.getString("uuid", null);
 		
-		String device_uuid = Secure.getString(activity
+		String device_uuid = Secure.getString(context
 				.getContentResolver(), Secure.ANDROID_ID);
 		uuid = uuid + device_uuid; // device specific. Might want to make
 									// this more random.
