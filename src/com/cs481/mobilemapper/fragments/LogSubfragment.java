@@ -220,6 +220,8 @@ public class LogSubfragment extends ListFragment implements OnRefreshListener {
 		@Override
 		public void onRequestSuccess(Response response) {
 			// update your UI
+			Log.i(CommandCenterActivity.TAG, "Logs get request has completed");
+
 			if (response.getResponseInfo().getSuccess()) {
 				Logs logs = (Logs) response.getData();
 				Log.i(CommandCenterActivity.TAG, "Logs get request successful");
@@ -246,7 +248,7 @@ public class LogSubfragment extends ListFragment implements OnRefreshListener {
 		this.logs = logs;
 		if (adapter == null) {
 			Log.i(CommandCenterActivity.TAG, "created new adapter.");
-			adapter = new LogAdapter(getActivity(), this.logs);
+			adapter = new LogAdapter(getActivity(), logs);
 			setListAdapter(adapter);
 		}
 		Log.i(CommandCenterActivity.TAG, "notifying adapter of new dataset");

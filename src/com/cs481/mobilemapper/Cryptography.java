@@ -50,13 +50,13 @@ public class Cryptography {
 			IllegalBlockSizeException, BadPaddingException,
 			UnsupportedEncodingException {
 		/* Encrypt the message. */
-		Log.i(CommandCenterActivity.TAG, "Encrypting "+message);
+		//Log.i(CommandCenterActivity.TAG, "Encrypting "+message);
 
 		Cipher cipher = null;
 		cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
 		cipher.init(Cipher.ENCRYPT_MODE, secret);
 		byte[] cipherText = cipher.doFinal(message.getBytes("UTF-8"));
-		Log.i(CommandCenterActivity.TAG, "Encrypted ciphertext to"+ Base64.decode(cipherText, Base64.DEFAULT));
+		//Log.i(CommandCenterActivity.TAG, "Encrypted ciphertext to"+ Base64.decode(cipherText, Base64.DEFAULT));
 		return cipherText;
 	}
 
@@ -70,13 +70,13 @@ public class Cryptography {
 		 * Decrypt the message, given derived encContentValues and
 		 * initialization vector.
 		 */
-		Log.i(CommandCenterActivity.TAG, "Decrypting"+ Base64.decode(cipherText, Base64.DEFAULT));
+		//Log.i(CommandCenterActivity.TAG, "Decrypting"+ Base64.decode(cipherText, Base64.DEFAULT));
 
 		Cipher cipher = null;
 		cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
 		cipher.init(Cipher.DECRYPT_MODE, secret);
 		String decryptString = new String(cipher.doFinal(cipherText), "UTF-8");
-		Log.i(CommandCenterActivity.TAG, "Decrypted to "+decryptString);
+		//Log.i(CommandCenterActivity.TAG, "Decrypted to "+decryptString);
 
 		return decryptString;
 	}	
