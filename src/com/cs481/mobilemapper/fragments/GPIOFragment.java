@@ -286,7 +286,7 @@ public class GPIOFragment extends Fragment implements OnRefreshListener,
 	}
 
 	public void updateSwitches() {
-		if (gpio != null) {
+		if (gpio != null && getView() != null) {
 			// Power LED Green (turns to orange if off)
 			Switch lswitch = (Switch) getView().findViewById(
 					R.id.powerled_state);
