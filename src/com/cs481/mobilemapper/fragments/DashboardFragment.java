@@ -137,18 +137,19 @@ public class DashboardFragment extends ListFragment {
 			TextView subtitle = (TextView) rowView
 					.findViewById(R.id.listview_subtitle);
 			subtitle.setText(rows.get(position).getSubtitle());
-			
-			
-            // Highlight selected item
-            if (position == currentSelection) {
-                rowView.setBackgroundColor((rowView.getResources()
-                       .getColor(R.color.TransparentWhite)));
-            } else {
-                Drawable sel = rowView.getResources().getDrawable(
-                        R.drawable.listview_background);
-                rowView.setBackgroundDrawable(sel); //have to use because we use API 14 and 15. Only added in 16.
-            }
-			
+
+			// Highlight selected item
+			if (position == currentSelection) {
+				rowView.setBackgroundColor((rowView.getResources()
+						.getColor(R.color.TransparentWhite)));
+			} else {
+				Drawable sel = rowView.getResources().getDrawable(
+						R.drawable.listview_background);
+				rowView.setBackgroundDrawable(sel); // have to use because we
+													// use API 14 and 15. Only
+													// added in 16.
+			}
+
 			return rowView;
 		}
 	}
@@ -249,9 +250,12 @@ public class DashboardFragment extends ListFragment {
 			super.onListItemClick(l, v, position, id);
 			return;
 		}
-		currentSelection = position;
-		getListView().setItemChecked(currentSelection, true);
 
+		if (((CommandCenterActivity) getActivity())
+				.findViewById(R.id.rightside_fragment) != null) {
+			currentSelection = position;
+			getListView().setItemChecked(currentSelection, true);
+		}
 	}
 
 }
