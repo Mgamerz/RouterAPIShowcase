@@ -10,6 +10,7 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v4.app.ListFragment;
 import android.util.Log;
 import android.view.ContextMenu;
@@ -33,6 +34,7 @@ import com.cs481.mobilemapper.responses.Response;
 import com.cs481.mobilemapper.responses.status.log.LogMessage;
 import com.cs481.mobilemapper.responses.status.log.Logs;
 import com.octo.android.robospice.SpiceManager;
+import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.PendingRequestListener;
 import com.octo.android.robospice.request.listener.RequestListener;
@@ -40,13 +42,14 @@ import com.octo.android.robospice.request.listener.RequestListener;
 public class LogSubfragment extends ListFragment implements OnRefreshListener {
 
 	private static final String CACHEKEY_LOGS = "logs_get";
-	private static final int LOG_FAILED = 0;
-	private static final int LOG_LOADING = 1;
-	private static final int LOG_LOADED = 2;
+	private static final int LOG_LOADING = 0;
+	private static final int LOG_LOADED = 1;
+	private static final int LOG_FAILED = 2;
 	private PullToRefreshLayout mPullToRefreshLayout;
 	private SpiceManager spiceManager;
 	private AuthInfo authInfo;
 	private LogAdapter adapter;
+	private Parcelable listState;
 	private ArrayList<LogMessage> logs;
 	private boolean shouldLoadData = true;
 	private int logState = 0;
@@ -62,6 +65,7 @@ public class LogSubfragment extends ListFragment implements OnRefreshListener {
 			shouldLoadData = savedInstanceState.getBoolean("shouldLoadData");
 			authInfo = savedInstanceState.getParcelable("authInfo");
 			logState = savedInstanceState.getInt("logState", LOG_LOADING);
+			listState = savedInstanceState.getParcelable("listState");
 		} else {
 			Bundle passedArgs = getArguments();
 			if (passedArgs != null) {
@@ -105,19 +109,32 @@ public class LogSubfragment extends ListFragment implements OnRefreshListener {
 														// must be parcelable
 		outState.putParcelable("authInfo", authInfo);
 		outState.putInt("logState", logState);
+		outState.putParcelable("listState", getListView().onSaveInstanceState());
 	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		// Inflate the layout for this fragment
-		return inflater.inflate(R.layout.subfrag_log, container, false);
+		View v = inflater.inflate(R.layout.subfrag_log, container, false);
+		if (logState == LOG_FAILED){
+			ProgressBar bar = (ProgressBar) v.findViewById(
+					R.id.log_loadingprogressbar);
+			bar.setVisibility(ProgressBar.GONE);
+
+			TextView message = (TextView) v.findViewById(
+					R.id.log_loadingtext);
+			message.setText(getActivity().getResources().getString(
+					R.string.log_get_failed));
+		}
+		return v;
 	}
 
 	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
-
+		
+		
 		// This is the View which is created by ListFragment
 		ViewGroup viewGroup = (ViewGroup) view;
 
@@ -163,7 +180,7 @@ public class LogSubfragment extends ListFragment implements OnRefreshListener {
 				Logs.class, CACHEKEY_LOGS);
 		String lastRequestCacheKey = clientModeReq.createCacheKey();
 		spiceManager.execute(clientModeReq, lastRequestCacheKey,
-				SpiceActivity.DURATION_3SECS, rl);
+				DurationInMillis.ALWAYS_EXPIRED, rl);
 	}
 
 	public class LogAdapter extends ArrayAdapter<LogMessage> {
@@ -212,6 +229,7 @@ public class LogSubfragment extends ListFragment implements OnRefreshListener {
 
 	@Override
 	public void onRefreshStarted(View view) {
+		logState = LOG_LOADING;
 		readLogs(rl);
 	}
 
@@ -254,6 +272,7 @@ public class LogSubfragment extends ListFragment implements OnRefreshListener {
 							response.getResponseInfo().getReason(),
 							Toast.LENGTH_LONG).show();
 				}
+				logState = LOG_LOADED;
 				mPullToRefreshLayout.setRefreshComplete();
 			}
 		}
@@ -270,10 +289,6 @@ public class LogSubfragment extends ListFragment implements OnRefreshListener {
 		// TODO Auto-generated method stub
 		Log.i(CommandCenterActivity.TAG,
 				"Updating adapter with new log information.");
-		/* if (this.logs == null){
-			Log.i(CommandCenterActivity.TAG, "Creating empty log list. It was previously null");
-			this.logs = new ArrayList<LogMessage>();
-		} */
 		
 		if (adapter == null) {
 			adapter = new LogAdapter(getActivity(), logs); // nothing in it
@@ -294,8 +309,15 @@ public class LogSubfragment extends ListFragment implements OnRefreshListener {
 		
 		adapter.addAll(logs);
 		this.logs = logs;
+		
 		Log.i(CommandCenterActivity.TAG, "notifying adapter of new dataset");
 		adapter.notifyDataSetChanged();
+		
+		if (logState == LOG_LOADED){
+			//it's already been loaded (if it hasn't yet, it will be set after this call.)
+			Log.i(CommandCenterActivity.TAG, "Restoring listview position.");
+			getListView().onRestoreInstanceState(listState);
+		}
 	}
 
 	@Override
