@@ -8,18 +8,20 @@
     <color name="CradlepointGreen">#3EA822</color>
     <color name="CradlepointGreenHigh">#5DF934</color>
 
-    <!-- Various shades of white for text-->
-    <color name="White">#FFFFFF</color> <!-- normal text -->
+    <!-- Various shades of white for text -->
+    <color name="White">#FFFFFF</color>
+ <!-- normal text -->
     <color name="DimmedWhite">#AAFFFFFF</color>
-    <color name="TransparentWhite">#22FFFFFF</color> <!-- Disabled -->
-    <color name="SelectedWhite">#10FFFFFF</color> <!-- listrow selection -->
+    <color name="TransparentWhite">#22FFFFFF</color>
+ <!-- Disabled -->
+    <color name="SelectedWhite">#10FFFFFF</color>
+ <!-- listrow selection -->
 
     <color name="TextWhite">#FFFFFF</color>
     <color name="TextDisabledWhite">#90FFFFFF</color>
-
     <color name="SubtextWhite">#BBFFFFFF</color>
     <color name="SubtextDisabledWhite">#80FFFFFF</color>
-    
+    <color name="PinGrey">#AAAAAA</color>
     <color name="ActionbarWhite">#DDDDDD</color>
     
     

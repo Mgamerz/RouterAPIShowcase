@@ -123,7 +123,10 @@
     <!-- PIN -->
     <string name="pin_actionbar_title">UNLOCK</string>
     <string name="pin_verify">Enter PIN again to verify</string>
-    <string name="pin_verify_fail">Pin did not match</string>
+    <string name="pin_verify_fail">PIN did not match</string>
+    <string name="pin_create">Enter a new PIN to continue</string>
+    <string name="pin_enter">Enter your PIN to continue</string>
+    <string name="pin_validate_fail">Incorrect PIN</string>
 
     <!-- Router Confirm Dialog -->
     <string name="confirm_router_management">Are you sure you want to connect and manage %1$s?</string>
