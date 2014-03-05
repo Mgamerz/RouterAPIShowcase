@@ -1,10 +1,10 @@
 package com.cs481.mobilemapper.activities;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentManager.OnBackStackChangedListener;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.Menu;
@@ -16,8 +16,10 @@ import com.cs481.mobilemapper.AuthInfo;
 import com.cs481.mobilemapper.R;
 import com.cs481.mobilemapper.Utility;
 import com.cs481.mobilemapper.fragments.DashboardFragment;
+import com.cs481.mobilemapper.fragments.WifiClientFragment;
 
-public class CommandCenterActivity extends SpiceActivity {
+public class CommandCenterActivity extends SpiceActivity implements
+		OnBackStackChangedListener {
 
 	public static final String TAG = "CommandCenter";
 	private boolean isDualPane;
@@ -28,21 +30,22 @@ public class CommandCenterActivity extends SpiceActivity {
 		super.onCreate(savedInstanceState);
 		setTheme(Utility.getTheme(this));
 
-
 		setContentView(R.layout.activity_commandcenter);
 
 		Intent intent = getIntent();
 		// Rebuild authInfo from the intent that put us here
 		authInfo = intent.getParcelableExtra("authInfo");
 		getActionBar().setSubtitle(intent.getStringExtra("ab_subtitle"));
-		/*authInfo = new AuthInfo();
-		authInfo.setEcm(intent.getBooleanExtra("ecm", false));
-		authInfo.setRemote(intent.getBooleanExtra("remote", false));
-		authInfo.setPort(intent.getIntExtra("port", 80));
-		authInfo.setRouterId(intent.getStringExtra("id"));
-		authInfo.setRouterip(intent.getStringExtra("ip"));
-		authInfo.setUsername(intent.getStringExtra("user"));
-		authInfo.setPassword(intent.getStringExtra("pass"));*/
+		/*
+		 * authInfo = new AuthInfo();
+		 * authInfo.setEcm(intent.getBooleanExtra("ecm", false));
+		 * authInfo.setRemote(intent.getBooleanExtra("remote", false));
+		 * authInfo.setPort(intent.getIntExtra("port", 80));
+		 * authInfo.setRouterId(intent.getStringExtra("id"));
+		 * authInfo.setRouterip(intent.getStringExtra("ip"));
+		 * authInfo.setUsername(intent.getStringExtra("user"));
+		 * authInfo.setPassword(intent.getStringExtra("pass"));
+		 */
 
 		// Retain fragments on rotation
 		if (null == savedInstanceState) {
@@ -61,7 +64,7 @@ public class CommandCenterActivity extends SpiceActivity {
 			// Commit to the UI
 			ft.commit();
 		}
-		//getActionBar().setSubtitle("--Cloud Router testing--");
+		// getActionBar().setSubtitle("--Cloud Router testing--");
 		View dual = findViewById(R.id.rightside_fragment);
 		setDualPane(dual != null && dual.getVisibility() == View.VISIBLE);
 
@@ -107,5 +110,28 @@ public class CommandCenterActivity extends SpiceActivity {
 
 	public void setDualPane(boolean isDualPane) {
 		this.isDualPane = isDualPane;
+	}
+
+	@Override
+	public void onBackStackChanged() {
+		// This method is called when the backstack changes.
+		int backStackEntryCount = getSupportFragmentManager()
+				.getBackStackEntryCount();
+		if (backStackEntryCount > 0) {
+			FragmentManager fm = getSupportFragmentManager();
+			Fragment wcf = fm.findFragmentByTag(WifiClientFragment.class.getName());
+			
+			if (wcf == null){
+				//its not showing
+				getActionBar().setDisplayShowTitleEnabled(true);
+			}
+					
+			if (!isDualPane) {
+				getActionBar().setDisplayHomeAsUpEnabled(true);
+			}
+		} else {
+			getActionBar().setDisplayHomeAsUpEnabled(false);
+			getActionBar().setDisplayShowTitleEnabled(true);
+		}
 	}
 }

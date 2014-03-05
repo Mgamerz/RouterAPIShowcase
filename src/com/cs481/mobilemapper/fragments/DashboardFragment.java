@@ -108,7 +108,8 @@ public class DashboardFragment extends ListFragment {
 				resources.getString(R.string.gpio), "Fully Operational"));
 		rows.add(new DashboardListRow(lABOUT, resources
 				.getString(R.string.routerinfo), "Fully Operational"));
-		rows.add(new DashboardListRow(lPRINTSTACK, "Print Fragment backstack", "Debug Option"));
+		rows.add(new DashboardListRow(lPRINTSTACK, "Print Fragment backstack",
+				"Debug Option"));
 		setListAdapter(new DashboardAdapter(getActivity(), rows));
 	}
 
@@ -160,8 +161,8 @@ public class DashboardFragment extends ListFragment {
 	@Override
 	public void onListItemClick(ListView l, View v, int position, long id) {
 		// TODO Auto-generated method stub
-		if (position == currentSelection){
-			return; //don't open it again
+		if (position == currentSelection) {
+			return; // don't open it again
 		}
 		Log.w(CommandCenterActivity.TAG, "Item was clicked at pos " + position
 				+ ", id " + id);
@@ -169,41 +170,46 @@ public class DashboardFragment extends ListFragment {
 				.getItem(position));
 		switch (row.getId()) {
 		case lGPIO: {
-			// Create a new Fragment to be placed in the activity layout
-			GPIOFragment gpioFragment = GPIOFragment.newInstance(authInfo);
-			
-			//We need to have an instnace of the object or we cannot get the name of the fragment class.
-			
-			
+			String gpioTag = GPIOFragment.class.getName();
+
+			// We need to have an instnace of the object or we cannot get the
+			// name of the fragment class.
+
 			// Check if fragment is visible on the screen.
-			GPIOFragment gpioVisibility = (GPIOFragment) getActivity().getSupportFragmentManager()
-					.findFragmentByTag(gpioFragment.getClass().getName());
+			GPIOFragment gpioVisibility = (GPIOFragment) getActivity()
+					.getSupportFragmentManager().findFragmentByTag(gpioTag);
 			if (gpioVisibility != null && gpioVisibility.isVisible()) {
-				Log.i(CommandCenterActivity.TAG, "Fragment is visible - exit further fragment adding.");
-				return; //fragment is currently visible, do nothing.
+				Log.i(CommandCenterActivity.TAG,
+						"Fragment is visible - exit further fragment adding.");
+				return; // fragment is currently visible, do nothing.
 			}
 
-			//Fragment is not visible. We should check if it's the in the backstack now.
+			// Fragment is not visible. We should check if it's the in the
+			// backstack now.
 
 			// Add the fragment to the 'fragment_container' FrameLayout
 			FragmentManager fm = getActivity().getSupportFragmentManager();
 
-			boolean fragmentPopped = fm.popBackStackImmediate(gpioFragment
-					.getClass().getName(), 0);
+			boolean fragmentPopped = fm.popBackStackImmediate(gpioTag, 0);
 			if (!fragmentPopped) {
-				Log.i(CommandCenterActivity.TAG, "Not in backstack - creating new fragment.");
+				// Create a new Fragment to be placed in the activity layout
+				GPIOFragment gpioFragment = GPIOFragment.newInstance(authInfo);
+				Log.i(CommandCenterActivity.TAG,
+						"Not in backstack - creating new fragment.");
 
-				//Fragment is not in the backstack. we must add it to the activity now.
+				// Fragment is not in the backstack. we must add it to the
+				// activity now.
 				FragmentTransaction transaction = fm.beginTransaction();
 
 				// check if the parent activity is dual pane based.
 				CommandCenterActivity parent = (CommandCenterActivity) getActivity();
 				if (parent.isDualPane()) {
-					transaction.replace(R.id.rightside_fragment, gpioFragment, gpioFragment.getClass().getName());
+					transaction.replace(R.id.rightside_fragment, gpioFragment,
+							gpioTag);
 				} else {
 					transaction.replace(R.id.leftside_fragment, gpioFragment);
 				}
-				transaction.addToBackStack(gpioFragment.getClass().getName());
+				transaction.addToBackStack(gpioTag);
 				transaction
 						.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
 				transaction.commit();
@@ -211,37 +217,40 @@ public class DashboardFragment extends ListFragment {
 		}
 			break;
 		case lWLAN: {
+			String wwanTag = WifiClientFragment.class.getName();
 			Log.i(CommandCenterActivity.TAG, "WLAN WAS CLICKED");
-			WifiClientFragment wlanFragment = WifiClientFragment
-					.newInstance(authInfo);
 
 			// Check if fragment is visible on the screen.
-			WifiClientFragment wificlientVisibility = (WifiClientFragment) getActivity().getSupportFragmentManager()
-					.findFragmentByTag(wlanFragment.getClass().getName());
-			Log.i(CommandCenterActivity.TAG, "Checking for WCF via the SFM: "+wificlientVisibility);
-			
-			if (wificlientVisibility != null && wificlientVisibility.isVisible()) {
-				return; //fragment is currently visible, do nothing.
+			WifiClientFragment wificlientVisibility = (WifiClientFragment) getActivity()
+					.getSupportFragmentManager().findFragmentByTag(wwanTag);
+			Log.i(CommandCenterActivity.TAG, "Checking for WCF via the SFM: "
+					+ wificlientVisibility);
+
+			if (wificlientVisibility != null
+					&& wificlientVisibility.isVisible()) {
+				return; // fragment is currently visible, do nothing.
 			}
 
 			FragmentManager fm = getActivity().getSupportFragmentManager();
 
-			boolean fragmentPopped = fm.popBackStackImmediate(wlanFragment
-					.getClass().getName(), 0);
+			boolean fragmentPopped = fm.popBackStackImmediate(wwanTag, 0);
 
 			if (!fragmentPopped) {
-				Log.i(CommandCenterActivity.TAG, "Not in backstack - creating new fragment.");
-
+				Log.i(CommandCenterActivity.TAG,
+						"Not in backstack - creating new fragment.");
+				WifiClientFragment wlanFragment = WifiClientFragment
+						.newInstance(authInfo);
 				FragmentTransaction transaction = fm.beginTransaction();
 
 				// check if the parent activity is dual pane based.
 				CommandCenterActivity parent = (CommandCenterActivity) getActivity();
 				if (parent.isDualPane()) {
-					transaction.replace(R.id.rightside_fragment, wlanFragment, wlanFragment.getClass().getName());
+					transaction.replace(R.id.rightside_fragment, wlanFragment,
+							wwanTag);
 				} else {
 					transaction.replace(R.id.leftside_fragment, wlanFragment);
 				}
-				transaction.addToBackStack(wlanFragment.getClass().getName());
+				transaction.addToBackStack(wwanTag);
 				transaction
 						.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
 				transaction.commit();
@@ -249,45 +258,48 @@ public class DashboardFragment extends ListFragment {
 		}
 			break;
 		case lABOUT: {
+			String infoTag = RouterInfoFragment.class.getName();
 			Log.i(CommandCenterActivity.TAG, "ABOUT WAS CLICKED");
-			RouterInfoFragment infoFragment = RouterInfoFragment
-					.newInstance(authInfo);
 
 			// Check if fragment is visible on the screen.
-			RouterInfoFragment infoVisibility = (RouterInfoFragment) getActivity().getSupportFragmentManager()
-					.findFragmentByTag(infoFragment.getClass().getName());
+			RouterInfoFragment infoVisibility = (RouterInfoFragment) getActivity()
+					.getSupportFragmentManager().findFragmentByTag(infoTag);
 			if (infoVisibility != null && infoVisibility.isVisible()) {
-				return; //fragment is currently visible, do nothing.
+				return; // fragment is currently visible, do nothing.
 			}
-			
+
 			FragmentManager fm = getActivity().getSupportFragmentManager();
 
-			boolean fragmentPopped = fm.popBackStackImmediate(infoFragment
-					.getClass().getName(), 0);
+			boolean fragmentPopped = fm.popBackStackImmediate(infoTag, 0);
 
 			if (!fragmentPopped) {
-				Log.i(CommandCenterActivity.TAG, "Not in backstack - creating new fragment.");
+				Log.i(CommandCenterActivity.TAG,
+						"Not in backstack - creating new fragment.");
+				RouterInfoFragment infoFragment = RouterInfoFragment
+						.newInstance(authInfo);
 				FragmentTransaction transaction = fm.beginTransaction();
 				// check if the parent activity is dual pane based.
 				CommandCenterActivity parent = (CommandCenterActivity) getActivity();
 				if (parent.isDualPane()) {
-					transaction.replace(R.id.rightside_fragment, infoFragment, infoFragment.getClass().getName());
+					transaction.replace(R.id.rightside_fragment, infoFragment,
+							infoTag);
 				} else {
 					transaction.replace(R.id.leftside_fragment, infoFragment);
 				}
-				transaction.addToBackStack(infoFragment.getClass().getName());
+				transaction.addToBackStack(infoTag);
 				transaction
 						.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
 				transaction.commit();
 			}
 		}
-		break;
+			break;
 		case lPRINTSTACK:
 			FragmentManager fm = getActivity().getSupportFragmentManager();
 
-			for(int entry = 0; entry < fm.getBackStackEntryCount(); entry++){
+			for (int entry = 0; entry < fm.getBackStackEntryCount(); entry++) {
 				BackStackEntry f = fm.getBackStackEntryAt(entry);
-			 	Log.i(CommandCenterActivity.TAG, "Stack item "+f.getId()+ "has name "+f.getName());
+				Log.i(CommandCenterActivity.TAG, "Stack item " + f.getId()
+						+ "has name " + f.getName());
 			}
 			break;
 
