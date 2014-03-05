@@ -132,10 +132,9 @@
     <string name="crypto_prefsdb">crypto</string>
 
     <!-- Splash Screen -->
-    <string name="splash_button_ecm">ECM</string>
-    <string name="splash_button_local">Local</string>
-    <string name="splash_text_ecm">ECM</string>
-    <string name="splash_text_local">Local</string>
+    <string name="splash_text">Select</string>
+    <string name="splash_textup">^</string>
+    <string name="splash_textdown">v</string>
 
     <!-- Preferred Connection Dialog -->
     <string name="text_preferredconnection">Is this your preferred connection?</string>

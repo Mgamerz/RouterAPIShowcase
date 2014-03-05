@@ -1,57 +1,112 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layout_splash"
     android:gravity="top|center"
-    android:orientation="vertical" >
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
 
-    <FrameLayout
-        android:id="@+id/button_ecm_layout"
+    <ImageView
+        android:id="@+id/button_ecm"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="0.5" >
+        android:layout_height="230dp"
+        android:src="@android:color/transparent" />
 
-        <ImageView
-            android:id="@+id/button_ecm"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:src="@drawable/ic_splash_clouds" />
-
-        <TextView
-            android:id="@+id/text_ecm"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="top|center"
-            android:visibility="invisible"
-            android:text="@string/splash_text_ecm"
-            android:textColor="@color/White"
-            android:textAppearance="?android:attr/textAppearanceLarge" />
-
-    </FrameLayout>
-
-    <FrameLayout
-        android:id="@+id/button_local_layout"
+    <ImageView
+        android:id="@+id/button_local"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="0.5" >
+        android:layout_height="230dp"
+        android:layout_gravity="bottom"
+        android:src="@android:color/transparent" />
+    
+    <ImageView
+        android:id="@+id/image_ecm"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:src="@drawable/ic_splash_clouds" />
 
-        <ImageView
-            android:id="@+id/button_local"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:src="@drawable/ic_splash_city" />
+    <ImageView
+        android:id="@+id/image_local"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:src="@drawable/ic_splash_city" />
 
-        <TextView
-            android:id="@+id/text_local"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|center"
-            android:visibility="invisible"
-            android:text="@string/splash_text_local"
-            android:textColor="@color/White"
-            android:textAppearance="?android:attr/textAppearanceLarge" />
+    <TextView
+        android:id="@+id/text_splash"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="@string/splash_text"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="@color/White"
+        android:visibility="invisible" />
 
-    </FrameLayout>
+    <TextView
+        android:id="@+id/up1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="-20dp"
+        android:text="@string/splash_textup"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="@color/White"
+        android:visibility="invisible" />
+    
+   	<TextView
+        android:id="@+id/up2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="-30dp"
+        android:textColor="@color/White"
+        android:text="@string/splash_textup"
+        android:visibility="invisible"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+   	
+   	<TextView
+        android:id="@+id/up3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="-40dp"
+        android:textColor="@color/White"
+        android:text="@string/splash_textup"
+        android:visibility="invisible"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+   	
+	<TextView
+        android:id="@+id/down1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="20dp"
+        android:textColor="@color/White"
+        android:text="@string/splash_textdown"
+        android:visibility="invisible"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+	
+	<TextView
+        android:id="@+id/down2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="30dp"
+        android:textColor="@color/White"
+        android:text="@string/splash_textdown"
+        android:visibility="invisible"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+		
+	<TextView
+        android:id="@+id/down3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="40dp"
+        android:textColor="@color/White"
+        android:text="@string/splash_textdown"
+        android:visibility="invisible"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
 
-</LinearLayout>
+</FrameLayout>
