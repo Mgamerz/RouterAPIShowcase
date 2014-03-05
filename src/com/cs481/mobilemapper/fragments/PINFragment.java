@@ -49,6 +49,7 @@ import com.cs481.mobilemapper.R;
 import com.cs481.mobilemapper.activities.CommandCenterActivity;
 
 public class PINFragment extends Fragment implements OnClickListener {
+	//private static final Bundle savedInstancedState = null;
 	String currentPin = "", verifyPin = ""; // pin that has been currently entered
 	int attemptsRemaining = 5; // TODO this should be set in SharedPreferences
 								// with a timestamp for a cooldown on attempts.
@@ -66,6 +67,7 @@ public class PINFragment extends Fragment implements OnClickListener {
 		if (savedInstancedState != null) {
 			currentPin = savedInstancedState.getString("pin");
 			attemptsRemaining = savedInstancedState.getInt("attemptsRemaining");
+			verify = savedInstancedState.getBoolean("verify");
 		}
 	}
 	
@@ -121,7 +123,11 @@ public class PINFragment extends Fragment implements OnClickListener {
 
 			// transaction on header
 			if (headerFragment == null) {
-				headerFragment = new PINHeaderSubfragment();
+				String directions = getActivity().getResources().getString(R.string.pin_enter);
+				if (pinsetup){
+					directions = getActivity().getResources().getString(R.string.pin_create);
+				}
+				headerFragment = PINHeaderSubfragment.newInstance(directions);
 				FragmentTransaction fmt = cfm.beginTransaction();
 				fmt.replace(header.getId(), headerFragment, pinHeaderId);
 				fmt.commit();
@@ -490,6 +496,7 @@ public class PINFragment extends Fragment implements OnClickListener {
 		super.onSaveInstanceState(outState);
 		outState.putString("pin", currentPin);
 		outState.putInt("attemptsRemaining", attemptsRemaining);
+		outState.putBoolean("verify", verify);
 	}
 
 	/**

@@ -7,7 +7,6 @@ import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -18,6 +17,16 @@ public class PINHeaderSubfragment extends Fragment {
 	public void onCreate(Bundle savedInstancedState) {
 		super.onCreate(savedInstancedState);
 		// setHasOptionsMenu(true);
+	}
+	
+	public static PINHeaderSubfragment newInstance(String header) {
+		PINHeaderSubfragment pinFragment = new PINHeaderSubfragment();
+
+		Bundle args = new Bundle();
+		//Log.i(CommandCenterActivity.TAG, "CP: "+createPIN);
+		args.putString("headertext", header);
+		pinFragment.setArguments(args);
+		return pinFragment;
 	}
 
 	@Override
@@ -42,7 +51,19 @@ public class PINHeaderSubfragment extends Fragment {
 		
 		params.setMargins(0, margin, 0, 0);
 		enterText.setLayoutParams(params);
+		if (savedInstanceState != null){
+			enterText.setText(savedInstanceState.getString("titletext"));
+		}
 
 		return rootView;
+	}
+	
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		TextView enterText = (TextView) getView()
+				.findViewById(R.id.enterpin_text);
+		
+		outState.putString("titletext", enterText.getText().toString());
 	}
 }
