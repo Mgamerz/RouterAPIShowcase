@@ -224,7 +224,8 @@ public class WifiWanDialogFragment extends DialogFragment {
 			ssid = ssidField.getText().toString();
 		}
 		wanprofile.setSsid(ssid);
-		wanprofile.setBssid(wap.getBssid());
+		
+		//wanprofile.setBssid(wap.getBssid());
 
 		wanprofile.setUid(wap.getBssid());
 		wanprofile.setEnabled(true);
@@ -233,10 +234,11 @@ public class WifiWanDialogFragment extends DialogFragment {
 		String pass = tv.getText().toString();
 
 		if (!wap.getAuthmode().equals("none")) {
-			wanprofile.setWpapsk(pass);
+			wanprofile.setSerializePassword(pass);
+
+			//wanprofile.setWpapsk(pass);
 			wanprofile.setWpacipher(wap.getCipher());
 		}
-
 		hostingFragment.connectAsWAN(wanprofile);
 	}
 

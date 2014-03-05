@@ -165,7 +165,7 @@ public class LogSubfragment extends ListFragment implements OnRefreshListener {
 			readLogs(rl);
 			shouldLoadData = false;
 		} else {
-			updateLogsList(logs);
+			updateLogsList(logs, false);
 		}
 	}
 
@@ -266,7 +266,7 @@ public class LogSubfragment extends ListFragment implements OnRefreshListener {
 					Logs logs = (Logs) response.getData();
 					Log.i(CommandCenterActivity.TAG,
 							"Logs get request successful");
-					updateLogsList(logs.getLogs());
+					updateLogsList(logs.getLogs(), true);
 				} else {
 					Toast.makeText(getActivity(),
 							response.getResponseInfo().getReason(),
@@ -285,12 +285,15 @@ public class LogSubfragment extends ListFragment implements OnRefreshListener {
 		}
 	}
 
-	private void updateLogsList(ArrayList<LogMessage> logs) {
+	private void updateLogsList(ArrayList<LogMessage> logs, boolean clearExisting) {
+		if (getActivity() == null) {
+			return; //fragment has died
+		}
 		// TODO Auto-generated method stub
 		Log.i(CommandCenterActivity.TAG,
 				"Updating adapter with new log information.");
 		
-		if (adapter == null) {
+		if (adapter == null ) {
 			adapter = new LogAdapter(getActivity(), logs); // nothing in it
 																// right now as
 																// we will add
@@ -301,10 +304,12 @@ public class LogSubfragment extends ListFragment implements OnRefreshListener {
 
 			setListAdapter(adapter);
 		} else {
-			adapter.clear(); //clear if the adapter might have already had data in it.
+			if (clearExisting) {
+				adapter.clear(); //clear if the adapter might have already had data in it.
+			}
 		}
 		//Log.i(CommandCenterActivity.TAG, "Number of preclear: " + logs.size()+ " and instance v: "+this.logs.size());
-		//Log.i(CommandCenterActivity.TAG, "Number of postclear: " + logs.size()+ " and instance v: "+this.logs.size());
+		Log.i(CommandCenterActivity.TAG, "Number of logs: " + logs.size());
 
 		
 		adapter.addAll(logs);
@@ -313,9 +318,9 @@ public class LogSubfragment extends ListFragment implements OnRefreshListener {
 		Log.i(CommandCenterActivity.TAG, "notifying adapter of new dataset");
 		adapter.notifyDataSetChanged();
 		
-		if (logState == LOG_LOADED){
+		if (logState == LOG_LOADED && listState != null){
 			//it's already been loaded (if it hasn't yet, it will be set after this call.)
-			Log.i(CommandCenterActivity.TAG, "Restoring listview position.");
+			Log.i(CommandCenterActivity.TAG, "Restoring listview position with state "+listState);
 			getListView().onRestoreInstanceState(listState);
 		}
 	}

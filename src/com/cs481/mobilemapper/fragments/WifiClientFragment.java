@@ -394,7 +394,6 @@ public class WifiClientFragment extends ListFragment implements
 					.getString(R.string.wlan_reading));
 			progressDialog.show();
 			progressDialog.setCanceledOnTouchOutside(false);
-			progressDialog.setCancelable(false);
 		}
 
 		spiceManager.execute(wapListrequest, lastRequestCacheKey,

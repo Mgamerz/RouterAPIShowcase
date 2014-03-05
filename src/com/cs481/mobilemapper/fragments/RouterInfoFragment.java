@@ -84,26 +84,28 @@ public class RouterInfoFragment extends Fragment {
 		/* put whatever data */
 
 		View v = getView();
-		TextView textVal = (TextView) v.findViewById(R.id.product_value);
-		outState.putString("product", textVal.getText().toString());
-
-		textVal = (TextView) v.findViewById(R.id.hostname_value);
-		outState.putString("hostname", textVal.getText().toString());
-
-		textVal = (TextView) v.findViewById(R.id.firmware_value);
-		outState.putString("firmware", textVal.getText().toString());
-
-		textVal = (TextView) v.findViewById(R.id.mac_address_value);
-		outState.putString("mac_address", textVal.getText().toString());
-
-		textVal = (TextView) v.findViewById(R.id.uptime_value);
-		outState.putString("uptime", textVal.getText().toString());
-
-		textVal = (TextView) v.findViewById(R.id.numclients_value);
-		outState.putString("numclients", textVal.getText().toString());
-
-		outState.putParcelable("authInfo", authInfo);
-		outState.putBoolean("shouldLoadData", shouldLoadData);
+		if (v!= null) {
+			TextView textVal = (TextView) v.findViewById(R.id.product_value);
+			outState.putString("product", textVal.getText().toString());
+	
+			textVal = (TextView) v.findViewById(R.id.hostname_value);
+			outState.putString("hostname", textVal.getText().toString());
+	
+			textVal = (TextView) v.findViewById(R.id.firmware_value);
+			outState.putString("firmware", textVal.getText().toString());
+	
+			textVal = (TextView) v.findViewById(R.id.mac_address_value);
+			outState.putString("mac_address", textVal.getText().toString());
+	
+			textVal = (TextView) v.findViewById(R.id.uptime_value);
+			outState.putString("uptime", textVal.getText().toString());
+	
+			textVal = (TextView) v.findViewById(R.id.numclients_value);
+			outState.putString("numclients", textVal.getText().toString());
+	
+			outState.putParcelable("authInfo", authInfo);
+			outState.putBoolean("shouldLoadData", shouldLoadData);
+		}
 	}
 
 	@Override
@@ -252,6 +254,9 @@ public class RouterInfoFragment extends Fragment {
 
 		@Override
 		public void onRequestFailure(SpiceException e) {
+			if (getActivity() == null || getView() == null){
+				return;
+			}
 			// update your UI
 			if (progressDialog != null)
 				progressDialog.dismiss();
@@ -264,6 +269,9 @@ public class RouterInfoFragment extends Fragment {
 
 		@Override
 		public void onRequestSuccess(Response response) {
+			if (getActivity() == null || getView() == null){
+				return;
+			}
 			Product_info proin = (Product_info) response.getData();
 
 			// update your UI
@@ -304,6 +312,9 @@ public class RouterInfoFragment extends Fragment {
 			PendingRequestListener<Response> {
 		@Override
 		public void onRequestFailure(SpiceException e) {
+			if (getActivity() == null || getView() == null){
+				return;
+			}
 			// update your UI
 			if (progressDialog != null)
 				progressDialog.dismiss();
@@ -316,6 +327,9 @@ public class RouterInfoFragment extends Fragment {
 
 		@Override
 		public void onRequestSuccess(Response response) {
+			if (getActivity() == null || getView() == null) {
+				return; //prevent crash if fragment has been discarded and is awaiting GC
+			}
 			Fw_info fw = (Fw_info) response.getData();
 
 			// update your UI
@@ -354,6 +368,9 @@ public class RouterInfoFragment extends Fragment {
 		@Override
 		public void onRequestFailure(SpiceException e) {
 			// update your UI
+			if (getActivity() == null || getView() == null){
+				return;
+			}
 			if (progressDialog != null)
 				progressDialog.dismiss();
 			Log.i(CommandCenterActivity.TAG, "Failed to read Status Info!");
@@ -365,6 +382,9 @@ public class RouterInfoFragment extends Fragment {
 
 		@Override
 		public void onRequestSuccess(Response response) {
+			if (getActivity() == null || getView() == null){
+				return;
+			}
 			com.cs481.mobilemapper.responses.status.product_info.System sys = (com.cs481.mobilemapper.responses.status.product_info.System) response
 					.getData();
 
@@ -406,18 +426,26 @@ public class RouterInfoFragment extends Fragment {
 			PendingRequestListener<Response> {
 		@Override
 		public void onRequestFailure(SpiceException e) {
+			if (getActivity() == null || getView() == null){
+				return;
+			}
 			// update your UI
 			if (progressDialog != null)
 				progressDialog.dismiss();
 			Log.i(CommandCenterActivity.TAG, "Failed to read Config Info!");
 
+			if (getActivity() != null) { //prevent crash in the event the user navigates away.
 			Toast.makeText(getActivity(),
 					getResources().getString(R.string.config_fail),
 					Toast.LENGTH_SHORT).show();
+			}
 		}
 
 		@Override
 		public void onRequestSuccess(Response response) {
+			if (getActivity() == null || getView() == null){
+				return;
+			}
 			com.cs481.mobilemapper.status.wan.devices.ethernetwan.Config con = (com.cs481.mobilemapper.status.wan.devices.ethernetwan.Config) response
 					.getData();
 
@@ -457,6 +485,9 @@ public class RouterInfoFragment extends Fragment {
 			PendingRequestListener<Response> {
 		@Override
 		public void onRequestFailure(SpiceException e) {
+			if (getActivity() == null || getView() == null){
+				return;
+			}
 			// update your UI
 			if (progressDialog != null)
 				progressDialog.dismiss();
@@ -469,6 +500,9 @@ public class RouterInfoFragment extends Fragment {
 
 		@Override
 		public void onRequestSuccess(Response response) {
+			if (getActivity() == null || getView() == null){
+				return;
+			}
 			com.cs481.mobilemapper.responses.status.lan.Lan dat = (com.cs481.mobilemapper.responses.status.lan.Lan) response
 					.getData();
 			// Devices dat = (Devices) response.getData();

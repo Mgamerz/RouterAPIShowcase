@@ -112,14 +112,13 @@ public class SplashScreenFragment extends Fragment {
 		if (savedInstanceState != null) {
 			hasAnimated = true;
 		}
-
+		animate();
 		return view;
 	}
 
 	@Override
 	public void onStart() {
 		super.onStart();
-		animate();
 	}
 
 	// Animates the fragment

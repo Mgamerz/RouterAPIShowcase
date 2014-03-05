@@ -7,6 +7,8 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentManager.BackStackEntry;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.ListFragment;
 import android.util.Log;
@@ -29,6 +31,8 @@ public class DashboardFragment extends ListFragment {
 	private final int lWAN = 2;
 	private final int lGPIO = 3;
 	private final int lABOUT = 4;
+	private final int lPRINTSTACK = 5;
+
 	private AuthInfo authInfo;
 	private int currentSelection = -1;
 
@@ -87,7 +91,12 @@ public class DashboardFragment extends ListFragment {
 																					// list
 																					// appear
 		sa.getActionBar().setDisplayShowTitleEnabled(true);
-
+		boolean isDualPane = (getActivity().findViewById(
+				R.id.rightside_fragment) == null);
+		if (isDualPane) {
+			getListView().setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+			getListView().setItemChecked(currentSelection, true);
+		}
 		ArrayList<DashboardListRow> rows = new ArrayList<DashboardListRow>();
 		rows.add(new DashboardListRow(lWLAN, resources
 				.getString(R.string.wireless), "Partially Operational"));
@@ -98,15 +107,9 @@ public class DashboardFragment extends ListFragment {
 		rows.add(new DashboardListRow(lGPIO,
 				resources.getString(R.string.gpio), "Fully Operational"));
 		rows.add(new DashboardListRow(lABOUT, resources
-				.getString(R.string.routerinfo), "In Progress"));
+				.getString(R.string.routerinfo), "Fully Operational"));
+		rows.add(new DashboardListRow(lPRINTSTACK, "Print Fragment backstack", "Debug Option"));
 		setListAdapter(new DashboardAdapter(getActivity(), rows));
-
-		boolean isDualPane = (getActivity().findViewById(
-				R.id.rightside_fragment) == null);
-		if (isDualPane) {
-			getListView().setChoiceMode(ListView.CHOICE_MODE_SINGLE);
-			getListView().setItemChecked(currentSelection, true);
-		}
 	}
 
 	public class DashboardAdapter extends ArrayAdapter<DashboardListRow> {
@@ -157,38 +160,54 @@ public class DashboardFragment extends ListFragment {
 	@Override
 	public void onListItemClick(ListView l, View v, int position, long id) {
 		// TODO Auto-generated method stub
+		if (position == currentSelection){
+			return; //don't open it again
+		}
 		Log.w(CommandCenterActivity.TAG, "Item was clicked at pos " + position
 				+ ", id " + id);
 		DashboardListRow row = (DashboardListRow) (l.getAdapter()
 				.getItem(position));
 		switch (row.getId()) {
-		// case lWLAN:
-		// case lLAN:
-		// case lWAN:
 		case lGPIO: {
 			// Create a new Fragment to be placed in the activity layout
 			GPIOFragment gpioFragment = GPIOFragment.newInstance(authInfo);
+			
+			//We need to have an instnace of the object or we cannot get the name of the fragment class.
+			
+			
+			// Check if fragment is visible on the screen.
+			GPIOFragment gpioVisibility = (GPIOFragment) getActivity().getSupportFragmentManager()
+					.findFragmentByTag(gpioFragment.getClass().getName());
+			if (gpioVisibility != null && gpioVisibility.isVisible()) {
+				Log.i(CommandCenterActivity.TAG, "Fragment is visible - exit further fragment adding.");
+				return; //fragment is currently visible, do nothing.
+			}
 
-			// In case this activity was started with special instructions from
-			// an
-			// Intent, pass the Intent's extras to the fragment as arguments
-			// firstFragment.setArguments(getIntent().getExtras());
+			//Fragment is not visible. We should check if it's the in the backstack now.
 
 			// Add the fragment to the 'fragment_container' FrameLayout
-			FragmentTransaction transaction = getFragmentManager()
-					.beginTransaction();
+			FragmentManager fm = getActivity().getSupportFragmentManager();
 
-			// check if the parent activity is dual pane based.
-			CommandCenterActivity parent = (CommandCenterActivity) getActivity();
-			if (parent.isDualPane()) {
-				transaction.replace(R.id.rightside_fragment, gpioFragment);
-			} else {
-				transaction.replace(R.id.leftside_fragment, gpioFragment);
+			boolean fragmentPopped = fm.popBackStackImmediate(gpioFragment
+					.getClass().getName(), 0);
+			if (!fragmentPopped) {
+				Log.i(CommandCenterActivity.TAG, "Not in backstack - creating new fragment.");
+
+				//Fragment is not in the backstack. we must add it to the activity now.
+				FragmentTransaction transaction = fm.beginTransaction();
+
+				// check if the parent activity is dual pane based.
+				CommandCenterActivity parent = (CommandCenterActivity) getActivity();
+				if (parent.isDualPane()) {
+					transaction.replace(R.id.rightside_fragment, gpioFragment, gpioFragment.getClass().getName());
+				} else {
+					transaction.replace(R.id.leftside_fragment, gpioFragment);
+				}
+				transaction.addToBackStack(gpioFragment.getClass().getName());
+				transaction
+						.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+				transaction.commit();
 			}
-			transaction.addToBackStack(null);
-			transaction
-					.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-			transaction.commit();
 		}
 			break;
 		case lWLAN: {
@@ -196,26 +215,37 @@ public class DashboardFragment extends ListFragment {
 			WifiClientFragment wlanFragment = WifiClientFragment
 					.newInstance(authInfo);
 
-			// In case this activity was started with special instructions from
-			// an
-			// Intent, pass the Intent's extras to the fragment as arguments
-			// firstFragment.setArguments(getIntent().getExtras());
-
-			// Add the fragment to the 'fragment_container' FrameLayout
-			FragmentTransaction transaction = getFragmentManager()
-					.beginTransaction();
-
-			// check if the parent activity is dual pane based.
-			CommandCenterActivity parent = (CommandCenterActivity) getActivity();
-			if (parent.isDualPane()) {
-				transaction.replace(R.id.rightside_fragment, wlanFragment);
-			} else {
-				transaction.replace(R.id.leftside_fragment, wlanFragment);
+			// Check if fragment is visible on the screen.
+			WifiClientFragment wificlientVisibility = (WifiClientFragment) getActivity().getSupportFragmentManager()
+					.findFragmentByTag(wlanFragment.getClass().getName());
+			Log.i(CommandCenterActivity.TAG, "Checking for WCF via the SFM: "+wificlientVisibility);
+			
+			if (wificlientVisibility != null && wificlientVisibility.isVisible()) {
+				return; //fragment is currently visible, do nothing.
 			}
-			transaction.addToBackStack(null);
-			transaction
-					.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-			transaction.commit();
+
+			FragmentManager fm = getActivity().getSupportFragmentManager();
+
+			boolean fragmentPopped = fm.popBackStackImmediate(wlanFragment
+					.getClass().getName(), 0);
+
+			if (!fragmentPopped) {
+				Log.i(CommandCenterActivity.TAG, "Not in backstack - creating new fragment.");
+
+				FragmentTransaction transaction = fm.beginTransaction();
+
+				// check if the parent activity is dual pane based.
+				CommandCenterActivity parent = (CommandCenterActivity) getActivity();
+				if (parent.isDualPane()) {
+					transaction.replace(R.id.rightside_fragment, wlanFragment, wlanFragment.getClass().getName());
+				} else {
+					transaction.replace(R.id.leftside_fragment, wlanFragment);
+				}
+				transaction.addToBackStack(wlanFragment.getClass().getName());
+				transaction
+						.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+				transaction.commit();
+			}
 		}
 			break;
 		case lABOUT: {
@@ -223,27 +253,42 @@ public class DashboardFragment extends ListFragment {
 			RouterInfoFragment infoFragment = RouterInfoFragment
 					.newInstance(authInfo);
 
-			// In case this activity was started with special instructions from
-			// an
-			// Intent, pass the Intent's extras to the fragment as arguments
-			// firstFragment.setArguments(getIntent().getExtras());
-
-			// Add the fragment to the 'fragment_container' FrameLayout
-			FragmentTransaction transaction = getActivity()
-					.getSupportFragmentManager().beginTransaction();
-
-			// check if the parent activity is dual pane based.
-			CommandCenterActivity parent = (CommandCenterActivity) getActivity();
-			if (parent.isDualPane()) {
-				transaction.replace(R.id.rightside_fragment, infoFragment);
-			} else {
-				transaction.replace(R.id.leftside_fragment, infoFragment);
+			// Check if fragment is visible on the screen.
+			RouterInfoFragment infoVisibility = (RouterInfoFragment) getActivity().getSupportFragmentManager()
+					.findFragmentByTag(infoFragment.getClass().getName());
+			if (infoVisibility != null && infoVisibility.isVisible()) {
+				return; //fragment is currently visible, do nothing.
 			}
-			transaction.addToBackStack(null);
-			transaction
-					.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-			transaction.commit();
+			
+			FragmentManager fm = getActivity().getSupportFragmentManager();
+
+			boolean fragmentPopped = fm.popBackStackImmediate(infoFragment
+					.getClass().getName(), 0);
+
+			if (!fragmentPopped) {
+				Log.i(CommandCenterActivity.TAG, "Not in backstack - creating new fragment.");
+				FragmentTransaction transaction = fm.beginTransaction();
+				// check if the parent activity is dual pane based.
+				CommandCenterActivity parent = (CommandCenterActivity) getActivity();
+				if (parent.isDualPane()) {
+					transaction.replace(R.id.rightside_fragment, infoFragment, infoFragment.getClass().getName());
+				} else {
+					transaction.replace(R.id.leftside_fragment, infoFragment);
+				}
+				transaction.addToBackStack(infoFragment.getClass().getName());
+				transaction
+						.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+				transaction.commit();
+			}
 		}
+		break;
+		case lPRINTSTACK:
+			FragmentManager fm = getActivity().getSupportFragmentManager();
+
+			for(int entry = 0; entry < fm.getBackStackEntryCount(); entry++){
+				BackStackEntry f = fm.getBackStackEntryAt(entry);
+			 	Log.i(CommandCenterActivity.TAG, "Stack item "+f.getId()+ "has name "+f.getName());
+			}
 			break;
 
 		default:
@@ -253,9 +298,14 @@ public class DashboardFragment extends ListFragment {
 
 		if (((CommandCenterActivity) getActivity())
 				.findViewById(R.id.rightside_fragment) != null) {
+			Log.i(CommandCenterActivity.TAG,
+					"updating dual pane dashboard list highlight");
+			getListView().setItemChecked(currentSelection, false); // remove old
+																	// check
 			currentSelection = position;
-			getListView().setItemChecked(currentSelection, true);
+			v.setSelected(true);
+			getListView().setItemChecked(currentSelection, true); // set new
+																	// check
 		}
 	}
-
 }
