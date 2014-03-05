@@ -45,6 +45,9 @@ public class Config{
 	@JsonProperty("ondemand")
    	private boolean ondemand;
 	
+	@JsonProperty("ondemand_start_connected")
+	private boolean ondemand_start_connected;
+	
 	@JsonProperty("ondemand_idle_minutes")
    	private int ondemand_idle_minutes;
 	
@@ -167,5 +170,12 @@ public class Config{
 	}
 	public void setStatic(Static staticObj){
 		this.staticObj = staticObj;
+	}
+	
+	public boolean isOndemand_start_connected() {
+		return ondemand_start_connected;
+	}
+	public void setOndemand_start_connected(boolean ondemand_start_connected) {
+		this.ondemand_start_connected = ondemand_start_connected;
 	}
 }

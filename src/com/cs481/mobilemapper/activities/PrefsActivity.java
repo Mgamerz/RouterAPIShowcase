@@ -20,7 +20,7 @@ public class PrefsActivity extends PreferenceActivity {
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-		setTheme(Utility.getTheme(this));
+		//setTheme(Utility.getTheme(this));
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 		super.onCreate(savedInstanceState);
 	}

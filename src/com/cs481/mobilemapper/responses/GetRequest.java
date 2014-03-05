@@ -47,12 +47,10 @@ public class GetRequest extends SpiceRequest<Response> {
 												// from the `server.
 
 		String responseString = EntityUtils.toString(entity, "UTF-8"); // format
-																		// into
-																		// a
+																		// to
 																		// string
-																		// we
-																		// can
-																		// read.
+																		// thats
+																		// readable
 		ObjectMapper mapper = new ObjectMapper();
 
 		if (authInfo.isEcm()) {

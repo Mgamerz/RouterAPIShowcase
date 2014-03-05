@@ -307,12 +307,10 @@ public class LogSubfragment extends ListFragment implements OnRefreshListener {
 			if (clearExisting) {
 				adapter.clear(); //clear if the adapter might have already had data in it.
 			}
+			adapter.addAll(logs);
 		}
 		//Log.i(CommandCenterActivity.TAG, "Number of preclear: " + logs.size()+ " and instance v: "+this.logs.size());
 		Log.i(CommandCenterActivity.TAG, "Number of logs: " + logs.size());
-
-		
-		adapter.addAll(logs);
 		this.logs = logs;
 		
 		Log.i(CommandCenterActivity.TAG, "notifying adapter of new dataset");

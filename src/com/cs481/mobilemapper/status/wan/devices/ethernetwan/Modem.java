@@ -3,6 +3,9 @@ package com.cs481.mobilemapper.status.wan.devices.ethernetwan;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Modem{
    	private boolean aggressive_reset;
    	private String apn_mode;
@@ -12,8 +15,20 @@ public class Modem{
    	private boolean ip_src_wan_subnet_filter;
    	private String net_sel_mode;
    	private List profiles;
+   	
+   	@JsonProperty("ehrdp_enable")
+   	private boolean ehrdp_enable;
 
- 	public boolean getAggressive_reset(){
+   	@JsonProperty("ehrdp_enable")
+ 	public boolean getEhrdp_enable() {
+		return ehrdp_enable;
+	}
+   	
+   	@JsonProperty("ehrdp_enable")
+	public void setEhrdp_enable(boolean ehrdp_enable) {
+		this.ehrdp_enable = ehrdp_enable;
+	}
+	public boolean getAggressive_reset(){
 		return this.aggressive_reset;
 	}
 	public void setAggressive_reset(boolean aggressive_reset){
