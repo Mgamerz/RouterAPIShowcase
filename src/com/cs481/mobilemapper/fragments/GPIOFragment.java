@@ -19,7 +19,7 @@ import android.widget.Switch;
 import android.widget.Toast;
 
 import com.cs481.mobilemapper.AuthInfo;
-import com.cs481.mobilemapper.R;
+import com.cs481.commandcenter.R;
 import com.cs481.mobilemapper.activities.CommandCenterActivity;
 import com.cs481.mobilemapper.activities.SpiceActivity;
 import com.cs481.mobilemapper.responses.GetRequest;

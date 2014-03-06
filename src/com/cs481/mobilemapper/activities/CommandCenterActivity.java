@@ -13,7 +13,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.cs481.mobilemapper.AuthInfo;
-import com.cs481.mobilemapper.R;
+import com.cs481.commandcenter.R;
 import com.cs481.mobilemapper.Utility;
 import com.cs481.mobilemapper.fragments.DashboardFragment;
 import com.cs481.mobilemapper.fragments.WifiClientFragment;

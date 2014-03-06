@@ -7,7 +7,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 
-import com.cs481.mobilemapper.R;
+import com.cs481.commandcenter.R;
 import com.cs481.mobilemapper.Utility;
 import com.cs481.mobilemapper.fragments.PINFragment;
 

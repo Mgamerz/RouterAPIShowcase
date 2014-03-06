@@ -45,7 +45,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cs481.mobilemapper.Cryptography;
-import com.cs481.mobilemapper.R;
+import com.cs481.commandcenter.R;
 import com.cs481.mobilemapper.activities.CommandCenterActivity;
 
 public class PINFragment extends Fragment implements OnClickListener {

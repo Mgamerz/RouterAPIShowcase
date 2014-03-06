@@ -10,7 +10,7 @@ import android.util.Log;
 import android.util.TypedValue;
 import android.widget.Toast;
 
-import com.cs481.mobilemapper.R;
+import com.cs481.commandcenter.R;
 import com.cs481.mobilemapper.activities.CommandCenterActivity;
 
 public class WifiClientChangeDialog extends DialogFragment {

@@ -9,7 +9,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.cs481.mobilemapper.R;
+import com.cs481.commandcenter.R;
 
 public class HoloDialogBuilder extends AlertDialog.Builder {
 

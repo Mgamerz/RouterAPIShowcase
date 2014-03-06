@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.cs481.mobilemapper.R;
+import com.cs481.commandcenter.R;
 
 public class PINHeaderSubfragment extends Fragment {
 	@Override

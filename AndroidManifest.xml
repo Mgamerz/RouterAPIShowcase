@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.cs481.mobilemapper"
+    package="com.cs481.commandcenter"
     android:versionCode="2"
     android:versionName="1.0" >
 
@@ -43,7 +43,7 @@
             android:name="com.cs481.mobilemapper.activities.CommandCenterActivity"
             android:label="@string/command_title" >
         </activity>
-        <activity android:name=".activities.PINActivity" >
+        <activity android:name="com.cs481.mobilemapper.activities.PINActivity" >
         </activity>
     </application>
 

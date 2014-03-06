@@ -4,7 +4,7 @@ import android.os.Bundle;
 import android.preference.PreferenceFragment;
 import android.view.View;
 
-import com.cs481.mobilemapper.R;
+import com.cs481.commandcenter.R;
 
 /**
  * Preference Fragment for the ui preferences page.

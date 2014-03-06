@@ -2,9 +2,7 @@ package com.cs481.mobilemapper;
 
 import java.io.IOException;
 import java.util.ArrayList;
-
 import javax.crypto.SecretKey;
-
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.Credentials;
 import org.apache.http.auth.UsernamePasswordCredentials;
@@ -12,7 +10,6 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -25,7 +22,7 @@ import android.support.v4.app.FragmentActivity;
 import android.text.format.Formatter;
 import android.util.Base64;
 import android.util.Log;
-
+import com.cs481.commandcenter.R;
 import com.cs481.mobilemapper.activities.CommandCenterActivity;
 import com.cs481.mobilemapper.activities.PrefsActivity;
 import com.fasterxml.jackson.core.JsonProcessingException;

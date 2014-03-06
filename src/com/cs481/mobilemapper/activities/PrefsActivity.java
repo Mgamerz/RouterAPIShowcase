@@ -7,7 +7,7 @@ import android.preference.PreferenceActivity;
 import android.util.Log;
 import android.view.MenuItem;
 
-import com.cs481.mobilemapper.R;
+import com.cs481.commandcenter.R;
 import com.cs481.mobilemapper.Utility;
 import com.cs481.mobilemapper.fragments.preferences.SecurityPrefsFragment;
 import com.cs481.mobilemapper.fragments.preferences.UIPrefsFragment;

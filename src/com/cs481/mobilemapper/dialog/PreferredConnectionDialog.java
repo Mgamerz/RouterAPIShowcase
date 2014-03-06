@@ -11,7 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.CheckBox;
 
-import com.cs481.mobilemapper.R;
+import com.cs481.commandcenter.R;
 
 public class PreferredConnectionDialog extends DialogFragment {
 	private String connectionType;

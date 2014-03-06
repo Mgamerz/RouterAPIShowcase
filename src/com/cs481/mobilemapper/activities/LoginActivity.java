@@ -35,7 +35,7 @@ import android.widget.Toast;
 import com.cs481.mobilemapper.AuthInfo;
 import com.cs481.mobilemapper.Cryptography;
 import com.cs481.mobilemapper.Profile;
-import com.cs481.mobilemapper.R;
+import com.cs481.commandcenter.R;
 import com.cs481.mobilemapper.Utility;
 import com.cs481.mobilemapper.debug.DebugActivity;
 import com.cs481.mobilemapper.fragments.PINFragment;
