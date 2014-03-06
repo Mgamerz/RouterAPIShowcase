@@ -3,7 +3,8 @@
 
     <Preference
         android:key="@+id/prefs_create_pin"
-        android:title="@string/prefs_create_pin" />
+        android:title="@string/prefs_create_pin"
+        android:enabled="false" />
     <Preference
         android:key="@+id/prefs_delete_profiles"
         android:title="@string/prefs_delete_profiles" />

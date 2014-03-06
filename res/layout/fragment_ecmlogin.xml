@@ -30,6 +30,7 @@
         android:ems="16"
         android:gravity="center"
         android:hint="@string/ecm_username_hint"
+        android:inputType="textFilter"
         android:imeOptions="actionNext"
         android:singleLine="true" >
     </EditText>

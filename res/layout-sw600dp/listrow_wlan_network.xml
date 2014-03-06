@@ -9,7 +9,7 @@
         style="@style/TextTheme"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="45dp"
+        android:layout_marginLeft="15dp"
         android:text="SSID"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
@@ -28,7 +28,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
-        android:layout_marginRight="45dp"
+        android:layout_marginRight="15dp"
         android:contentDescription="@string/app_name"
         android:src="@drawable/ic_wifi_dark_open" />
 

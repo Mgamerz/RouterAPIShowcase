@@ -115,6 +115,8 @@ public class CommandCenterActivity extends SpiceActivity implements
 	@Override
 	public void onBackStackChanged() {
 		// This method is called when the backstack changes.
+		Log.i(TAG, "Backstack has changed.");
+		
 		int backStackEntryCount = getSupportFragmentManager()
 				.getBackStackEntryCount();
 		if (backStackEntryCount > 0) {
