@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/mapping_statusfrag"
-        android:name="com.cs481.mobilemapper.fragments.StatusSubfragment"
+        android:name="com.cs481.commandcenter.fragments.StatusSubfragment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         tools:layout="@layout/subfrag_mapping_status" />
