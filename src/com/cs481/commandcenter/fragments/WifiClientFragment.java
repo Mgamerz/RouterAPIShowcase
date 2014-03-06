@@ -175,12 +175,6 @@ public class WifiClientFragment extends ListFragment implements
 						R.array.wificlient_values)));
 		mSpinnerAdapter = new DropdownAdapter(getActivity(), values,
 				getActivity().getActionBar().getSubtitle().toString());
-
-	}
-
-	@Override
-	public void onResume() {
-		super.onResume();
 		SpiceActivity sa = (SpiceActivity) getActivity();
 		sa.getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST); // makes
 																				// the
@@ -188,16 +182,11 @@ public class WifiClientFragment extends ListFragment implements
 																				// list
 																				// appear
 
-		// set the title before we set the callbacks.
-		// sa.getActionBar().setListNavigationCallbacks(mSpinnerAdapter, null);
-
+		//set the callbacks.
 		sa.getActionBar().setListNavigationCallbacks(mSpinnerAdapter, this);
+		Log.i(CommandCenterActivity.TAG, "Hiding title bar");
 		sa.getActionBar().setDisplayShowTitleEnabled(false);
-		sa.setTitle(getResources().getString(R.string.wifiwan_title)); // TODO
-																		// change
-																		// to
-																		// string
-																		// resource
+		
 		spiceManager = sa.getSpiceManager();
 		if (shouldLoadData) {
 			readWlanWANConfig(true);
@@ -210,9 +199,7 @@ public class WifiClientFragment extends ListFragment implements
 				sa.getActionBar().setSelectedNavigationItem(temporaryClientMode);
 			} else {
 				sa.getActionBar().setSelectedNavigationItem(currentClientMode);
-
 			}
-
 		}
 	}
 

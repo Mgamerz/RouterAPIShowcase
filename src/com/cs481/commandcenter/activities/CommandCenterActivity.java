@@ -130,6 +130,7 @@ public class CommandCenterActivity extends SpiceActivity implements
 				getActionBar().setDisplayHomeAsUpEnabled(true);
 			}
 		} else {
+			Log.i(TAG, "Backstack is empty - making the title appear");
 			DashboardFragment db = (DashboardFragment) getSupportFragmentManager().findFragmentByTag(DashboardFragment.class.getName());
 			// this shouldn't be null... hopefully
 			db.setCurrentSelection(-1);
