@@ -92,7 +92,7 @@ public class DashboardFragment extends ListFragment {
 																					// appear
 		sa.getActionBar().setDisplayShowTitleEnabled(true);
 		boolean isDualPane = (getActivity().findViewById(
-				R.id.rightside_fragment) == null);
+				R.id.rightside_fragment) != null);
 		if (isDualPane) {
 			getListView().setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 			getListView().setItemChecked(currentSelection, true);
@@ -319,5 +319,10 @@ public class DashboardFragment extends ListFragment {
 			getListView().setItemChecked(currentSelection, true); // set new
 																	// check
 		}
+	}
+
+	public void setCurrentSelection(int i) {
+		// TODO Auto-generated method stub
+		currentSelection = i;
 	}
 }

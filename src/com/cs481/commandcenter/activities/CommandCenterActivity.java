@@ -1,5 +1,6 @@
 package com.cs481.commandcenter.activities;
 
+import android.app.ActionBar;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -36,16 +37,6 @@ public class CommandCenterActivity extends SpiceActivity implements
 		// Rebuild authInfo from the intent that put us here
 		authInfo = intent.getParcelableExtra("authInfo");
 		getActionBar().setSubtitle(intent.getStringExtra("ab_subtitle"));
-		/*
-		 * authInfo = new AuthInfo();
-		 * authInfo.setEcm(intent.getBooleanExtra("ecm", false));
-		 * authInfo.setRemote(intent.getBooleanExtra("remote", false));
-		 * authInfo.setPort(intent.getIntExtra("port", 80));
-		 * authInfo.setRouterId(intent.getStringExtra("id"));
-		 * authInfo.setRouterip(intent.getStringExtra("ip"));
-		 * authInfo.setUsername(intent.getStringExtra("user"));
-		 * authInfo.setPassword(intent.getStringExtra("pass"));
-		 */
 
 		// Retain fragments on rotation
 		if (null == savedInstanceState) {
@@ -58,7 +49,7 @@ public class CommandCenterActivity extends SpiceActivity implements
 					.beginTransaction();
 
 			// Inject our fragment
-			ft.replace(R.id.leftside_fragment, fragment);
+			ft.replace(R.id.leftside_fragment, fragment, fragment.getClass().getName());
 			// set type of animation
 
 			// Commit to the UI
@@ -66,7 +57,7 @@ public class CommandCenterActivity extends SpiceActivity implements
 		}
 		// getActionBar().setSubtitle("--Cloud Router testing--");
 		View dual = findViewById(R.id.rightside_fragment);
-		setDualPane(dual != null && dual.getVisibility() == View.VISIBLE);
+		setDualPane(dual != null);
 
 	}
 
@@ -132,8 +123,13 @@ public class CommandCenterActivity extends SpiceActivity implements
 				getActionBar().setDisplayHomeAsUpEnabled(true);
 			}
 		} else {
+			DashboardFragment db = (DashboardFragment) getSupportFragmentManager().findFragmentByTag(DashboardFragment.class.getName());
+			// this shouldn't be null... hopefully
+			db.setCurrentSelection(-1);
+			db.getListView().invalidateViews(); //redraw
 			getActionBar().setDisplayHomeAsUpEnabled(false);
 			getActionBar().setDisplayShowTitleEnabled(true);
+			getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
 		}
 	}
 }
