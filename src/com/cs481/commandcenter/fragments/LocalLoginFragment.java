@@ -190,7 +190,7 @@ public class LocalLoginFragment extends Fragment {
 			FragmentTransaction transaction = getActivity()
 					.getSupportFragmentManager().beginTransaction();
 
-			transaction.replace(R.id.login_fragment, ecmFragment);
+			transaction.replace(R.id.login_fragment, ecmFragment, "DirectFragment");
 			transaction.commit();
 			return true;
 		case R.id.menu_preenter_ip:

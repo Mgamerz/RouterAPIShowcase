@@ -130,7 +130,7 @@ public class LoginActivity extends SpiceActivity {
 
 		// Save layout on rotation
 		if (savedInstanceState == null) {
-			Fragment fragment; // fragment to set.
+			Fragment fragment; // fragment to set - reads the preferred connection type.
 
 			SharedPreferences defaultPrefs = PreferenceManager
 					.getDefaultSharedPreferences(this);
@@ -141,10 +141,13 @@ public class LoginActivity extends SpiceActivity {
 									R.string.prefskey_connection_type), "none");
 			String[] loginValues = getResources().getStringArray(
 					R.array.preferred_connection_values);
+			String tag = null;
 			if (loginType.equals(loginValues[1])) {
 				fragment = new LocalLoginFragment();
+				tag = "DirectFragment";
 			} else if (loginType.equals(loginValues[2])) {
 				fragment = new ECMLoginFragment();
+				tag = "ECMFragment";
 			} else {
 				fragment = new SplashScreenFragment();
 			}
@@ -160,7 +163,7 @@ public class LoginActivity extends SpiceActivity {
 			FragmentTransaction transaction = getSupportFragmentManager()
 					.beginTransaction();
 
-			transaction.replace(R.id.login_fragment, fragment);
+			transaction.replace(R.id.login_fragment, fragment, tag);
 			// frFragment.animate();
 			transaction.commit();
 
