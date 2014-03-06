@@ -3,6 +3,7 @@ package com.cs481.commandcenter.fragments;
 import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
 import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
 import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
+import android.app.ActionBar;
 import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -113,7 +114,9 @@ public class GPIOFragment extends Fragment implements OnRefreshListener,
 	public void onStart() {
 		super.onStart();
 		SpiceActivity sa = (SpiceActivity) getActivity();
-		sa.setTitle(getResources().getString(R.string.gpio_title)); // TODO
+		sa.getActionBar().setDisplayShowTitleEnabled(true);
+		sa.getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+		sa.getActionBar().setTitle(getResources().getString(R.string.gpio_title)); // TODO
 																	// change to
 																	// string
 																	// resource

@@ -448,6 +448,9 @@ public class WifiClientFragment extends ListFragment implements
 
 		@Override
 		public void onRequestFailure(SpiceException e) {
+			if (!isAdded()){
+				return;
+			}
 			Resources resources = getResources();
 			Log.i(CommandCenterActivity.TAG,
 					"Failed to read the client wan mode!");
@@ -460,7 +463,9 @@ public class WifiClientFragment extends ListFragment implements
 		@Override
 		public void onRequestSuccess(Response response) {
 			// update your UI
-
+			if (!isAdded()) {
+				return;
+			}
 			if (response.getResponseInfo().getSuccess()) {
 				String currentMode = (String) response.getData();
 

@@ -137,6 +137,9 @@ public class CommandCenterActivity extends SpiceActivity implements
 			getActionBar().setDisplayHomeAsUpEnabled(false);
 			getActionBar().setDisplayShowTitleEnabled(true);
 			getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+			Intent intent = getIntent();
+			getActionBar().setSubtitle(intent.getStringExtra("ab_subtitle"));
+			getActionBar().setTitle(getResources().getString(R.string.dashboard_title));
 		}
 	}
 }

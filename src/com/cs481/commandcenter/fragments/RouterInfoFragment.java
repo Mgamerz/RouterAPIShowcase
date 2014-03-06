@@ -2,6 +2,7 @@ package com.cs481.commandcenter.fragments;
 
 import org.apache.commons.lang3.time.DurationFormatUtils;
 
+import android.app.ActionBar;
 import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -153,7 +154,9 @@ public class RouterInfoFragment extends Fragment {
 	public void onStart() {
 		super.onStart();
 		SpiceActivity sa = (SpiceActivity) getActivity();
-		sa.setTitle(getResources().getString(R.string.routerinfo));
+		sa.getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+		sa.getActionBar().setDisplayShowTitleEnabled(true);
+		sa.getActionBar().setTitle(getResources().getString(R.string.routerinfo));
 		spiceManager = sa.getSpiceManager();
 		spiceManager.addListenerIfPending(Response.class, CACHEKEY_PRODUCT,
 				new InfoGetRequestListener());
