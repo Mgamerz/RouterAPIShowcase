@@ -6,9 +6,11 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.content.res.Resources.Theme;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.util.Log;
+import android.util.TypedValue;
 
 import com.cs481.commandcenter.AuthInfo;
 import com.cs481.commandcenter.R;
@@ -38,7 +40,17 @@ public class SaveProfileDialogFragment extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
     	LoginActivity activity = (LoginActivity) getActivity();
     	//authInfo = activity.getAuthInfo();
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(activity);
+    	
+    	HoloDialogBuilder alertDialogBuilder = new HoloDialogBuilder(getActivity());
+
+		Theme theme = getActivity().getTheme();
+		TypedValue typedValue = new TypedValue();
+		theme.resolveAttribute(android.R.attr.windowBackground, typedValue,
+				true);
+		// Color color = getResources().getColor(colorid);
+
+		alertDialogBuilder.setDividerColor(typedValue.resourceId);
+		alertDialogBuilder.setTitleColor(typedValue.resourceId);
         alertDialogBuilder.setTitle(router.getName());
         Resources resources = getResources();
         alertDialogBuilder.setMessage(resources.getString(R.string.save_profile));
