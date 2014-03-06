@@ -218,7 +218,7 @@
     <string name="googlePlusURL">https://plus.google.com/communities/111564840010673680416</string>
     
     <!-- Dialog Text -->
-    <string name="dialog_yes">Yes</string>
-    <string name="dialog_no">No</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
 
 </resources>
