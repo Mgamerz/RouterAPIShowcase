@@ -175,7 +175,8 @@
     <string name="prefs_securitytitle">Security</string>
 
     <!-- Prefs keys -->
-    <string name="prefskey_theme">current_theme</string>
+    <string name="prefskey_theme">prefs_current_theme</string>
+    <string name="prefs_connection_type">prefs_connection_type</string>
 
     <string-array name="theme_names">
         <item>Red</item>
@@ -194,15 +195,24 @@
         <item>WiFi as Bridge</item>
         <item>WiFi as WAN</item>
     </string-array>
+    <string-array name="preferred_connection_names">
+        <item>None</item>
+        <item>Direct</item>
+        <item>ECM</item>
+    </string-array>
+    <string-array name="preferred_connection_values">
+        <item>None</item>
+        <item>Direct</item>
+        <item>ECM</item>
+    </string-array>
 
     <string name="contextmenu_copy">Copy Log Message</string>
     <string name="prefs_delete_profiles">Delete saved profiles</string>
     <string name="prefs_delete_profiles_summary">Wipe all profiles [disabled in this build - wipe app data to clear]</string>
     <string name="prefs_create_pin">Create a PIN</string>
-    
-    
-	<!-- About Page -->
+
+    <!-- About Page -->
     <string name="about">About</string>
-	<string name="googlePlusURL">https://plus.google.com/communities/111564840010673680416</string>
+    <string name="googlePlusURL">https://plus.google.com/communities/111564840010673680416</string>
 
 </resources>

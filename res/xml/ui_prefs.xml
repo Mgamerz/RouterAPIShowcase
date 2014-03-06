@@ -6,5 +6,11 @@
         android:entries="@array/theme_names"
         android:entryValues="@array/theme_values"
         android:key="@string/prefskey_theme" />
+    
+    <ListPreference
+        android:title="@string/prefs_connection_type"
+        android:entries="@array/preferred_connection_names"
+        android:entryValues="@array/preferred_connection_values"
+        android:key="@string/prefskey_theme" />
 
 </PreferenceScreen>

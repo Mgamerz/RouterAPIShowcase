@@ -2,11 +2,11 @@
 <preference-headers xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <header
-        android:fragment="com.cs481.mobilemapper.fragments.preferences.UIPrefsFragment"
+        android:fragment="com.cs481.commandcenter.fragments.preferences.UIPrefsFragment"
         android:summary="@string/prefs_uisubtitle"
         android:title="@string/prefs_uititle" />
     <header
-        android:fragment="com.cs481.mobilemapper.fragments.preferences.SecurityPrefsFragment"
+        android:fragment="com.cs481.commandcenter.fragments.preferences.SecurityPrefsFragment"
         android:summary="@string/prefs_securitysubtitle"
         android:title="@string/prefs_securitytitle" />
 
