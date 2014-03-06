@@ -199,5 +199,10 @@
     <string name="prefs_delete_profiles">Delete saved profiles</string>
     <string name="prefs_delete_profiles_summary">Wipe all profiles [disabled in this build - wipe app data to clear]</string>
     <string name="prefs_create_pin">Create a PIN</string>
+    
+    
+	<!-- About Page -->
+    <string name="about">About</string>
+	<string name="googlePlusURL">https://plus.google.com/communities/111564840010673680416</string>
 
 </resources>

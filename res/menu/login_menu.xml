@@ -28,5 +28,9 @@
         android:id="@+id/action_settings"
         android:title="@string/action_settings">
     </item>
+    <item
+        android:id="@+id/about"
+        android:title="@string/about">
+    </item>
 
 </menu>
