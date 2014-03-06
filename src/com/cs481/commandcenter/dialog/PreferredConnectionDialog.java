@@ -58,7 +58,7 @@ public class PreferredConnectionDialog extends DialogFragment {
 					editor.putBoolean("prefs_connection_dontAskAgain", true);
 				}
 				
-				editor.putString(getResources().getString(R.string.prefs_connection_type), connectionType);
+				editor.putString(getResources().getString(R.string.prefskey_connection_type), connectionType);
 				editor.commit();
 			}
 		});

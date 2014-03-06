@@ -162,6 +162,7 @@
     <string name="log_get_failed">Failed to get router logs</string>
     <string name="log_copied">Log text copied to clipboard.</string>
     <string name="loading_logs">Retreiving Router Log</string>
+    <string name="contextmenu_copy">Copy Log Message</string>
     <string name="no_logs">No router logs to display or none could be retreived.</string>
 
     <!-- Color Strings (for the custom dialogs - doesn't support R.color values. -->
@@ -176,7 +177,7 @@
 
     <!-- Prefs keys -->
     <string name="prefskey_theme">prefs_current_theme</string>
-    <string name="prefs_connection_type">prefs_connection_type</string>
+    <string name="prefskey_connection_type">prefs_connection_type</string>
 
     <string-array name="theme_names">
         <item>Red</item>
@@ -206,7 +207,8 @@
         <item>ECM</item>
     </string-array>
 
-    <string name="contextmenu_copy">Copy Log Message</string>
+    <string name="prefs_preferred_connection_title">Preferred Connection Type</string>
+    <string name="prefs_theme_title">App Theme</string>
     <string name="prefs_delete_profiles">Delete saved profiles</string>
     <string name="prefs_delete_profiles_summary">Wipe all profiles [disabled in this build - wipe app data to clear]</string>
     <string name="prefs_create_pin">Create a PIN</string>

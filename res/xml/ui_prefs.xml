@@ -2,15 +2,15 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <ListPreference
-        android:title="Theme"
+        android:title="@string/prefs_theme_title"
         android:entries="@array/theme_names"
         android:entryValues="@array/theme_values"
         android:key="@string/prefskey_theme" />
     
     <ListPreference
-        android:title="@string/prefs_connection_type"
+        android:title="@string/prefs_preferred_connection_title"
         android:entries="@array/preferred_connection_names"
         android:entryValues="@array/preferred_connection_values"
-        android:key="@string/prefskey_theme" />
+        android:key="@string/prefskey_connection_type" />
 
 </PreferenceScreen>
