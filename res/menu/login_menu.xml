@@ -11,15 +11,18 @@
     </item>
     <item
         android:id="@+id/menu_preenter_ip"
-        android:title="Preenter Cloud IP">
+        android:title="Preenter Cloud IP"
+        android:visible="false">
     </item>
     <item
         android:id="@+id/fr_debug"
-        android:title="Debug - TestPin">
+        android:title="Debug - TestPin"
+        android:visible="false">
     </item>
     <item
         android:id="@+id/fr_debug_new"
-        android:title="Debug - NewPin">
+        android:title="Debug - NewPin"
+        android:visible="false">
     </item>
     <item
         android:id="@+id/action_settings"

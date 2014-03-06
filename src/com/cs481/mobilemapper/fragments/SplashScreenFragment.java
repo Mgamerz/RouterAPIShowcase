@@ -87,6 +87,8 @@ public class SplashScreenFragment extends Fragment {
 				ECMLoginFragment ecmLoginFragment = new ECMLoginFragment();
 				FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
 				transaction.replace(R.id.login_fragment, ecmLoginFragment);
+				transaction
+				.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
 				transaction.commit();
 			}
 		});
@@ -104,6 +106,8 @@ public class SplashScreenFragment extends Fragment {
 				LocalLoginFragment localLoginFragment = new LocalLoginFragment();
 				FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
 				transaction.replace(R.id.login_fragment, localLoginFragment);
+				transaction
+				.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
 				transaction.commit();
 			}
 		});

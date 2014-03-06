@@ -125,7 +125,7 @@ public class LoginActivity extends SpiceActivity {
 		// Save layout on rotation
 		if (savedInstanceState == null) {
 			// LocalLoginFragment frFragment = new LocalLoginFragment();
-			SplashScreenFragment frFragment = new SplashScreenFragment();
+			SplashScreenFragment splashFragment = new SplashScreenFragment();
 
 			// In case this activity was started with special instructions from
 			// an
@@ -136,11 +136,10 @@ public class LoginActivity extends SpiceActivity {
 			FragmentTransaction transaction = getSupportFragmentManager()
 					.beginTransaction();
 
-			transaction.replace(R.id.login_fragment, frFragment);
+			transaction.replace(R.id.login_fragment, splashFragment);
 			// frFragment.animate();
 			transaction.commit();
 
-			// CRASH HERE
 		}
 
 		mTitle = getTitle();

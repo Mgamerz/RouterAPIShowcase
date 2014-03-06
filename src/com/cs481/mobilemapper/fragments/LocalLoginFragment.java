@@ -281,18 +281,6 @@ public class LocalLoginFragment extends Fragment {
 					// Prepare new intent.
 					Intent intent = new Intent(getActivity(),
 							CommandCenterActivity.class);
-					// intent.putExtra("ip", routerip);
-					// String password = ((EditText) getView().findViewById(
-					// R.id.router_password)).getText().toString();
-					// intent.putExtra("pass", password);
-
-					// Set ecm flags to false.
-					/*
-					 * intent.putExtra("ecm", false); intent.putExtra("port",
-					 * autInfo.ge); intent.putExtra("remote",
-					 * authInfo.isRemote()); intent.putExtra("id",
-					 * "NOT-ECM-MANAGED"); intent.putExtra("user", "admin");
-					 */
 					intent.putExtra("authInfo", authInfo);
 					intent.putExtra("ab_subtitle", proin.getProduct_name()); //changes subtitle.
 					// start the new activity, and prevent this one from being

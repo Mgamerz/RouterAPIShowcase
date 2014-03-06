@@ -31,7 +31,7 @@ public class CommandCenterActivity extends SpiceActivity implements
 		setTheme(Utility.getTheme(this));
 
 		setContentView(R.layout.activity_commandcenter);
-
+		getSupportFragmentManager().addOnBackStackChangedListener(this);
 		Intent intent = getIntent();
 		// Rebuild authInfo from the intent that put us here
 		authInfo = intent.getParcelableExtra("authInfo");

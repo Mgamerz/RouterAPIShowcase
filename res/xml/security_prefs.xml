@@ -7,6 +7,6 @@
         android:enabled="false" />
     <Preference
         android:key="@+id/prefs_delete_profiles"
-        android:title="@string/prefs_delete_profiles" />
+        android:title="@string/prefs_delete_profiles" android:summary="@string/prefs_delete_profiles_summary" android:enabled="false"/>
 
 </PreferenceScreen>

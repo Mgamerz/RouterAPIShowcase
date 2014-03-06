@@ -197,6 +197,7 @@
 
     <string name="contextmenu_copy">Copy Log Message</string>
     <string name="prefs_delete_profiles">Delete saved profiles</string>
+    <string name="prefs_delete_profiles_summary">Wipe all profiles [disabled in this build - wipe app data to clear]</string>
     <string name="prefs_create_pin">Create a PIN</string>
 
 </resources>

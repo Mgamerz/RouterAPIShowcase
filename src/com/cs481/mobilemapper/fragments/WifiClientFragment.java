@@ -348,6 +348,9 @@ public class WifiClientFragment extends ListFragment implements
 	}
 
 	private String dropdownToString(int position) {
+		if (!isAdded()){
+			return null;
+		}
 		switch (position) {
 		case WIFICLIENT_WAN:
 			return getResources().getString(R.string.wifiwan_title);
@@ -361,15 +364,6 @@ public class WifiClientFragment extends ListFragment implements
 	@Override
 	public void onRefreshStarted(View view) {
 		readWlanWANConfig(false);
-
-		/*
-		 * GetRequest request = new GetRequest( authInfo, "config/wlan",
-		 * ConfigWlan.class, "configwlanget"); String lastRequestCacheKey =
-		 * request.createCacheKey();
-		 * 
-		 * spiceManager.execute(request, lastRequestCacheKey,
-		 * DurationInMillis.ALWAYS_EXPIRED, new WLANGetRequestListener());
-		 */
 	}
 
 	@Override
