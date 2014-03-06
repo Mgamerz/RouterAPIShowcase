@@ -16,7 +16,9 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.ActionBarDrawerToggle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Base64;
@@ -39,6 +41,8 @@ import com.cs481.commandcenter.Profile;
 import com.cs481.commandcenter.R;
 import com.cs481.commandcenter.Utility;
 import com.cs481.commandcenter.debug.DebugActivity;
+import com.cs481.commandcenter.fragments.ECMLoginFragment;
+import com.cs481.commandcenter.fragments.LocalLoginFragment;
 import com.cs481.commandcenter.fragments.PINFragment;
 import com.cs481.commandcenter.fragments.SplashScreenFragment;
 import com.cs481.commandcenter.responses.GetRequest;
@@ -66,11 +70,11 @@ public class LoginActivity extends SpiceActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		if (savedInstanceState != null){
+		if (savedInstanceState != null) {
 			unlockProfile = savedInstanceState.getParcelable("unlockProfile");
 			authInfo = savedInstanceState.getParcelable("authInfo");
 		}
-		
+
 		Ln.getConfig().setLoggingLevel(Log.ERROR);
 		setTheme(Utility.getTheme(this));
 
@@ -88,7 +92,8 @@ public class LoginActivity extends SpiceActivity {
 				resources.getString(R.string.crypto_prefsdb), MODE_PRIVATE);
 		String uuid = crypto.getString("uuid", null);
 		if (uuid == null) {
-			Log.i(CommandCenterActivity.TAG, "UUID is null - app should be running from a fresh data set.");
+			Log.i(CommandCenterActivity.TAG,
+					"UUID is null - app should be running from a fresh data set.");
 			// writing
 			SecureRandom secureRandom = new SecureRandom();
 			// Do *not* seed secureRandom! Automatically seeded from system.
@@ -125,8 +130,26 @@ public class LoginActivity extends SpiceActivity {
 
 		// Save layout on rotation
 		if (savedInstanceState == null) {
+			Fragment fragment; // fragment to set.
+
+			SharedPreferences defaultPrefs = PreferenceManager
+					.getDefaultSharedPreferences(this);
+
+			String loginType = defaultPrefs
+					.getString(
+							getResources().getString(
+									R.string.prefskey_connection_type), "none");
+			String[] loginValues = getResources().getStringArray(
+					R.array.preferred_connection_values);
+			if (loginType.equals(loginValues[1])) {
+				fragment = new LocalLoginFragment();
+			} else if (loginType.equals(loginValues[2])) {
+				fragment = new ECMLoginFragment();
+			} else {
+				fragment = new SplashScreenFragment();
+			}
+
 			// LocalLoginFragment frFragment = new LocalLoginFragment();
-			SplashScreenFragment splashFragment = new SplashScreenFragment();
 
 			// In case this activity was started with special instructions from
 			// an
@@ -137,7 +160,7 @@ public class LoginActivity extends SpiceActivity {
 			FragmentTransaction transaction = getSupportFragmentManager()
 					.beginTransaction();
 
-			transaction.replace(R.id.login_fragment, splashFragment);
+			transaction.replace(R.id.login_fragment, fragment);
 			// frFragment.animate();
 			transaction.commit();
 
@@ -175,7 +198,7 @@ public class LoginActivity extends SpiceActivity {
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 		getActionBar().setHomeButtonEnabled(true);
 	}
-	
+
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
 		outState.putParcelable("authInfo", authInfo);
@@ -347,11 +370,11 @@ public class LoginActivity extends SpiceActivity {
 					SecretKey secret = Cryptography.generateKey(pin,
 							uuid.getBytes("UTF-8"));
 					String decryptedUsername = Cryptography.decryptMsg(Base64
-							.decode(unlockProfile.getAuthInfo().getUsername(), Base64.DEFAULT),
-							secret);
+							.decode(unlockProfile.getAuthInfo().getUsername(),
+									Base64.DEFAULT), secret);
 					String decryptedPassword = Cryptography.decryptMsg(Base64
-							.decode(unlockProfile.getAuthInfo().getPassword(), Base64.DEFAULT),
-							secret);
+							.decode(unlockProfile.getAuthInfo().getPassword(),
+									Base64.DEFAULT), secret);
 					profileAuth.setPassword(decryptedPassword);
 					profileAuth.setUsername(decryptedUsername);
 
