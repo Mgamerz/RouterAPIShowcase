@@ -14,6 +14,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.FragmentTransaction;
@@ -197,6 +198,12 @@ public class LoginActivity extends SpiceActivity {
 		case R.id.action_settings:
 			Intent prefsIntent = new Intent(this, PrefsActivity.class);
 			startActivity(prefsIntent);
+			return true;
+		case R.id.about:
+			String url = getResources().getString(R.string.googlePlusURL);
+			Intent i = new Intent(Intent.ACTION_VIEW);
+			i.setData(Uri.parse(url));
+			startActivity(i);
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
