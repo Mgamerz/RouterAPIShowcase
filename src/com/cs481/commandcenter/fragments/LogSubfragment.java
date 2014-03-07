@@ -319,7 +319,9 @@ public class LogSubfragment extends ListFragment implements OnRefreshListener {
 		if (logState == LOG_LOADED && listState != null){
 			//it's already been loaded (if it hasn't yet, it will be set after this call.)
 			Log.i(CommandCenterActivity.TAG, "Restoring listview position with state "+listState);
-			getListView().onRestoreInstanceState(listState);
+			if (listState != null) {
+				getListView().onRestoreInstanceState(listState);
+			}
 		}
 	}
 

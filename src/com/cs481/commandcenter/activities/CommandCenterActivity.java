@@ -121,7 +121,11 @@ public class CommandCenterActivity extends SpiceActivity implements OnBackStackC
 				Log.i(TAG, "wificlient fragment is not showing - show the title bar.");
 				getActionBar().setDisplayShowTitleEnabled(true);
 			} else {
-				getActionBar().setDisplayShowTitleEnabled(false);
+				if (wcf.isVisible()){
+					getActionBar().setDisplayShowTitleEnabled(false);
+				} else {
+					getActionBar().setDisplayShowTitleEnabled(true);
+				}
 			}
 			if (!isDualPane) {
 				getActionBar().setDisplayHomeAsUpEnabled(true);
