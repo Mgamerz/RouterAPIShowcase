@@ -43,9 +43,9 @@ public class DatabaseAdapter {
 	    }
 	
 	private static class DatabaseHelper extends SQLiteOpenHelper {
+		
 		public DatabaseHelper(Context context) {
 			super(context, DATABASE_NAME, null, DATABASE_VERSION);
-			// TODO Auto-generated constructor stub
 		}
 
 		@Override
@@ -90,17 +90,30 @@ public class DatabaseAdapter {
 		}
 	}
 	
+	/**
+	 * Opens the database. 
+	 * @return 
+	 * @throws SQLException
+	 */
 	public DatabaseAdapter open() throws SQLException
 	{
 	    db = DBHelper.getWritableDatabase();
 	    return this;
 	}
-	 
+	
+	/**
+	 * Closes the database.  
+	 */
 	public void close()
 	{
 	    DBHelper.close();
 	}
-
+	
+	/**
+	 * Inserts a profile into the database
+	 * @param profile, the profile to be inserted
+	 * @return positive if insertion successful
+	 */
 	public long insertProfile(Profile profile) {
 		boolean ecm = profile.getAuthInfo().isEcm();
 		open();
@@ -109,7 +122,12 @@ public class DatabaseAdapter {
 		} else
 			return insertProfileDirect(profile);
 	}
-
+	
+	/**
+	 * Inserts a profile into the ECM table in the database
+	 * @param profile
+	 * @return positive on success
+	 */
 	public long insertProfileEcm(Profile profile) {
 		
 		AuthInfo authInfo = profile.getAuthInfo();
@@ -122,7 +140,12 @@ public class DatabaseAdapter {
 		
 		return db.insert(DATABASE_TABLE_ECM, null, values);
 	}
-
+	
+	/**
+	 * Inserts a profile into the Direct table in the database
+	 * @param profile
+	 * @return positive on success
+	 */
 	public long insertProfileDirect(Profile profile) {
 
 		AuthInfo authInfo = profile.getAuthInfo();
@@ -138,6 +161,11 @@ public class DatabaseAdapter {
 		return db.insert(DATABASE_TABLE_DIRECT, null, values);
 	}
 	
+	/**
+	 * Deletes a profile from the database
+	 * @param profile, the profile to be deleted
+	 * @return positive if deletion successful
+	 */
 	public long deleteProfile(Profile profile) {
 		boolean ecm = profile.getAuthInfo().isEcm();
 		open();
@@ -147,25 +175,64 @@ public class DatabaseAdapter {
 			return deleteProfileDirect(profile);
 	}
 	
+	/**
+	 * Deletes a profile from the ECM table in the database
+	 * @param profile
+	 * @return positive on success
+	 */
 	public long deleteProfileEcm(Profile profile) {
 		AuthInfo authInfo = profile.getAuthInfo();
 		//routerid is primary key
-		return db.delete(DATABASE_TABLE_ECM, TABLE_ECM_ROW_ROUTERID + "=" + authInfo.getRouterId(), null);
+		String where = TABLE_ECM_ROW_ROUTERID + "= ?" ;
+		String[] args = {authInfo.getRouterId()};
+		return db.delete(DATABASE_TABLE_ECM, where, args);
 	}
 
+	/**
+	 * Deletes a profile from the Direct table in the database
+	 * @param profile
+	 * @return positive on success
+	 */
 	public long deleteProfileDirect(Profile profile) {
 		AuthInfo authInfo = profile.getAuthInfo();
 		//routerip is primary key
-		return db.delete(DATABASE_TABLE_DIRECT, TABLE_DIRECT_ROW_ROUTERIP + "=" + authInfo.getRouterip(), null);
+		String where = TABLE_DIRECT_ROW_ROUTERIP + "= ?";
+		String[] args = {authInfo.getRouterip()};
+		return db.delete(DATABASE_TABLE_DIRECT, where, args);
 	}
 	
+	/**
+	 * Deletes all profiles in both Direct and ECM tables
+	 * @return positive on success
+	 */
 	public long deleteAllProfiles() {
-			if(db.delete(DATABASE_TABLE_ECM, null, null) > 0 &&	 db.delete(DATABASE_TABLE_DIRECT, null, null) > 0)
-				return 1;
-			else
-				return -1;
+		
+		if (deleteAllEcmProfiles() > 0 && deleteAllDirectProfiles() > 0)
+			return 1;
+		else
+			return -1;
 	}
 	
+	/**
+	 * 
+	 * @return positive on success
+	 */
+	public long deleteAllEcmProfiles(){
+		return db.delete(DATABASE_TABLE_ECM, null, null);
+	}
+	
+	/**
+	 * 
+	 * @return positive on success
+	 */
+	public long deleteAllDirectProfiles(){
+		return  db.delete(DATABASE_TABLE_DIRECT, null, null);
+	}
+	
+	/**
+	 * Gets all profiles currently stored in the ECM table
+	 * @return ArrayList of all profiles in ECM table
+	 */
 	public ArrayList<Profile> getEcmProfiles() {
 		String select = "SELECT * FROM ECM";
 		ArrayList<Profile> profileArrayList = new ArrayList<Profile>();
@@ -193,6 +260,10 @@ public class DatabaseAdapter {
 		return profileArrayList;
 	}
 	
+	/**
+	 * Gets all profiles currently stored in the Direct table
+	 * @return ArrayList of all profiles in Direct table
+	 */
 	public ArrayList<Profile> getDirectProfiles() {
 		String select = "SELECT * FROM DIRECT";
 		ArrayList<Profile> profileArrayList = new ArrayList<Profile>();
