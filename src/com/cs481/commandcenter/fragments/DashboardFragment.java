@@ -108,8 +108,8 @@ public class DashboardFragment extends ListFragment {
 				resources.getString(R.string.gpio), "Fully Operational"));
 		rows.add(new DashboardListRow(lABOUT, resources
 				.getString(R.string.routerinfo), "Fully Operational"));
-		rows.add(new DashboardListRow(lPRINTSTACK, "Print Fragment backstack",
-				"Debug Option"));
+		/* rows.add(new DashboardListRow(lPRINTSTACK, "Print Fragment backstack",
+				"Debug Option")); */
 		setListAdapter(new DashboardAdapter(getActivity(), rows));
 	}
 
