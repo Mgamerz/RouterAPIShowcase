@@ -499,10 +499,10 @@ public class WifiClientFragment extends ListFragment implements
 
 	public void updateWapList(ArrayList<WAP> waps) {
 		rows = new ArrayList<WlanListRow>();
-		if (adapter == null) {
+		//if (adapter == null) {
 			adapter = new WlanAdapter(getActivity(), rows);
 			setListAdapter(adapter);
-		}
+		//}
 
 		Resources resources = getResources();
 		for (WAP wap : waps) {

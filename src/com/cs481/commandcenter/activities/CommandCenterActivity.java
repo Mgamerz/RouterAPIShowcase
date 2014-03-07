@@ -20,8 +20,7 @@ import com.cs481.commandcenter.Utility;
 import com.cs481.commandcenter.fragments.DashboardFragment;
 import com.cs481.commandcenter.fragments.WifiClientFragment;
 
-public class CommandCenterActivity extends SpiceActivity implements
-		OnBackStackChangedListener {
+public class CommandCenterActivity extends SpiceActivity implements OnBackStackChangedListener {
 
 	public static final String TAG = "CommandCenter";
 	private boolean isDualPane;
@@ -46,8 +45,7 @@ public class CommandCenterActivity extends SpiceActivity implements
 			// create first UI fragment and set it up
 			Fragment fragment = DashboardFragment.newInstance(authInfo);
 
-			FragmentTransaction ft = getSupportFragmentManager()
-					.beginTransaction();
+			FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 
 			// Inject our fragment
 			ft.replace(R.id.leftside_fragment, fragment, fragment.getClass().getName());
@@ -80,12 +78,10 @@ public class CommandCenterActivity extends SpiceActivity implements
 		switch (item.getItemId()) {
 		case R.id.action_logout:
 			Intent logoutIntent = new Intent(this, LoginActivity.class);
-			Toast.makeText(this, getResources().getString(R.string.logged_out),
-					Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, getResources().getString(R.string.logged_out), Toast.LENGTH_SHORT).show();
 			startActivity(logoutIntent);
 			finish();
-			overridePendingTransition(android.R.anim.fade_in,
-					android.R.anim.fade_out);
+			overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
 			return true;
 		case R.id.action_settings:
 			Intent prefsIntent = new Intent(this, PrefsActivity.class);
@@ -114,18 +110,19 @@ public class CommandCenterActivity extends SpiceActivity implements
 	public void onBackStackChanged() {
 		// This method is called when the backstack changes.
 		Log.i(TAG, "Backstack has changed.");
-		
-		int backStackEntryCount = getSupportFragmentManager()
-				.getBackStackEntryCount();
+
+		int backStackEntryCount = getSupportFragmentManager().getBackStackEntryCount();
 		if (backStackEntryCount > 0) {
 			FragmentManager fm = getSupportFragmentManager();
 			Fragment wcf = fm.findFragmentByTag(WifiClientFragment.class.getName());
-			
-			if (wcf == null){
-				//its not showing
+
+			if (wcf == null) {
+				// its not showing
+				Log.i(TAG, "wificlient fragment is not showing - show the title bar.");
 				getActionBar().setDisplayShowTitleEnabled(true);
+			} else {
+				getActionBar().setDisplayShowTitleEnabled(false);
 			}
-					
 			if (!isDualPane) {
 				getActionBar().setDisplayHomeAsUpEnabled(true);
 			}
@@ -134,7 +131,7 @@ public class CommandCenterActivity extends SpiceActivity implements
 			DashboardFragment db = (DashboardFragment) getSupportFragmentManager().findFragmentByTag(DashboardFragment.class.getName());
 			// this shouldn't be null... hopefully
 			db.setCurrentSelection(-1);
-			db.getListView().invalidateViews(); //redraw
+			db.getListView().invalidateViews(); // redraw
 			getActionBar().setDisplayHomeAsUpEnabled(false);
 			getActionBar().setDisplayShowTitleEnabled(true);
 			getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);

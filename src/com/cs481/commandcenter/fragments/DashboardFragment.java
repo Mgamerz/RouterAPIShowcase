@@ -207,7 +207,7 @@ public class DashboardFragment extends ListFragment {
 					transaction.replace(R.id.rightside_fragment, gpioFragment,
 							gpioTag);
 				} else {
-					transaction.replace(R.id.leftside_fragment, gpioFragment);
+					transaction.replace(R.id.leftside_fragment, gpioFragment, gpioTag);
 				}
 				transaction.addToBackStack(gpioTag);
 				transaction
@@ -248,7 +248,7 @@ public class DashboardFragment extends ListFragment {
 					transaction.replace(R.id.rightside_fragment, wlanFragment,
 							wwanTag);
 				} else {
-					transaction.replace(R.id.leftside_fragment, wlanFragment);
+					transaction.replace(R.id.leftside_fragment, wlanFragment, wwanTag);
 				}
 				transaction.addToBackStack(wwanTag);
 				transaction
@@ -284,7 +284,7 @@ public class DashboardFragment extends ListFragment {
 					transaction.replace(R.id.rightside_fragment, infoFragment,
 							infoTag);
 				} else {
-					transaction.replace(R.id.leftside_fragment, infoFragment);
+					transaction.replace(R.id.leftside_fragment, infoFragment, infoTag);
 				}
 				transaction.addToBackStack(infoTag);
 				transaction
