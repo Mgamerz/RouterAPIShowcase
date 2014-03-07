@@ -41,6 +41,7 @@ public class DatabaseAdapter {
 	    this.context = ctx;
 	    DBHelper = new DatabaseHelper(context);
 	    }
+	
 	private static class DatabaseHelper extends SQLiteOpenHelper {
 		public DatabaseHelper(Context context) {
 			super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -78,7 +79,7 @@ public class DatabaseAdapter {
 
 		@Override
 		public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-			// TODO Need to fix all of this for our database
+			
 			 Log.i(CommandCenterActivity.TAG, "Upgrading database from version " + oldVersion
 		              + " to "
 		              + newVersion + ", which will destroy all old data");
@@ -95,12 +96,11 @@ public class DatabaseAdapter {
 	    return this;
 	}
 	 
-	//---closes the database---
 	public void close()
 	{
 	    DBHelper.close();
 	}
-	
+
 	public long insertProfile(Profile profile) {
 		boolean ecm = profile.getAuthInfo().isEcm();
 		open();
@@ -111,12 +111,15 @@ public class DatabaseAdapter {
 	}
 
 	public long insertProfileEcm(Profile profile) {
+		
 		AuthInfo authInfo = profile.getAuthInfo();
+		
 		ContentValues values = new ContentValues();
 		values.put(TABLE_ECM_ROW_PROFILE_NAME, profile.getProfileName());
 		values.put(TABLE_ECM_ROW_USERNAME, authInfo.getUsername());
 		values.put(TABLE_ECM_ROW_PASSWORD, authInfo.getPassword());
 		values.put(TABLE_ECM_ROW_ROUTERID, authInfo.getRouterId());
+		
 		return db.insert(DATABASE_TABLE_ECM, null, values);
 	}
 
@@ -134,11 +137,35 @@ public class DatabaseAdapter {
 
 		return db.insert(DATABASE_TABLE_DIRECT, null, values);
 	}
-	/*
-	"SELECT * FROM user WHERE email=:email AND password=:password";
-	String select = "SELECT * FROM ECM WHERE routerid = ?"
-	String[] arguments = { }
-	return db.rawQuery(select, arguments);*/
+	
+	public long deleteProfile(Profile profile) {
+		boolean ecm = profile.getAuthInfo().isEcm();
+		open();
+		if (ecm) {
+			return deleteProfileEcm(profile);
+		} else
+			return deleteProfileDirect(profile);
+	}
+	
+	public long deleteProfileEcm(Profile profile) {
+		AuthInfo authInfo = profile.getAuthInfo();
+		//routerid is primary key
+		return db.delete(DATABASE_TABLE_ECM, TABLE_ECM_ROW_ROUTERID + "=" + authInfo.getRouterId(), null);
+	}
+
+	public long deleteProfileDirect(Profile profile) {
+		AuthInfo authInfo = profile.getAuthInfo();
+		//routerip is primary key
+		return db.delete(DATABASE_TABLE_DIRECT, TABLE_DIRECT_ROW_ROUTERIP + "=" + authInfo.getRouterip(), null);
+	}
+	
+	public long deleteAllProfiles() {
+			if(db.delete(DATABASE_TABLE_ECM, null, null) > 0 &&	 db.delete(DATABASE_TABLE_DIRECT, null, null) > 0)
+				return 1;
+			else
+				return -1;
+	}
+	
 	public ArrayList<Profile> getEcmProfiles() {
 		String select = "SELECT * FROM ECM";
 		ArrayList<Profile> profileArrayList = new ArrayList<Profile>();
@@ -200,7 +227,7 @@ public class DatabaseAdapter {
 	}
 	
 	/**
-	 * Gets a list of all profiles stored in the database and return sit as an arraylist
+	 * Gets a list of all profiles stored in the database and returns it as an arraylist
 	 * @return Arraylist of all profiles stored in the database, or an empty one if there are none.
 	 */
 	public ArrayList<Profile> getProfiles(){
