@@ -220,5 +220,6 @@
     <!-- Dialog Text -->
     <string name="yes">Yes</string>
     <string name="no">No</string>
+    <string name="bugreport_title">Bug Reporter</string>
 
 </resources>

@@ -42,6 +42,7 @@
         <activity android:name="com.cs481.commandcenter.activities.PINActivity" >
         </activity>
         <activity android:name=".activities.CommandCenterActivity" android:label="@string/command_title"></activity>
+        <activity android:name=".activities.BugReportActivity" android:label="@string/bugreport_title"></activity>
     </application>
 
 </manifest>
