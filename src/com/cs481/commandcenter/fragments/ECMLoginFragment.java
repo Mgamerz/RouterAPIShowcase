@@ -37,7 +37,7 @@ import com.octo.android.robospice.request.listener.RequestListener;
 public class ECMLoginFragment extends Fragment {
 	private ProgressDialog progressDialog;
 	private SpiceManager spiceManager;
-	
+
 	@Override
 	public void onCreate(Bundle savedInstancedState) {
 		super.onCreate(savedInstancedState);
@@ -45,10 +45,8 @@ public class ECMLoginFragment extends Fragment {
 	}
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
-		View rootView = inflater.inflate(R.layout.fragment_ecmlogin, container,
-				false);
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		View rootView = inflater.inflate(R.layout.fragment_ecmlogin, container, false);
 
 		Button loginButton = (Button) rootView.findViewById(R.id.login_button);
 		loginButton.setOnClickListener(new OnClickListener() {
@@ -56,6 +54,7 @@ public class ECMLoginFragment extends Fragment {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
+				Log.i(CommandCenterActivity.TAG, "Clicked on button.");
 				readECMRouters();
 			}
 		});
@@ -68,17 +67,18 @@ public class ECMLoginFragment extends Fragment {
 		super.onStart();
 		SpiceActivity sa = (SpiceActivity) getActivity();
 		Resources resources = getResources();
-		sa.setTitle(resources.getString(R.string.ecm_actionbar_title)); // TODO change to string resource
+		sa.setTitle(resources.getString(R.string.ecm_actionbar_title)); // TODO
+																		// change
+																		// to
+																		// string
+																		// resource
 		spiceManager = sa.getSpiceManager();
 		EditText passw = (EditText) getView().findViewById(R.id.ecm_password);
-		final Button connect = (Button) getView().findViewById(
-				R.id.login_button);
+		final Button connect = (Button) getView().findViewById(R.id.login_button);
 		passw.setOnEditorActionListener(new OnEditorActionListener() {
-			public boolean onEditorAction(TextView v, int actionId,
-					KeyEvent event) {
+			public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
 				Log.i(CommandCenterActivity.TAG, "Action ID: " + actionId);
-				if (actionId == EditorInfo.IME_ACTION_SEND
-						|| actionId == EditorInfo.IME_NULL) {
+				if (actionId == EditorInfo.IME_ACTION_SEND || actionId == EditorInfo.IME_NULL) {
 					connect.performClick();
 					return true;
 				}
@@ -89,89 +89,107 @@ public class ECMLoginFragment extends Fragment {
 	}
 
 	private void readECMRouters() {
+		Log.i(CommandCenterActivity.TAG, "Reading ECM Routers as login");
 		AuthInfo authInfo = new AuthInfo();
 		EditText usern = (EditText) getView().findViewById(R.id.ecm_username);
 		EditText passw = (EditText) getView().findViewById(R.id.ecm_password);
-		authInfo.setUsername(usern.getText().toString());
+		authInfo.setUsername(usern.getText().toString().trim());
 		authInfo.setPassword(passw.getText().toString());
 		Resources resources = getResources();
 
-		com.cs481.commandcenter.responses.ecm.routers.GetRequest request = new com.cs481.commandcenter.responses.ecm.routers.GetRequest(
-				authInfo);
+		com.cs481.commandcenter.responses.ecm.routers.GetRequest request = new com.cs481.commandcenter.responses.ecm.routers.GetRequest(authInfo);
 		String lastRequestCacheKey = request.createCacheKey();
-
 
 		ContextThemeWrapper wrapper = new ContextThemeWrapper(getActivity(), R.style.DialogTheme);
 		progressDialog = new ProgressDialog(wrapper);
-		//progressDialog = new ProgressDialog(getActivity());
 		progressDialog.setMessage(resources.getString(R.string.ecm_connecting));
-		progressDialog.show();
 		progressDialog.setCanceledOnTouchOutside(false);
-		progressDialog.setCancelable(false);
-
-		spiceManager.execute(request, lastRequestCacheKey,
-				DurationInMillis.ALWAYS_EXPIRED,
-				new ECMRoutersGetRequestListener());
+		progressDialog.show();
+		spiceManager.execute(request, lastRequestCacheKey, DurationInMillis.ALWAYS_EXPIRED, new ECMRoutersGetRequestListener());
 	}
 
 	// inner class of your spiced Activity
-	private class ECMRoutersGetRequestListener implements
-			RequestListener<Routers> {
+	private class ECMRoutersGetRequestListener implements RequestListener<Routers> {
 		Resources resources = getResources();
+
 		@Override
 		public void onRequestFailure(SpiceException e) {
 			// update your UI
-			progressDialog.dismiss();
-			Toast.makeText(getActivity(),
-					resources.getString(R.string.ecm_failed_get_routers),
-					Toast.LENGTH_SHORT).show();
+			if (progressDialog != null) {
+				progressDialog.dismiss();
+			}
+			Toast.makeText(getActivity(), resources.getString(R.string.ecm_failed_get_routers), Toast.LENGTH_SHORT).show();
 		}
 
 		@Override
 		public void onRequestSuccess(Routers routers) {
 			// update your UI
-			progressDialog.dismiss();
-			//LoginActivity activity = (LoginActivity) getActivity();
-			AuthInfo authInfo = new AuthInfo();
-			EditText usern = (EditText) getView().findViewById(
-					R.id.ecm_username);
-			EditText passw = (EditText) getView().findViewById(
-					R.id.ecm_password);
-			authInfo.setUsername(usern.getText().toString());
-			authInfo.setPassword(passw.getText().toString());
-			authInfo.setEcm(true);
+			if (progressDialog != null) {
+				progressDialog.dismiss();
+			}
 
-			//activity.setAuthInfo(authInfo);
-			//activity.setRouters(routers);
-			
-			
+			if (routers.getSuccess()) {
+				AuthInfo authInfo = new AuthInfo();
+				EditText usern = (EditText) getView().findViewById(R.id.ecm_username);
+				EditText passw = (EditText) getView().findViewById(R.id.ecm_password);
+				authInfo.setUsername(usern.getText().toString());
+				authInfo.setPassword(passw.getText().toString());
+				authInfo.setEcm(true);
 
-			ECMRoutersFragment routersFragment = ECMRoutersFragment.newInstance(routers.getData(), authInfo);
+				ECMRoutersFragment routersFragment = ECMRoutersFragment.newInstance(routers.getData(), authInfo);
 
-			// In case this activity was started with special instructions from
-			// an
-			// Intent, pass the Intent's extras to the fragment as arguments
-			// firstFragment.setArguments(getIntent().getExtras());
+				// In case this activity was started with special instructions
+				// from
+				// an
+				// Intent, pass the Intent's extras to the fragment as arguments
+				// firstFragment.setArguments(getIntent().getExtras());
 
-			// Add the fragment to the 'fragment_container' FrameLayout
-			FragmentTransaction transaction = getActivity()
-					.getSupportFragmentManager().beginTransaction();
+				// Add the fragment to the 'fragment_container' FrameLayout
+				FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
 
-			// check if the parent activity is dual pane based.
-			transaction.replace(R.id.login_fragment, routersFragment);
+				// check if the parent activity is dual pane based.
+				transaction.replace(R.id.login_fragment, routersFragment);
 
-			transaction.addToBackStack(null);
-			transaction.commit();
+				transaction.addToBackStack(null);
+				transaction.commit();
+			} else {
+				// not a success
+				StringBuilder errorMessage = new StringBuilder();
+				
+				errorMessage.append(getResources().getString(R.string.server_exception));
+				errorMessage.append(": ");
+				errorMessage.append(routers.getException());
+				
+				String message = routers.getMessage();
+				if (!message.equals("")) {
+					errorMessage.append(" - ");
+					errorMessage.append(message);
+				}
+				
+				errorMessage.append(" @ ");
+				errorMessage.append(routers.getPath());
+
+				Toast.makeText(getActivity(), errorMessage.toString(), Toast.LENGTH_LONG).show();
+			}
 		}
 	}
-
+	
 	@Override
-	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-		inflater.inflate(R.menu.login_menu, menu);
-		MenuItem item = menu.findItem(R.id.menu_switchtoecm);
-		item.setVisible(false);
-		// getActivity().invalidateOptionsMenu();
-	}
+	public void onPrepareOptionsMenu(Menu menu) {
+		MenuItem directitem = menu.findItem(R.id.menu_switchtolocal);
+		if (directitem != null) {
+			directitem.setVisible(true);
+		}
+		
+		MenuItem ecmitem = menu.findItem(R.id.menu_switchtoecm);
+		if (ecmitem != null) {
+			ecmitem.setVisible(false);
+		}
+		
+		super.onPrepareOptionsMenu(menu);
+	} 
+
+
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
@@ -186,8 +204,7 @@ public class ECMLoginFragment extends Fragment {
 			// firstFragment.setArguments(getIntent().getExtras());
 
 			// Add the fragment to the 'fragment_container' FrameLayout
-			FragmentTransaction transaction = getActivity()
-					.getSupportFragmentManager().beginTransaction();
+			FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
 
 			transaction.replace(R.id.login_fragment, localFragment);
 			transaction.commit();

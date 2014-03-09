@@ -4,9 +4,11 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
+import android.content.res.Resources.Theme;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.DialogFragment;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.CheckBox;
@@ -34,6 +36,14 @@ public class PreferredConnectionDialog extends DialogFragment {
 	@Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         HoloDialogBuilder alertDialogBuilder = new HoloDialogBuilder(getActivity());
+        Theme theme = getActivity().getTheme();
+		TypedValue typedValue = new TypedValue();
+		theme.resolveAttribute(android.R.attr.windowBackground, typedValue,
+				true);
+		// Color color = getResources().getColor(colorid);
+
+		alertDialogBuilder.setDividerColor(typedValue.resourceId);
+		alertDialogBuilder.setTitleColor(typedValue.resourceId);
         alertDialogBuilder.setTitle(connectionType + " Connection");
         final Resources resources = getResources();
         

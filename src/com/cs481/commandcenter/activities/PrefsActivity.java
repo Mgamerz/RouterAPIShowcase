@@ -1,14 +1,19 @@
 package com.cs481.commandcenter.activities;
 
+
+
 import java.util.List;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.cs481.commandcenter.R;
-import com.cs481.commandcenter.Utility;
 import com.cs481.commandcenter.fragments.preferences.SecurityPrefsFragment;
 import com.cs481.commandcenter.fragments.preferences.UIPrefsFragment;
 
@@ -41,11 +46,22 @@ public class PrefsActivity extends PreferenceActivity {
 		}
 		return false;
 	}
+	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// Inflate the menu; this adds items to the action bar if it is present.
+		getMenuInflater().inflate(R.menu.prefs_menu, menu);
+		return true;
+	}
 
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case android.R.id.home:
 			finish();
+			return true;
+		case R.id.action_bugreport:
+			Intent intent = new Intent(this, BugReportActivity.class);
+			startActivity(intent);
 			return true;
 		default:
 			return false;

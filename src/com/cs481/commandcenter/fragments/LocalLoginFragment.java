@@ -166,12 +166,19 @@ public class LocalLoginFragment extends Fragment {
 	}
 
 	@Override
-	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-		inflater.inflate(R.menu.login_menu, menu);
-		MenuItem item = menu.findItem(R.id.menu_switchtolocal);
-		item.setVisible(false);
-		// getActivity().invalidateOptionsMenu();
-	}
+	public void onPrepareOptionsMenu(Menu menu) {
+		MenuItem directitem = menu.findItem(R.id.menu_switchtolocal);
+		if (directitem != null) {
+			directitem.setVisible(false);
+		}
+		
+		MenuItem ecmitem = menu.findItem(R.id.menu_switchtoecm);
+		if (ecmitem != null) {
+			ecmitem.setVisible(true);
+		}
+		
+		super.onPrepareOptionsMenu(menu);
+	} 
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {

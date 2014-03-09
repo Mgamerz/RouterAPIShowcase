@@ -1,5 +1,9 @@
 package com.cs481.commandcenter.activities;
 
+import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -7,6 +11,7 @@ import android.widget.Button;
 
 import com.cs481.commandcenter.R;
 import com.cs481.commandcenter.Utility;
+import com.mgamerzproductions.logthislib.LogCollector;
 
 
 /**
@@ -28,9 +33,20 @@ public class BugReportActivity extends SpiceActivity {
 			
 			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				//LogCollector collector = new LogCollector();
-				//collector.getLogs(BugReportActivity.this);
+				LogCollector collector = new LogCollector(getPackageName(),"3e06ecc889a1a816bbcb9fed03631b84", "9c1502c29c523d0514208708016488d3");
+				collector.getLogs(BugReportActivity.this);
+			}
+		});
+		
+		Button googlePlusButton = (Button) findViewById(R.id.googleplus_button);
+		googlePlusButton.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				String url = getResources().getString(R.string.googlePlusURL);
+				Intent i = new Intent(Intent.ACTION_VIEW);
+				i.setData(Uri.parse(url));
+				startActivity(i);
 			}
 		});
 	}

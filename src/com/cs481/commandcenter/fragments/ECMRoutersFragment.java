@@ -113,7 +113,7 @@ public class ECMRoutersFragment extends ListFragment implements
 		ViewGroup viewGroup = (ViewGroup) view;
 
 		// We need to create a PullToRefreshLayout manually
-		mPullToRefreshLayout = new PullToRefreshLayout(viewGroup.getContext());
+		/*mPullToRefreshLayout = new PullToRefreshLayout(viewGroup.getContext());
 
 		// We can now setup the PullToRefreshLayout
 		ActionBarPullToRefresh.from(getActivity())
@@ -128,7 +128,7 @@ public class ECMRoutersFragment extends ListFragment implements
 						getListView().getEmptyView())
 
 				// We can now complete the setup as desired
-				.listener(this).setup(mPullToRefreshLayout);
+				.listener(this).setup(mPullToRefreshLayout); */
 	}
 
 	@Override

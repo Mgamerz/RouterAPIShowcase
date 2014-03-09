@@ -140,7 +140,7 @@
     <string name="splash_textdown">v</string>
 
     <!-- Preferred Connection Dialog -->
-    <string name="text_preferredconnection">Is this your preferred connection?</string>
+    <string name="text_preferredconnection">Set this connection type as the default when launching the app?</string>
     <string name="checkbox_donotaskagain">Do not ask again</string>
 
     <!-- Router Info -->
@@ -216,10 +216,18 @@
     <!-- About Page -->
     <string name="about">About</string>
     <string name="googlePlusURL">https://plus.google.com/communities/111564840010673680416</string>
-    
+
     <!-- Dialog Text -->
     <string name="yes">Yes</string>
     <string name="no">No</string>
+
+    <!-- Bug reporter -->
     <string name="bugreport_title">Bug Reporter</string>
+    <string name="gen_bugreport">Generate bug report</string>
+    <string name="bugreport_description">Bug reports capture the Android Logcat logs of this app and upload them into our privately owned Pastebin account. It is not accessible to anybody but our team. The posts expire after 1 month. The URL to the pastebin (which you won\'t be able to view as it is private) will be copied to your clipboard once the post finishes. Posting it to the Google+ group is the easiest way to get us the report.</string>
+
+    <!-- Whats new - keep this at the bottom -->
+    <string name="whats_new_title">What\'s new</string>
+    <string name="whats_new">What\'s new in Alpha 1.01:\n\n - Added bug reporter that uploads logs to a privately owned Pastebin account, accessible through the menu (only visible to us)\n\n - Added this What\'s New dialog\n\n - Fixed username space trimming\n\n - Setting direct login as your preferred type via the splash screen dialog now has an effect\n\n - ECM Login failure gives detailed response in a toast \n\n - Other small fixes</string>
 
 </resources>

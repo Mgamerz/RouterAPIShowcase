@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.cs481.commandcenter"
-    android:versionCode="5"
-    android:versionName="1.0a" >
+    android:versionCode="6"
+    android:versionName="1.01a" >
 
     <uses-sdk
         android:minSdkVersion="14"
@@ -41,8 +41,15 @@
             android:theme="@android:style/Theme.Holo.Light" />
         <activity android:name="com.cs481.commandcenter.activities.PINActivity" >
         </activity>
-        <activity android:name=".activities.CommandCenterActivity" android:label="@string/command_title"></activity>
-        <activity android:name=".activities.BugReportActivity" android:label="@string/bugreport_title"></activity>
+        <activity
+            android:name=".activities.CommandCenterActivity"
+            android:label="@string/command_title" >
+        </activity>
+        <activity
+            android:name=".activities.BugReportActivity"
+            android:screenOrientation="portrait"
+            android:label="@string/bugreport_title" >
+        </activity>
     </application>
 
 </manifest>

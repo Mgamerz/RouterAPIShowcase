@@ -8,12 +8,17 @@ import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 
 import roboguice.util.temp.Ln;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.content.res.Resources.Theme;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -23,8 +28,10 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Base64;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,7 +47,7 @@ import com.cs481.commandcenter.Cryptography;
 import com.cs481.commandcenter.Profile;
 import com.cs481.commandcenter.R;
 import com.cs481.commandcenter.Utility;
-import com.cs481.commandcenter.debug.DebugActivity;
+import com.cs481.commandcenter.dialog.HoloDialogBuilder;
 import com.cs481.commandcenter.fragments.ECMLoginFragment;
 import com.cs481.commandcenter.fragments.LocalLoginFragment;
 import com.cs481.commandcenter.fragments.PINFragment;
@@ -66,6 +73,8 @@ public class LoginActivity extends SpiceActivity {
 	private ActionBarDrawerToggle mDrawerToggle;
 	private Profile unlockProfile;
 	private ProgressDialog progressDialog;
+	private AlertDialog whatsNewDialog;
+	private boolean showingWhatsNew = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -73,12 +82,14 @@ public class LoginActivity extends SpiceActivity {
 		if (savedInstanceState != null) {
 			unlockProfile = savedInstanceState.getParcelable("unlockProfile");
 			authInfo = savedInstanceState.getParcelable("authInfo");
+			showingWhatsNew = savedInstanceState.getBoolean("showingWhatsNew");
 		}
 
 		Ln.getConfig().setLoggingLevel(Log.ERROR);
 		setTheme(Utility.getTheme(this));
 
 		setContentView(R.layout.activity_login);
+		checkIfNewVersion();
 		// If this is the first time the app has run, there will be no salt key
 		// in the shared prefs.
 		// Look it up first. If it doesn't exist, we can make one. This is not
@@ -88,12 +99,10 @@ public class LoginActivity extends SpiceActivity {
 
 		// Reading
 		Resources resources = getResources();
-		SharedPreferences crypto = getSharedPreferences(
-				resources.getString(R.string.crypto_prefsdb), MODE_PRIVATE);
+		SharedPreferences crypto = getSharedPreferences(resources.getString(R.string.crypto_prefsdb), MODE_PRIVATE);
 		String uuid = crypto.getString("uuid", null);
 		if (uuid == null) {
-			Log.i(CommandCenterActivity.TAG,
-					"UUID is null - app should be running from a fresh data set.");
+			Log.i(CommandCenterActivity.TAG, "UUID is null - app should be running from a fresh data set.");
 			// writing
 			SecureRandom secureRandom = new SecureRandom();
 			// Do *not* seed secureRandom! Automatically seeded from system.
@@ -103,13 +112,11 @@ public class LoginActivity extends SpiceActivity {
 				SecretKey key = keyGenerator.generateKey();
 
 				SharedPreferences.Editor editor = crypto.edit();
-				editor.putString("uuid",
-						Base64.encodeToString(key.getEncoded(), Base64.DEFAULT));
+				editor.putString("uuid", Base64.encodeToString(key.getEncoded(), Base64.DEFAULT));
 				// Commit the edits!
 				editor.commit();
 			} catch (NoSuchAlgorithmException e) {
-				Log.e(CommandCenterActivity.TAG,
-						"This devices does not support AES (that's weird!)");
+				Log.e(CommandCenterActivity.TAG, "This devices does not support AES (that's weird!)");
 			}
 		}
 
@@ -130,17 +137,13 @@ public class LoginActivity extends SpiceActivity {
 
 		// Save layout on rotation
 		if (savedInstanceState == null) {
-			Fragment fragment; // fragment to set - reads the preferred connection type.
+			Fragment fragment; // fragment to set - reads the preferred
+								// connection type.
 
-			SharedPreferences defaultPrefs = PreferenceManager
-					.getDefaultSharedPreferences(this);
+			SharedPreferences defaultPrefs = PreferenceManager.getDefaultSharedPreferences(this);
 
-			String loginType = defaultPrefs
-					.getString(
-							getResources().getString(
-									R.string.prefskey_connection_type), "none");
-			String[] loginValues = getResources().getStringArray(
-					R.array.preferred_connection_values);
+			String loginType = defaultPrefs.getString(getResources().getString(R.string.prefskey_connection_type), "none");
+			String[] loginValues = getResources().getStringArray(R.array.preferred_connection_values);
 			String tag = null;
 			if (loginType.equals(loginValues[1])) {
 				fragment = new LocalLoginFragment();
@@ -160,8 +163,7 @@ public class LoginActivity extends SpiceActivity {
 			// firstFragment.setArguments(getIntent().getExtras());
 
 			// Add the fragment to the 'fragment_container' FrameLayout
-			FragmentTransaction transaction = getSupportFragmentManager()
-					.beginTransaction();
+			FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 
 			transaction.replace(R.id.login_fragment, fragment, tag);
 			// frFragment.animate();
@@ -172,9 +174,7 @@ public class LoginActivity extends SpiceActivity {
 		mTitle = getTitle();
 		mDrawerTitle = getResources().getString(R.string.saved_profiles_title);
 		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-		mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
-				R.drawable.ic_drawer, R.string.drawer_open,
-				R.string.drawer_closed) {
+		mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.drawable.ic_drawer, R.string.drawer_open, R.string.drawer_closed) {
 
 			/** Called when a drawer has settled in a completely closed state. */
 			public void onDrawerClosed(View view) {
@@ -202,10 +202,27 @@ public class LoginActivity extends SpiceActivity {
 		getActionBar().setHomeButtonEnabled(true);
 	}
 
+	@Override
+	public void onResume() {
+		super.onResume();
+		if (showingWhatsNew && whatsNewDialog == null) {
+			showWNDialog();
+		}
+	}
+
+	@Override
+	public void onStop() {
+		super.onStop();
+		if (showingWhatsNew) {
+			showWNDialog();
+		}
+	}
+
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
 		outState.putParcelable("authInfo", authInfo);
 		outState.putParcelable("unlockProfile", unlockProfile);
+		outState.putBoolean("showingWhatsNew", showingWhatsNew);
 	}
 
 	public boolean onOptionsItemSelected(MenuItem item) {
@@ -215,15 +232,13 @@ public class LoginActivity extends SpiceActivity {
 				return true;
 			}
 			return false;
-		case R.id.fr_debug: {
-			Intent intent = new Intent(this, DebugActivity.class);
-			intent.putExtra("create_new", false);
-			startActivity(intent);
-			return true;
-		}
 		case R.id.action_settings:
 			Intent prefsIntent = new Intent(this, PrefsActivity.class);
 			startActivity(prefsIntent);
+			return true;
+		case R.id.action_bugreport:
+			Intent intent = new Intent(this, BugReportActivity.class);
+			startActivity(intent);
 			return true;
 		case R.id.about:
 			String url = getResources().getString(R.string.googlePlusURL);
@@ -236,11 +251,9 @@ public class LoginActivity extends SpiceActivity {
 		}
 	}
 
-	private class DrawerItemClickListener implements
-			ListView.OnItemClickListener {
+	private class DrawerItemClickListener implements ListView.OnItemClickListener {
 		@Override
-		public void onItemClick(AdapterView parent, View view, int position,
-				long id) {
+		public void onItemClick(AdapterView parent, View view, int position, long id) {
 			selectItem(position);
 		}
 	}
@@ -293,6 +306,13 @@ public class LoginActivity extends SpiceActivity {
 		return super.onPrepareOptionsMenu(menu);
 	}
 
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.login_menu, menu);
+		return true;
+	}
+
 	// List adapter.
 	public class ProfileAdapter extends ArrayAdapter<Profile> {
 		private final Context context;
@@ -311,20 +331,16 @@ public class LoginActivity extends SpiceActivity {
 
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
-			LayoutInflater inflater = (LayoutInflater) context
-					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			View rowView = inflater.inflate(R.layout.listrow_profiles, parent,
-					false);
+			LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+			View rowView = inflater.inflate(R.layout.listrow_profiles, parent, false);
 
 			Profile profile = rows.get(position);
 			// Title text
-			TextView title = (TextView) rowView
-					.findViewById(R.id.profilerow_title);
+			TextView title = (TextView) rowView.findViewById(R.id.profilerow_title);
 			title.setText(profile.getProfileName());
 
 			// Profile image
-			ImageView profileIcon = (ImageView) rowView
-					.findViewById(R.id.profilerow_image);
+			ImageView profileIcon = (ImageView) rowView.findViewById(R.id.profilerow_image);
 
 			if (profile.getAuthInfo().isEcm()) {
 				// set ecm cloud icon
@@ -370,14 +386,9 @@ public class LoginActivity extends SpiceActivity {
 					AuthInfo profileAuth = unlockProfile.getAuthInfo();
 					// connection goes here.
 					String uuid = Cryptography.createLocalUUID(this);
-					SecretKey secret = Cryptography.generateKey(pin,
-							uuid.getBytes("UTF-8"));
-					String decryptedUsername = Cryptography.decryptMsg(Base64
-							.decode(unlockProfile.getAuthInfo().getUsername(),
-									Base64.DEFAULT), secret);
-					String decryptedPassword = Cryptography.decryptMsg(Base64
-							.decode(unlockProfile.getAuthInfo().getPassword(),
-									Base64.DEFAULT), secret);
+					SecretKey secret = Cryptography.generateKey(pin, uuid.getBytes("UTF-8"));
+					String decryptedUsername = Cryptography.decryptMsg(Base64.decode(unlockProfile.getAuthInfo().getUsername(), Base64.DEFAULT), secret);
+					String decryptedPassword = Cryptography.decryptMsg(Base64.decode(unlockProfile.getAuthInfo().getPassword(), Base64.DEFAULT), secret);
 					profileAuth.setPassword(decryptedPassword);
 					profileAuth.setUsername(decryptedUsername);
 
@@ -385,12 +396,10 @@ public class LoginActivity extends SpiceActivity {
 
 					// Login via ECM.
 					if (profileAuth.isEcm()) {
-						Intent intent = new Intent(this,
-								CommandCenterActivity.class);
+						Intent intent = new Intent(this, CommandCenterActivity.class);
 						intent.putExtra("authInfo", profileAuth);
-						intent.putExtra("ab_subtitle",
-								unlockProfile.getProfileName()); // changes
-																	// subtitle.
+						intent.putExtra("ab_subtitle", unlockProfile.getProfileName()); // changes
+																						// subtitle.
 						startActivity(intent);
 						finish();
 						return; // makes sure nothing else happens in this
@@ -401,28 +410,21 @@ public class LoginActivity extends SpiceActivity {
 						// Perform a credential login before we load up the
 						// management interface.
 
-						GetRequest request = new GetRequest(authInfo,
-								"status/product_info", Product_info.class,
-								"direct_login");
+						GetRequest request = new GetRequest(authInfo, "status/product_info", Product_info.class, "direct_login");
 						String lastRequestCacheKey = request.createCacheKey();
 
-						progressDialog = new ProgressDialog(this,
-								R.style.DialogTheme);
-						progressDialog.setMessage(getResources().getString(
-								R.string.connecting));
+						progressDialog = new ProgressDialog(this, R.style.DialogTheme);
+						progressDialog.setMessage(getResources().getString(R.string.connecting));
 						progressDialog.show();
 						progressDialog.setCanceledOnTouchOutside(false);
 
 						// fire off the request.
-						spiceManager.execute(request, lastRequestCacheKey,
-								DurationInMillis.ALWAYS_EXPIRED,
-								new LoginGetRequestListener());
+						spiceManager.execute(request, lastRequestCacheKey, DurationInMillis.ALWAYS_EXPIRED, new LoginGetRequestListener());
 					}
 
 				} catch (Exception e) {
 					// failed to decrypt due to 1-million possible errors.
-					Log.e(CommandCenterActivity.TAG,
-							"The supplied PIN was unable to decrypt the username and/or password, logging in has been cancelled.");
+					Log.e(CommandCenterActivity.TAG, "The supplied PIN was unable to decrypt the username and/or password, logging in has been cancelled.");
 					e.printStackTrace();
 				}
 			} // end OK result
@@ -443,9 +445,7 @@ public class LoginActivity extends SpiceActivity {
 				progressDialog.dismiss();
 			}
 			Log.i(CommandCenterActivity.TAG, "Failed to log in!");
-			Toast.makeText(LoginActivity.this,
-					getResources().getString(R.string.direct_login_fail),
-					Toast.LENGTH_SHORT).show();
+			Toast.makeText(LoginActivity.this, getResources().getString(R.string.direct_login_fail), Toast.LENGTH_SHORT).show();
 		}
 
 		@Override
@@ -459,8 +459,7 @@ public class LoginActivity extends SpiceActivity {
 				if (response.getResponseInfo().getSuccess()) {
 					// login successful
 					// Prepare new intent.
-					Intent intent = new Intent(LoginActivity.this,
-							CommandCenterActivity.class);
+					Intent intent = new Intent(LoginActivity.this, CommandCenterActivity.class);
 					intent.putExtra("authInfo", authInfo);
 					intent.putExtra("ab_subtitle", proin.getProduct_name()); // changes
 																				// subtitle.
@@ -469,32 +468,83 @@ public class LoginActivity extends SpiceActivity {
 					startActivity(intent);
 					finish();
 				} else {
-					Toast.makeText(LoginActivity.this,
-							response.getResponseInfo().getReason(),
-							Toast.LENGTH_LONG).show();
+					Toast.makeText(LoginActivity.this, response.getResponseInfo().getReason(), Toast.LENGTH_LONG).show();
 				}
 			} else {
-				Toast.makeText(
-						LoginActivity.this,
-						getResources().getString(
-								R.string.gpio_get_null_response),
-						Toast.LENGTH_LONG).show();
+				Toast.makeText(LoginActivity.this, getResources().getString(R.string.gpio_get_null_response), Toast.LENGTH_LONG).show();
 			}
 		}
 	}
 
 	@Override
 	public void onBackPressed() {
-		final PINFragment fragment = (PINFragment) getSupportFragmentManager()
-				.findFragmentByTag("PIN");
+		final PINFragment fragment = (PINFragment) getSupportFragmentManager().findFragmentByTag("PIN");
 		if (fragment != null) { // and then you define a method allowBackPressed
 								// with the logic to allow back pressed or not
-			Log.i(CommandCenterActivity.TAG, "Back - restoring title to "
-					+ mTitle);
+			Log.i(CommandCenterActivity.TAG, "Back - restoring title to " + mTitle);
 			getActionBar().setTitle(mTitle);
 			getActionBar().show();
 		}
 		super.onBackPressed();
 
+	}
+
+	private void checkIfNewVersion() {
+		Log.i(CommandCenterActivity.TAG, "Checking if new version");
+		PackageInfo pInfo = null;
+		try {
+			pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
+		} catch (NameNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return;
+		}
+
+		int version = pInfo.versionCode;
+		SharedPreferences whatsNewDB = PreferenceManager.getDefaultSharedPreferences(this);
+		int lastWhatsNew = whatsNewDB.getInt("lastWhatsNew", 0);
+
+		// debug
+		// lastWhatsNew = 0; //debug
+
+		if (lastWhatsNew < version) {
+			showingWhatsNew = true;
+
+			// update the shareddb to only make this dialog show once
+			SharedPreferences.Editor whatsNewWriteDB = whatsNewDB.edit();
+			whatsNewWriteDB.putInt("lastWhatsNew", version);
+			whatsNewWriteDB.commit();
+
+			showWNDialog();
+		}
+	}
+
+	/**
+	 * Actually shows the 'whats new' dialog
+	 */
+	private void showWNDialog() {
+		// should show page - but first, set it so it doesn't show again.
+
+		// show the 'Whats new' dialog.
+		HoloDialogBuilder alertDialogBuilder = new HoloDialogBuilder(this);
+
+		Theme theme = getTheme();
+		TypedValue typedValue = new TypedValue();
+		theme.resolveAttribute(android.R.attr.windowBackground, typedValue, true);
+		// Color color = getResources().getColor(colorid);
+
+		alertDialogBuilder.setDividerColor(typedValue.resourceId);
+		alertDialogBuilder.setTitleColor(typedValue.resourceId);
+		alertDialogBuilder.setTitle(getResources().getString(R.string.whats_new_title));
+		alertDialogBuilder.setMessage(getResources().getString(R.string.whats_new));
+		alertDialogBuilder.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				dialog.dismiss();
+				showingWhatsNew = false;
+			}
+		});
+		whatsNewDialog = alertDialogBuilder.show();
 	}
 }

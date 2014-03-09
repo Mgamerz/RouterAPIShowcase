@@ -7,6 +7,8 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -39,17 +41,23 @@ public class SplashScreenFragment extends Fragment {
 	TextView[] indicator = new TextView[6];
 
 	Animation zoomAnim;
-	Animation fadeInAnim;
+	Animation fadeInAnim; 
 	Animation fadeInAndOutAnim;
 
-/*	TranslateAnimation moveUp;
-	TranslateAnimation moveDown;*/
+	/*
+	 * TranslateAnimation moveUp; TranslateAnimation moveDown;
+	 */
 	Animation moveUp;
 	Animation moveDown;
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
+	public void onCreate(Bundle savedInstancedState) {
+		super.onCreate(savedInstancedState);
+		setHasOptionsMenu(true);
+	}
+
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		// Inflate the layout for this fragment
 		View view = inflater.inflate(R.layout.fragment_splashscreen, container, false);
@@ -73,22 +81,21 @@ public class SplashScreenFragment extends Fragment {
 
 		// Used for retrieving user preferences
 		final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
-
+		final String[] loginValues = getResources().getStringArray(R.array.preferred_connection_values);
 		ecm_button.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View arg) {
 				// Display the preferred connection dialog
 				if (!prefs.getBoolean("prefs_connection_dontAskAgain", false)) {
-					PreferredConnectionDialog rcFragment = PreferredConnectionDialog.newInstance("ECM");
-					rcFragment.show(getActivity().getSupportFragmentManager(),"PreferredConnection");
+					PreferredConnectionDialog rcFragment = PreferredConnectionDialog.newInstance(loginValues[2]);
+					rcFragment.show(getActivity().getSupportFragmentManager(), "PreferredConnection");
 				}
 
 				// Load the ECM login fragment
 				ECMLoginFragment ecmLoginFragment = new ECMLoginFragment();
 				FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
 				transaction.replace(R.id.login_fragment, ecmLoginFragment);
-				transaction
-				.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+				transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
 				transaction.commit();
 			}
 		});
@@ -98,16 +105,15 @@ public class SplashScreenFragment extends Fragment {
 			public void onClick(View arg) {
 				// Display the preferred connection dialog
 				if (!prefs.getBoolean("prefs_connection_dontAskAgain", false)) {
-					PreferredConnectionDialog rcFragment = PreferredConnectionDialog.newInstance("Local Router");
-					rcFragment.show(getActivity().getSupportFragmentManager(),"PreferredConnection");
+					PreferredConnectionDialog rcFragment = PreferredConnectionDialog.newInstance(loginValues[1]);
+					rcFragment.show(getActivity().getSupportFragmentManager(), "PreferredConnection");
 				}
 
 				// Load the local login fragment
 				LocalLoginFragment localLoginFragment = new LocalLoginFragment();
 				FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
 				transaction.replace(R.id.login_fragment, localLoginFragment);
-				transaction
-				.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+				transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
 				transaction.commit();
 			}
 		});
@@ -121,17 +127,27 @@ public class SplashScreenFragment extends Fragment {
 	}
 
 	@Override
-	public void onStart() {
-		super.onStart();
+	public void onPrepareOptionsMenu(Menu menu) {
+		MenuItem directitem = menu.findItem(R.id.menu_switchtolocal);
+		if (directitem != null) {
+			directitem.setVisible(false);
+		}
+
+		MenuItem ecmitem = menu.findItem(R.id.menu_switchtoecm);
+		if (ecmitem != null) {
+			ecmitem.setVisible(false);
+		}
+
+		super.onPrepareOptionsMenu(menu);
 	}
 
 	// Animates the fragment
 	public void animate() {
 		zoomAnim = AnimationUtils.loadAnimation(getActivity(), R.anim.zoom_in);
 		fadeInAnim = AnimationUtils.loadAnimation(getActivity(), R.anim.fade_in);
-		fadeInAndOutAnim = AnimationUtils.loadAnimation(getActivity(),R.anim.fade_in_and_out);
-		moveUp = AnimationUtils.loadAnimation(getActivity(), R.anim.move_up); 
-		moveDown = AnimationUtils.loadAnimation(getActivity(), R.anim.move_down); 
+		fadeInAndOutAnim = AnimationUtils.loadAnimation(getActivity(), R.anim.fade_in_and_out);
+		moveUp = AnimationUtils.loadAnimation(getActivity(), R.anim.move_up);
+		moveDown = AnimationUtils.loadAnimation(getActivity(), R.anim.move_down);
 
 		// This makes the animation permanent after initial rotation
 		if (hasAnimated) {
@@ -143,9 +159,11 @@ public class SplashScreenFragment extends Fragment {
 		}
 
 		// Create a set of animations for the two buttons
-		final AnimationSet ecm_anim = new AnimationSet(false); // Zoom in and move up
-		final AnimationSet local_anim = new AnimationSet(false); // Zoom in and move
-															// down
+		final AnimationSet ecm_anim = new AnimationSet(false); // Zoom in and
+																// move up
+		final AnimationSet local_anim = new AnimationSet(false); // Zoom in and
+																	// move
+		// down
 
 		// Makes effects of animation NOT reset
 		ecm_anim.setFillEnabled(true);
@@ -159,7 +177,7 @@ public class SplashScreenFragment extends Fragment {
 		local_anim.addAnimation(moveDown);
 
 		// Start animating the buttons
-		if(!hasAnimated) {
+		if (!hasAnimated) {
 			new Handler().postDelayed(new Runnable() {
 				@Override
 				public void run() {
@@ -167,7 +185,7 @@ public class SplashScreenFragment extends Fragment {
 					local_image.startAnimation(local_anim);
 				}
 			}, 1000);
-	
+
 			// Start animating the text
 			new Handler().postDelayed(new Runnable() {
 				@Override
@@ -175,7 +193,7 @@ public class SplashScreenFragment extends Fragment {
 					splash_text.startAnimation(fadeInAnim);
 				}
 			}, 2000);
-			
+
 			// Start animating the indicators
 			int interval = 1; // seconds
 			new Handler().postDelayed(new Runnable() {
@@ -184,43 +202,42 @@ public class SplashScreenFragment extends Fragment {
 					indicator[0].startAnimation(fadeInAndOutAnim);
 				}
 			}, interval * 3 * 1000);
-			
+
 			new Handler().postDelayed(new Runnable() {
 				@Override
 				public void run() {
 					indicator[1].startAnimation(fadeInAndOutAnim);
 				}
 			}, interval * 4 * 1000);
-			
+
 			new Handler().postDelayed(new Runnable() {
 				@Override
 				public void run() {
 					indicator[2].startAnimation(fadeInAndOutAnim);
 				}
 			}, interval * 5 * 1000);
-			
+
 			new Handler().postDelayed(new Runnable() {
 				@Override
 				public void run() {
 					indicator[3].startAnimation(fadeInAndOutAnim);
 				}
 			}, interval * 3 * 1000);
-			
+
 			new Handler().postDelayed(new Runnable() {
 				@Override
 				public void run() {
 					indicator[4].startAnimation(fadeInAndOutAnim);
 				}
 			}, interval * 4 * 1000);
-			
+
 			new Handler().postDelayed(new Runnable() {
 				@Override
 				public void run() {
 					indicator[5].startAnimation(fadeInAndOutAnim);
 				}
 			}, interval * 5 * 1000);
-		}
-		else {
+		} else {
 			ecm_image.startAnimation(ecm_anim);
 			local_image.startAnimation(local_anim);
 			splash_text.startAnimation(fadeInAnim);

@@ -17,6 +17,7 @@ import android.widget.Toast;
 import com.cs481.commandcenter.AuthInfo;
 import com.cs481.commandcenter.R;
 import com.cs481.commandcenter.Utility;
+import com.cs481.commandcenter.debug.DebugActivity;
 import com.cs481.commandcenter.fragments.DashboardFragment;
 import com.cs481.commandcenter.fragments.WifiClientFragment;
 
@@ -86,6 +87,10 @@ public class CommandCenterActivity extends SpiceActivity implements OnBackStackC
 		case R.id.action_settings:
 			Intent prefsIntent = new Intent(this, PrefsActivity.class);
 			startActivity(prefsIntent);
+			return true;
+		case R.id.action_bugreport:
+			Intent intent = new Intent(this, BugReportActivity.class);
+			startActivity(intent);
 			return true;
 		case R.id.about:
 			String url = getResources().getString(R.string.googlePlusURL);
