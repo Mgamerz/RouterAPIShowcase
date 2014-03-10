@@ -7,6 +7,7 @@
     <string name="status">Status:</string>
     <string name="debug_title">CC Debugging</string>
     <string name="server_exception">Server returned exception</string>
+    <string name="ecmapi_base_url">https://cradlepointecm.com/api/v1/</string>
 
     <!-- Login Activity -->
 
@@ -27,6 +28,8 @@
     <string name="locallogin_actionbar_title">Local Device Login</string>
     <string name="saved_profiles_title">Saved Profiles</string>
     <string name="direct_login_fail">Login failed. Check your credentials.</string>
+    <string name="use_ssl">Use SSL</string>
+    <string name="routerport_hint">Port</string>
 
     <!-- ECM Login -->
     <string name="ecm_title">Enterprise Cloud Manager</string>
@@ -170,10 +173,12 @@
 
     <!-- Preferences -->
     <string name="prefs_title">Preferences</string>
-    <string name="prefs_uisubtitle">Look &amp; feel</string>
-    <string name="prefs_uititle">User Interface</string>
-    <string name="prefs_securitysubtitle">App Security</string>
-    <string name="prefs_securitytitle">Security</string>
+    <string name="prefs_header_uititle">User Interface</string>
+    <string name="prefs_header_uisubtitle">Look &amp; feel</string>
+    <string name="prefs_header_securitytitle">Security</string>
+    <string name="prefs_header_securitysubtitle">App Security</string>
+    <string name="prefs_header_advancedtitle">Advanced Mode</string>
+    <string name="prefs_header_advancedsubtitle">Tweak advanced settings</string>
 
     <!-- Prefs keys -->
     <string name="prefskey_theme">prefs_current_theme</string>
@@ -184,12 +189,6 @@
         <item>Blue</item>
         <item>Green</item>
         <item>Black</item>
-    </string-array>
-    <string-array name="theme_values">
-        <item>0</item>
-        <item>1</item>
-        <item>2</item>
-        <item>3</item>
     </string-array>
     <string-array name="wificlient_values">
         <item>WiFi Client</item>
@@ -210,10 +209,16 @@
     <string name="prefs_preferred_connection_title">Preferred Connection Type</string>
     <string name="prefs_theme_title">App Theme</string>
     <string name="prefs_delete_profiles">Delete saved profiles</string>
-    <string name="prefs_delete_profiles_summary">Wipe all profiles [disabled in this build - wipe app data to clear]</string>
+    <string name="prefs_delete_profiles_summary">Wipe all profiles [disabled in this build]</string>
     <string name="prefs_create_pin">Create a PIN</string>
-    <string name="prefs_advancedtitle">Advanced Mode</string>
-    <string name="prefs_advancedsubtitle">Tweak advanced settings</string>
+    <string name="prefs_advanced_mode">Advanced Mode</string>
+    <string name="prefs_ecmapiurl_title">ECM API base url</string>
+    <string name="prefs_advanced_mode_subtitle">Override the app defaults with custom ones</string>
+
+    <!-- Prefs keys -->
+    <string name="prefskey_delete_profiles">prefskey_delete_profiles</string>
+    <string name="prefskey_advanced">prefskey_advanced</string>
+    <string name="prefskey_ecmapiurl">prefskey_ecmapiurl</string>
 
     <!-- About Page -->
     <string name="about">About</string>
@@ -231,9 +236,5 @@
     <!-- Whats new - keep this at the bottom -->
     <string name="whats_new_title">What\'s new</string>
     <string name="whats_new">What\'s new in Alpha 1.01:\n\n - Added bug reporter that uploads logs to a privately owned Pastebin account, accessible through the menu (only visible to us)\n\n - Added this What\'s New dialog\n\n - Fixed username space trimming\n\n - Setting direct login as your preferred type via the splash screen dialog now has an effect\n\n - ECM Login failure gives detailed response in a toast \n\n - Other small fixes</string>
-    <string name="prefs_advanced_mode">Advanced Mode</string>
-    <string name="prefskey_advanced">prefskey_advanced</string>
-    <string name="prefskey_ecmapiurl">prefskey_ecmapiurl</string>
-    <string name="prefs_ecmapiurl_title">ECM API base url</string>
 
 </resources>

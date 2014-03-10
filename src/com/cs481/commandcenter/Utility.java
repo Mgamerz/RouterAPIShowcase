@@ -282,10 +282,12 @@ public class Utility {
 			return false;
 		}
 	}
-	
+
 	/**
 	 * Deletes all saved profiles from the database
-	 * @param context Context that this method will use for environment information
+	 * 
+	 * @param context
+	 *            Context that this method will use for environment information
 	 */
 	public static void deleteAllProfiles(Context context) {
 		// TODO Need help here. I don't understand what activity/context to pass
@@ -314,21 +316,24 @@ public class Utility {
 		// set theme
 		SharedPreferences mPrefs = PreferenceManager
 				.getDefaultSharedPreferences(activity);
-		String theme = mPrefs
-				.getString(
-						activity.getResources().getString(
-								R.string.prefskey_theme), "0");
-		int themeid = Integer.parseInt(theme);
-		switch (themeid) {
-		case PrefsActivity.THEME_BLUE:
+		Resources resources = activity.getResources();
+		String theme = mPrefs.getString(resources.getString(R.string.prefskey_theme), "Red");
+		// Theme strings
+		
+		String[] colors = resources.getStringArray(R.array.theme_names);
+		String red = colors[0];
+		String blue = colors[1];
+		String green = colors[2];
+		String black = colors[3];
+
+		if (theme.equals(blue)) {
 			return R.style.BlueAppTheme;
-		case PrefsActivity.THEME_GREEN:
-			return R.style.GreenAppTheme;
-		case PrefsActivity.THEME_BLACK:
+		} else if (theme.equals(black)) {
 			return R.style.BlackAppTheme;
-		default:
-			return R.style.RedAppTheme;
+		} else if (theme.equals(green)) {
+			return R.style.GreenAppTheme;
 		}
+		return R.style.RedAppTheme;
 	}
 
 	public static AuthInfo encryptAuthInfo(Context context, String pin,
@@ -360,7 +365,7 @@ public class Utility {
 			Log.e(CommandCenterActivity.TAG,
 					"Unable to encrypt auth info, object cannot be saved.");
 			e.printStackTrace();
-			//Log.e(CommandCenterActivity.TAG, e.getSta);
+			// Log.e(CommandCenterActivity.TAG, e.getSta);
 			return null;
 		}
 	}

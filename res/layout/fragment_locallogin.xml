@@ -60,6 +60,34 @@
             android:singleLine="true" />
     </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:orientation="horizontal" >
+
+        <CheckBox
+            android:id="@+id/use_ssl"
+            style="@style/CheckBoxTheme"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="false"
+            android:text="@string/use_ssl" />
+
+        <EditText
+            android:id="@+id/router_ip"
+            style="@style/EditTextTheme"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:digits="0123456789"
+            android:ems="5"
+            android:gravity="center"
+            android:hint="@string/routerport_hint"
+            android:inputType="numberDecimal"
+            android:singleLine="true" />
+    </LinearLayout>
+
     <EditText
         android:id="@+id/router_password"
         style="@style/EditTextTheme"
@@ -86,7 +114,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:onClick="connectClick"
+            android:text="@string/show_direct_advanced" />
+
+        <Button
+            android:id="@+id/connect_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
             android:text="@string/connect" />
     </LinearLayout>
 

@@ -3,7 +3,7 @@
 
     <Preference
         android:enabled="true"
-        android:key="@+id/prefs_delete_profiles"
+        android:key="@string/prefs_delete_profiles"
         android:summary="@string/prefs_delete_profiles_summary"
         android:title="@string/prefs_delete_profiles" />
 

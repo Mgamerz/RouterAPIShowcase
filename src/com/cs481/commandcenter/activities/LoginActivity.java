@@ -84,7 +84,7 @@ public class LoginActivity extends SpiceActivity {
 			authInfo = savedInstanceState.getParcelable("authInfo");
 			showingWhatsNew = savedInstanceState.getBoolean("showingWhatsNew");
 		}
-
+		setDefaultPrefs();
 		Ln.getConfig().setLoggingLevel(Log.ERROR);
 		setTheme(Utility.getTheme(this));
 
@@ -200,6 +200,21 @@ public class LoginActivity extends SpiceActivity {
 
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 		getActionBar().setHomeButtonEnabled(true);
+	}
+
+	/**
+	 * Inflates and initializes preferences if they haven't been set before. Must be called
+	 * at the beginning of the very first activity to ensure the very first run of the app doesn't break.
+	 * 
+	 */
+	private void setDefaultPrefs() {
+		
+		PreferenceManager.setDefaultValues(this, R.xml.ui_prefs,
+                false);
+		PreferenceManager.setDefaultValues(this, R.xml.security_prefs,
+                false);
+		PreferenceManager.setDefaultValues(this, R.xml.testing_prefs,
+                false);
 	}
 
 	@Override

@@ -3,11 +3,15 @@
 
     <CheckBoxPreference
         android:key="@string/prefskey_advanced"
-        android:title="@string/prefs_advanced_mode" />
+        android:title="@string/prefs_advanced_mode"
+        android:summary="@string/prefs_advanced_mode_subtitle"
+        android:defaultValue="false" />
 
     <EditTextPreference
         android:dependency="@string/prefskey_advanced"
         android:key="@string/prefskey_ecmapiurl"
-        android:title="@string/prefs_ecmapiurl_title" />
+        android:defaultValue="@string/ecmapi_base_url"
+        android:title="@string/prefs_ecmapiurl_title"
+        android:singleLine="true" />
 
 </PreferenceScreen>

@@ -3,15 +3,15 @@
 
     <header
         android:fragment="com.cs481.commandcenter.fragments.preferences.UIPrefsFragment"
-        android:summary="@string/prefs_uisubtitle"
-        android:title="@string/prefs_uititle" />
+        android:summary="@string/prefs_header_uisubtitle"
+        android:title="@string/prefs_header_uititle" />
     <header
         android:fragment="com.cs481.commandcenter.fragments.preferences.SecurityPrefsFragment"
-        android:summary="@string/prefs_securitysubtitle"
-        android:title="@string/prefs_securitytitle" />
+        android:summary="@string/prefs_header_securitysubtitle"
+        android:title="@string/prefs_header_securitytitle" />
     <header
         android:fragment="com.cs481.commandcenter.fragments.preferences.AdvancedPrefsFragment"
-        android:summary="@string/prefs_advancedsubtitle"
-        android:title="@string/prefs_advancedtitle" />
+        android:summary="@string/prefs_header_advancedsubtitle"
+        android:title="@string/prefs_header_advancedtitle" />
 
 </preference-headers>
