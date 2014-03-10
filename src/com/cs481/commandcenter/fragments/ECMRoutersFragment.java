@@ -2,8 +2,6 @@ package com.cs481.commandcenter.fragments;
 
 import java.util.ArrayList;
 
-import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
-import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
 import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -22,7 +20,6 @@ import android.widget.TextView;
 import com.cs481.commandcenter.AuthInfo;
 import com.cs481.commandcenter.R;
 import com.cs481.commandcenter.activities.CommandCenterActivity;
-import com.cs481.commandcenter.activities.LoginActivity;
 import com.cs481.commandcenter.activities.SpiceActivity;
 import com.cs481.commandcenter.dialog.RouterConfirmDialogFragment;
 import com.cs481.commandcenter.listrows.RouterListRow;
@@ -31,7 +28,7 @@ import com.cs481.commandcenter.responses.ecm.routers.Router;
 public class ECMRoutersFragment extends ListFragment implements
 		OnRefreshListener {
 	// private boolean checking = true;
-	private PullToRefreshLayout mPullToRefreshLayout;
+	//private PullToRefreshLayout mPullToRefreshLayout;
 	ProgressDialog progressDialog;
 	// private SpiceManager spiceManager;
 	private AuthInfo authInfo;
@@ -110,7 +107,7 @@ public class ECMRoutersFragment extends ListFragment implements
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
 		// This is the View which is created by ListFragment
-		ViewGroup viewGroup = (ViewGroup) view;
+		//ViewGroup viewGroup = (ViewGroup) view;
 
 		// We need to create a PullToRefreshLayout manually
 		/*mPullToRefreshLayout = new PullToRefreshLayout(viewGroup.getContext());

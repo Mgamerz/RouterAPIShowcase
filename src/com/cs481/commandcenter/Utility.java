@@ -21,12 +21,10 @@ import android.net.DhcpInfo;
 import android.net.wifi.WifiManager;
 import android.os.Parcel;
 import android.preference.PreferenceManager;
-import android.support.v4.app.FragmentActivity;
 import android.text.format.Formatter;
 import android.util.Base64;
 import android.util.Log;
 
-import com.cs481.commandcenter.R;
 import com.cs481.commandcenter.activities.CommandCenterActivity;
 import com.cs481.commandcenter.activities.PrefsActivity;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -283,7 +281,18 @@ public class Utility {
 		} else {
 			return false;
 		}
-
+	}
+	
+	/**
+	 * Deletes all saved profiles from the database
+	 * @param context Context that this method will use for environment information
+	 */
+	public static void deleteAllProfiles(Context context) {
+		// TODO Need help here. I don't understand what activity/context to pass
+		// on to this db as param
+		DatabaseAdapter dbAdapter = new DatabaseAdapter(context).open();
+		dbAdapter.deleteAllProfiles();
+		dbAdapter.close();
 	}
 
 	/**

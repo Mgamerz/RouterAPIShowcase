@@ -6,8 +6,10 @@ import android.preference.Preference;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceFragment;
 import android.view.View;
+import android.widget.Toast;
 
 import com.cs481.commandcenter.R;
+import com.cs481.commandcenter.Utility;
 import com.cs481.commandcenter.activities.CommandCenterActivity;
 import com.cs481.commandcenter.activities.LoginActivity;
 import com.cs481.commandcenter.activities.PINActivity;
@@ -31,19 +33,15 @@ public class SecurityPrefsFragment extends PreferenceFragment {
     public void onViewCreated(View v, Bundle savedInstanceState){
     	super.onViewCreated(v, savedInstanceState);
     	
-    	Preference createpin = findPreference(getActivity().getResources().getString(R.id.prefs_create_pin));
-    	createpin.setOnPreferenceClickListener(new OnPreferenceClickListener() {
+    	Preference deleteAllProfiles = findPreference(getActivity().getResources().getString(R.id.prefs_delete_profiles));
+    	deleteAllProfiles.setOnPreferenceClickListener(new OnPreferenceClickListener() {
 			
 			@Override
 			public boolean onPreferenceClick(Preference preference) {
 				// should create a new pin screen.
 				// Prepare new intent.
-				Intent intent = new Intent(getActivity(),
-						PINActivity.class);
-				intent.putExtra("createpin", true);
-				// start the new activity, and prevent this one from being
-				// returned to unless logout is chosen.
-				startActivity(intent);
+				Utility.deleteAllProfiles(getActivity());
+				Toast.makeText(getActivity(), "debug: Deleted all profiles.", Toast.LENGTH_LONG).show();
 				return true;
 			}
 		});

@@ -85,6 +85,7 @@ public class CommandCenterActivity extends SpiceActivity implements OnBackStackC
 			overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
 			return true;
 		case R.id.action_settings:
+			Log.i(TAG, "launching prefs");
 			Intent prefsIntent = new Intent(this, PrefsActivity.class);
 			startActivity(prefsIntent);
 			return true;

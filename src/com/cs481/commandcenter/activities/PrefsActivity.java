@@ -1,19 +1,16 @@
 package com.cs481.commandcenter.activities;
 
-
-
 import java.util.List;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import com.cs481.commandcenter.R;
+import com.cs481.commandcenter.fragments.preferences.AdvancedPrefsFragment;
 import com.cs481.commandcenter.fragments.preferences.SecurityPrefsFragment;
 import com.cs481.commandcenter.fragments.preferences.UIPrefsFragment;
 
@@ -25,7 +22,7 @@ public class PrefsActivity extends PreferenceActivity {
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-		//setTheme(Utility.getTheme(this));
+		// setTheme(Utility.getTheme(this));
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 		super.onCreate(savedInstanceState);
 	}
@@ -41,12 +38,14 @@ public class PrefsActivity extends PreferenceActivity {
 				"Validating: " + UIPrefsFragment.class.getName() + " vs "
 						+ fragmentName);
 		if (UIPrefsFragment.class.getName().equals(fragmentName)||
-				SecurityPrefsFragment.class.getName().equals(fragmentName)) {
+				SecurityPrefsFragment.class.getName().equals(fragmentName) || 
+				
+			AdvancedPrefsFragment.class.getName().equals(fragmentName)) {
 			return true;
 		}
 		return false;
 	}
-	
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
