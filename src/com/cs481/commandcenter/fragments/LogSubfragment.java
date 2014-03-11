@@ -179,7 +179,7 @@ public class LogSubfragment extends ListFragment implements OnRefreshListener {
 	 */
 	private void readLogs(LogsGetRequestListener rl) {
 		// TODO Auto-generated method stub
-		GetRequest clientModeReq = new GetRequest(authInfo, "status/log",
+		GetRequest clientModeReq = new GetRequest(getActivity(), authInfo, "status/log",
 				Logs.class, CACHEKEY_LOGS);
 		String lastRequestCacheKey = clientModeReq.createCacheKey();
 		spiceManager.execute(clientModeReq, lastRequestCacheKey,

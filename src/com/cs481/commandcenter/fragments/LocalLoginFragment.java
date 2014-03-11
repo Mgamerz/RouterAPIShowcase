@@ -244,7 +244,7 @@ public class LocalLoginFragment extends Fragment {
 
 		// Perform network check
 
-		GetRequest request = new GetRequest(authInfo, "status/product_info",
+		GetRequest request = new GetRequest(getActivity(), authInfo, "status/product_info",
 				Product_info.class, "direct_login");
 		String lastRequestCacheKey = request.createCacheKey();
 

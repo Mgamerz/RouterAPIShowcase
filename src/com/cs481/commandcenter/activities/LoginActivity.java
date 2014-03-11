@@ -425,7 +425,7 @@ public class LoginActivity extends SpiceActivity {
 						// Perform a credential login before we load up the
 						// management interface.
 
-						GetRequest request = new GetRequest(authInfo, "status/product_info", Product_info.class, "direct_login");
+						GetRequest request = new GetRequest(this, authInfo, "status/product_info", Product_info.class, "direct_login");
 						String lastRequestCacheKey = request.createCacheKey();
 
 						progressDialog = new ProgressDialog(this, R.style.DialogTheme);

@@ -207,7 +207,7 @@ public class WifiClientFragment extends ListFragment implements
 
 	private void readClientMode() {
 		// TODO Auto-generated method stub
-		GetRequest clientModeReq = new GetRequest(authInfo,
+		GetRequest clientModeReq = new GetRequest(getActivity(), authInfo,
 				"config/wwan/radio/0/mode", String.class, "ConfigClientGet");
 		String lastRequestCacheKey = clientModeReq.createCacheKey();
 		spiceManager.execute(clientModeReq, lastRequestCacheKey,
@@ -364,7 +364,7 @@ public class WifiClientFragment extends ListFragment implements
 
 	private void readWlanWANConfig(boolean dialog) {
 		// perform the request.
-		GetRequest wapListrequest = new GetRequest(authInfo, "status/wlan",
+		GetRequest wapListrequest = new GetRequest(getActivity(), authInfo, "status/wlan",
 				StatusWlan.class, "statuswlanget");
 		String lastRequestCacheKey = wapListrequest.createCacheKey();
 		Resources resources = getResources();
@@ -385,7 +385,7 @@ public class WifiClientFragment extends ListFragment implements
 
 		// get wwan profiles
 
-		GetRequest profilesRequest = new GetRequest(authInfo, "config/wwan",
+		GetRequest profilesRequest = new GetRequest(getActivity(), authInfo, "config/wwan",
 				WWAN.class, "configwwanget");
 
 		spiceManager.execute(profilesRequest, profilesRequest.createCacheKey(),
@@ -605,7 +605,7 @@ public class WifiClientFragment extends ListFragment implements
 		// Profile is not yet defined. Do a POST to the router.
 		Log.i(CommandCenterActivity.TAG,
 				"Performing put request to enabled wlan");
-		PostRequest request = new PostRequest(wanprofile, authInfo,
+		PostRequest request = new PostRequest(getActivity(), wanprofile, authInfo,
 				"config/wwan/radio/0/profiles", WANProfile.class); // TODO will
 																	// have to
 																	// deal with
@@ -685,7 +685,7 @@ public class WifiClientFragment extends ListFragment implements
 
 				// Send data to server to change modes
 				String newMode = getClientMode();
-				PutRequest profilesRequest = new PutRequest(newMode, authInfo,
+				PutRequest profilesRequest = new PutRequest(getActivity(), newMode, authInfo,
 						"config/wwan/radio/0/mode", String.class);
 
 				spiceManager.execute(profilesRequest,

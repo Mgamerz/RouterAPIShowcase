@@ -203,7 +203,7 @@ public class RouterInfoFragment extends Fragment {
 
 	private void readProductInfo(boolean dialog) {
 		// perform the request.
-		GetRequest request = new GetRequest(authInfo, "status/product_info",
+		GetRequest request = new GetRequest(getActivity(), authInfo, "status/product_info",
 				Product_info.class, CACHEKEY_PRODUCT);
 		String lastRequestCacheKey = request.createCacheKey();
 
@@ -221,7 +221,7 @@ public class RouterInfoFragment extends Fragment {
 
 	private void readFWInfo() {
 		// perform the request.
-		GetRequest request = new GetRequest(authInfo, "status/fw_info",
+		GetRequest request = new GetRequest(getActivity(), authInfo, "status/fw_info",
 				Fw_info.class, CACHEKEY_FIRMWARE);
 		String lastRequestCacheKey = request.createCacheKey();
 
@@ -231,7 +231,7 @@ public class RouterInfoFragment extends Fragment {
 
 	private void readUptimeInfo() {
 		// perform the request.
-		GetRequest request = new GetRequest(
+		GetRequest request = new GetRequest(getActivity(), 
 				authInfo,
 				"status/system",
 				com.cs481.commandcenter.responses.status.product_info.System.class,
@@ -244,7 +244,7 @@ public class RouterInfoFragment extends Fragment {
 
 	private void readHostNameInfo() {
 		// perform the request.
-		GetRequest request = new GetRequest(
+		GetRequest request = new GetRequest(getActivity(), 
 				authInfo,
 				"status/wan/devices/ethernet-wan/config",
 				com.cs481.commandcenter.status.wan.devices.ethernetwan.Config.class,
@@ -257,10 +257,10 @@ public class RouterInfoFragment extends Fragment {
 
 	private void readNumClientsInfo() {
 		// perform the request.
-		GetRequest request = new GetRequest(authInfo, "status/lan",
+		GetRequest request = new GetRequest(getActivity(), authInfo, "status/lan",
 				com.cs481.commandcenter.responses.status.lan.Lan.class,
 				CACHEKEY_CLIENTS);
-		// GetRequest request = new GetRequest(authInfo, "status/lan/devices/",
+		// GetRequest request = new GetRequest(getActivity(), authInfo, "status/lan/devices/",
 		// com.cs481.mobilemapper.responses.status.lan.Devices.class,
 		// "client_get");
 		String lastRequestCacheKey = request.createCacheKey();
