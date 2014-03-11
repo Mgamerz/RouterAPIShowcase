@@ -28,7 +28,6 @@ import com.cs481.commandcenter.responses.GetRequest;
 import com.cs481.commandcenter.responses.PutRequest;
 import com.cs481.commandcenter.responses.Response;
 import com.cs481.commandcenter.responses.control.gpio.GPIO;
-import com.cs481.commandcenter.responses.control.led.LED;
 import com.octo.android.robospice.SpiceManager;
 import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
@@ -87,7 +86,7 @@ public class GPIOFragment extends Fragment implements OnRefreshListener,
 
 	private void readGPIOConfig(boolean dialog) {
 		// perform the request.
-		GetRequest request = new GetRequest(authInfo, "status/gpio",
+		GetRequest request = new GetRequest(getActivity(), authInfo, "status/gpio",
 				GPIO.class, CACHEKEY_GPIOGET);
 		String lastRequestCacheKey = request.createCacheKey();
 
@@ -474,7 +473,7 @@ public class GPIOFragment extends Fragment implements OnRefreshListener,
 			}
 
 			// perform the request.
-			PutRequest request = new PutRequest(gpio, authInfo, "control/gpio",
+			PutRequest request = new PutRequest(getActivity(), gpio, authInfo, "control/gpio",
 					com.cs481.commandcenter.responses.control.gpio.GPIO.class);
 			String lastRequestCacheKey = request.createCacheKey();
 
@@ -501,8 +500,8 @@ public class GPIOFragment extends Fragment implements OnRefreshListener,
 			return true;
 		case R.id.reset_leds:
 			// perform the request.
-			com.cs481.commandcenter.responses.control.led.PutRequest request = new com.cs481.commandcenter.responses.control.led.PutRequest(
-					authInfo);
+			PutRequest request = new PutRequest(getActivity(), Boolean.valueOf(true), authInfo, "control/led/reset_leds",
+					Boolean.class);
 			String lastRequestCacheKey = request.createCacheKey();
 
 			spiceManager.execute(request, lastRequestCacheKey,
@@ -515,26 +514,25 @@ public class GPIOFragment extends Fragment implements OnRefreshListener,
 	}
 
 	// inner class of your spiced Activity
-	private class LEDPutRequestListener implements RequestListener<LED> {
-
+	private class LEDPutRequestListener implements RequestListener<Response> {
 		@Override
 		public void onRequestFailure(SpiceException e) {
-			// update your UI
-			// handle here if necessary.
+			Log.i(CommandCenterActivity.TAG, "Failed to reset LEDs!");
+			
+			if (!isAdded()){
+				return;
+			}
+			/* Toast.makeText(getActivity(),
+					getResources().getString(R.string.gpio_get_config_failure),
+					Toast.LENGTH_SHORT).show(); */
+			Toast.makeText(getActivity(),
+					"LED reset request failed.",
+					Toast.LENGTH_SHORT).show();
 		}
 
 		@Override
-		public void onRequestSuccess(LED led) {
-			// update your UI
-			if (led.getData().getException() == null) {
-				// should possibly do a get here.
-			} else {
-				Toast.makeText(
-						getActivity(),
-						"GPIO: Server returned exception: "
-								+ led.getData().getException(),
-						Toast.LENGTH_LONG).show();
-			}
+		public void onRequestSuccess(Response response) {
+		
 		}
 	}
 }
