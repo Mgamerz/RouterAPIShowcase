@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="5dp" >
+
+    <TextView
+        android:id="@+id/clients_mac_text"
+        style="@style/TextTheme"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/mac_address" />
+    
+    <TextView
+        android:id="@+id/clients_mac_value"
+        style="@style/TextTheme"
+        android:layout_marginLeft="10dp"
+        android:layout_toRightOf="@id/clients_mac_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/mac_address" />
+
+    <TextView
+        android:id="@+id/ip_address_text"
+        style="@style/TextTheme"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/clients_mac_text"
+        android:text="@string/ip_address" />
+    
+        <TextView
+        android:id="@+id/ip_address_value"
+        style="@style/TextTheme"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/clients_mac_value"
+        android:layout_below="@id/clients_mac_value"
+        android:text="@string/ip_address" />
+
+</RelativeLayout>

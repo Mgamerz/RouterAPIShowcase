@@ -30,6 +30,7 @@
     <string name="direct_login_fail">Login failed. Check your credentials.</string>
     <string name="use_ssl">Use SSL</string>
     <string name="routerport_hint">Port</string>
+    <string name="show_direct_advanced">Show Advanced Options</string>
 
     <!-- ECM Login -->
     <string name="ecm_title">Enterprise Cloud Manager</string>
@@ -72,6 +73,9 @@
     <string name="disabled">disabled</string>
     <string name="bridged">bridge</string>
     <string name="wwan">wwan</string>
+    <string name="no_access">No access points or wireless is off.</string>
+    <string name="no_clients">No clients are currently connected</string>
+    <string name="ip_address">IP Address</string>
 
     <!-- WifiAsWanDialog -->
     <string name="excellent">Excellent</string>
