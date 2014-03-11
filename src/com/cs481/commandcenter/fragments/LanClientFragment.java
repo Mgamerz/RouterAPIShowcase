@@ -121,19 +121,12 @@ OnRefreshListener {
 	@Override
 	public void onStart() {
 		super.onStart();
-		// Setup navigation stuff.
 		// onStart is called before onResume()
 		SpiceActivity sa = (SpiceActivity) getActivity();
-		sa.getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST); // makes
-		// the
-		// dropdown
-		// list
-		// appear
-		// set the callbacks.
-		Log.i(CommandCenterActivity.TAG, "Hiding title bar");
-		sa.getActionBar().setDisplayShowTitleEnabled(false);
-
 		spiceManager = sa.getSpiceManager();
+		sa.getActionBar().setDisplayShowTitleEnabled(true);
+		sa.getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+		sa.getActionBar().setTitle(getResources().getString(R.string.lan_title));
 		if (shouldLoadData) {
 			readClients();
 			shouldLoadData = false;

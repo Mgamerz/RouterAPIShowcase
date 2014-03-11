@@ -101,13 +101,13 @@ public class DashboardFragment extends ListFragment {
 		rows.add(new DashboardListRow(lWLAN, resources
 				.getString(R.string.wireless), "Partially Operational"));
 		rows.add(new DashboardListRow(lLAN, resources.getString(R.string.lan),
-				"Non Operational"));
+				"Partially Operational"));
 		rows.add(new DashboardListRow(lWAN, resources.getString(R.string.wan),
 				"Non Operational"));
 		rows.add(new DashboardListRow(lGPIO,
 				resources.getString(R.string.gpio), "Fully Operational"));
 		rows.add(new DashboardListRow(lABOUT, resources
-				.getString(R.string.routerinfo), "Fully Operational"));
+				.getString(R.string.routerinfo), "Mostly Broken"));
 		/* rows.add(new DashboardListRow(lPRINTSTACK, "Print Fragment backstack",
 				"Debug Option")); */
 		setListAdapter(new DashboardAdapter(getActivity(), rows));
@@ -276,6 +276,43 @@ public class DashboardFragment extends ListFragment {
 				Log.i(CommandCenterActivity.TAG,
 						"Not in backstack - creating new fragment.");
 				RouterInfoFragment infoFragment = RouterInfoFragment
+						.newInstance(authInfo);
+				FragmentTransaction transaction = fm.beginTransaction();
+				// check if the parent activity is dual pane based.
+				CommandCenterActivity parent = (CommandCenterActivity) getActivity();
+				if (parent.isDualPane()) {
+					transaction.replace(R.id.rightside_fragment, infoFragment,
+							infoTag);
+				} else {
+					transaction.replace(R.id.leftside_fragment, infoFragment, infoTag);
+				}
+				transaction.addToBackStack(infoTag);
+				transaction
+						.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+				transaction.commit();
+			}
+		}
+			break;
+		case lLAN:
+		{
+			String infoTag = LanClientFragment.class.getName();
+			Log.i(CommandCenterActivity.TAG, "ABOUT WAS CLICKED");
+
+			// Check if fragment is visible on the screen.
+			LanClientFragment infoVisibility = (LanClientFragment) getActivity()
+					.getSupportFragmentManager().findFragmentByTag(infoTag);
+			if (infoVisibility != null && infoVisibility.isVisible()) {
+				return; // fragment is currently visible, do nothing.
+			}
+
+			FragmentManager fm = getActivity().getSupportFragmentManager();
+
+			boolean fragmentPopped = fm.popBackStackImmediate(infoTag, 0);
+
+			if (!fragmentPopped) {
+				Log.i(CommandCenterActivity.TAG,
+						"Not in backstack - creating new fragment.");
+				LanClientFragment infoFragment = LanClientFragment
 						.newInstance(authInfo);
 				FragmentTransaction transaction = fm.beginTransaction();
 				// check if the parent activity is dual pane based.
