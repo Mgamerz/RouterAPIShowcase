@@ -6,6 +6,7 @@ import org.apache.http.client.methods.HttpPut;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
 
+import android.content.Context;
 import android.util.Log;
 
 import com.cs481.commandcenter.AuthInfo;
@@ -29,6 +30,7 @@ public class PutRequest extends SpiceRequest<Response> {
 	private String suburl;
 	private Class clazz;
 	private Object data;
+	private Context context;
 
 	/**
 	 * Creates a new PutRequest object. It is executed when spiceManager.execute() is called.
@@ -38,9 +40,10 @@ public class PutRequest extends SpiceRequest<Response> {
 	 * @param classId
 	 * @param clazz
 	 */
-	public PutRequest(Object data, AuthInfo authInfo, String suburl,
+	public PutRequest(Context context, Object data, AuthInfo authInfo, String suburl,
 			 Class clazz) {
 		super(Response.class);
+		this.context = context;
 		this.authInfo = authInfo;
 		this.suburl = suburl;
 		this.data = data;
@@ -50,7 +53,7 @@ public class PutRequest extends SpiceRequest<Response> {
 	@Override
 	public Response loadDataFromNetwork() throws Exception {
 		String url = suburl; // url to access
-		ConnectionInfo ci = Utility.prepareConnection(url, authInfo);
+		ConnectionInfo ci = Utility.prepareConnection(context, url, authInfo);
 		DefaultHttpClient client = ci.getClient();
 		url = ci.getAccessUrl();
 		Log.i(CommandCenterActivity.TAG, "Put Request to " + url);

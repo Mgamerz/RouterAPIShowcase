@@ -6,6 +6,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
 
+import android.content.Context;
 import android.util.Log;
 
 import com.cs481.commandcenter.AuthInfo;
@@ -29,6 +30,7 @@ public class PostRequest extends SpiceRequest<Response> {
 	private String suburl;
 	private Class clazz;
 	private Object data;
+	private Context context;
 
 	/**
 	 * Creates a new PostRequest object. It is executed when spiceManager.execute() is called.
@@ -40,19 +42,20 @@ public class PostRequest extends SpiceRequest<Response> {
 	 * @param suburl Suburl to access of where to send the post. For example, "config/wlan" posts to that subtree.
 	 * @param clazz Class of object to put
 	 */
-	public PostRequest(Object data, AuthInfo authInfo, String suburl,
+	public PostRequest(Context context, Object data, AuthInfo authInfo, String suburl,
 			 Class clazz) {
 		super(Response.class);
 		this.authInfo = authInfo;
 		this.suburl = suburl;
 		this.data = data;
 		this.clazz = clazz;
+		this.context = context;
 	}
 
 	@Override
 	public Response loadDataFromNetwork() throws Exception {
 		String url = suburl; // url to access
-		ConnectionInfo ci = Utility.prepareConnection(url, authInfo);
+		ConnectionInfo ci = Utility.prepareConnection(context,  url, authInfo);
 		DefaultHttpClient client = ci.getClient();
 		url = ci.getAccessUrl();
 		Log.i(CommandCenterActivity.TAG, "Post Request to " + url);

@@ -6,6 +6,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
 
+import android.content.Context;
 import android.util.Log;
 
 import com.cs481.commandcenter.AuthInfo;
@@ -15,7 +16,6 @@ import com.cs481.commandcenter.activities.CommandCenterActivity;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.octo.android.robospice.request.SpiceRequest;
-import com.octo.android.robospice.request.springandroid.SpringAndroidSpiceRequest;
 
 public class GetRequest extends SpiceRequest<Response> {
 
@@ -23,20 +23,22 @@ public class GetRequest extends SpiceRequest<Response> {
 	private String suburl;
 	private Class clazz;
 	private String requestid;
+	private Context context;
 
-	public GetRequest(AuthInfo authInfo, String url, Class clazz, String requestid) {
+	public GetRequest(Context context, AuthInfo authInfo, String url, Class clazz, String requestid) {
 		super(Response.class);
 		this.suburl = url;
 		this.authInfo = authInfo;
 		this.clazz = clazz;
 		this.requestid = requestid;
+		this.context = context;
 	}
 
 	@Override
 	public Response loadDataFromNetwork() throws Exception {
 		// Prepare connection
 		String url = suburl; // url to access
-		ConnectionInfo ci = Utility.prepareConnection(suburl, authInfo);
+		ConnectionInfo ci = Utility.prepareConnection(context, suburl, authInfo);
 		DefaultHttpClient client = ci.getClient();
 		url = ci.getAccessUrl();
 		Log.i(CommandCenterActivity.TAG, "Get Request to " + url);

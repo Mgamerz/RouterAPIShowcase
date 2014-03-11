@@ -90,7 +90,7 @@ public class Utility {
 	 *            information.
 	 * @return ConnectionInfo bundle describing this connection
 	 */
-	public static ConnectionInfo prepareConnection(String url, AuthInfo authInfo) {
+	public static ConnectionInfo prepareConnection(Context context, String url, AuthInfo authInfo) {
 		ConnectionInfo ci = new ConnectionInfo();
 		DefaultHttpClient client = new DefaultHttpClient();
 		Credentials defaultcreds = new UsernamePasswordCredentials(
@@ -99,8 +99,10 @@ public class Utility {
 		// set auth type
 		AuthScope auth;
 		if (authInfo.isEcm()) {
+			SharedPreferences advancedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
+			String baseurl = advancedPrefs.getString(context.getResources().getString(R.string.prefskey_ecmapiurl), context.getResources().getString(R.string.ecmapi_base_url));
 			ci.setAccessUrl(String.format(
-					"https://cradlepointecm.com/api/v1/remote/%s?id=%s", url,
+					"%sremote/%s?id=%s", baseurl, url,
 					authInfo.getRouterId()));
 			auth = new AuthScope("cradlepointecm.com", 443);
 		} else {
