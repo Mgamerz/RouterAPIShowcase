@@ -22,9 +22,18 @@ public final class LogsDeserializer extends JsonDeserializer<Logs> {
 	@Override
 	public Logs deserialize(final JsonParser jp, final DeserializationContext ctxt) throws IOException {
 											// under the 1MB parcel limit.
-		final JsonNode node = jp.readValueAs(JsonNode.class);
-		if (!node.isContainerNode() || !node.isArray())
-			throw new JsonMappingException("expected an array");
+		JsonNode node = jp.readValueAs(JsonNode.class);
+		if (!node.isArray()) {
+			//might need to go down a level
+			node = node.get("logs"); //go down to the 'logs' array
+		}
+		
+		if (!node.isArray()) {
+			Log.e(CommandCenterActivity.TAG, "Deserialization of Logs Error. Not an array or container node.");
+			Log.e(CommandCenterActivity.TAG, node.toString());
+			throw new JsonMappingException("Array expected in logs deserializer, could not find one at the top level/logs level.");
+		}
+			
 		Logs logs = new Logs();
 
 		Log.i(CommandCenterActivity.TAG, "Starting LOGS deserialization.");

@@ -1,13 +1,16 @@
 package com.cs481.commandcenter.responses.status.log;
 
+import java.io.IOException;
+import java.util.Iterator;
+
+import android.util.Log;
+
+import com.cs481.commandcenter.activities.CommandCenterActivity;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
-
-import java.io.IOException;
-import java.util.Iterator;
 
 /**
  * Jackson deserializer for our unkeyed log object.
@@ -18,8 +21,11 @@ public final class LogMessageDeserializer extends JsonDeserializer<LogMessage> {
 			final DeserializationContext ctxt) throws IOException {
 
 		final JsonNode node = jp.readValueAs(JsonNode.class);
-		if (!node.isContainerNode() || !node.isArray())
-			throw new JsonMappingException("expected an array");
+		if (!node.isContainerNode() && !node.isArray()) {
+			Log.e(CommandCenterActivity.TAG, node.toString());
+			throw new JsonMappingException("LogMessageDeserializer: expected an object");
+		}
+		Log.i(CommandCenterActivity.TAG, "Log message parsing: "+node.toString());
 		LogMessage logMessage = new LogMessage();
 
 		// Build the log object manually...

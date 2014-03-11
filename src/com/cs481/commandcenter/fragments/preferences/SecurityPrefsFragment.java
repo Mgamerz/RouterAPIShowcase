@@ -1,5 +1,7 @@
 package com.cs481.commandcenter.fragments.preferences;
 
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnDismissListener;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
@@ -70,10 +72,12 @@ public class SecurityPrefsFragment extends PreferenceFragment implements OnShare
 				// should create a new pin screen.
 				// Prepare new intent.
 				Utility.deleteAllProfiles(getActivity());
-				Toast.makeText(getActivity(), "debug: Deleted all profiles.", Toast.LENGTH_LONG).show();
+				//Toast.makeText(getActivity(), "debug: Deleted all profiles.", Toast.LENGTH_LONG).show();
 				return true;
 			}
 		});
+    	
+       	CCDialogPreference clearPIN = (CCDialogPreference) findPreference(getActivity().getResources().getString(R.string.prefs_delete_pin));
     }
     
     private void updatePrefSummary(Preference p) {

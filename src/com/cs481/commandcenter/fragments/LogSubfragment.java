@@ -1,6 +1,7 @@
 package com.cs481.commandcenter.fragments;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 
 import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
 import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
@@ -33,6 +34,7 @@ import com.cs481.commandcenter.responses.GetRequest;
 import com.cs481.commandcenter.responses.Response;
 import com.cs481.commandcenter.responses.status.log.LogMessage;
 import com.cs481.commandcenter.responses.status.log.Logs;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.octo.android.robospice.SpiceManager;
 import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
@@ -117,13 +119,12 @@ public class LogSubfragment extends ListFragment implements OnRefreshListener {
 			Bundle savedInstanceState) {
 		// Inflate the layout for this fragment
 		View v = inflater.inflate(R.layout.subfrag_log, container, false);
-		if (logState == LOG_FAILED){
-			ProgressBar bar = (ProgressBar) v.findViewById(
-					R.id.log_loadingprogressbar);
+		if (logState == LOG_FAILED) {
+			ProgressBar bar = (ProgressBar) v
+					.findViewById(R.id.log_loadingprogressbar);
 			bar.setVisibility(ProgressBar.GONE);
 
-			TextView message = (TextView) v.findViewById(
-					R.id.log_loadingtext);
+			TextView message = (TextView) v.findViewById(R.id.log_loadingtext);
 			message.setText(getActivity().getResources().getString(
 					R.string.log_get_failed));
 		}
@@ -133,8 +134,7 @@ public class LogSubfragment extends ListFragment implements OnRefreshListener {
 	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
-		
-		
+
 		// This is the View which is created by ListFragment
 		ViewGroup viewGroup = (ViewGroup) view;
 
@@ -157,9 +157,12 @@ public class LogSubfragment extends ListFragment implements OnRefreshListener {
 		spiceManager = sa.getSpiceManager();
 		rl = new LogsGetRequestListener();
 
-		//spiceManager.getFromCache(Response.class, CACHEKEY_LOGS,
-		//		SpiceActivity.DURATION_3SECS, rl);
+		// spiceManager.getFromCache(Response.class, CACHEKEY_LOGS,
+		// SpiceActivity.DURATION_3SECS, rl);
 		spiceManager.addListenerIfPending(Response.class, CACHEKEY_LOGS, rl);
+		spiceManager.getFromCache(Response.class, CACHEKEY_LOGS,
+				DurationInMillis.ONE_MINUTE, rl);
+
 		if (shouldLoadData) {
 			Log.i(CommandCenterActivity.TAG, "Reading logs, should load data.");
 			readLogs(rl);
@@ -258,12 +261,20 @@ public class LogSubfragment extends ListFragment implements OnRefreshListener {
 		@Override
 		public void onRequestSuccess(Response response) {
 			// update your UI
-			if (response != null) { //can be null if its not in the cache.
+			if (response != null) { // can be null if its not in the cache.
 				Log.i(CommandCenterActivity.TAG,
 						"Logs get request has completed");
 
 				if (response.getResponseInfo().getSuccess()) {
-					Logs logs = (Logs) response.getData();
+					//check to see if it was cached.
+					Log.i(CommandCenterActivity.TAG, "Response data is "+response.getData());
+					Logs logs;
+					if (response.getData() instanceof LinkedHashMap){
+						Log.i(CommandCenterActivity.TAG, "Response data a linked hash map. It's been cached, converting now.");
+						logs = (new ObjectMapper().convertValue(response.getData(), Logs.class));
+					} else {
+						logs = (Logs) response.getData();
+					}
 					Log.i(CommandCenterActivity.TAG,
 							"Logs get request successful");
 					updateLogsList(logs.getLogs(), true);
@@ -285,40 +296,45 @@ public class LogSubfragment extends ListFragment implements OnRefreshListener {
 		}
 	}
 
-	private void updateLogsList(ArrayList<LogMessage> logs, boolean clearExisting) {
+	private void updateLogsList(ArrayList<LogMessage> logs,
+			boolean clearExisting) {
 		if (getActivity() == null) {
-			return; //fragment has died
+			return; // fragment has died
 		}
 		// TODO Auto-generated method stub
 		Log.i(CommandCenterActivity.TAG,
 				"Updating adapter with new log information.");
-		
-		if (adapter == null ) {
+
+		if (adapter == null) {
 			adapter = new LogAdapter(getActivity(), logs); // nothing in it
-																// right now as
-																// we will add
-																// it below
-																// (performance
-																// gain)
+															// right now as
+															// we will add
+															// it below
+															// (performance
+															// gain)
 			Log.i(CommandCenterActivity.TAG, "created new adapter :" + adapter);
 
 			setListAdapter(adapter);
 		} else {
 			if (clearExisting) {
-				adapter.clear(); //clear if the adapter might have already had data in it.
+				adapter.clear(); // clear if the adapter might have already had
+									// data in it.
 			}
 			adapter.addAll(logs);
 		}
-		//Log.i(CommandCenterActivity.TAG, "Number of preclear: " + logs.size()+ " and instance v: "+this.logs.size());
+		// Log.i(CommandCenterActivity.TAG, "Number of preclear: " +
+		// logs.size()+ " and instance v: "+this.logs.size());
 		Log.i(CommandCenterActivity.TAG, "Number of logs: " + logs.size());
 		this.logs = logs;
-		
+
 		Log.i(CommandCenterActivity.TAG, "notifying adapter of new dataset");
 		adapter.notifyDataSetChanged();
-		
-		if (logState == LOG_LOADED && listState != null){
-			//it's already been loaded (if it hasn't yet, it will be set after this call.)
-			Log.i(CommandCenterActivity.TAG, "Restoring listview position with state "+listState);
+
+		if (logState == LOG_LOADED && listState != null) {
+			// it's already been loaded (if it hasn't yet, it will be set after
+			// this call.)
+			Log.i(CommandCenterActivity.TAG,
+					"Restoring listview position with state " + listState);
 			if (listState != null) {
 				getListView().onRestoreInstanceState(listState);
 			}
