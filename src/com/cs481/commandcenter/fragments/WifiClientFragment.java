@@ -17,6 +17,7 @@ import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.ListFragment;
 import android.util.Log;
@@ -127,7 +128,7 @@ public class WifiClientFragment extends ListFragment implements
 		// Android.
 		Log.i(CommandCenterActivity.TAG, "Saving instance");
 		if (waps == null) {
-			waps = new ArrayList<WAP>(); //prevents null pointer on iteration
+			waps = new ArrayList<WAP>(); // prevents null pointer on iteration
 		}
 		outState.putParcelableArrayList("waps", waps);
 		outState.putParcelableArrayList("wanprofiles", wanprofiles);
@@ -182,11 +183,11 @@ public class WifiClientFragment extends ListFragment implements
 																				// list
 																				// appear
 
-		//set the callbacks.
+		// set the callbacks.
 		sa.getActionBar().setListNavigationCallbacks(mSpinnerAdapter, this);
 		Log.i(CommandCenterActivity.TAG, "Hiding title bar");
 		sa.getActionBar().setDisplayShowTitleEnabled(false);
-		
+
 		spiceManager = sa.getSpiceManager();
 		if (shouldLoadData) {
 			readWlanWANConfig(true);
@@ -196,7 +197,8 @@ public class WifiClientFragment extends ListFragment implements
 			// Log.i(CommandCenterActivity.TAG, waps.toString());
 			updateWapList(waps);
 			if (temporaryClientMode != -1) {
-				sa.getActionBar().setSelectedNavigationItem(temporaryClientMode);
+				sa.getActionBar()
+						.setSelectedNavigationItem(temporaryClientMode);
 			} else {
 				sa.getActionBar().setSelectedNavigationItem(currentClientMode);
 			}
@@ -335,7 +337,7 @@ public class WifiClientFragment extends ListFragment implements
 	}
 
 	private String dropdownToString(int position) {
-		if (!isAdded()){
+		if (!isAdded()) {
 			return null;
 		}
 		switch (position) {
@@ -435,7 +437,7 @@ public class WifiClientFragment extends ListFragment implements
 
 		@Override
 		public void onRequestFailure(SpiceException e) {
-			if (!isAdded()){
+			if (!isAdded()) {
 				return;
 			}
 			Resources resources = getResources();
@@ -499,10 +501,10 @@ public class WifiClientFragment extends ListFragment implements
 
 	public void updateWapList(ArrayList<WAP> waps) {
 		rows = new ArrayList<WlanListRow>();
-		//if (adapter == null) {
-			adapter = new WlanAdapter(getActivity(), rows);
-			setListAdapter(adapter);
-		//}
+		// if (adapter == null) {
+		adapter = new WlanAdapter(getActivity(), rows);
+		setListAdapter(adapter);
+		// }
 
 		Resources resources = getResources();
 		for (WAP wap : waps) {
@@ -518,6 +520,12 @@ public class WifiClientFragment extends ListFragment implements
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
+		case android.R.id.home:
+			// up navigation
+			Log.i(CommandCenterActivity.TAG, "UP in WifiClient is being handled.");
+			FragmentManager fm = getActivity().getSupportFragmentManager();
+			fm.popBackStack();
+			return true;
 		case R.id.wifimenu_sort_alphabetically:
 			sortAlphabetically();
 			return true;
@@ -689,7 +697,7 @@ public class WifiClientFragment extends ListFragment implements
 				// After Cancel code.
 				Log.i(CommandCenterActivity.TAG,
 						"user pressed cancel, mode now " + currentClientMode);
-				//currentClientMode = temporaryClientMode;
+				// currentClientMode = temporaryClientMode;
 				temporaryClientMode = -1;
 				Log.i(CommandCenterActivity.TAG, "reverted mode, mode now "
 						+ currentClientMode);

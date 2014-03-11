@@ -7,6 +7,7 @@ import android.app.ActionBar;
 import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -492,6 +493,12 @@ public class GPIOFragment extends Fragment implements OnRefreshListener,
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// handle item selection
 		switch (item.getItemId()) {
+		case android.R.id.home:
+			//up navigation
+			Log.i(CommandCenterActivity.TAG, "UP in GPIO is being handled.");
+			FragmentManager fm = getActivity().getSupportFragmentManager();
+			fm.popBackStack();
+			return true;
 		case R.id.reset_leds:
 			// perform the request.
 			com.cs481.commandcenter.responses.control.led.PutRequest request = new com.cs481.commandcenter.responses.control.led.PutRequest(

@@ -10,6 +10,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -76,6 +77,21 @@ public class RouterInfoFragment extends Fragment {
 	}
 
 	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		// handle item selection
+		switch (item.getItemId()) {
+		case android.R.id.home:
+			// up navigation
+			Log.i(CommandCenterActivity.TAG, "UP in GPIO is being handled.");
+			FragmentManager fm = getActivity().getSupportFragmentManager();
+			fm.popBackStack();
+			return true;
+		default:
+			return false;
+		}
+	}
+
+	@Override
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
 
@@ -85,25 +101,25 @@ public class RouterInfoFragment extends Fragment {
 		/* put whatever data */
 
 		View v = getView();
-		if (v!= null) {
+		if (v != null) {
 			TextView textVal = (TextView) v.findViewById(R.id.product_value);
 			outState.putString("product", textVal.getText().toString());
-	
+
 			textVal = (TextView) v.findViewById(R.id.hostname_value);
 			outState.putString("hostname", textVal.getText().toString());
-	
+
 			textVal = (TextView) v.findViewById(R.id.firmware_value);
 			outState.putString("firmware", textVal.getText().toString());
-	
+
 			textVal = (TextView) v.findViewById(R.id.mac_address_value);
 			outState.putString("mac_address", textVal.getText().toString());
-	
+
 			textVal = (TextView) v.findViewById(R.id.uptime_value);
 			outState.putString("uptime", textVal.getText().toString());
-	
+
 			textVal = (TextView) v.findViewById(R.id.numclients_value);
 			outState.putString("numclients", textVal.getText().toString());
-	
+
 			outState.putParcelable("authInfo", authInfo);
 			outState.putBoolean("shouldLoadData", shouldLoadData);
 		}
@@ -120,7 +136,8 @@ public class RouterInfoFragment extends Fragment {
 		// created and should be automatically reattached for us.
 		if (savedInstanceState == null) {
 			Log.i(CommandCenterActivity.TAG, "Saved Instance state was null.");
-			FragmentManager fm = getChildFragmentManager(); //doing a subfragment
+			FragmentManager fm = getChildFragmentManager(); // doing a
+															// subfragment
 			FragmentTransaction ft = fm.beginTransaction();
 			Fragment logFrag = LogSubfragment.newInstance(authInfo);
 			ft.add(R.id.log_container, logFrag);
@@ -156,7 +173,8 @@ public class RouterInfoFragment extends Fragment {
 		SpiceActivity sa = (SpiceActivity) getActivity();
 		sa.getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
 		sa.getActionBar().setDisplayShowTitleEnabled(true);
-		sa.getActionBar().setTitle(getResources().getString(R.string.routerinfo));
+		sa.getActionBar().setTitle(
+				getResources().getString(R.string.routerinfo));
 		spiceManager = sa.getSpiceManager();
 		spiceManager.addListenerIfPending(Response.class, CACHEKEY_PRODUCT,
 				new InfoGetRequestListener());
@@ -257,7 +275,7 @@ public class RouterInfoFragment extends Fragment {
 
 		@Override
 		public void onRequestFailure(SpiceException e) {
-			if (getActivity() == null || getView() == null){
+			if (getActivity() == null || getView() == null) {
 				return;
 			}
 			// update your UI
@@ -272,7 +290,7 @@ public class RouterInfoFragment extends Fragment {
 
 		@Override
 		public void onRequestSuccess(Response response) {
-			if (getActivity() == null || getView() == null){
+			if (getActivity() == null || getView() == null) {
 				return;
 			}
 			Product_info proin = (Product_info) response.getData();
@@ -315,7 +333,7 @@ public class RouterInfoFragment extends Fragment {
 			PendingRequestListener<Response> {
 		@Override
 		public void onRequestFailure(SpiceException e) {
-			if (getActivity() == null || getView() == null){
+			if (getActivity() == null || getView() == null) {
 				return;
 			}
 			// update your UI
@@ -331,7 +349,8 @@ public class RouterInfoFragment extends Fragment {
 		@Override
 		public void onRequestSuccess(Response response) {
 			if (getActivity() == null || getView() == null) {
-				return; //prevent crash if fragment has been discarded and is awaiting GC
+				return; // prevent crash if fragment has been discarded and is
+						// awaiting GC
 			}
 			Fw_info fw = (Fw_info) response.getData();
 
@@ -367,11 +386,12 @@ public class RouterInfoFragment extends Fragment {
 		}
 	}
 
-	private class InfoGetSystemListener implements RequestListener<Response>, PendingRequestListener<Response> {
+	private class InfoGetSystemListener implements RequestListener<Response>,
+			PendingRequestListener<Response> {
 		@Override
 		public void onRequestFailure(SpiceException e) {
 			// update your UI
-			if (getActivity() == null || getView() == null){
+			if (getActivity() == null || getView() == null) {
 				return;
 			}
 			if (progressDialog != null)
@@ -385,7 +405,7 @@ public class RouterInfoFragment extends Fragment {
 
 		@Override
 		public void onRequestSuccess(Response response) {
-			if (getActivity() == null || getView() == null){
+			if (getActivity() == null || getView() == null) {
 				return;
 			}
 			com.cs481.commandcenter.responses.status.product_info.System sys = (com.cs481.commandcenter.responses.status.product_info.System) response
@@ -421,7 +441,7 @@ public class RouterInfoFragment extends Fragment {
 		@Override
 		public void onRequestNotFound() {
 			// TODO Auto-generated method stub
-			
+
 		}
 	}
 
@@ -429,7 +449,7 @@ public class RouterInfoFragment extends Fragment {
 			PendingRequestListener<Response> {
 		@Override
 		public void onRequestFailure(SpiceException e) {
-			if (getActivity() == null || getView() == null){
+			if (getActivity() == null || getView() == null) {
 				return;
 			}
 			// update your UI
@@ -437,16 +457,17 @@ public class RouterInfoFragment extends Fragment {
 				progressDialog.dismiss();
 			Log.i(CommandCenterActivity.TAG, "Failed to read Config Info!");
 
-			if (getActivity() != null) { //prevent crash in the event the user navigates away.
-			Toast.makeText(getActivity(),
-					getResources().getString(R.string.config_fail),
-					Toast.LENGTH_SHORT).show();
+			if (getActivity() != null) { // prevent crash in the event the user
+											// navigates away.
+				Toast.makeText(getActivity(),
+						getResources().getString(R.string.config_fail),
+						Toast.LENGTH_SHORT).show();
 			}
 		}
 
 		@Override
 		public void onRequestSuccess(Response response) {
-			if (getActivity() == null || getView() == null){
+			if (getActivity() == null || getView() == null) {
 				return;
 			}
 			com.cs481.commandcenter.status.wan.devices.ethernetwan.Config con = (com.cs481.commandcenter.status.wan.devices.ethernetwan.Config) response
@@ -488,7 +509,7 @@ public class RouterInfoFragment extends Fragment {
 			PendingRequestListener<Response> {
 		@Override
 		public void onRequestFailure(SpiceException e) {
-			if (getActivity() == null || getView() == null){
+			if (getActivity() == null || getView() == null) {
 				return;
 			}
 			// update your UI
@@ -503,7 +524,7 @@ public class RouterInfoFragment extends Fragment {
 
 		@Override
 		public void onRequestSuccess(Response response) {
-			if (getActivity() == null || getView() == null){
+			if (getActivity() == null || getView() == null) {
 				return;
 			}
 			com.cs481.commandcenter.responses.status.lan.Lan dat = (com.cs481.commandcenter.responses.status.lan.Lan) response
