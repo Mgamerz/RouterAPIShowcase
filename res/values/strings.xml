@@ -74,8 +74,11 @@
     <string name="bridged">bridge</string>
     <string name="wwan">wwan</string>
     <string name="no_access">No access points or wireless is off.</string>
+    
+    <!-- LAN Clients -->
     <string name="no_clients">No clients are currently connected</string>
     <string name="ip_address">IP Address</string>
+    <string name="lan_clients_failure">Failed to read LAN/Clients</string>
 
     <!-- WifiAsWanDialog -->
     <string name="excellent">Excellent</string>
