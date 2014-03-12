@@ -14,8 +14,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.ListFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,6 +30,7 @@ import com.cs481.commandcenter.listrows.ClientListRow;
 import com.cs481.commandcenter.responses.GetRequest;
 import com.cs481.commandcenter.responses.Response;
 import com.cs481.commandcenter.responses.status.lan.Client;
+import com.cs481.commandcenter.responses.status.lan.Lan;
 import com.octo.android.robospice.SpiceManager;
 import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
@@ -49,7 +48,6 @@ OnRefreshListener {
 	private boolean shouldLoadData = true;
 	private ArrayList<ClientListRow> rows;
 	private ArrayList<Client> clients;
-	private Menu menu;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -134,8 +132,8 @@ OnRefreshListener {
 	}
 
 	private void readClients() {
-		GetRequest clientReq = new GetRequest(getActivity(), authInfo, "status/lan/clients",
-				Client.class, "ClientsGet");
+		GetRequest clientReq = new GetRequest(getActivity(), authInfo, "status/lan",
+				Lan.class, "LanGet");
 		String lastRequestCacheKey = clientReq.createCacheKey();
 		spiceManager.execute(clientReq, lastRequestCacheKey,
 				DurationInMillis.ALWAYS_EXPIRED,
@@ -185,13 +183,6 @@ OnRefreshListener {
 		readClients();
 	}
 
-	@Override
-	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-		// super.onCreateOptionsMenu(menu, inflater);
-		this.menu = menu;
-		inflater.inflate(R.menu.commandcenter_menu, this.menu);
-	}
-
 	private class ClientsGetRequestListener implements
 	RequestListener<Response> {
 
@@ -224,8 +215,8 @@ OnRefreshListener {
 
 			if (response.getResponseInfo().getSuccess()) {
 				if(response.getData()==null) return;
-				ArrayList<Client> clients = (ArrayList<Client>) response
-						.getData();
+				Lan lan = (Lan) response.getData();
+				ArrayList<Client> clients = lan.getClients();
 				Log.i(CommandCenterActivity.TAG,
 						"LAN Client request successful");
 				updateClientList(clients);
@@ -245,7 +236,6 @@ OnRefreshListener {
 			 adapter = new ClientAdapter(getActivity(), rows);
 			 setListAdapter(adapter);
 		}
-
 		for (Client cli : clients) {
 			String ip = cli.getIp_address();
 			String mac = cli.getMac();

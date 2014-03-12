@@ -5,6 +5,10 @@ import android.os.Parcelable;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Client implements Parcelable {
+	public Client(){
+		//empty constructor for jackson
+	}
+	
 	@JsonProperty("ip_address")
    	private String ip_address;
 	
