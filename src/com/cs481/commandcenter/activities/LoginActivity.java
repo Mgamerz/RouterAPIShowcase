@@ -359,10 +359,10 @@ public class LoginActivity extends SpiceActivity {
 
 			if (profile.getAuthInfo().isEcm()) {
 				// set ecm cloud icon
-				profileIcon.setImageResource(R.drawable.ic_ecm_cloud_profile);
+				profileIcon.setImageResource(R.drawable.ic_profile_ecm);
 			} else {
 				// We would add the local image here
-				profileIcon.setImageResource(R.drawable.ic_direct_wire_profile);
+				profileIcon.setImageResource(R.drawable.ic_profile_local);
 			}
 
 			return rowView;
