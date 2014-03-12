@@ -13,5 +13,9 @@
         android:fragment="com.cs481.commandcenter.fragments.preferences.AdvancedPrefsFragment"
         android:summary="@string/prefs_header_advancedsubtitle"
         android:title="@string/prefs_header_advancedtitle" />
+    <header
+        android:fragment="com.cs481.commandcenter.fragments.preferences.AboutPrefsFragment"
+        android:summary="@string/prefs_header_aboutsubtitle"
+        android:title="@string/prefs_header_abouttitle" />
 
 </preference-headers>

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.cs481.commandcenter"
-    android:versionCode="6"
-    android:versionName="1.01a" >
+    android:versionCode="7"
+    android:versionName="1.02a internal" >
 
     <uses-sdk
         android:minSdkVersion="14"
@@ -47,8 +47,8 @@
         </activity>
         <activity
             android:name=".activities.BugReportActivity"
-            android:screenOrientation="portrait"
-            android:label="@string/bugreport_title" >
+            android:label="@string/bugreport_title"
+            android:screenOrientation="portrait" >
         </activity>
     </application>
 

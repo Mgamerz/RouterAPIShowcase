@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <Preference
+        android:enabled="true"
+        android:key="@string/prefs_open_source"
+        android:summary="@string/prefs_open_source_summary"
+        android:title="@string/prefs_open_source" />
+    <Preference
+        android:enabled="false"
+        android:key="@string/prefs_app_version"
+        android:title="@string/prefs_app_version" />
+
+</PreferenceScreen>

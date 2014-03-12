@@ -10,6 +10,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.cs481.commandcenter.R;
+import com.cs481.commandcenter.fragments.preferences.AboutPrefsFragment;
 import com.cs481.commandcenter.fragments.preferences.AdvancedPrefsFragment;
 import com.cs481.commandcenter.fragments.preferences.SecurityPrefsFragment;
 import com.cs481.commandcenter.fragments.preferences.UIPrefsFragment;
@@ -34,13 +35,15 @@ public class PrefsActivity extends PreferenceActivity {
 
 	@Override
 	protected boolean isValidFragment(String fragmentName) {
+		//This is hideous... required by Android 4.4 kitkat, pointless in my opinion
 		Log.i(CommandCenterActivity.TAG,
 				"Validating: " + UIPrefsFragment.class.getName() + " vs "
 						+ fragmentName);
-		if (UIPrefsFragment.class.getName().equals(fragmentName)||
-				SecurityPrefsFragment.class.getName().equals(fragmentName) || 
-				
-			AdvancedPrefsFragment.class.getName().equals(fragmentName)) {
+		if (UIPrefsFragment.class.getName().equals(fragmentName)
+				|| SecurityPrefsFragment.class.getName().equals(fragmentName)
+				|| AboutPrefsFragment.class.getName().equals(fragmentName) ||
+
+				AdvancedPrefsFragment.class.getName().equals(fragmentName)) {
 			return true;
 		}
 		return false;

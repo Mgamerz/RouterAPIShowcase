@@ -2,9 +2,10 @@
 <resources>
 
     <!-- Xml Comment -->
-    <!-- General strings -->
     <string name="app_name">Command Center</string>
-    <string name="status">Status:</string>
+    <string name="app_version">1.02a</string>
+    <string name="app_version_code">7</string>
+    <!-- General strings -->
     <string name="debug_title">CC Debugging</string>
     <string name="server_exception">Server returned exception</string>
     <string name="ecmapi_base_url">https://cradlepointecm.com/api/v1/</string>
@@ -74,7 +75,7 @@
     <string name="bridged">bridge</string>
     <string name="wwan">wwan</string>
     <string name="no_access">No access points or wireless is off.</string>
-    
+
     <!-- LAN Clients -->
     <string name="no_clients">No clients are currently connected</string>
     <string name="ip_address">IP Address</string>
@@ -224,6 +225,11 @@
     <string name="prefs_advanced_mode_subtitle">Override the app defaults with custom ones</string>
     <string name="prefs_delete_pin_summary">Remove PIN from device. Removes all profiles as well</string>
     <string name="prefs_delete_pin">Clear PIN</string>
+    <string name="prefs_open_source">Open Source Licenses</string>
+    <string name="prefs_open_source_summary">Open source projects used in Command Center</string>
+    <string name="prefs_app_version">Build</string>
+    <string name="prefs_header_aboutsubtitle">About this application</string>
+    <string name="prefs_header_abouttitle">About&#8230;</string>
 
     <!-- Prefs keys -->
     <string name="prefskey_delete_profiles">prefskey_delete_profiles</string>
