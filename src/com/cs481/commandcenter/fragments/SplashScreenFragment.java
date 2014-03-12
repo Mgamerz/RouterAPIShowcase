@@ -71,6 +71,7 @@ public class SplashScreenFragment extends Fragment {
 		// Used only in animate()
 		splash_text = (TextView) view.findViewById(R.id.text_splash);
 
+
 		// The ^'s and v's
 		indicator[0] = (TextView) view.findViewById(R.id.up1);
 		indicator[1] = (TextView) view.findViewById(R.id.up2);
@@ -159,22 +160,30 @@ public class SplashScreenFragment extends Fragment {
 		}
 
 		// Create a set of animations for the two buttons
-		final AnimationSet ecm_anim = new AnimationSet(false); // Zoom in and
-																// move up
-		final AnimationSet local_anim = new AnimationSet(false); // Zoom in and
-																	// move
-		// down
+		final AnimationSet ecm_anim = new AnimationSet(false); // Zoom in and move up
+		final AnimationSet local_anim = new AnimationSet(false); // Zoom in and move down
+		final AnimationSet ecm_text = new AnimationSet(false);	// Move up and fade in
+		final AnimationSet local_text = new AnimationSet(false); // Move down and fade in
 
 		// Makes effects of animation NOT reset
 		ecm_anim.setFillEnabled(true);
 		ecm_anim.setFillAfter(true);
 		local_anim.setFillEnabled(true);
 		local_anim.setFillAfter(true);
+		ecm_text.setFillEnabled(true);
+		ecm_text.setFillAfter(true);
+		local_text.setFillEnabled(true);
+		local_text.setFillAfter(true);
 
+		// Add animations to the sets
 		ecm_anim.addAnimation(zoomAnim);
 		ecm_anim.addAnimation(moveUp);
 		local_anim.addAnimation(zoomAnim);
 		local_anim.addAnimation(moveDown);
+		ecm_text.addAnimation(moveUp);
+		ecm_text.addAnimation(fadeInAnim);
+		local_text.addAnimation(moveDown);
+		local_text.addAnimation(fadeInAnim);
 
 		// Start animating the buttons
 		if (!hasAnimated) {
