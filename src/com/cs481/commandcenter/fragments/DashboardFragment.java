@@ -295,19 +295,19 @@ public class DashboardFragment extends ListFragment {
 			break;
 		case lLAN:
 		{
-			String infoTag = LanClientFragment.class.getName();
+			String lanTag = LanClientFragment.class.getName();
 			Log.i(CommandCenterActivity.TAG, "ABOUT WAS CLICKED");
 
 			// Check if fragment is visible on the screen.
-			LanClientFragment infoVisibility = (LanClientFragment) getActivity()
-					.getSupportFragmentManager().findFragmentByTag(infoTag);
-			if (infoVisibility != null && infoVisibility.isVisible()) {
+			LanClientFragment lanVisibility = (LanClientFragment) getActivity()
+					.getSupportFragmentManager().findFragmentByTag(lanTag);
+			if (lanVisibility != null && lanVisibility.isVisible()) {
 				return; // fragment is currently visible, do nothing.
 			}
 
 			FragmentManager fm = getActivity().getSupportFragmentManager();
 
-			boolean fragmentPopped = fm.popBackStackImmediate(infoTag, 0);
+			boolean fragmentPopped = fm.popBackStackImmediate(lanTag, 0);
 
 			if (!fragmentPopped) {
 				Log.i(CommandCenterActivity.TAG,
@@ -319,11 +319,11 @@ public class DashboardFragment extends ListFragment {
 				CommandCenterActivity parent = (CommandCenterActivity) getActivity();
 				if (parent.isDualPane()) {
 					transaction.replace(R.id.rightside_fragment, infoFragment,
-							infoTag);
+							lanTag);
 				} else {
-					transaction.replace(R.id.leftside_fragment, infoFragment, infoTag);
+					transaction.replace(R.id.leftside_fragment, infoFragment, lanTag);
 				}
-				transaction.addToBackStack(infoTag);
+				transaction.addToBackStack(lanTag);
 				transaction
 						.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
 				transaction.commit();

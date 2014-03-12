@@ -37,7 +37,7 @@ import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
 
 public class LanClientFragment extends ListFragment implements
-OnRefreshListener {
+		OnRefreshListener {
 
 	private PullToRefreshLayout mPullToRefreshLayout;
 	private ProgressDialog progressDialog;
@@ -109,10 +109,10 @@ OnRefreshListener {
 
 		// We can now setup the PullToRefreshLayout
 		ActionBarPullToRefresh
-		.from(getActivity())
-		.insertLayoutInto(viewGroup)
-		.theseChildrenArePullable(getListView(),
-				getListView().getEmptyView()).listener(this)
+				.from(getActivity())
+				.insertLayoutInto(viewGroup)
+				.theseChildrenArePullable(getListView(),
+						getListView().getEmptyView()).listener(this)
 				.setup(mPullToRefreshLayout);
 	}
 
@@ -124,7 +124,8 @@ OnRefreshListener {
 		spiceManager = sa.getSpiceManager();
 		sa.getActionBar().setDisplayShowTitleEnabled(true);
 		sa.getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
-		sa.getActionBar().setTitle(getResources().getString(R.string.lan_title));
+		sa.getActionBar()
+				.setTitle(getResources().getString(R.string.lan_title));
 		if (shouldLoadData) {
 			readClients();
 			shouldLoadData = false;
@@ -132,8 +133,8 @@ OnRefreshListener {
 	}
 
 	private void readClients() {
-		GetRequest clientReq = new GetRequest(getActivity(), authInfo, "status/lan",
-				Lan.class, "LanGet");
+		GetRequest clientReq = new GetRequest(getActivity(), authInfo,
+				"status/lan", Lan.class, "LanGet");
 		String lastRequestCacheKey = clientReq.createCacheKey();
 		spiceManager.execute(clientReq, lastRequestCacheKey,
 				DurationInMillis.ALWAYS_EXPIRED,
@@ -184,7 +185,7 @@ OnRefreshListener {
 	}
 
 	private class ClientsGetRequestListener implements
-	RequestListener<Response> {
+			RequestListener<Response> {
 
 		@Override
 		public void onRequestFailure(SpiceException e) {
@@ -214,7 +215,8 @@ OnRefreshListener {
 			}
 
 			if (response.getResponseInfo().getSuccess()) {
-				if(response.getData()==null) return;
+				if (response.getData() == null)
+					return;
 				Lan lan = (Lan) response.getData();
 				ArrayList<Client> clients = lan.getClients();
 				Log.i(CommandCenterActivity.TAG,
@@ -231,11 +233,10 @@ OnRefreshListener {
 	}
 
 	public void updateClientList(ArrayList<Client> clients) {
+		Log.i(CommandCenterActivity.TAG, "Updating client list");
 		rows = new ArrayList<ClientListRow>();
-		if (adapter == null) {
-			 adapter = new ClientAdapter(getActivity(), rows);
-			 setListAdapter(adapter);
-		}
+		adapter = new ClientAdapter(getActivity(), rows);
+		setListAdapter(adapter);
 		for (Client cli : clients) {
 			String ip = cli.getIp_address();
 			String mac = cli.getMac();
@@ -244,35 +245,37 @@ OnRefreshListener {
 		adapter.notifyDataSetChanged();
 	}
 
-		@Override
-		public boolean onOptionsItemSelected(MenuItem item) {
-			switch (item.getItemId()) {
-			case android.R.id.home:
-				//up navigation
-				Log.i(CommandCenterActivity.TAG, "UP in LAN Clients is being handled.");
-				FragmentManager fm = getActivity().getSupportFragmentManager();
-				fm.popBackStack();
-				return true;
-			default:
-				return super.onOptionsItemSelected(item);
-			}
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case android.R.id.home:
+			// up navigation
+			Log.i(CommandCenterActivity.TAG,
+					"UP in LAN Clients is being handled.");
+			FragmentManager fm = getActivity().getSupportFragmentManager();
+			fm.popBackStack();
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
 		}
-
-		@Override
-		public void onListItemClick(ListView l, View v, int position, long id) {
-			ClientListRow row = (ClientListRow) (l.getAdapter().getItem(position));
-			Log.w(CommandCenterActivity.TAG, "Client IP clicked: " + row.getClient().getIp_address());
-
-			/** TODO: Add kick/ban options */
-			// CommandCenterActivity activity = (CommandCenterActivity)
-			// getActivity();
-
-			// authInfo = activity.getAuthInfo();
-			// WifiWanDialogFragment wwFragment = WifiWanDialogFragment
-			// .newInstance(this);
-			// wwFragment.setData(row.getWap(), authInfo);
-			// wwFragment
-			// .show(getActivity().getSupportFragmentManager(), "WAPConfirm");
-		}
-	
 	}
+
+	@Override
+	public void onListItemClick(ListView l, View v, int position, long id) {
+		ClientListRow row = (ClientListRow) (l.getAdapter().getItem(position));
+		Log.w(CommandCenterActivity.TAG, "Client IP clicked: "
+				+ row.getClient().getIp_address());
+
+		/** TODO: Add kick/ban options */
+		// CommandCenterActivity activity = (CommandCenterActivity)
+		// getActivity();
+
+		// authInfo = activity.getAuthInfo();
+		// WifiWanDialogFragment wwFragment = WifiWanDialogFragment
+		// .newInstance(this);
+		// wwFragment.setData(row.getWap(), authInfo);
+		// wwFragment
+		// .show(getActivity().getSupportFragmentManager(), "WAPConfirm");
+	}
+
+}
