@@ -1,6 +1,8 @@
 package com.cs481.commandcenter;
 
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 
 import javax.crypto.SecretKey;
@@ -26,7 +28,6 @@ import android.util.Base64;
 import android.util.Log;
 
 import com.cs481.commandcenter.activities.CommandCenterActivity;
-import com.cs481.commandcenter.activities.PrefsActivity;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -104,7 +105,14 @@ public class Utility {
 			ci.setAccessUrl(String.format(
 					"%sremote/%s?id=%s", baseurl, url,
 					authInfo.getRouterId()));
-			auth = new AuthScope("cradlepointecm.com", 443);
+			String scope = null; 
+			try {
+				scope = getDomainName(baseurl);
+			} catch (URISyntaxException e) {
+				Log.e(CommandCenterActivity.TAG, "WARNING: couldn't extract hostname from supplied ECM base URL. The app will accept items from all hosts, even untrusted ones!");
+				e.printStackTrace();
+			}
+			auth = new AuthScope(scope, 443);
 		} else {
 			// if (authInfo.isRemote()) {
 			// Assuming it's a WAN.
@@ -370,5 +378,11 @@ public class Utility {
 			// Log.e(CommandCenterActivity.TAG, e.getSta);
 			return null;
 		}
+	}
+	
+	public static String getDomainName(String url) throws URISyntaxException {
+	    URI uri = new URI(url);
+	    String domain = uri.getHost();
+	    return domain.startsWith("www.") ? domain.substring(4) : domain;
 	}
 }
