@@ -1,8 +1,11 @@
 package com.cs481.commandcenter.fragments.preferences;
 
+import android.content.Intent;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.Preference;
+import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceFragment;
 
 import com.cs481.commandcenter.R;
@@ -31,5 +34,32 @@ public class AboutPrefsFragment extends PreferenceFragment {
 
 		Preference build = findPreference(getResources().getString(R.string.prefs_app_version));
 		build.setSummary(versionName);
+		
+		/* Preference openSource = findPreference(getResources().getString(R.string.prefs_open_source));
+		openSource.setOnPreferenceClickListener(new OnPreferenceClickListener() {
+
+			@Override
+			public boolean onPreferenceClick(Preference preference) {
+				String url = getResources().getString(R.string.googlePlusURL);
+				Intent i = new Intent(Intent.ACTION_VIEW);
+				i.setData(Uri.parse(url));
+				startActivity(i);
+				return true;
+			}
+		}); */
+
+		Preference googlePlusGroup = findPreference(getResources().getString(R.string.prefs_googleplus_group));
+		googlePlusGroup.setOnPreferenceClickListener(new OnPreferenceClickListener() {
+
+			@Override
+			public boolean onPreferenceClick(Preference preference) {
+				String url = getResources().getString(R.string.googlePlusURL);
+				Intent i = new Intent(Intent.ACTION_VIEW);
+				i.setData(Uri.parse(url));
+				startActivity(i);
+				return true;
+			}
+		});
+
 	}
 }

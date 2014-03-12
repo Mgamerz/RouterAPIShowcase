@@ -49,7 +49,7 @@ import com.cs481.commandcenter.R;
 import com.cs481.commandcenter.Utility;
 import com.cs481.commandcenter.dialog.HoloDialogBuilder;
 import com.cs481.commandcenter.fragments.ECMLoginFragment;
-import com.cs481.commandcenter.fragments.LocalLoginFragment;
+import com.cs481.commandcenter.fragments.DirectLoginFragment;
 import com.cs481.commandcenter.fragments.PINFragment;
 import com.cs481.commandcenter.fragments.SplashScreenFragment;
 import com.cs481.commandcenter.responses.GetRequest;
@@ -146,7 +146,7 @@ public class LoginActivity extends SpiceActivity {
 			String[] loginValues = getResources().getStringArray(R.array.preferred_connection_values);
 			String tag = null;
 			if (loginType.equals(loginValues[1])) {
-				fragment = new LocalLoginFragment();
+				fragment = new DirectLoginFragment();
 				tag = "DirectFragment";
 			} else if (loginType.equals(loginValues[2])) {
 				fragment = new ECMLoginFragment();

@@ -232,6 +232,11 @@
     <string name="prefs_app_version">Build</string>
     <string name="prefs_header_aboutsubtitle">About this application</string>
     <string name="prefs_header_abouttitle">About&#8230;</string>
+    <string name="prefs_googleplus_group">Google+ Community</string>
+    <string name="prefs_googleplus_group_summary">Give app feedback directly to developers</string>
+    <string name="prefs_open_robospice">Robospice</string>
+    <string name="prefs_open_pulltorefresh">Android - Pull to Refresh</string>
+    <string name="prefs_open_smoothprogressbar">Smooth Progress Bar</string>
 
     <!-- Prefs keys -->
     <string name="prefskey_delete_profiles">prefskey_delete_profiles</string>

@@ -41,7 +41,7 @@ import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
 
-public class LocalLoginFragment extends Fragment {
+public class DirectLoginFragment extends Fragment {
 
 	private SpiceManager spiceManager;
 	private ProgressDialog progressDialog;
@@ -56,7 +56,7 @@ public class LocalLoginFragment extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		View rootView = inflater.inflate(R.layout.fragment_locallogin,
+		View rootView = inflater.inflate(R.layout.fragment_directlogin,
 				container, false);
 		return rootView;
 	}

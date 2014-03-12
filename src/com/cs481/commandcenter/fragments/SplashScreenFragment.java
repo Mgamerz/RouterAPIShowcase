@@ -111,7 +111,7 @@ public class SplashScreenFragment extends Fragment {
 				}
 
 				// Load the local login fragment
-				LocalLoginFragment localLoginFragment = new LocalLoginFragment();
+				DirectLoginFragment localLoginFragment = new DirectLoginFragment();
 				FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
 				transaction.replace(R.id.login_fragment, localLoginFragment);
 				transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);

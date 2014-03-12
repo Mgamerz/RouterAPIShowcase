@@ -196,7 +196,7 @@ public class ECMLoginFragment extends Fragment {
 		// handle item selection
 		switch (item.getItemId()) {
 		case R.id.menu_switchtolocal:
-			LocalLoginFragment localFragment = new LocalLoginFragment();
+			DirectLoginFragment localFragment = new DirectLoginFragment();
 
 			// In case this activity was started with special instructions from
 			// an
