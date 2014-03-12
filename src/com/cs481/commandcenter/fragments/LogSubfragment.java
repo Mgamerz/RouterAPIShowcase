@@ -101,8 +101,7 @@ public class LogSubfragment extends ListFragment implements OnRefreshListener {
 		Log.i(CommandCenterActivity.TAG, "Saving logs instance");
 		outState.putBoolean("shouldLoadData", shouldLoadData);
 		if (logs == null) {
-			Log.i(CommandCenterActivity.TAG,
-					"Logs are null, creating empty list.");
+			Log.i(CommandCenterActivity.TAG, "Logs are null, creating empty list.");
 			logs = new ArrayList<LogMessage>();
 		}
 		outState.putParcelableArrayList("logs", logs); // This is how to save
@@ -115,18 +114,15 @@ public class LogSubfragment extends ListFragment implements OnRefreshListener {
 	}
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		// Inflate the layout for this fragment
 		View v = inflater.inflate(R.layout.subfrag_log, container, false);
 		if (logState == LOG_FAILED) {
-			ProgressBar bar = (ProgressBar) v
-					.findViewById(R.id.log_loadingprogressbar);
+			ProgressBar bar = (ProgressBar) v.findViewById(R.id.log_loadingprogressbar);
 			bar.setVisibility(ProgressBar.GONE);
 
 			TextView message = (TextView) v.findViewById(R.id.log_loadingtext);
-			message.setText(getActivity().getResources().getString(
-					R.string.log_get_failed));
+			message.setText(getActivity().getResources().getString(R.string.log_get_failed));
 		}
 		return v;
 	}
@@ -143,11 +139,7 @@ public class LogSubfragment extends ListFragment implements OnRefreshListener {
 
 		// We can now setup the PullToRefreshLayout
 		ActionBarPullToRefresh
-				.from(getActivity())
-				.insertLayoutInto(viewGroup)
-				.theseChildrenArePullable(getListView(),
-						getListView().getEmptyView()).listener(this)
-				.setup(mPullToRefreshLayout);
+				.from(getActivity()).insertLayoutInto(viewGroup).theseChildrenArePullable(getListView(), getListView().getEmptyView()).listener(this).setup(mPullToRefreshLayout);
 	}
 
 	@Override
@@ -160,8 +152,6 @@ public class LogSubfragment extends ListFragment implements OnRefreshListener {
 		// spiceManager.getFromCache(Response.class, CACHEKEY_LOGS,
 		// SpiceActivity.DURATION_3SECS, rl);
 		spiceManager.addListenerIfPending(Response.class, CACHEKEY_LOGS, rl);
-		spiceManager.getFromCache(Response.class, CACHEKEY_LOGS,
-				DurationInMillis.ONE_MINUTE, rl);
 
 		if (shouldLoadData) {
 			Log.i(CommandCenterActivity.TAG, "Reading logs, should load data.");
@@ -179,11 +169,9 @@ public class LogSubfragment extends ListFragment implements OnRefreshListener {
 	 */
 	private void readLogs(LogsGetRequestListener rl) {
 		// TODO Auto-generated method stub
-		GetRequest clientModeReq = new GetRequest(getActivity(), authInfo, "status/log",
-				Logs.class, CACHEKEY_LOGS);
+		GetRequest clientModeReq = new GetRequest(getActivity(), authInfo, "status/log", Logs.class, CACHEKEY_LOGS);
 		String lastRequestCacheKey = clientModeReq.createCacheKey();
-		spiceManager.execute(clientModeReq, lastRequestCacheKey,
-				DurationInMillis.ALWAYS_EXPIRED, rl);
+		spiceManager.execute(clientModeReq, lastRequestCacheKey, DurationInMillis.ALWAYS_EXPIRED, rl);
 	}
 
 	public class LogAdapter extends ArrayAdapter<LogMessage> {
@@ -203,11 +191,9 @@ public class LogSubfragment extends ListFragment implements OnRefreshListener {
 
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
-			LayoutInflater inflater = (LayoutInflater) context
-					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+			LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-			View rowView = inflater
-					.inflate(R.layout.listrow_log, parent, false);
+			View rowView = inflater.inflate(R.layout.listrow_log, parent, false);
 
 			// Setup log stuff here. rowView is the container for each
 			// individual log in the list, so you can call
@@ -215,11 +201,9 @@ public class LogSubfragment extends ListFragment implements OnRefreshListener {
 
 			LogMessage log = rows.get(position);
 
-			TextView messageView = (TextView) rowView
-					.findViewById(R.id.log_message);
+			TextView messageView = (TextView) rowView.findViewById(R.id.log_message);
 			TextView tagView = (TextView) rowView.findViewById(R.id.log_tag);
-			TextView severityView = (TextView) rowView
-					.findViewById(R.id.log_severity);
+			TextView severityView = (TextView) rowView.findViewById(R.id.log_severity);
 			TextView timeView = (TextView) rowView.findViewById(R.id.log_time);
 
 			messageView.setText(log.getMessage());
@@ -236,52 +220,37 @@ public class LogSubfragment extends ListFragment implements OnRefreshListener {
 		readLogs(rl);
 	}
 
-	private class LogsGetRequestListener implements RequestListener<Response>,
-			PendingRequestListener<Response> {
+	private class LogsGetRequestListener implements RequestListener<Response>, PendingRequestListener<Response> {
 
 		@Override
 		public void onRequestFailure(SpiceException e) {
 			Resources resources = getResources();
 			Log.i(CommandCenterActivity.TAG, "Failed to read logs!");
-			Toast.makeText(getActivity(),
-					resources.getString(R.string.log_get_failed),
-					Toast.LENGTH_SHORT).show();
+			Toast.makeText(getActivity(), resources.getString(R.string.log_get_failed), Toast.LENGTH_SHORT).show();
 			mPullToRefreshLayout.setRefreshComplete();
 
-			ProgressBar bar = (ProgressBar) getView().findViewById(
-					R.id.log_loadingprogressbar);
+			ProgressBar bar = (ProgressBar) getView().findViewById(R.id.log_loadingprogressbar);
 			bar.setVisibility(ProgressBar.GONE);
 
-			TextView message = (TextView) getView().findViewById(
-					R.id.log_loadingtext);
-			message.setText(getActivity().getResources().getString(
-					R.string.log_get_failed));
+			TextView message = (TextView) getView().findViewById(R.id.log_loadingtext);
+			message.setText(getActivity().getResources().getString(R.string.log_get_failed));
 		}
 
 		@Override
 		public void onRequestSuccess(Response response) {
 			// update your UI
 			if (response != null) { // can be null if its not in the cache.
-				Log.i(CommandCenterActivity.TAG,
-						"Logs get request has completed");
+				Log.i(CommandCenterActivity.TAG, "Logs get request has completed");
 
 				if (response.getResponseInfo().getSuccess()) {
-					//check to see if it was cached.
-					Log.i(CommandCenterActivity.TAG, "Response data is "+response.getData());
-					Logs logs;
-					if (response.getData() instanceof LinkedHashMap){
-						Log.i(CommandCenterActivity.TAG, "Response data a linked hash map. It's been cached, converting now.");
-						logs = (new ObjectMapper().convertValue(response.getData(), Logs.class));
-					} else {
-						logs = (Logs) response.getData();
-					}
-					Log.i(CommandCenterActivity.TAG,
-							"Logs get request successful");
+					// check to see if it was cached.
+					Log.i(CommandCenterActivity.TAG, "Response data is " + response.getData());
+					Logs logs = (Logs) response.getData();
+
+					Log.i(CommandCenterActivity.TAG, "Logs get request successful");
 					updateLogsList(logs.getLogs(), true);
 				} else {
-					Toast.makeText(getActivity(),
-							response.getResponseInfo().getReason(),
-							Toast.LENGTH_LONG).show();
+					Toast.makeText(getActivity(), response.getResponseInfo().getReason(), Toast.LENGTH_LONG).show();
 				}
 				logState = LOG_LOADED;
 				mPullToRefreshLayout.setRefreshComplete();
@@ -291,19 +260,16 @@ public class LogSubfragment extends ListFragment implements OnRefreshListener {
 		@Override
 		public void onRequestNotFound() {
 			// TODO Auto-generated method stub
-			Log.w(CommandCenterActivity.TAG,
-					"No request pending to listen to for logs.");
+			Log.w(CommandCenterActivity.TAG, "No request pending to listen to for logs.");
 		}
 	}
 
-	private void updateLogsList(ArrayList<LogMessage> logs,
-			boolean clearExisting) {
+	private void updateLogsList(ArrayList<LogMessage> logs, boolean clearExisting) {
 		if (getActivity() == null) {
 			return; // fragment has died
 		}
 		// TODO Auto-generated method stub
-		Log.i(CommandCenterActivity.TAG,
-				"Updating adapter with new log information.");
+		Log.i(CommandCenterActivity.TAG, "Updating adapter with new log information.");
 
 		if (adapter == null) {
 			adapter = new LogAdapter(getActivity(), logs); // nothing in it
@@ -333,8 +299,7 @@ public class LogSubfragment extends ListFragment implements OnRefreshListener {
 		if (logState == LOG_LOADED && listState != null) {
 			// it's already been loaded (if it hasn't yet, it will be set after
 			// this call.)
-			Log.i(CommandCenterActivity.TAG,
-					"Restoring listview position with state " + listState);
+			Log.i(CommandCenterActivity.TAG, "Restoring listview position with state " + listState);
 			if (listState != null) {
 				getListView().onRestoreInstanceState(listState);
 			}
@@ -342,8 +307,7 @@ public class LogSubfragment extends ListFragment implements OnRefreshListener {
 	}
 
 	@Override
-	public void onCreateContextMenu(ContextMenu menu, View v,
-			ContextMenu.ContextMenuInfo menuInfo) {
+	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
 		// when a context menu is being created
 		MenuInflater inflater = getActivity().getMenuInflater();
 		inflater.inflate(R.menu.log_contextmenu, menu);
@@ -351,23 +315,27 @@ public class LogSubfragment extends ListFragment implements OnRefreshListener {
 
 	@Override
 	public boolean onContextItemSelected(MenuItem item) {
-		AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item
-				.getMenuInfo(); // info is the item in the adapter that was
-								// selected (long pressed.)
+		AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo(); // info
+																											// is
+																											// the
+																											// item
+																											// in
+																											// the
+																											// adapter
+																											// that
+																											// was
+																											// selected
+																											// (long
+																											// pressed.)
 		LogMessage messageSelected = logs.get(info.position);
 		switch (item.getItemId()) {
 		case R.id.contextmenu_copy:
 			// Gets a handle to the clipboard service.
-			ClipboardManager clipboard = (ClipboardManager) getActivity()
-					.getSystemService(Context.CLIPBOARD_SERVICE);
+			ClipboardManager clipboard = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
 			// Creates a new text clip to put on the clipboard
-			ClipData clip = ClipData.newPlainText("logmessage",
-					messageSelected.toString());
+			ClipData clip = ClipData.newPlainText("logmessage", messageSelected.toString());
 			clipboard.setPrimaryClip(clip);
-			Toast.makeText(
-					getActivity(),
-					getActivity().getResources().getString(R.string.log_copied),
-					Toast.LENGTH_LONG).show();
+			Toast.makeText(getActivity(), getActivity().getResources().getString(R.string.log_copied), Toast.LENGTH_LONG).show();
 			return true;
 		default:
 			return false;
