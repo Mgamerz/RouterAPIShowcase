@@ -45,6 +45,7 @@
     <string name="ecmrouters_actionbar_title">ECM Routers</string>
     <string name="ecm_connecting">Connecting to ECM&#8230;</string>
     <string name="ecm_failed_get_routers">Failed to get list of routers from ECM</string>
+    <string name="no_routers">No routers managed by ECM</string>
 
     <!-- CommandCenter -->
     <string name="command_title">Command Center</string>
