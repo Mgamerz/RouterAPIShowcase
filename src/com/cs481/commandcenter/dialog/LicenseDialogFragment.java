@@ -21,13 +21,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
+import android.app.DialogFragment;
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.os.AsyncTask;
 import android.os.Bundle;
 // TODO If you don't support Android 2.x, you should use the non-support version!
-import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,20 +44,42 @@ import com.cs481.commandcenter.R;
 public class LicenseDialogFragment extends DialogFragment {
 
     private AsyncTask<Void, Void, String> mLicenseLoader;
+    private int rawresource;
+    
+    private static final String FRAGMENT_TAG = "com.cs481.commandcenter.dialog.LicenseDialogFragment";
 
-    private static final String FRAGMENT_TAG = "nz.net.speakman.androidlicensespage.LicenseDialogFragment";
-
-    public static LicenseDialogFragment newInstance() {
-        return new LicenseDialogFragment();
+    public static LicenseDialogFragment newInstance(int rawresource) {
+    	LicenseDialogFragment ldf = new LicenseDialogFragment();
+    	ldf.setLicenseResource(rawresource);
+        return ldf;
     }
+    
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		if (savedInstanceState != null) {
+			rawresource = savedInstanceState.getInt("rawresource");
+		}
+	}
+	
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		outState.putInt("rawresource", rawresource);
+	}
 
+    private void setLicenseResource(int rawresource) {
+		// TODO Auto-generated method stub
+		this.rawresource = rawresource;
+	}
+
+    
     /**
-     * Builds and displays a licenses fragment for you. Requires "/res/raw/licenses.html" and
-     * "/res/layout/licenses_fragment.xml" to be present.
-     *
-     * @param fm A fragment manager instance used to display this LicenseDialogFragment.
+     * Builds and displays a licenses fragment for you.
+     * @param fm Fragment manager to use to show the dialog
+     * @param rawresource Resource to display. Should be under /res/raw/<html file>
      */
-    public static void displayLicenseDialogFragment(FragmentManager fm) {
+    public static void displayLicenseDialogFragment(FragmentManager fm, int rawresource) {
         FragmentTransaction ft = fm.beginTransaction();
         Fragment prev = fm.findFragmentByTag(FRAGMENT_TAG);
         if (prev != null) {
@@ -66,7 +88,7 @@ public class LicenseDialogFragment extends DialogFragment {
         ft.addToBackStack(null);
 
         // Create and show the dialog.
-        DialogFragment newFragment = LicenseDialogFragment.newInstance();
+        DialogFragment newFragment = LicenseDialogFragment.newInstance(rawresource);
         newFragment.show(ft, FRAGMENT_TAG);
     }
 
@@ -103,7 +125,7 @@ public class LicenseDialogFragment extends DialogFragment {
 
             @Override
             protected String doInBackground(Void... params) {
-                InputStream rawResource = getActivity().getResources().openRawResource(R.raw.licenses);
+                InputStream rawResource = getActivity().getResources().openRawResource(rawresource);
                 BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(rawResource));
 
                 String line;

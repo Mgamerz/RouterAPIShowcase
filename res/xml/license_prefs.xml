@@ -9,10 +9,13 @@
         android:enabled="true"
         android:key="@string/prefs_open_pulltorefresh"
         android:title="@string/prefs_open_pulltorefresh" />
-    
     <Preference
         android:enabled="true"
         android:key="@string/prefs_open_smoothprogressbar"
         android:title="@string/prefs_open_smoothprogressbar" />
+    <Preference
+        android:enabled="true"
+        android:key="@string/prefs_androidlicensespage"
+        android:title="@string/prefs_androidlicensespage" />
 
 </PreferenceScreen>

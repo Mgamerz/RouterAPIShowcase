@@ -239,6 +239,7 @@
     <string name="prefs_open_robospice">Robospice</string>
     <string name="prefs_open_pulltorefresh">Android - Pull to Refresh</string>
     <string name="prefs_open_smoothprogressbar">Smooth Progress Bar</string>
+    <string name="prefs_androidlicensespage">Android Licenses Page</string>
 
     <!-- Prefs keys -->
     <string name="prefskey_delete_profiles">prefskey_delete_profiles</string>
