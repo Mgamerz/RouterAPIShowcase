@@ -15,12 +15,12 @@
     </ListView>
 
     <TextView
-        android:id="@id/android:empty"
+        android:id="@+id/clients_value"
         style="@style/TextTheme"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="center"
         android:gravity="center"
-        android:text="@string/no_clients" />
+        android:text="@string/loading" />
 
 </uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout>

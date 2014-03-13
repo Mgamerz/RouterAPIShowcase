@@ -43,7 +43,6 @@ public class LanClientFragment extends ListFragment implements
 	private ProgressDialog progressDialog;
 	private SpiceManager spiceManager;
 	private AuthInfo authInfo;
-
 	private ClientAdapter adapter;
 	private boolean shouldLoadData = true;
 	private ArrayList<ClientListRow> rows;
@@ -237,12 +236,21 @@ public class LanClientFragment extends ListFragment implements
 		rows = new ArrayList<ClientListRow>();
 		adapter = new ClientAdapter(getActivity(), rows);
 		setListAdapter(adapter);
-		for (Client cli : clients) {
-			String ip = cli.getIp_address();
-			String mac = cli.getMac();
-			rows.add(new ClientListRow(cli, mac, ip));
+		if (clients.size() == 0) {
+			View v = getView();
+			TextView textVal = (TextView) v.findViewById(R.id.clients_value);
+			textVal.setText(R.string.no_clients);
+		} else {
+			for (Client cli : clients) {
+				String ip = cli.getIp_address();
+				String mac = cli.getMac();
+				rows.add(new ClientListRow(cli, mac, ip));
+			}
+			View v = getView();
+			TextView textVal = (TextView) v.findViewById(R.id.clients_value);
+			textVal.setText("");
+			adapter.notifyDataSetChanged();
 		}
-		adapter.notifyDataSetChanged();
 	}
 
 	@Override

@@ -114,7 +114,7 @@ public class RouterConfirmDialogFragment extends DialogFragment {
 					intent.putExtra("ab_subtitle", router.getName()); // changes
 																		// subtitle.
 					startActivity(intent);
-					getActivity().finish();
+					//getActivity().finish();
 					return; // makes sure nothing else happens in this
 				} // end pin
 				break;
