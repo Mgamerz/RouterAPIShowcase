@@ -8,12 +8,14 @@ import android.content.res.Resources.Theme;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.DialogFragment;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.CheckBox;
 
 import com.cs481.commandcenter.R;
+import com.cs481.commandcenter.activities.CommandCenterActivity;
 
 public class PreferredConnectionDialog extends DialogFragment {
 	private String connectionType;
@@ -54,20 +56,14 @@ public class PreferredConnectionDialog extends DialogFragment {
         LayoutInflater inflator = getActivity().getLayoutInflater();
         final View v = inflator.inflate(R.layout.dialog_preferredconnection, null);
         
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
+		final SharedPreferences.Editor editor = prefs.edit();
+        
         alertDialogBuilder.setCustomView(v);
         alertDialogBuilder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
-				//Check to see if the 'save profile' is selected.
-				CheckBox dontAskAgain = (CheckBox) v.findViewById(R.id.checkbox_donotaskagain);
-			
-				SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
-				SharedPreferences.Editor editor = prefs.edit();
-				
-				if (dontAskAgain.isChecked()){
-					editor.putBoolean("prefs_connection_dontAskAgain", true);
-				}
-				
+				editor.putBoolean("prefs_connection_dontAskAgain", true);
 				editor.putString(getResources().getString(R.string.prefskey_connection_type), connectionType);
 				editor.commit();
 			}
@@ -76,6 +72,11 @@ public class PreferredConnectionDialog extends DialogFragment {
         alertDialogBuilder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+            	CheckBox dontAskAgain = (CheckBox) v.findViewById(R.id.checkbox_donotaskagain);
+            	if(dontAskAgain.isChecked()){
+            		editor.putBoolean("prefs_connection_dontAskAgain", true);
+            		editor.commit();
+            	}
                 dialog.dismiss();
             }
         });
