@@ -1,6 +1,7 @@
 package com.cs481.commandcenter.responses.status.lan;
 
 import com.cs481.commandcenter.responses.status.lan.networks.InterfaceInfo;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
@@ -10,6 +11,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * @author Mgamerz
  * 
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class NetworkInterface {
 	@JsonProperty("info")
 	private InterfaceInfo info;

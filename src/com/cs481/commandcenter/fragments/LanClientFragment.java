@@ -267,15 +267,7 @@ public class LanClientFragment extends ListFragment implements
 				+ row.getClient().getIp_address());
 
 		/** TODO: Add kick/ban options */
-		// CommandCenterActivity activity = (CommandCenterActivity)
-		// getActivity();
 
-		// authInfo = activity.getAuthInfo();
-		// WifiWanDialogFragment wwFragment = WifiWanDialogFragment
-		// .newInstance(this);
-		// wwFragment.setData(row.getWap(), authInfo);
-		// wwFragment
-		// .show(getActivity().getSupportFragmentManager(), "WAPConfirm");
 	}
 
 }

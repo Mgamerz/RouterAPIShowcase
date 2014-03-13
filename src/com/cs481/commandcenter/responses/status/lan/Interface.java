@@ -1,7 +1,8 @@
 package com.cs481.commandcenter.responses.status.lan;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-
+@JsonIgnoreProperties(ignoreUnknown = true)
 /**
  * This is in the devices list at /status/networks/DEVICENAME/devices/0...1 2 3 4 etc.
  * @author Mgamerz

@@ -3,8 +3,9 @@ package com.cs481.commandcenter.responses.status.lan;
 
 import java.util.ArrayList;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Status{
 	@JsonProperty("link_flags")
    	private ArrayList<String> link_flags;

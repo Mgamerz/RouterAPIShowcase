@@ -1,7 +1,8 @@
 package com.cs481.commandcenter.responses.status.lan.networks;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Networks {
 	@JsonProperty("guestlan")
 	private InterfaceInfo guestlan;

@@ -1,5 +1,6 @@
 package com.cs481.commandcenter.responses.status.lan.networks;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
@@ -7,6 +8,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * @author Mgamerz
  *
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class NetworkInterfaceDevice {
 	@JsonProperty("state")
 	private String state;
