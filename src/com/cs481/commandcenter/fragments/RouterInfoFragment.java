@@ -247,7 +247,7 @@ public class RouterInfoFragment extends Fragment {
 		GetRequest request = new GetRequest(getActivity(), 
 				authInfo,
 				"status/wan/devices/ethernet-wan/config",
-				com.cs481.commandcenter.status.wan.devices.ethernetwan.Config.class,
+				com.cs481.commandcenter.responses.status.wan.devices.ethernetwan.Config.class,
 				CACHEKEY_HOSTNAME);
 		String lastRequestCacheKey = request.createCacheKey();
 
@@ -470,7 +470,7 @@ public class RouterInfoFragment extends Fragment {
 			if (getActivity() == null || getView() == null) {
 				return;
 			}
-			com.cs481.commandcenter.status.wan.devices.ethernetwan.Config con = (com.cs481.commandcenter.status.wan.devices.ethernetwan.Config) response
+			com.cs481.commandcenter.responses.status.wan.devices.ethernetwan.Config con = (com.cs481.commandcenter.responses.status.wan.devices.ethernetwan.Config) response
 					.getData();
 
 			// update your UI

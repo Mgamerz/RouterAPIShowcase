@@ -1,5 +1,5 @@
 
-package com.cs481.commandcenter.status.wan.devices.ethernetwan;
+package com.cs481.commandcenter.responses.status.wan.devices.ethernetwan;
 
 
 public class Failback{
