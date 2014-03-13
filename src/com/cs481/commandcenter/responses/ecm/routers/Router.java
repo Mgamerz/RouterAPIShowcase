@@ -1,8 +1,11 @@
 package com.cs481.commandcenter.responses.ecm.routers;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import android.os.Parcel;
 import android.os.Parcelable;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 
 public class Router implements Parcelable {
    	private String account;

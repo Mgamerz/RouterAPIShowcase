@@ -3,7 +3,9 @@ package com.cs481.commandcenter.responses.config.wwan;
 import java.util.ArrayList;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+@JsonIgnoreProperties(ignoreUnknown = true)
 
 public class WWAN {
 	@JsonProperty("radio")

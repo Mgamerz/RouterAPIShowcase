@@ -3,6 +3,8 @@ package com.cs481.commandcenter.responses.config.wlan;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Bss{
    	private String authmode;
    	private Number defaultwepkey;

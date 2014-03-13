@@ -2,11 +2,12 @@ package com.cs481.commandcenter.responses.config.wwan;
 
 import java.io.IOException;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
-
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class WANProfileSerializer extends JsonSerializer<WANProfile> {
 	private static String AUTH_OPEN = "none";
 	private static String AUTH_WEPAUTO = "wepauto";
