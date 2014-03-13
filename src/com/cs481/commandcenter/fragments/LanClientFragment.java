@@ -54,12 +54,12 @@ public class LanClientFragment extends ListFragment implements
 		setHasOptionsMenu(true);
 		if (savedInstanceState != null) {
 			clients = savedInstanceState.getParcelableArrayList("clients");
+			shouldLoadData = savedInstanceState.getBoolean("shouldLoadData");
 			authInfo = savedInstanceState.getParcelable("authInfo");
 		} else {
 			Bundle passedArgs = getArguments();
 			if (passedArgs != null) {
 				authInfo = passedArgs.getParcelable("authInfo");
-				clients = passedArgs.getParcelableArrayList("clients");
 			}
 		}
 	}
@@ -82,10 +82,12 @@ public class LanClientFragment extends ListFragment implements
 		// Android.
 		Log.i(CommandCenterActivity.TAG, "Saving instance");
 		if (clients == null) {
+			Log.i(CommandCenterActivity.TAG, "Client list is null");
 			clients = new ArrayList<Client>(); // prevents null pointer on
 			// iteration
 		}
 		outState.putParcelableArrayList("clients", clients);
+		outState.putBoolean("shouldLoadData", shouldLoadData);
 		outState.putParcelable("authInfo", authInfo);
 	}
 
@@ -126,8 +128,12 @@ public class LanClientFragment extends ListFragment implements
 		sa.getActionBar()
 				.setTitle(getResources().getString(R.string.lan_title));
 		if (shouldLoadData) {
+			Log.i(CommandCenterActivity.TAG, "shouldLoadData was set to true");
 			readClients();
 			shouldLoadData = false;
+		}
+		else{
+			updateClientList(clients);
 		}
 	}
 
@@ -217,7 +223,7 @@ public class LanClientFragment extends ListFragment implements
 				if (response.getData() == null)
 					return;
 				Lan lan = (Lan) response.getData();
-				ArrayList<Client> clients = lan.getClients();
+				clients = lan.getClients();
 				Log.i(CommandCenterActivity.TAG,
 						"LAN Client request successful");
 				updateClientList(clients);
