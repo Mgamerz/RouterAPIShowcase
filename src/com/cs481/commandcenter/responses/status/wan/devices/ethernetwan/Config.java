@@ -3,8 +3,9 @@ package com.cs481.commandcenter.responses.status.wan.devices.ethernetwan;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Config{
 	@JsonProperty("bandwidth_egress")
    	private int bandwidth_egress;

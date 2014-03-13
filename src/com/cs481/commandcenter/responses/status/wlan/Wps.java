@@ -1,5 +1,8 @@
 package com.cs481.commandcenter.responses.status.wlan;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Wps {
 	private String state;
 

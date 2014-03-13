@@ -3,8 +3,9 @@ package com.cs481.commandcenter.responses.status.wlan;
 
 import java.util.ArrayList;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Radio{
 	@JsonProperty("channel")
    	private Number channel;

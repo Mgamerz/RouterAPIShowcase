@@ -3,6 +3,8 @@ package com.cs481.commandcenter.responses.status.wlan;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Events{
    	private String associate;
    	private String deauthenticated;

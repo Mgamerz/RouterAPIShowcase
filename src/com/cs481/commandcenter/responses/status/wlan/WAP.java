@@ -3,8 +3,9 @@ package com.cs481.commandcenter.responses.status.wlan;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class WAP implements Parcelable {
 	@JsonProperty("authmode")
    	private String authmode;

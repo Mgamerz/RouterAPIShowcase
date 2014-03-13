@@ -1,7 +1,9 @@
 
 package com.cs481.commandcenter.responses.status.wan.devices.ethernetwan;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Failback{
    	private boolean immediate;
    	private String mode;

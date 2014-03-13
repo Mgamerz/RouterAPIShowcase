@@ -7,13 +7,14 @@ import java.util.Iterator;
 import android.util.Log;
 
 import com.cs481.commandcenter.activities.CommandCenterActivity;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
+@JsonIgnoreProperties(ignoreUnknown = true)
 /**
  * Jackson deserializer for our unkeyed log object.
  */

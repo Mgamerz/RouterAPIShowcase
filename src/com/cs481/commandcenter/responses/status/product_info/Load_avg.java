@@ -1,8 +1,9 @@
 
 package com.cs481.commandcenter.responses.status.product_info;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Load_avg{
 	@JsonProperty("15min")
    	private int min15;

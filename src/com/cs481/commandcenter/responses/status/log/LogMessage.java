@@ -8,8 +8,9 @@ import java.util.TimeZone;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-
+@JsonIgnoreProperties(ignoreUnknown = true)
 @JsonDeserialize(using = LogMessageDeserializer.class)
 public class LogMessage implements Parcelable {
 

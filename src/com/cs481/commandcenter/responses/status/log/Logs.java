@@ -3,10 +3,11 @@ package com.cs481.commandcenter.responses.status.log;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 @JsonDeserialize(using = LogsDeserializer.class)
-
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Logs implements Serializable {
 	/**
 	 * 
