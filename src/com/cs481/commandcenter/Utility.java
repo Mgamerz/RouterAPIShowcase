@@ -105,6 +105,7 @@ public class Utility {
 			ci.setAccessUrl(String.format(
 					"%sremote/%s?id=%s", baseurl, url,
 					authInfo.getRouterId()));
+			Log.i(CommandCenterActivity.TAG, "Get Request to " + url);
 			String scope = null; 
 			try {
 				scope = getDomainName(baseurl);

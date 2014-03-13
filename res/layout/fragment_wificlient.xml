@@ -21,6 +21,6 @@
         android:layout_height="match_parent"
         android:layout_gravity="center"
         android:gravity="center"
-        android:text="No access points or wireless is off." />
+        android:text="@string/no_access" />
 
 </uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout>

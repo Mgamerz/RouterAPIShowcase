@@ -9,7 +9,14 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
+import android.util.Log;
+
 import com.cs481.commandcenter.AuthInfo;
+import com.cs481.commandcenter.R;
+import com.cs481.commandcenter.activities.CommandCenterActivity;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.octo.android.robospice.request.SpiceRequest;
 
@@ -22,10 +29,12 @@ import com.octo.android.robospice.request.SpiceRequest;
 public class GetRequest extends SpiceRequest<Routers> {
 
 	private AuthInfo authInfo;
+	private Context context;
 
-	public GetRequest(AuthInfo authInfo) {
+	public GetRequest(AuthInfo authInfo, Context context) {
 		super(Routers.class);
 		this.authInfo = authInfo;
+		this.context = context;
 	}
 
 	@Override
@@ -35,9 +44,15 @@ public class GetRequest extends SpiceRequest<Routers> {
 		DefaultHttpClient client = new DefaultHttpClient();
 		Credentials defaultcreds = new UsernamePasswordCredentials(authInfo.getUsername(), authInfo.getPassword());
 		
+		SharedPreferences advancedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
+		String baseurl = advancedPrefs.getString(context.getResources().getString(R.string.prefskey_ecmapiurl), context.getResources().getString(R.string.ecmapi_base_url));
+
+
 		//set auth type
-		String url = String.format("https://cradlepointecm.com/api/v1/routers");
-		AuthScope auth = new AuthScope("cradlepointecm.com",443);
+		String url = String.format("%srouters", baseurl);
+		Log.i(CommandCenterActivity.TAG, "ECM Get Request to " + url);
+
+		AuthScope auth = new AuthScope(null, 443);
 		client.getCredentialsProvider().setCredentials(auth, defaultcreds);
 
 

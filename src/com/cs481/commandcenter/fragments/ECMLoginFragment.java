@@ -97,7 +97,7 @@ public class ECMLoginFragment extends Fragment {
 		authInfo.setPassword(passw.getText().toString());
 		Resources resources = getResources();
 
-		com.cs481.commandcenter.responses.ecm.routers.GetRequest request = new com.cs481.commandcenter.responses.ecm.routers.GetRequest(authInfo);
+		com.cs481.commandcenter.responses.ecm.routers.GetRequest request = new com.cs481.commandcenter.responses.ecm.routers.GetRequest(authInfo, getActivity());
 		String lastRequestCacheKey = request.createCacheKey();
 
 		ContextThemeWrapper wrapper = new ContextThemeWrapper(getActivity(), R.style.DialogTheme);
