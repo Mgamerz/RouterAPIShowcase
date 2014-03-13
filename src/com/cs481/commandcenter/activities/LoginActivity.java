@@ -255,12 +255,6 @@ public class LoginActivity extends SpiceActivity {
 			Intent intent = new Intent(this, BugReportActivity.class);
 			startActivity(intent);
 			return true;
-		case R.id.about:
-			String url = getResources().getString(R.string.googlePlusURL);
-			Intent i = new Intent(Intent.ACTION_VIEW);
-			i.setData(Uri.parse(url));
-			startActivity(i);
-			return true;
 		default:
 			return super.onOptionsItemSelected(item);
 		}
