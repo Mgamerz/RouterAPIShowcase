@@ -31,7 +31,9 @@
     <string name="direct_login_fail">Login failed. Check your credentials.</string>
     <string name="use_ssl">Use SSL</string>
     <string name="routerport_hint">Port</string>
+    <string name="username_hint">Username</string>
     <string name="show_direct_advanced">Show Advanced Options</string>
+    <string name="hide_direct_advanced">Hide Advanced Options</string>
 
     <!-- ECM Login -->
     <string name="ecm_title">Enterprise Cloud Manager</string>

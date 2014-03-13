@@ -46,11 +46,21 @@ public class DirectLoginFragment extends Fragment {
 	private SpiceManager spiceManager;
 	private ProgressDialog progressDialog;
 	private AuthInfo authInfo;
+	private boolean showingAdvanced = false;
 
 	@Override
 	public void onCreate(Bundle savedInstancedState) {
 		super.onCreate(savedInstancedState);
+		if (savedInstancedState != null) {
+			showingAdvanced = savedInstancedState.getBoolean("showingAdvanced", false);
+		}
 		setHasOptionsMenu(true);
+	}
+	
+	@Override 
+	public void onSaveInstanceState(Bundle outState){
+		super.onSaveInstanceState(outState);
+		outState.putBoolean("showingAdvanced", showingAdvanced);
 	}
 
 	@Override
@@ -139,26 +149,35 @@ public class DirectLoginFragment extends Fragment {
 				}
 			}
 		});
+		
+		final Button toggleAdvanced = (Button) getView().findViewById(R.id.show_direct_advanced_button);
+		toggleAdvanced.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				showingAdvanced = !showingAdvanced; //toggle
+				int visibility = (showingAdvanced) ? View.VISIBLE : View.GONE;
+				
+				LinearLayout sslPort = (LinearLayout) getView().findViewById(R.id.layout_ssl_port);
+				sslPort.setVisibility(visibility);
+				
+				//CheckBox useSSL = (CheckBox) getView().findViewById(R.id.use_ssl);
+				//useSSL.setVisibility(visibility);
+				
+				EditText username = (EditText) getView().findViewById(R.id.router_username);
+				username.setVisibility(visibility);
+				
+				toggleAdvanced.setText(getResources().getString((showingAdvanced) ? R.string.hide_direct_advanced : R.string.show_direct_advanced));
+				Log.i(CommandCenterActivity.TAG, "Toggling advanced, new visibility is "+visibility);
+
+			}
+		});
 
 		Button connect = (Button) getView().findViewById(R.id.connect_button);
 		connect.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
-				// collect information.
-				/*
-				 * CheckBox gateway = (CheckBox) getView().findViewById(
-				 * R.id.use_default_gateway); String routerip = ""; boolean
-				 * remoteBool = false; // default to local admin int port = 80;
-				 * // default http port for local if (gateway.isChecked()) {
-				 * routerip = Utility.getDefaultGateway(getActivity()); } else {
-				 * EditText iptext = (EditText) getView().findViewById(
-				 * R.id.router_ip); routerip = iptext.getText().toString();
-				 * CheckBox remote = (CheckBox) getView().findViewById(
-				 * R.id.use_remote_admin); remoteBool = remote.isChecked(); port
-				 * = 8080; // TODO add box for custom ports, perhaps SSL //
-				 * management }
-				 */
 				testLogin(true);
 
 			}
