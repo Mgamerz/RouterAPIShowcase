@@ -55,12 +55,12 @@ import com.octo.android.robospice.request.listener.RequestListener;
 
 public class WifiFragment extends ListFragment implements OnRefreshListener {
 	private static final int WANDIALOG_FRAGMENT = 0;
+	private static final String CACHEKEY_WLANGET = "config_wlan_get";
 	private PullToRefreshLayout mPullToRefreshLayout;
 	private ProgressDialog progressDialog;
 	private SpiceManager spiceManager;
 	private AuthInfo authInfo;
 	private ArrayList<WlanListRow> rows;
-	private WlanAdapter adapter;
 	private ArrayList<WAP> waps;
 	private boolean shouldLoadData = true;
 	private boolean wifiState = false;
@@ -74,11 +74,7 @@ public class WifiFragment extends ListFragment implements OnRefreshListener {
 		super.onCreate(savedInstanceState);
 		setHasOptionsMenu(true);
 		if (savedInstanceState != null) {
-			waps = savedInstanceState.getParcelableArrayList("waps");
-			wanprofiles = savedInstanceState
-					.getParcelableArrayList("wanprofiles");
 			authInfo = savedInstanceState.getParcelable("authInfo");
-			shouldLoadData = savedInstanceState.getBoolean("shouldLoadData");
 			wifiStateEnabled = savedInstanceState
 					.getBoolean("wifiStateEnabled");
 			wifiState = savedInstanceState.getBoolean("wifiState");
@@ -91,13 +87,13 @@ public class WifiFragment extends ListFragment implements OnRefreshListener {
 	}
 
 	public static WifiFragment newInstance(AuthInfo authInfo) {
-		WifiFragment wawFrag = new WifiFragment();
+		WifiFragment wifiFrag = new WifiFragment();
 
 		Bundle args = new Bundle();
 		args.putParcelable("authInfo", authInfo);
-		wawFrag.setArguments(args);
+		wifiFrag.setArguments(args);
 
-		return wawFrag;
+		return wifiFrag;
 	}
 
 	@Override
@@ -107,8 +103,6 @@ public class WifiFragment extends ListFragment implements OnRefreshListener {
 		// Save data on rotate. This bundle will be passed to onCreate() by
 		// Android.
 		Log.i(CommandCenterActivity.TAG, "Saving instance");
-		outState.putParcelableArrayList("waps", waps);
-		outState.putParcelableArrayList("wanprofiles", wanprofiles);
 		outState.putParcelable("authInfo", authInfo);
 		outState.putBoolean("shouldLoadData", shouldLoadData);
 		outState.putBoolean("wifiState", wifiState);
@@ -158,7 +152,7 @@ public class WifiFragment extends ListFragment implements OnRefreshListener {
 			shouldLoadData = false;
 		} else {
 			Log.i(CommandCenterActivity.TAG, waps.toString());
-			updateWapList(waps);
+			//updateWapList(waps);
 		}
 	}
 
@@ -176,74 +170,9 @@ public class WifiFragment extends ListFragment implements OnRefreshListener {
 				new WLANConfigGetRequestListener());
 	}
 
-	public class WlanAdapter extends ArrayAdapter<WlanListRow> {
-		private final Context context;
-		private final ArrayList<WlanListRow> rows;
-
-		public WlanAdapter(Context context, ArrayList<WlanListRow> rows) {
-			super(context, R.layout.listrow_wlan_network, rows);
-			this.context = context;
-			this.rows = rows;
-		}
-
-		@Override
-		public WlanListRow getItem(int position) {
-			return rows.get(position);
-		}
-
-		@Override
-		public View getView(int position, View convertView, ViewGroup parent) {
-			LayoutInflater inflater = (LayoutInflater) context
-					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
-			View rowView = inflater.inflate(R.layout.listrow_wlan_network,
-					parent, false);
-
-			WAP wap = rows.get(position).getWap();
-
-			// title
-			TextView title = (TextView) rowView
-					.findViewById(R.id.wlan_ssid_text);
-			title.setText(rows.get(position).getTitle());
-
-			// signal indicator
-			ImageView signalStrengthIcon = (ImageView) rowView
-					.findViewById(R.id.signal_strength);
-			int dbm = rows.get(position).getWap().getRssi();
-
-			int signalStrength = (Utility.rssiToHumanSignal(dbm) / 25);
-			signalStrength = Math.min(signalStrength, 3); // cap it.
-			if (wap.getAuthmode().equals("none")) {
-				signalStrengthIcon.setImageDrawable(getResources().getDrawable(
-						R.drawable.ic_wifi_dark_open));
-			} else {
-				signalStrengthIcon.setImageDrawable(getResources().getDrawable(
-						R.drawable.ic_wifi_dark_locked));
-			}
-			// signalStrengthIcon.setImageDrawable(getResources().getDrawable(R.drawable.ic_wifi_dark_open));
-			signalStrengthIcon.setImageLevel(signalStrength);
-
-			// subtitle
-			TextView subtitle = (TextView) rowView
-					.findViewById(R.id.wlan_type_mode_text);
-			subtitle.setText(rows.get(position).getSubtitle());
-
-			return rowView;
-		}
-	}
-
 	@Override
 	public void onRefreshStarted(View view) {
 		readWlanConfig(false);
-
-		/*
-		 * GetRequest request = new GetRequest(getActivity(),  authInfo, "config/wlan",
-		 * ConfigWlan.class, "configwlanget"); String lastRequestCacheKey =
-		 * request.createCacheKey();
-		 * 
-		 * spiceManager.execute(request, lastRequestCacheKey,
-		 * DurationInMillis.ALWAYS_EXPIRED, new WLANGetRequestListener());
-		 */
 	}
 
 	@Override
@@ -281,11 +210,11 @@ public class WifiFragment extends ListFragment implements OnRefreshListener {
 
 	private void readWlanConfig(boolean dialog) {
 		// perform the request.
-		GetRequest wapListrequest = new GetRequest(getActivity(), authInfo, "status/wlan",
-				StatusWlan.class, "statuswlanget");
+		 GetRequest wapListrequest = new GetRequest(getActivity(), authInfo, "status/wlan",
+				StatusWlan.class, CACHEKEY_WLANGET);
 		String lastRequestCacheKey = wapListrequest.createCacheKey();
 		Resources resources = getResources();
-		if (dialog) {
+		 if (dialog) {
 			ContextThemeWrapper wrapper = new ContextThemeWrapper(
 					getActivity(), android.R.style.Theme_Holo_Light);
 
@@ -295,20 +224,11 @@ public class WifiFragment extends ListFragment implements OnRefreshListener {
 			progressDialog.show();
 			progressDialog.setCanceledOnTouchOutside(false);
 			progressDialog.setCancelable(false);
-		}
+		} 
 
 		spiceManager.execute(wapListrequest, lastRequestCacheKey,
 				DurationInMillis.ALWAYS_EXPIRED,
-				new WLANStatusGetRequestListener());
-
-		// get wwan profiles
-
-		GetRequest profilesRequest = new GetRequest(getActivity(), authInfo, "config/wwan",
-				WWAN.class, "configwwanget");
-
-		spiceManager.execute(profilesRequest, profilesRequest.createCacheKey(),
-				DurationInMillis.ALWAYS_EXPIRED,
-				new WANProfilesGetRequestListener());
+				new WLANStatusGetRequestListener()); 
 	}
 
 	private class WLANStatusGetRequestListener implements
@@ -338,7 +258,7 @@ public class WifiFragment extends ListFragment implements OnRefreshListener {
 			if (response.getResponseInfo().getSuccess()) {
 				StatusWlan wlan = (StatusWlan) response.getData();
 				Log.i(CommandCenterActivity.TAG, "WLAN request successful");
-				updateWlanList(wlan);
+				//updateWlanList(wlan);
 				Log.i(CommandCenterActivity.TAG, "isRefresh(): "
 						+ mPullToRefreshLayout.isRefreshing());
 			} else {
@@ -401,108 +321,6 @@ public class WifiFragment extends ListFragment implements OnRefreshListener {
 			wifiToggle.setChecked(wifiState);
 			setWifiToggleListener();
 			mPullToRefreshLayout.setRefreshComplete();
-		}
-	}
-
-	/**
-	 * Should be run when a WLAN object has been returned and the list of AP's
-	 * should be updated
-	 * 
-	 * @param wlan
-	 *            wlan response object
-	 */
-	public void updateWlanList(StatusWlan wlan) {
-		waps = wlan.getRadio().get(0).getSurvey(); // might need to
-													// try to add
-													// dual band
-													// support.
-		updateWapList(waps);
-	}
-
-	public void updateWapList(ArrayList<WAP> waps) {
-		rows = new ArrayList<WlanListRow>();
-		if (adapter == null) {
-			adapter = new WlanAdapter(getActivity(), rows);
-			setListAdapter(adapter);
-		}
-
-		Resources resources = getResources();
-		for (WAP wap : waps) {
-			String subtitle = wap.getType() + " - " + wap.getMode();
-			String ssid = wap.getSsid();
-			if (ssid.equals(""))
-				ssid = resources.getString(R.string.wlan_hidden_ssid);
-			rows.add(new WlanListRow(wap, ssid, subtitle));
-		}
-		adapter.notifyDataSetChanged();
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case R.id.wifimenu_sort_alphabetically:
-			sortAlphabetically();
-			return true;
-		case R.id.wifimenu_sort_signal:
-			sortSignal();
-			return true;
-		default:
-			return super.onOptionsItemSelected(item);
-		}
-
-	}
-
-	/**
-	 * Sorts the list of AP's this router can see by name.
-	 * 
-	 */
-	public void sortAlphabetically() {
-		if (rows != null && rows.size() > 1) {
-			Collections.sort(rows, new Comparator<WlanListRow>() {
-
-				@Override
-				public int compare(WlanListRow lhs, WlanListRow rhs) {
-					return lhs.getWap().getSsid()
-							.compareToIgnoreCase(rhs.getWap().getSsid());
-				}
-			});
-			adapter.notifyDataSetChanged();
-		}
-	}
-
-	@Override
-	public void onListItemClick(ListView l, View v, int position, long id) {
-		WlanListRow row = (WlanListRow) (l.getAdapter().getItem(position));
-		// Log.w(CommandCenterActivity.TAG, "WAP ID clicked: " + row.getId());
-
-		// CommandCenterActivity activity = (CommandCenterActivity)
-		// getActivity();
-
-		// authInfo = activity.getAuthInfo();
-		/*
-		 * WifiWanDialogFragment wwFragment = WifiWanDialogFragment
-		 * .newInstance(this); wwFragment.setData(row.getWap(), authInfo);
-		 * wwFragment .show(getActivity().getSupportFragmentManager(),
-		 * "WAPConfirm");
-		 */
-	}
-
-	/**
-	 * Sorts the list of AP's this router can see by signal strength.
-	 * 
-	 */
-	public void sortSignal() {
-		if (rows != null && rows.size() > 1) {
-			Collections.sort(rows, new Comparator<WlanListRow>() {
-
-				@Override
-				public int compare(WlanListRow lhs, WlanListRow rhs) {
-					Integer lhsRssi = lhs.getWap().getRssi();
-					Integer rhsRssi = rhs.getWap().getRssi();
-					return rhsRssi.compareTo(lhsRssi);
-				}
-			});
-			adapter.notifyDataSetChanged();
 		}
 	}
 

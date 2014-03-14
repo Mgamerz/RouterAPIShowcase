@@ -1,11 +1,22 @@
 package com.cs481.commandcenter;
 
+import java.io.BufferedInputStream;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
+import java.security.KeyStore;
+import java.security.cert.Certificate;
+import java.security.cert.CertificateFactory;
+import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 
 import javax.crypto.SecretKey;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManagerFactory;
 
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.Credentials;
@@ -92,6 +103,58 @@ public class Utility {
 	 * @return ConnectionInfo bundle describing this connection
 	 */
 	public static ConnectionInfo prepareConnection(Context context, String url, AuthInfo authInfo) {
+		//https stuff
+		// Load CAs from an InputStream
+		// (could be from a resource or ByteArrayInputStream or ...)
+		/*CertificateFactory cf = CertificateFactory.getInstance("X.509");
+		// From https://www.washington.edu/itconnect/security/ca/load-der.crt
+		InputStream caInput = new BufferedInputStream(new FileInputStream("load-der.crt"));
+		Certificate ca;
+		try {
+		    ca = cf.generateCertificate(caInput);
+		    System.out.println("ca=" + ((X509Certificate) ca).getSubjectDN());
+		} finally {
+		    caInput.close();
+		}
+
+		// Create a KeyStore containing our trusted CAs
+		String keyStoreType = KeyStore.getDefaultType();
+		KeyStore keyStore = KeyStore.getInstance(keyStoreType);
+		keyStore.load(null, null);
+		keyStore.setCertificateEntry("ca", ca);
+
+		// Create a TrustManager that trusts the CAs in our KeyStore
+		String tmfAlgorithm = TrustManagerFactory.getDefaultAlgorithm();
+		TrustManagerFactory tmf = TrustManagerFactory.getInstance(tmfAlgorithm);
+		tmf.init(keyStore);
+
+		// Create an SSLContext that uses our TrustManager
+		SSLContext sslcontext = SSLContext.getInstance("TLS");
+		sslcontext.init(null, tmf.getTrustManagers(), null);
+
+		// Tell the URLConnection to use a SocketFactory from our SSLContext
+		URL url = new URL("https://certs.cac.washington.edu/CAtest/");
+		HttpsURLConnection urlConnection =
+		    (HttpsURLConnection)url.openConnection();
+		urlConnection.setSSLSocketFactory(context.getSocketFactory());
+		InputStream in = urlConnection.getInputStream();
+		copyInputStreamToOutputStream(in, System.out);
+		
+		*/
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		ConnectionInfo ci = new ConnectionInfo();
 		DefaultHttpClient client = new DefaultHttpClient();
 		Credentials defaultcreds = new UsernamePasswordCredentials(
@@ -123,7 +186,7 @@ public class Utility {
 			auth = new AuthScope(scope, 443);
 		} else {
 			// Creates the connection URL. Adds an s if it's an SSL (https) connection
-			ci.setAccessUrl(String.format("http%s://%s:%s/api/%s", authInfo.isHttps() ? "" : "s",
+			ci.setAccessUrl(String.format("http%s://%s:%s/api/%s", authInfo.isHttps() ? "s" : "",
 					authInfo.getRouterip(), authInfo.getRouterport(), url));
 			auth = new AuthScope(authInfo.getRouterip(),
 					authInfo.getRouterport(), AuthScope.ANY_REALM);
