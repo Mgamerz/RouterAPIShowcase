@@ -149,7 +149,7 @@ public class ECMLoginFragment extends Fragment {
 
 				// check if the parent activity is dual pane based.
 				transaction.replace(R.id.login_fragment, routersFragment);
-				transaction.setTransition(R.anim.slide_in);
+				//transaction.setTransition(R.anim.slide_in);
 
 				//transaction.setCustomAnimations(,0);
 				transaction.addToBackStack(null);
