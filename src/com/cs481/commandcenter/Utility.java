@@ -109,7 +109,6 @@ public class Utility {
 			} else {
 				baseurl = context.getResources().getString(R.string.ecmapi_base_url);
 			}
-			
 			ci.setAccessUrl(String.format(
 					"%sremote/%s?id=%s", baseurl, url,
 					authInfo.getRouterId()));
@@ -123,19 +122,11 @@ public class Utility {
 			}
 			auth = new AuthScope(scope, 443);
 		} else {
-			// if (authInfo.isRemote()) {
-			// Assuming it's a WAN.
-			ci.setAccessUrl(String.format("http://%s:%s/api/%s",
+			// Creates the connection URL. Adds an s if it's an SSL (https) connection
+			ci.setAccessUrl(String.format("http%s://%s:%s/api/%s", authInfo.isHttps() ? "" : "s",
 					authInfo.getRouterip(), authInfo.getRouterport(), url));
 			auth = new AuthScope(authInfo.getRouterip(),
 					authInfo.getRouterport(), AuthScope.ANY_REALM);
-			/*
-			 * } else { // On the current LAN
-			 * ci.setAccessUrl(String.format("http://%s/api/%s",
-			 * authInfo.getRouterip(), url)); auth = new
-			 * AuthScope(authInfo.getRouterip(), 80, AuthScope.ANY_REALM); }
-			 */
-
 		}
 		client.getCredentialsProvider().setCredentials(auth, defaultcreds);
 		ci.setClient(client);
