@@ -101,7 +101,15 @@ public class Utility {
 		AuthScope auth;
 		if (authInfo.isEcm()) {
 			SharedPreferences advancedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
-			String baseurl = advancedPrefs.getString(context.getResources().getString(R.string.prefskey_ecmapiurl), context.getResources().getString(R.string.ecmapi_base_url));
+			
+			boolean isUsingAdvanced = advancedPrefs.getBoolean(context.getResources().getString(R.string.prefskey_advanced), false);
+			String baseurl;
+			if (isUsingAdvanced) { 
+				baseurl = advancedPrefs.getString(context.getResources().getString(R.string.prefskey_ecmapiurl), context.getResources().getString(R.string.ecmapi_base_url));
+			} else {
+				baseurl = context.getResources().getString(R.string.ecmapi_base_url);
+			}
+			
 			ci.setAccessUrl(String.format(
 					"%sremote/%s?id=%s", baseurl, url,
 					authInfo.getRouterId()));

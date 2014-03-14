@@ -16,6 +16,7 @@ import android.util.Log;
 
 import com.cs481.commandcenter.AuthInfo;
 import com.cs481.commandcenter.R;
+import com.cs481.commandcenter.Utility;
 import com.cs481.commandcenter.activities.CommandCenterActivity;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.octo.android.robospice.request.SpiceRequest;
@@ -52,7 +53,8 @@ public class GetRequest extends SpiceRequest<Routers> {
 		String url = String.format("%srouters", baseurl);
 		Log.i(CommandCenterActivity.TAG, "ECM Get Request to " + url);
 
-		AuthScope auth = new AuthScope(null, 443);
+		String hostRealm = Utility.getDomainName(url);
+		AuthScope auth = new AuthScope(hostRealm, 443);
 		client.getCredentialsProvider().setCredentials(auth, defaultcreds);
 
 
