@@ -172,17 +172,12 @@ public class ECMRoutersFragment extends ListFragment implements
 					.findViewById(R.id.routerrow_image);
 			Router router = rows.get(position).getRouter();
 
-			if (router.getState().equals("offline")) {
+			if (!router.getState().equals("online")) {
 				rowView.setEnabled(false);
 				router_icon.setAlpha(.50f); // set transparency to half.
 			}
 			return rowView;
 		}
-		
-		/*@Override
-		public boolean areAllItemsEnabled() {
-			return false;
-		}*/
 		
 		@Override
 		public boolean isEnabled(int position) {

@@ -58,7 +58,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:gravity="center"
-        android:orientation="horizontal" >
+        android:orientation="horizontal"
+        android:visibility="gone" >
 
         <CheckBox
             android:id="@+id/use_ssl"
@@ -74,10 +75,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:digits="0123456789"
-            android:maxLength="5"
             android:gravity="center"
             android:hint="@string/routerport_hint"
             android:inputType="numberDecimal"
+            android:maxLength="5"
             android:singleLine="true" />
     </LinearLayout>
 
@@ -91,7 +92,8 @@
         android:gravity="center"
         android:hint="@string/username_hint"
         android:imeOptions="actionNext"
-        android:inputType="text" >
+        android:inputType="text"
+        android:visibility="gone" >
     </EditText>
 
     <EditText
