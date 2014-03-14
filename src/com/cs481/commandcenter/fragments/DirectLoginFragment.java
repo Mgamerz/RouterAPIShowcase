@@ -46,12 +46,15 @@ public class DirectLoginFragment extends Fragment {
 	private ProgressDialog progressDialog;
 	private AuthInfo authInfo;
 	private boolean showingAdvanced = false;
+	private boolean showingNongateway = false;
 
 	@Override
 	public void onCreate(Bundle savedInstancedState) {
 		super.onCreate(savedInstancedState);
 		if (savedInstancedState != null) {
 			showingAdvanced = savedInstancedState.getBoolean("showingAdvanced", false);
+			showingNongateway = savedInstancedState.getBoolean("showingNongateway", false);
+
 		}
 		setHasOptionsMenu(true);
 	}
@@ -60,11 +63,26 @@ public class DirectLoginFragment extends Fragment {
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
 		outState.putBoolean("showingAdvanced", showingAdvanced);
+		outState.putBoolean("showingNongateway", showingNongateway);
 	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View rootView = inflater.inflate(R.layout.fragment_directlogin, container, false);
+		
+		if (showingAdvanced) {
+			rootView.findViewById(R.id.use_ssl).setVisibility(View.VISIBLE);
+			rootView.findViewById(R.id.router_username).setVisibility(View.VISIBLE);
+			Button advanced = (Button) rootView.findViewById(R.id.show_direct_advanced_button);
+			advanced.setText(getResources().getString(R.string.hide_direct_advanced));
+		}
+		
+		if (showingNongateway){
+			rootView.findViewById(R.id.nongateway_layout).setVisibility(View.VISIBLE);
+		}
+		
+		
+		
 		return rootView;
 	}
 
@@ -97,6 +115,9 @@ public class DirectLoginFragment extends Fragment {
 
 	public void setupUI() {
 		final EditText ipAddress = (EditText) getView().findViewById(R.id.router_ip);
+		final CheckBox defaultGateway = (CheckBox) getView().findViewById(R.id.use_default_gateway);
+		final Button toggleAdvanced = (Button) getView().findViewById(R.id.show_direct_advanced_button);
+		
 		InputFilter[] filters = new InputFilter[1];
 		filters[0] = new InputFilter() {
 			public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
@@ -119,13 +140,14 @@ public class DirectLoginFragment extends Fragment {
 		};
 		ipAddress.setFilters(filters);
 
-		CheckBox cb = (CheckBox) getView().findViewById(R.id.use_default_gateway);
-		cb.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+
+		defaultGateway.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 
 			@Override
 			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 				// TODO Auto-generated method stub
-				Log.i(CommandCenterActivity.TAG, "Default gateway checkbox");
+				showingNongateway = !showingNongateway;
+				Log.i(CommandCenterActivity.TAG, "Default gateway checkbox clicked");
 				LinearLayout connectOptions = (LinearLayout) getView().findViewById(R.id.nongateway_layout);
 				if (!isChecked) {
 					connectOptions.setVisibility(EditText.VISIBLE);
@@ -134,8 +156,10 @@ public class DirectLoginFragment extends Fragment {
 				}
 			}
 		});
+		
+		
 
-		final Button toggleAdvanced = (Button) getView().findViewById(R.id.show_direct_advanced_button);
+		//toggle advanced options
 		toggleAdvanced.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -143,12 +167,8 @@ public class DirectLoginFragment extends Fragment {
 				showingAdvanced = !showingAdvanced; // toggle
 				int visibility = (showingAdvanced) ? View.VISIBLE : View.GONE;
 
-				LinearLayout sslPort = (LinearLayout) getView().findViewById(R.id.layout_ssl_port);
-				sslPort.setVisibility(visibility);
-
-				// CheckBox useSSL = (CheckBox)
-				// getView().findViewById(R.id.use_ssl);
-				// useSSL.setVisibility(visibility);
+				CheckBox ssl = (CheckBox) getView().findViewById(R.id.use_ssl);
+				ssl.setVisibility(visibility);
 
 				EditText username = (EditText) getView().findViewById(R.id.router_username);
 				username.setVisibility(visibility);
@@ -159,6 +179,8 @@ public class DirectLoginFragment extends Fragment {
 			}
 		});
 
+		
+		//connect button
 		Button connect = (Button) getView().findViewById(R.id.connect_button);
 		connect.setOnClickListener(new OnClickListener() {
 

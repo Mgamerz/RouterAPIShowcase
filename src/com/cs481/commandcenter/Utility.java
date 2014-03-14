@@ -80,12 +80,10 @@ public class Utility {
 			return root.toString();
 		} catch (JsonProcessingException e) {
 			// TODO Auto-generated catch block
-			Log.e(CommandCenterActivity.TAG,
-					"JSONPROCESSING: ERROR PARSING ECM JSON");
+			Log.e(CommandCenterActivity.TAG, "JSONPROCESSING: ERROR PARSING ECM JSON");
 			e.printStackTrace();
 		} catch (IOException e) {
-			Log.e(CommandCenterActivity.TAG,
-					"IOEXCEPTION: ERROR PARSING ECM JSON");
+			Log.e(CommandCenterActivity.TAG, "IOEXCEPTION: ERROR PARSING ECM JSON");
 			e.printStackTrace();
 		}
 		return null;
@@ -103,80 +101,26 @@ public class Utility {
 	 * @return ConnectionInfo bundle describing this connection
 	 */
 	public static ConnectionInfo prepareConnection(Context context, String url, AuthInfo authInfo) {
-		//https stuff
-		// Load CAs from an InputStream
-		// (could be from a resource or ByteArrayInputStream or ...)
-		/*CertificateFactory cf = CertificateFactory.getInstance("X.509");
-		// From https://www.washington.edu/itconnect/security/ca/load-der.crt
-		InputStream caInput = new BufferedInputStream(new FileInputStream("load-der.crt"));
-		Certificate ca;
-		try {
-		    ca = cf.generateCertificate(caInput);
-		    System.out.println("ca=" + ((X509Certificate) ca).getSubjectDN());
-		} finally {
-		    caInput.close();
-		}
 
-		// Create a KeyStore containing our trusted CAs
-		String keyStoreType = KeyStore.getDefaultType();
-		KeyStore keyStore = KeyStore.getInstance(keyStoreType);
-		keyStore.load(null, null);
-		keyStore.setCertificateEntry("ca", ca);
-
-		// Create a TrustManager that trusts the CAs in our KeyStore
-		String tmfAlgorithm = TrustManagerFactory.getDefaultAlgorithm();
-		TrustManagerFactory tmf = TrustManagerFactory.getInstance(tmfAlgorithm);
-		tmf.init(keyStore);
-
-		// Create an SSLContext that uses our TrustManager
-		SSLContext sslcontext = SSLContext.getInstance("TLS");
-		sslcontext.init(null, tmf.getTrustManagers(), null);
-
-		// Tell the URLConnection to use a SocketFactory from our SSLContext
-		URL url = new URL("https://certs.cac.washington.edu/CAtest/");
-		HttpsURLConnection urlConnection =
-		    (HttpsURLConnection)url.openConnection();
-		urlConnection.setSSLSocketFactory(context.getSocketFactory());
-		InputStream in = urlConnection.getInputStream();
-		copyInputStreamToOutputStream(in, System.out);
-		
-		*/
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
 		ConnectionInfo ci = new ConnectionInfo();
 		DefaultHttpClient client = new DefaultHttpClient();
-		Credentials defaultcreds = new UsernamePasswordCredentials(
-				authInfo.getUsername(), authInfo.getPassword());
+		Credentials defaultcreds = new UsernamePasswordCredentials(authInfo.getUsername(), authInfo.getPassword());
 
 		// set auth type
 		AuthScope auth;
 		if (authInfo.isEcm()) {
 			SharedPreferences advancedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
-			
+
 			boolean isUsingAdvanced = advancedPrefs.getBoolean(context.getResources().getString(R.string.prefskey_advanced), false);
 			String baseurl;
-			if (isUsingAdvanced) { 
+			if (isUsingAdvanced) {
 				baseurl = advancedPrefs.getString(context.getResources().getString(R.string.prefskey_ecmapiurl), context.getResources().getString(R.string.ecmapi_base_url));
 			} else {
 				baseurl = context.getResources().getString(R.string.ecmapi_base_url);
 			}
-			ci.setAccessUrl(String.format(
-					"%sremote/%s?id=%s", baseurl, url,
-					authInfo.getRouterId()));
+			ci.setAccessUrl(String.format("%sremote/%s?id=%s", baseurl, url, authInfo.getRouterId()));
 			Log.i(CommandCenterActivity.TAG, "Get Request to " + url);
-			String scope = null; 
+			String scope = null;
 			try {
 				scope = getDomainName(baseurl);
 			} catch (URISyntaxException e) {
@@ -185,11 +129,10 @@ public class Utility {
 			}
 			auth = new AuthScope(scope, 443);
 		} else {
-			// Creates the connection URL. Adds an s if it's an SSL (https) connection
-			ci.setAccessUrl(String.format("http%s://%s:%s/api/%s", authInfo.isHttps() ? "s" : "",
-					authInfo.getRouterip(), authInfo.getRouterport(), url));
-			auth = new AuthScope(authInfo.getRouterip(),
-					authInfo.getRouterport(), AuthScope.ANY_REALM);
+			// Creates the connection URL. Adds an s if it's an SSL (https)
+			// connection
+			ci.setAccessUrl(String.format("http%s://%s:%s/api/%s", authInfo.isHttps() ? "s" : "", authInfo.getRouterip(), authInfo.getRouterport(), url));
+			auth = new AuthScope(authInfo.getRouterip(), authInfo.getRouterport(), AuthScope.ANY_REALM);
 		}
 		client.getCredentialsProvider().setCredentials(auth, defaultcreds);
 		ci.setClient(client);
@@ -204,8 +147,7 @@ public class Utility {
 	 * @return String of the gateway
 	 */
 	public static String getDefaultGateway(Context context) {
-		final WifiManager manager = (WifiManager) context
-				.getSystemService(Context.WIFI_SERVICE);
+		final WifiManager manager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
 		final DhcpInfo dhcp = manager.getDhcpInfo();
 		// This method is deprecated because we use IPv4 and the new one
 		// is IPv6. IPv6 is way more complicated and used in more
@@ -225,8 +167,7 @@ public class Utility {
 		return 2 * (rssi + 100);
 	}
 
-	public static HttpPut preparePutRequest(AuthInfo authInfo, HttpPut put,
-			String data) throws JsonProcessingException, IOException {
+	public static HttpPut preparePutRequest(AuthInfo authInfo, HttpPut put, String data) throws JsonProcessingException, IOException {
 		// TODO Auto-generated method stub
 		// Log.i(CommandCenterActivity.TAG, "PPR: "+r.getData());
 
@@ -245,8 +186,7 @@ public class Utility {
 		return put;
 	}
 
-	public static HttpPost preparePostRequest(AuthInfo authInfo, HttpPost post,
-			String data) throws JsonProcessingException, IOException {
+	public static HttpPost preparePostRequest(AuthInfo authInfo, HttpPost post, String data) throws JsonProcessingException, IOException {
 		// TODO Auto-generated method stub
 		// Log.i(CommandCenterActivity.TAG, "PPR: "+r.getData());
 
@@ -262,8 +202,7 @@ public class Utility {
 			post.setHeader("Content-Type", "application/x-www-form-urlencoded");
 			post.setEntity(new StringEntity("data=" + data, "UTF-8"));
 		}
-		Log.i(CommandCenterActivity.TAG, "Final data going to the network: "
-				+ post.getEntity().toString());
+		Log.i(CommandCenterActivity.TAG, "Final data going to the network: " + post.getEntity().toString());
 		return post;
 	}
 
@@ -316,8 +255,7 @@ public class Utility {
 		return signalQuality;
 	}
 
-	public static String getPutString(Object data, Class clazz,
-			ObjectMapper mapper) {
+	public static String getPutString(Object data, Class clazz, ObjectMapper mapper) {
 		// } else {
 		try {
 			String result;
@@ -387,12 +325,11 @@ public class Utility {
 
 	public static int getTheme(Activity activity) {
 		// set theme
-		SharedPreferences mPrefs = PreferenceManager
-				.getDefaultSharedPreferences(activity);
+		SharedPreferences mPrefs = PreferenceManager.getDefaultSharedPreferences(activity);
 		Resources resources = activity.getResources();
 		String theme = mPrefs.getString(resources.getString(R.string.prefskey_theme), "Red");
 		// Theme strings
-		
+
 		String[] colors = resources.getStringArray(R.array.theme_names);
 		String red = colors[0];
 		String blue = colors[1];
@@ -409,43 +346,35 @@ public class Utility {
 		return R.style.RedAppTheme;
 	}
 
-	public static AuthInfo encryptAuthInfo(Context context, String pin,
-			AuthInfo unencryptedAuthInfo) {
+	public static AuthInfo encryptAuthInfo(Context context, String pin, AuthInfo unencryptedAuthInfo) {
 		// make a clone of the original so it doesn't change what the original
 		// reference points to.
 		Parcel p = Parcel.obtain();
 		p.writeValue(unencryptedAuthInfo);
 		p.setDataPosition(0);
-		AuthInfo authInfo = (AuthInfo) p.readValue(AuthInfo.class
-				.getClassLoader());
+		AuthInfo authInfo = (AuthInfo) p.readValue(AuthInfo.class.getClassLoader());
 		p.recycle();
 		try {
 			String uuid = Cryptography.createLocalUUID(context);
-			SecretKey secret = Cryptography.generateKey(pin,
-					uuid.getBytes("UTF-8"));
-			byte[] encryptedUsername = Cryptography.encryptMsg(
-					authInfo.getUsername(), secret);
-			byte[] encryptedPassword = Cryptography.encryptMsg(
-					authInfo.getPassword(), secret);
+			SecretKey secret = Cryptography.generateKey(pin, uuid.getBytes("UTF-8"));
+			byte[] encryptedUsername = Cryptography.encryptMsg(authInfo.getUsername(), secret);
+			byte[] encryptedPassword = Cryptography.encryptMsg(authInfo.getPassword(), secret);
 
-			authInfo.setUsername(Base64.encodeToString(encryptedUsername,
-					Base64.DEFAULT));
-			authInfo.setPassword(Base64.encodeToString(encryptedPassword,
-					Base64.DEFAULT));
+			authInfo.setUsername(Base64.encodeToString(encryptedUsername, Base64.DEFAULT));
+			authInfo.setPassword(Base64.encodeToString(encryptedPassword, Base64.DEFAULT));
 			return authInfo;
 
 		} catch (Exception e) {
-			Log.e(CommandCenterActivity.TAG,
-					"Unable to encrypt auth info, object cannot be saved.");
+			Log.e(CommandCenterActivity.TAG, "Unable to encrypt auth info, object cannot be saved.");
 			e.printStackTrace();
 			// Log.e(CommandCenterActivity.TAG, e.getSta);
 			return null;
 		}
 	}
-	
+
 	public static String getDomainName(String url) throws URISyntaxException {
-	    URI uri = new URI(url);
-	    String domain = uri.getHost();
-	    return domain.startsWith("www.") ? domain.substring(4) : domain;
+		URI uri = new URI(url);
+		String domain = uri.getHost();
+		return domain.startsWith("www.") ? domain.substring(4) : domain;
 	}
 }

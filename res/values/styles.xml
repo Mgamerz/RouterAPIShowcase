@@ -82,7 +82,7 @@
 
     <!-- Checkbox Theme -->
     <style name="CheckBoxTheme" parent="@android:style/Widget.CompoundButton.CheckBox">
-        <item name="android:textColor">@color/White</item>
+        <item name="android:textColor">@color/selector_textcolor</item>
         <item name="android:button">@drawable/apptheme_btn_check_holo_dark</item>
     </style>
 

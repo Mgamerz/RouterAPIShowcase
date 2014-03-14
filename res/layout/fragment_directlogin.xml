@@ -22,13 +22,34 @@
         android:text="@string/local_title"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
-    <CheckBox
-        android:id="@+id/use_default_gateway"
-        style="@style/CheckBoxTheme"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/checkboxes_layout"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:checked="true"
-        android:text="@string/default_gateway" />
+        android:layout_gravity="center"
+        android:animateLayoutChanges="true"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:visibility="visible" >
+
+        <CheckBox
+            android:id="@+id/use_default_gateway"
+            style="@style/CheckBoxTheme"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:text="@string/default_gateway" />
+
+        <CheckBox
+            android:id="@+id/use_ssl"
+            style="@style/CheckBoxTheme"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="false"
+            android:enabled="false"
+            android:text="@string/use_ssl"
+            android:visibility="gone" />
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/nongateway_layout"
@@ -36,7 +57,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:gravity="center"
-        android:orientation="vertical"
+        android:orientation="horizontal"
         android:visibility="gone" >
 
         <EditText
@@ -45,29 +66,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:digits="0123456789."
-            android:ems="16"
+            android:ems="9"
             android:gravity="center"
             android:hint="@string/routerip_hint"
             android:inputType="numberDecimal"
             android:singleLine="true" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/layout_ssl_port"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:gravity="center"
-        android:orientation="horizontal"
-        android:visibility="gone" >
-
-        <CheckBox
-            android:id="@+id/use_ssl"
-            style="@style/CheckBoxTheme"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:checked="false"
-            android:text="@string/use_ssl" />
 
         <EditText
             android:id="@+id/router_port"
@@ -75,6 +78,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:digits="0123456789"
+            android:ems="5"
             android:gravity="center"
             android:hint="@string/routerport_hint"
             android:inputType="numberDecimal"
