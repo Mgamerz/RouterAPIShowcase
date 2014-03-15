@@ -83,6 +83,7 @@ public class LoginActivity extends SpiceActivity {
 			unlockProfile = savedInstanceState.getParcelable("unlockProfile");
 			authInfo = savedInstanceState.getParcelable("authInfo");
 			showingWhatsNew = savedInstanceState.getBoolean("showingWhatsNew");
+			getActionBar().setTitle(savedInstanceState.getString("actionbarTitle"));
 		}
 		setDefaultPrefs();
 		Ln.getConfig().setLoggingLevel(Log.ERROR);
@@ -239,6 +240,7 @@ public class LoginActivity extends SpiceActivity {
 		outState.putParcelable("authInfo", authInfo);
 		outState.putParcelable("unlockProfile", unlockProfile);
 		outState.putBoolean("showingWhatsNew", showingWhatsNew);
+		outState.putString("actionbarTitle", getActionBar().getTitle().toString());
 	}
 
 	public boolean onOptionsItemSelected(MenuItem item) {

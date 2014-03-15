@@ -13,6 +13,7 @@ import com.cs481.commandcenter.R;
 import com.cs481.commandcenter.fragments.preferences.AboutPrefsFragment;
 import com.cs481.commandcenter.fragments.preferences.AdvancedPrefsFragment;
 import com.cs481.commandcenter.fragments.preferences.LicensesFragment;
+import com.cs481.commandcenter.fragments.preferences.ProfilesFragment;
 import com.cs481.commandcenter.fragments.preferences.SecurityPrefsFragment;
 import com.cs481.commandcenter.fragments.preferences.UIPrefsFragment;
 
@@ -42,9 +43,10 @@ public class PrefsActivity extends PreferenceActivity {
 						+ fragmentName);
 		if (UIPrefsFragment.class.getName().equals(fragmentName)
 				|| SecurityPrefsFragment.class.getName().equals(fragmentName)
-				|| AboutPrefsFragment.class.getName().equals(fragmentName) ||
-				LicensesFragment.class.getName().equals(fragmentName) ||
-				AdvancedPrefsFragment.class.getName().equals(fragmentName)) {
+				|| AboutPrefsFragment.class.getName().equals(fragmentName) 
+				|| LicensesFragment.class.getName().equals(fragmentName) 
+				|| ProfilesFragment.class.getName().equals(fragmentName) 
+				|| AdvancedPrefsFragment.class.getName().equals(fragmentName)) {
 			return true;
 		}
 		return false;

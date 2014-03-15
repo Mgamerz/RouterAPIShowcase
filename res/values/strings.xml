@@ -146,6 +146,12 @@
     <!-- Profile Manager -->
     <string name="wipe_profiles_warning">Are you sure you want to wipe all stored profiles? You PIN will remain intact. The app will restart automatically for security.</string>
     <string name="wipe_all_warning">Are you sure you want to clear your PIN? All profiles will be deleted as well. The app will restart automatically for security.</string>
+    <string name="profiledescriptor_routerid">ECM ID</string>
+    <string name="profiledescriptor_routerip">Router IP</string>
+    <string name="profiledescriptor_uses_ssl">Uses SSL</string>
+    <string name="profiledescriptor_routerport">Port</string>
+    <string name="restart_app_banner">Deleted profiles may not fully removed until the app is restarted.</string>
+    <string name="no_profiles">You don\'t have any saved profiles! Log into some routers to create some.</string>
 
     <!-- ECM Router Confirm Dialog -->
     <string name="confirm_router_management">Are you sure you want to connect and manage %1$s?</string>

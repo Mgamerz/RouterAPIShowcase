@@ -454,4 +454,11 @@ public class Utility {
 		mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 100, mPendingIntent);
 		System.exit(0);
 	}
+
+	public static void deleteProfile(Context context, Profile profile) {
+		DatabaseAdapter dbAdapter = new DatabaseAdapter(context);
+		//dbAdapter.open();
+		dbAdapter.deleteProfile(profile);
+		//dbAdapter.close();
+	}
 }
