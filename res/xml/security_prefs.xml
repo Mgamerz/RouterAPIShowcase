@@ -12,9 +12,7 @@
         android:key="@string/prefs_delete_profiles"
         android:summary="@string/prefs_delete_profiles_summary"
         android:title="@string/prefs_delete_profiles" />
-
-    <com.cs481.commandcenter.fragments.preferences.CCDialogPreference
-        android:dialogMessage="Clearing your PIN will also delete all the profiles on this device. Are you sure you want to continue?"
+    <Preference
         android:enabled="true"
         android:key="@string/prefs_delete_pin"
         android:summary="@string/prefs_delete_pin_summary"

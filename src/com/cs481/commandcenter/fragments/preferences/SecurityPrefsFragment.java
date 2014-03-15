@@ -77,7 +77,7 @@ public class SecurityPrefsFragment extends PreferenceFragment implements OnShare
 			}
 		});
     	
-       	CCDialogPreference clearPIN = (CCDialogPreference) findPreference(getActivity().getResources().getString(R.string.prefs_delete_pin));
+       	Preference clearPIN = findPreference(getActivity().getResources().getString(R.string.prefs_delete_pin));
        	clearPIN.setOnPreferenceClickListener(new OnPreferenceClickListener() {
 			
 			@Override
