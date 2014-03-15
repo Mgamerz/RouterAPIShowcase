@@ -204,6 +204,6 @@ public class ECMRoutersFragment extends ListFragment implements
 		//activity.setAuthInfo(authInfo);
 		// activity.setRouter(row.getRouter());
 		RouterConfirmDialogFragment rcFragment = RouterConfirmDialogFragment.newInstance(row.getRouter(), authInfo);
-		rcFragment.show(getFragmentManager(), "RouterConfirm");
+		rcFragment.show(getActivity().getSupportFragmentManager(), "RouterConfirm");
 	}
 }

@@ -16,6 +16,8 @@ import android.widget.Toast;
 
 import com.cs481.commandcenter.R;
 import com.cs481.commandcenter.Utility;
+import com.cs481.commandcenter.dialog.DeleteProfilesPINDialog;
+import com.cs481.commandcenter.dialog.RouterConfirmDialogFragment;
 
 /**
  * Preference Fragment for the ui preferences page.
@@ -69,15 +71,22 @@ public class SecurityPrefsFragment extends PreferenceFragment implements OnShare
 			
 			@Override
 			public boolean onPreferenceClick(Preference preference) {
-				// should create a new pin screen.
-				// Prepare new intent.
-				Utility.deleteAllProfiles(getActivity());
-				//Toast.makeText(getActivity(), "debug: Deleted all profiles.", Toast.LENGTH_LONG).show();
+				DeleteProfilesPINDialog dppdFragment = DeleteProfilesPINDialog.newInstance(false);
+				dppdFragment.show(getFragmentManager(), dppdFragment.getClass().getName());
 				return true;
 			}
 		});
     	
        	CCDialogPreference clearPIN = (CCDialogPreference) findPreference(getActivity().getResources().getString(R.string.prefs_delete_pin));
+       	clearPIN.setOnPreferenceClickListener(new OnPreferenceClickListener() {
+			
+			@Override
+			public boolean onPreferenceClick(Preference preference) {
+				DeleteProfilesPINDialog dppdFragment = DeleteProfilesPINDialog.newInstance(true);
+				dppdFragment.show(getFragmentManager(), dppdFragment.getClass().getName());
+				return true;
+			}
+		});
     }
     
     private void updatePrefSummary(Preference p) {

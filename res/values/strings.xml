@@ -143,11 +143,15 @@
     <string name="pin_enter">Enter your PIN to continue</string>
     <string name="pin_validate_fail">Incorrect PIN</string>
 
+    <!-- Profile Manager -->
+    <string name="wipe_profiles_warning">Are you sure you want to wipe all stored profiles? You PIN will remain intact. The app will restart automatically for security.</string>
+    <string name="wipe_all_warning">Are you sure you want to clear your PIN? All profiles will be deleted as well. The app will restart automatically for security.</string>
+
     <!-- ECM Router Confirm Dialog -->
     <string name="confirm_router_management">Are you sure you want to connect and manage %1$s?</string>
 
     <!-- Direct Router Confirm Dialog -->
-     <string name="direct_profile_dialog_title">Direct Login Profile</string>
+    <string name="direct_profile_dialog_title">Direct Login Profile</string>
     <string name="save_profile_direct">Save this connection as a profile if connection succeeds</string>
     <string name="confirm_router_direct">\?\?\? Placeholder text... maybe \?\?\?</string>
 
@@ -250,6 +254,8 @@
     <string name="prefs_open_pulltorefresh">Android - Pull to Refresh</string>
     <string name="prefs_open_smoothprogressbar">Smooth Progress Bar</string>
     <string name="prefs_androidlicensespage">Android Licenses Page</string>
+    <string name="prefs_manage_profiles">Manage Profiles</string>
+    <string name="prefs_manage_profiles_summary">View and remove specific profiles</string>
 
     <!-- Prefs keys -->
     <string name="prefskey_delete_profiles">prefskey_delete_profiles</string>
