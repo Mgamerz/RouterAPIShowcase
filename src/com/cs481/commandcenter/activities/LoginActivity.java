@@ -228,8 +228,9 @@ public class LoginActivity extends SpiceActivity {
 	@Override
 	public void onStop() {
 		super.onStop();
-		if (showingWhatsNew) {
-			showWNDialog();
+		if (whatsNewDialog != null) {
+			whatsNewDialog.dismiss();
+			whatsNewDialog = null;
 		}
 	}
 
