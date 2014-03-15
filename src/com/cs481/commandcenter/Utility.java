@@ -44,10 +44,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  */
 public class Utility {
 
-	
 	/**
 	 * Bad way of converting a ecm reply to a normal reply.
-	 * @param str string to convert to only the data
+	 * 
+	 * @param str
+	 *            string to convert to only the data
 	 * @return modified string only showing the data
 	 */
 	public static String convertToDataSegment(String str) {
@@ -79,12 +80,10 @@ public class Utility {
 			return root.toString();
 		} catch (JsonProcessingException e) {
 			// TODO Auto-generated catch block
-			Log.e(CommandCenterActivity.TAG,
-					"JSONPROCESSING: ERROR PARSING ECM JSON");
+			Log.e(CommandCenterActivity.TAG, "JSONPROCESSING: ERROR PARSING ECM JSON");
 			e.printStackTrace();
 		} catch (IOException e) {
-			Log.e(CommandCenterActivity.TAG,
-					"IOEXCEPTION: ERROR PARSING ECM JSON");
+			Log.e(CommandCenterActivity.TAG, "IOEXCEPTION: ERROR PARSING ECM JSON");
 			e.printStackTrace();
 		}
 		return null;
@@ -101,52 +100,39 @@ public class Utility {
 	 *            information.
 	 * @return ConnectionInfo bundle describing this connection
 	 */
-	public static ConnectionInfo prepareConnection(Context context, String url,
-			AuthInfo authInfo) {
+	public static ConnectionInfo prepareConnection(Context context, String url, AuthInfo authInfo) {
 
 		ConnectionInfo ci = new ConnectionInfo();
 		DefaultHttpClient client = new DefaultHttpClient();
-		Credentials defaultcreds = new UsernamePasswordCredentials(
-				authInfo.getUsername(), authInfo.getPassword());
+		Credentials defaultcreds = new UsernamePasswordCredentials(authInfo.getUsername(), authInfo.getPassword());
 
 		// set auth type
 		AuthScope auth;
 		if (authInfo.isEcm()) {
-			SharedPreferences advancedPrefs = PreferenceManager
-					.getDefaultSharedPreferences(context);
+			SharedPreferences advancedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
 
-			boolean isUsingAdvanced = advancedPrefs.getBoolean(context
-					.getResources().getString(R.string.prefskey_advanced),
-					false);
+			boolean isUsingAdvanced = advancedPrefs.getBoolean(context.getResources().getString(R.string.prefskey_advanced), false);
 			String baseurl;
 			if (isUsingAdvanced) {
-				baseurl = advancedPrefs.getString(context.getResources()
-						.getString(R.string.prefskey_ecmapiurl), context
-						.getResources().getString(R.string.ecmapi_base_url));
+				baseurl = advancedPrefs.getString(context.getResources().getString(R.string.prefskey_ecmapiurl), context.getResources().getString(R.string.ecmapi_base_url));
 			} else {
-				baseurl = context.getResources().getString(
-						R.string.ecmapi_base_url);
+				baseurl = context.getResources().getString(R.string.ecmapi_base_url);
 			}
-			ci.setAccessUrl(String.format("%sremote/%s?id=%s", baseurl, url,
-					authInfo.getRouterId()));
+			ci.setAccessUrl(String.format("%sremote/%s?id=%s", baseurl, url, authInfo.getRouterId()));
 			Log.i(CommandCenterActivity.TAG, "Get Request to " + url);
 			String scope = null;
 			try {
 				scope = getDomainName(baseurl);
 			} catch (URISyntaxException e) {
-				Log.e(CommandCenterActivity.TAG,
-						"WARNING: couldn't extract hostname from supplied ECM base URL. The app will accept items from all hosts, even untrusted ones!");
+				Log.e(CommandCenterActivity.TAG, "WARNING: couldn't extract hostname from supplied ECM base URL. The app will accept items from all hosts, even untrusted ones!");
 				e.printStackTrace();
 			}
 			auth = new AuthScope(scope, 443);
 		} else {
 			// Creates the connection URL. Adds an s if it's an SSL (https)
 			// connection
-			ci.setAccessUrl(String.format("http%s://%s:%s/api/%s",
-					authInfo.isHttps() ? "s" : "", authInfo.getRouterip(),
-					authInfo.getRouterport(), url));
-			auth = new AuthScope(authInfo.getRouterip(),
-					authInfo.getRouterport(), AuthScope.ANY_REALM);
+			ci.setAccessUrl(String.format("http%s://%s:%s/api/%s", authInfo.isHttps() ? "s" : "", authInfo.getRouterip(), authInfo.getRouterport(), url));
+			auth = new AuthScope(authInfo.getRouterip(), authInfo.getRouterport(), AuthScope.ANY_REALM);
 		}
 		client.getCredentialsProvider().setCredentials(auth, defaultcreds);
 		ci.setClient(client);
@@ -161,8 +147,7 @@ public class Utility {
 	 * @return String of the gateway
 	 */
 	public static String getDefaultGateway(Context context) {
-		final WifiManager manager = (WifiManager) context
-				.getSystemService(Context.WIFI_SERVICE);
+		final WifiManager manager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
 		final DhcpInfo dhcp = manager.getDhcpInfo();
 		// This method is deprecated because we use IPv4 and the new one
 		// is IPv6. IPv6 is way more complicated and used in more
@@ -182,18 +167,22 @@ public class Utility {
 		return 2 * (rssi + 100);
 	}
 
-	
 	/**
-	 * Prepares a PUT request. Automatically sets the put request up with correct values for ECM or direct login based on the authInfo object.
-	 * @param authInfo Authinfo to use for connection
-	 * @param put HttpPut object that will be modified
-	 * @param data String data to include as the entity
-	 * @return modified httpput that points to the correct place based on the authinfo object
+	 * Prepares a PUT request. Automatically sets the put request up with
+	 * correct values for ECM or direct login based on the authInfo object.
+	 * 
+	 * @param authInfo
+	 *            Authinfo to use for connection
+	 * @param put
+	 *            HttpPut object that will be modified
+	 * @param data
+	 *            String data to include as the entity
+	 * @return modified httpput that points to the correct place based on the
+	 *         authinfo object
 	 * @throws JsonProcessingException
 	 * @throws IOException
 	 */
-	public static HttpPut preparePutRequest(AuthInfo authInfo, HttpPut put,
-			String data) throws JsonProcessingException, IOException {
+	public static HttpPut preparePutRequest(AuthInfo authInfo, HttpPut put, String data) throws JsonProcessingException, IOException {
 		// TODO Auto-generated method stub
 		// Log.i(CommandCenterActivity.TAG, "PPR: "+r.getData());
 
@@ -212,9 +201,10 @@ public class Utility {
 		return put;
 	}
 
-	
 	/**
-	 * Prepares a post request. Same as prepare put request but returns a post one instead.
+	 * Prepares a post request. Same as prepare put request but returns a post
+	 * one instead.
+	 * 
 	 * @param authInfo
 	 * @param post
 	 * @param data
@@ -222,8 +212,7 @@ public class Utility {
 	 * @throws JsonProcessingException
 	 * @throws IOException
 	 */
-	public static HttpPost preparePostRequest(AuthInfo authInfo, HttpPost post,
-			String data) throws JsonProcessingException, IOException {
+	public static HttpPost preparePostRequest(AuthInfo authInfo, HttpPost post, String data) throws JsonProcessingException, IOException {
 		// TODO Auto-generated method stub
 		// Log.i(CommandCenterActivity.TAG, "PPR: "+r.getData());
 
@@ -239,8 +228,7 @@ public class Utility {
 			post.setHeader("Content-Type", "application/x-www-form-urlencoded");
 			post.setEntity(new StringEntity("data=" + data, "UTF-8"));
 		}
-		Log.i(CommandCenterActivity.TAG, "Final data going to the network: "
-				+ post.getEntity().toString());
+		Log.i(CommandCenterActivity.TAG, "Final data going to the network: " + post.getEntity().toString());
 		return post;
 	}
 
@@ -275,7 +263,8 @@ public class Utility {
 	 * Converts RSSI to a human readable "percent" for the most part. It's not
 	 * perfect as some values fall out of the range.
 	 * 
-	 * @param dbm dbm signal strength.
+	 * @param dbm
+	 *            dbm signal strength.
 	 * @return human readable percent signal strength
 	 */
 	public static int rssiToHumanSignal(int dbm) {
@@ -293,16 +282,19 @@ public class Utility {
 		return signalQuality;
 	}
 
-	
 	/**
 	 * Gets a string for putting to the network. Converts an object into it.
-	 * @param data Data object to put to the network
-	 * @param clazz class (Name.class) of the object to put to the network, for casting
-	 * @param mapper an objectmapper to use to make the writing with
+	 * 
+	 * @param data
+	 *            Data object to put to the network
+	 * @param clazz
+	 *            class (Name.class) of the object to put to the network, for
+	 *            casting
+	 * @param mapper
+	 *            an objectmapper to use to make the writing with
 	 * @return String that can be set as the body of a PUT or POST request
 	 */
-	public static String getPutString(Object data, Class clazz,
-			ObjectMapper mapper) {
+	public static String getPutString(Object data, Class clazz, ObjectMapper mapper) {
 		// } else {
 		try {
 			String result;
@@ -380,11 +372,9 @@ public class Utility {
 	 */
 	public static int getTheme(Activity activity) {
 		// set theme
-		SharedPreferences mPrefs = PreferenceManager
-				.getDefaultSharedPreferences(activity);
+		SharedPreferences mPrefs = PreferenceManager.getDefaultSharedPreferences(activity);
 		Resources resources = activity.getResources();
-		String theme = mPrefs.getString(
-				resources.getString(R.string.prefskey_theme), "Red");
+		String theme = mPrefs.getString(resources.getString(R.string.prefskey_theme), "Red");
 		// Theme strings
 
 		String[] colors = resources.getStringArray(R.array.theme_names);
@@ -415,34 +405,28 @@ public class Utility {
 	 *            auth info that is not yet encrypted
 	 * @return auth info with encrypted username and password fields
 	 */
-	public static AuthInfo encryptAuthInfo(Context context, String pin,
-			AuthInfo unencryptedAuthInfo) {
+	public static AuthInfo encryptAuthInfo(Context context, String pin, AuthInfo unencryptedAuthInfo) {
 		// make a clone of the original so it doesn't change what the original
 		// reference points to.
 		Parcel p = Parcel.obtain();
 		p.writeValue(unencryptedAuthInfo);
 		p.setDataPosition(0);
-		AuthInfo authInfo = (AuthInfo) p.readValue(AuthInfo.class
-				.getClassLoader());
+		AuthInfo authInfo = (AuthInfo) p.readValue(AuthInfo.class.getClassLoader());
+		
+		Log.i(CommandCenterActivity.TAG, "Encrypting authinfo " + authInfo);
 		p.recycle();
 		try {
 			String uuid = Cryptography.createLocalUUID(context);
-			SecretKey secret = Cryptography.generateKey(pin,
-					uuid.getBytes("UTF-8"));
-			byte[] encryptedUsername = Cryptography.encryptMsg(
-					authInfo.getUsername(), secret);
-			byte[] encryptedPassword = Cryptography.encryptMsg(
-					authInfo.getPassword(), secret);
+			SecretKey secret = Cryptography.generateKey(pin, uuid.getBytes("UTF-8"));
+			byte[] encryptedUsername = Cryptography.encryptMsg(authInfo.getUsername(), secret);
+			byte[] encryptedPassword = Cryptography.encryptMsg(authInfo.getPassword(), secret);
 
-			authInfo.setUsername(Base64.encodeToString(encryptedUsername,
-					Base64.DEFAULT));
-			authInfo.setPassword(Base64.encodeToString(encryptedPassword,
-					Base64.DEFAULT));
+			authInfo.setUsername(Base64.encodeToString(encryptedUsername, Base64.DEFAULT));
+			authInfo.setPassword(Base64.encodeToString(encryptedPassword, Base64.DEFAULT));
 			return authInfo;
 
 		} catch (Exception e) {
-			Log.e(CommandCenterActivity.TAG,
-					"Unable to encrypt auth info, object cannot be saved.");
+			Log.e(CommandCenterActivity.TAG, "Unable to encrypt auth info, object cannot be saved.");
 			e.printStackTrace();
 			// Log.e(CommandCenterActivity.TAG, e.getSta);
 			return null;
@@ -465,13 +449,9 @@ public class Utility {
 	public static void restartApp(Context context) {
 		Intent mStartActivity = new Intent(context, LoginActivity.class);
 		int mPendingIntentId = 123456;
-		PendingIntent mPendingIntent = PendingIntent.getActivity(context,
-				mPendingIntentId, mStartActivity,
-				PendingIntent.FLAG_CANCEL_CURRENT);
-		AlarmManager mgr = (AlarmManager) context
-				.getSystemService(Context.ALARM_SERVICE);
-		mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 100,
-				mPendingIntent);
+		PendingIntent mPendingIntent = PendingIntent.getActivity(context, mPendingIntentId, mStartActivity, PendingIntent.FLAG_CANCEL_CURRENT);
+		AlarmManager mgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+		mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 100, mPendingIntent);
 		System.exit(0);
 	}
 }

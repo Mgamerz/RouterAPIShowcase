@@ -64,7 +64,6 @@ public class DirectLoginFragment extends Fragment {
 			showingNongateway = savedInstancedState.getBoolean("showingNongateway", false);
 			authInfo = savedInstancedState.getParcelable("authInfo");
 			encryptedInfo = savedInstancedState.getParcelable("encryptedInfo");
-
 		}
 		setHasOptionsMenu(true);
 	}
@@ -198,24 +197,24 @@ public class DirectLoginFragment extends Fragment {
 				ArrayList<Profile> profiles = la.getProfiles();
 
 				// construct a temporary profile
-				Profile directprofile = buildProfile();
+				
+				Profile directprofile = buildProfile(buildAuthInfo());
 				
 				if (profiles.contains(directprofile)){
 					//already exists. just login
 					testLogin(false, null);
 				} else {
 					//show the dialog for saving the profile
-					DirectSaveProfileDialogFragment dpsFragment = DirectSaveProfileDialogFragment.newInstance(authInfo);
+					DirectSaveProfileDialogFragment dpsFragment = DirectSaveProfileDialogFragment.newInstance(buildAuthInfo());
 					dpsFragment.show(getFragmentManager(), "DirectProfileSave");
 				}
 			}
 		});
 	}
 
-	protected Profile buildProfile() {
+	protected Profile buildProfile(AuthInfo authInfo) {
 		// construct a temporary profile
 		Profile directProfile = new Profile();
-		AuthInfo authInfo = buildAuthInfo();
 		directProfile.setAuthInfo(authInfo);
 		directProfile.setProfileName(authInfo.getRouterip());
 		return directProfile;
@@ -275,7 +274,10 @@ public class DirectLoginFragment extends Fragment {
 	public void testLogin(boolean saveprofile, AuthInfo encryptedInfo) {
 		AuthInfo authInfo = buildAuthInfo();
 		this.authInfo = authInfo;
+		this.encryptedInfo = encryptedInfo;
 		this.loginSavingProfile = saveprofile;
+		
+		Log.i(CommandCenterActivity.TAG, "Encrypted Auth Info via dialog: "+encryptedInfo);
 		// Perform network check
 		GetRequest request = new GetRequest(getActivity(), authInfo, "status/product_info", Product_info.class, "direct_login");
 		String lastRequestCacheKey = request.createCacheKey();
@@ -363,7 +365,7 @@ public class DirectLoginFragment extends Fragment {
 
 					// We should get ready to save this as profile if thats set
 					if (loginSavingProfile) {
-						Utility.saveProfile(getActivity(), buildProfile());
+						Utility.saveProfile(getActivity(), buildProfile(encryptedInfo));
 					}
 
 					// Prepare new intent.

@@ -2,7 +2,6 @@ package com.cs481.commandcenter.activities;
 
 import android.app.ActionBar;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -17,7 +16,6 @@ import android.widget.Toast;
 import com.cs481.commandcenter.AuthInfo;
 import com.cs481.commandcenter.R;
 import com.cs481.commandcenter.Utility;
-import com.cs481.commandcenter.debug.DebugActivity;
 import com.cs481.commandcenter.fragments.DashboardFragment;
 import com.cs481.commandcenter.fragments.WifiClientFragment;
 

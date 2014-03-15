@@ -47,7 +47,7 @@ public class DirectSaveProfileDialogFragment extends DialogFragment {
 			authInfo = savedInstanceState.getParcelable("authInfo");
 		}
 	}
-	
+
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
 		outState.putParcelable("authInfo", authInfo);
@@ -104,18 +104,6 @@ public class DirectSaveProfileDialogFragment extends DialogFragment {
 	}
 
 	/**
-	 * Sets the authorization information and the router information, allowing
-	 * this dialog to navigate to the CommandCenter activity with all required
-	 * information.
-	 * 
-	 * @param authInfo
-	 *            Auth information allowing the user to login to the router
-	 */
-	public void setData(AuthInfo authInfo) {
-		this.authInfo = authInfo;
-	}
-
-	/**
 	 * Creates a new instance of this dialog with the specified authInfo already
 	 * initialized.
 	 * 
@@ -126,6 +114,7 @@ public class DirectSaveProfileDialogFragment extends DialogFragment {
 	public static DirectSaveProfileDialogFragment newInstance(AuthInfo authInfo) {
 		DirectSaveProfileDialogFragment dspd = new DirectSaveProfileDialogFragment();
 		dspd.authInfo = authInfo;
+		Log.i(CommandCenterActivity.TAG, "Started DSPDF with authInfo " + authInfo);
 		return dspd;
 	}
 

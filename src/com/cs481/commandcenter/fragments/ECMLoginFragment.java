@@ -208,7 +208,7 @@ public class ECMLoginFragment extends Fragment {
 			// Add the fragment to the 'fragment_container' FrameLayout
 			FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
 
-			transaction.replace(R.id.login_fragment, localFragment);
+			transaction.replace(R.id.login_fragment, localFragment, localFragment.getClass().getName());
 			transaction.commit();
 			return true;
 		default:
