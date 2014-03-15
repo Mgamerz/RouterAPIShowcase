@@ -143,8 +143,13 @@
     <string name="pin_enter">Enter your PIN to continue</string>
     <string name="pin_validate_fail">Incorrect PIN</string>
 
-    <!-- Router Confirm Dialog -->
+    <!-- ECM Router Confirm Dialog -->
     <string name="confirm_router_management">Are you sure you want to connect and manage %1$s?</string>
+
+    <!-- Direct Router Confirm Dialog -->
+     <string name="direct_profile_dialog_title">Direct Login Profile</string>
+    <string name="save_profile_direct">Save this connection as a profile if connection succeeds</string>
+    <string name="confirm_router_direct">\?\?\? Placeholder text... maybe \?\?\?</string>
 
     <!-- Preferences Databases -->
     <string name="crypto_prefsdb">crypto</string>

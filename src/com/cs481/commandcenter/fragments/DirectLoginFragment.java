@@ -1,7 +1,8 @@
 package com.cs481.commandcenter.fragments;
 
+import java.util.ArrayList;
+
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
@@ -29,10 +30,14 @@ import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
 
 import com.cs481.commandcenter.AuthInfo;
+import com.cs481.commandcenter.Profile;
 import com.cs481.commandcenter.R;
 import com.cs481.commandcenter.Utility;
 import com.cs481.commandcenter.activities.CommandCenterActivity;
+import com.cs481.commandcenter.activities.LoginActivity;
 import com.cs481.commandcenter.activities.SpiceActivity;
+import com.cs481.commandcenter.dialog.DirectSaveProfileDialogFragment;
+import com.cs481.commandcenter.dialog.RouterConfirmDialogFragment;
 import com.cs481.commandcenter.responses.GetRequest;
 import com.cs481.commandcenter.responses.Response;
 import com.cs481.commandcenter.responses.status.product_info.Product_info;
@@ -46,17 +51,19 @@ public class DirectLoginFragment extends Fragment {
 	private SpiceManager spiceManager;
 	private ProgressDialog progressDialog;
 	private AuthInfo authInfo;
+	private AuthInfo encryptedInfo;
 	private boolean showingAdvanced = false;
 	private boolean showingNongateway = false;
+	private boolean loginSavingProfile = false; // set when save profile is set
 
 	@Override
 	public void onCreate(Bundle savedInstancedState) {
 		super.onCreate(savedInstancedState);
 		if (savedInstancedState != null) {
-			showingAdvanced = savedInstancedState.getBoolean("showingAdvanced",
-					false);
-			showingNongateway = savedInstancedState.getBoolean(
-					"showingNongateway", false);
+			showingAdvanced = savedInstancedState.getBoolean("showingAdvanced", false);
+			showingNongateway = savedInstancedState.getBoolean("showingNongateway", false);
+			authInfo = savedInstancedState.getParcelable("authInfo");
+			encryptedInfo = savedInstancedState.getParcelable("encryptedInfo");
 
 		}
 		setHasOptionsMenu(true);
@@ -67,27 +74,24 @@ public class DirectLoginFragment extends Fragment {
 		super.onSaveInstanceState(outState);
 		outState.putBoolean("showingAdvanced", showingAdvanced);
 		outState.putBoolean("showingNongateway", showingNongateway);
+		outState.putParcelable("authInfo", authInfo);
+		outState.putParcelable("encryptedInfo", encryptedInfo);
+
 	}
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
-		View rootView = inflater.inflate(R.layout.fragment_directlogin,
-				container, false);
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		View rootView = inflater.inflate(R.layout.fragment_directlogin, container, false);
 
 		if (showingAdvanced) {
 			rootView.findViewById(R.id.use_ssl).setVisibility(View.VISIBLE);
-			rootView.findViewById(R.id.router_username).setVisibility(
-					View.VISIBLE);
-			Button advanced = (Button) rootView
-					.findViewById(R.id.show_direct_advanced_button);
-			advanced.setText(getResources().getString(
-					R.string.hide_direct_advanced));
+			rootView.findViewById(R.id.router_username).setVisibility(View.VISIBLE);
+			Button advanced = (Button) rootView.findViewById(R.id.show_direct_advanced_button);
+			advanced.setText(getResources().getString(R.string.hide_direct_advanced));
 		}
 
 		if (showingNongateway) {
-			rootView.findViewById(R.id.nongateway_layout).setVisibility(
-					View.VISIBLE);
+			rootView.findViewById(R.id.nongateway_layout).setVisibility(View.VISIBLE);
 		}
 
 		return rootView;
@@ -105,16 +109,12 @@ public class DirectLoginFragment extends Fragment {
 																				// resource
 		spiceManager = sa.getSpiceManager();
 
-		EditText passw = (EditText) getView()
-				.findViewById(R.id.router_password);
-		final Button connect = (Button) getView().findViewById(
-				R.id.connect_button);
+		EditText passw = (EditText) getView().findViewById(R.id.router_password);
+		final Button connect = (Button) getView().findViewById(R.id.connect_button);
 		passw.setOnEditorActionListener(new OnEditorActionListener() {
-			public boolean onEditorAction(TextView v, int actionId,
-					KeyEvent event) {
+			public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
 				Log.i(CommandCenterActivity.TAG, "Action ID: " + actionId);
-				if (actionId == EditorInfo.IME_ACTION_SEND
-						|| actionId == EditorInfo.IME_NULL) {
+				if (actionId == EditorInfo.IME_ACTION_SEND || actionId == EditorInfo.IME_NULL) {
 					connect.performClick();
 					return true;
 				}
@@ -125,24 +125,17 @@ public class DirectLoginFragment extends Fragment {
 	}
 
 	public void setupUI() {
-		final EditText ipAddress = (EditText) getView().findViewById(
-				R.id.router_ip);
-		final CheckBox defaultGateway = (CheckBox) getView().findViewById(
-				R.id.use_default_gateway);
-		final Button toggleAdvanced = (Button) getView().findViewById(
-				R.id.show_direct_advanced_button);
+		final EditText ipAddress = (EditText) getView().findViewById(R.id.router_ip);
+		final CheckBox defaultGateway = (CheckBox) getView().findViewById(R.id.use_default_gateway);
+		final Button toggleAdvanced = (Button) getView().findViewById(R.id.show_direct_advanced_button);
 
 		InputFilter[] filters = new InputFilter[1];
 		filters[0] = new InputFilter() {
-			public CharSequence filter(CharSequence source, int start, int end,
-					Spanned dest, int dstart, int dend) {
+			public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
 				if (end > start) {
 					String destTxt = dest.toString();
-					String resultingTxt = destTxt.substring(0, dstart)
-							+ source.subSequence(start, end)
-							+ destTxt.substring(dend);
-					if (!resultingTxt
-							.matches("^\\d{1,3}(\\.(\\d{1,3}(\\.(\\d{1,3}(\\.(\\d{1,3})?)?)?)?)?)?")) {
+					String resultingTxt = destTxt.substring(0, dstart) + source.subSequence(start, end) + destTxt.substring(dend);
+					if (!resultingTxt.matches("^\\d{1,3}(\\.(\\d{1,3}(\\.(\\d{1,3}(\\.(\\d{1,3})?)?)?)?)?)?")) {
 						return "";
 					} else {
 						String[] splits = resultingTxt.split("\\.");
@@ -158,25 +151,21 @@ public class DirectLoginFragment extends Fragment {
 		};
 		ipAddress.setFilters(filters);
 
-		defaultGateway
-				.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+		defaultGateway.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 
-					@Override
-					public void onCheckedChanged(CompoundButton buttonView,
-							boolean isChecked) {
-						// TODO Auto-generated method stub
-						showingNongateway = !showingNongateway;
-						Log.i(CommandCenterActivity.TAG,
-								"Default gateway checkbox clicked");
-						LinearLayout connectOptions = (LinearLayout) getView()
-								.findViewById(R.id.nongateway_layout);
-						if (!isChecked) {
-							connectOptions.setVisibility(EditText.VISIBLE);
-						} else {
-							connectOptions.setVisibility(EditText.GONE);
-						}
-					}
-				});
+			@Override
+			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+				// TODO Auto-generated method stub
+				showingNongateway = !showingNongateway;
+				Log.i(CommandCenterActivity.TAG, "Default gateway checkbox clicked");
+				LinearLayout connectOptions = (LinearLayout) getView().findViewById(R.id.nongateway_layout);
+				if (!isChecked) {
+					connectOptions.setVisibility(EditText.VISIBLE);
+				} else {
+					connectOptions.setVisibility(EditText.GONE);
+				}
+			}
+		});
 
 		// toggle advanced options
 		toggleAdvanced.setOnClickListener(new OnClickListener() {
@@ -189,15 +178,11 @@ public class DirectLoginFragment extends Fragment {
 				CheckBox ssl = (CheckBox) getView().findViewById(R.id.use_ssl);
 				ssl.setVisibility(visibility);
 
-				EditText username = (EditText) getView().findViewById(
-						R.id.router_username);
+				EditText username = (EditText) getView().findViewById(R.id.router_username);
 				username.setVisibility(visibility);
 
-				toggleAdvanced.setText(getResources().getString(
-						(showingAdvanced) ? R.string.hide_direct_advanced
-								: R.string.show_direct_advanced));
-				Log.i(CommandCenterActivity.TAG,
-						"Toggling advanced, new visibility is " + visibility);
+				toggleAdvanced.setText(getResources().getString((showingAdvanced) ? R.string.hide_direct_advanced : R.string.show_direct_advanced));
+				Log.i(CommandCenterActivity.TAG, "Toggling advanced, new visibility is " + visibility);
 
 			}
 		});
@@ -208,10 +193,32 @@ public class DirectLoginFragment extends Fragment {
 
 			@Override
 			public void onClick(View v) {
-				testLogin(true);
+				// get current profiles
+				LoginActivity la = (LoginActivity) getActivity();
+				ArrayList<Profile> profiles = la.getProfiles();
 
+				// construct a temporary profile
+				Profile directprofile = buildProfile();
+				
+				if (profiles.contains(directprofile)){
+					//already exists. just login
+					testLogin(false, null);
+				} else {
+					//show the dialog for saving the profile
+					DirectSaveProfileDialogFragment dpsFragment = DirectSaveProfileDialogFragment.newInstance(authInfo);
+					dpsFragment.show(getFragmentManager(), "DirectProfileSave");
+				}
 			}
 		});
+	}
+
+	protected Profile buildProfile() {
+		// construct a temporary profile
+		Profile directProfile = new Profile();
+		AuthInfo authInfo = buildAuthInfo();
+		directProfile.setAuthInfo(authInfo);
+		directProfile.setProfileName(authInfo.getRouterip());
+		return directProfile;
 	}
 
 	@Override
@@ -243,19 +250,16 @@ public class DirectLoginFragment extends Fragment {
 			// firstFragment.setArguments(getIntent().getExtras());
 
 			// Add the fragment to the 'fragment_container' FrameLayout
-			FragmentTransaction transaction = getActivity()
-					.getSupportFragmentManager().beginTransaction();
+			FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
 
-			transaction.replace(R.id.login_fragment, ecmFragment,
-					"DirectFragment");
+			transaction.replace(R.id.login_fragment, ecmFragment, "DirectFragment");
 			transaction.commit();
 			return true;
 		case R.id.menu_preenter_ip:
 			EditText iptext = (EditText) getView().findViewById(R.id.router_ip);
 			iptext.setText("132.178.226.103");
 
-			EditText portNum = (EditText) getView().findViewById(
-					R.id.router_port);
+			EditText portNum = (EditText) getView().findViewById(R.id.router_port);
 			portNum.setText("8080");
 			return true;
 		default:
@@ -263,14 +267,32 @@ public class DirectLoginFragment extends Fragment {
 		}
 	}
 
-	private void testLogin(boolean dialog) {
+	/**
+	 * Begins a login process to the router.
+	 * @param saveprofile boolean flag to save this as a profile if the command succeeds.
+	 * @param encryptedInfo encrypted info save into the database if it succeeds. should be generated by the dialog for saving.
+	 */
+	public void testLogin(boolean saveprofile, AuthInfo encryptedInfo) {
+		AuthInfo authInfo = buildAuthInfo();
+		this.authInfo = authInfo;
+		this.loginSavingProfile = saveprofile;
+		// Perform network check
+		GetRequest request = new GetRequest(getActivity(), authInfo, "status/product_info", Product_info.class, "direct_login");
+		String lastRequestCacheKey = request.createCacheKey();
+
+		progressDialog = new ProgressDialog(getActivity(), R.style.DialogTheme);
+		progressDialog.setMessage(getResources().getString(R.string.connecting));
+		progressDialog.show();
+		progressDialog.setCanceledOnTouchOutside(false);
+		spiceManager.execute(request, lastRequestCacheKey, DurationInMillis.ALWAYS_EXPIRED, new LoginGetRequestListener());
+	}
+
+	private AuthInfo buildAuthInfo() {
 		// get necessary info. there's going to be a lot
 		// collect information.
-		CheckBox gateway = (CheckBox) getView().findViewById(
-				R.id.use_default_gateway);
+		CheckBox gateway = (CheckBox) getView().findViewById(R.id.use_default_gateway);
 		String routerip = "";
-		EditText passw = (EditText) getView()
-				.findViewById(R.id.router_password);
+		EditText passw = (EditText) getView().findViewById(R.id.router_password);
 		String password = passw.getText().toString();
 
 		int port = 80; // default port
@@ -284,8 +306,7 @@ public class DirectLoginFragment extends Fragment {
 			routerip = iptext.getText().toString();
 
 			// port
-			EditText portField = (EditText) getView().findViewById(
-					R.id.router_port);
+			EditText portField = (EditText) getView().findViewById(R.id.router_port);
 			String portString = portField.getText().toString();
 			port = Integer.parseInt(portString);
 		}
@@ -299,8 +320,7 @@ public class DirectLoginFragment extends Fragment {
 			isSSL = ssl.isChecked();
 
 			// username
-			EditText usernameField = (EditText) getView().findViewById(
-					R.id.router_username);
+			EditText usernameField = (EditText) getView().findViewById(R.id.router_username);
 			username = usernameField.getText().toString();
 		}
 
@@ -313,22 +333,8 @@ public class DirectLoginFragment extends Fragment {
 		authInfo.setUsername(username);
 		authInfo.setPassword(password);
 		authInfo.setHttps(isSSL);
-		this.authInfo = authInfo;
 
-		// Perform network check
-
-		GetRequest request = new GetRequest(getActivity(), authInfo,
-				"status/product_info", Product_info.class, "direct_login");
-		String lastRequestCacheKey = request.createCacheKey();
-
-		progressDialog = new ProgressDialog(getActivity(), R.style.DialogTheme);
-		progressDialog
-				.setMessage(getResources().getString(R.string.connecting));
-		progressDialog.show();
-		progressDialog.setCanceledOnTouchOutside(false);
-		spiceManager.execute(request, lastRequestCacheKey,
-				DurationInMillis.ALWAYS_EXPIRED, new LoginGetRequestListener());
-
+		return authInfo;
 	}
 
 	private class LoginGetRequestListener implements RequestListener<Response> {
@@ -339,10 +345,9 @@ public class DirectLoginFragment extends Fragment {
 			if (progressDialog != null) {
 				progressDialog.dismiss();
 			}
+			DirectLoginFragment.this.loginSavingProfile = false;
 			Log.i(CommandCenterActivity.TAG, "Failed to log in!");
-			Toast.makeText(getActivity(),
-					getResources().getString(R.string.direct_login_fail),
-					Toast.LENGTH_SHORT).show();
+			Toast.makeText(getActivity(), getResources().getString(R.string.direct_login_fail), Toast.LENGTH_SHORT).show();
 		}
 
 		@Override
@@ -355,9 +360,14 @@ public class DirectLoginFragment extends Fragment {
 			if (response.getResponseInfo() != null) {
 				if (response.getResponseInfo().getSuccess()) {
 					// login successful
+
+					// We should get ready to save this as profile if thats set
+					if (loginSavingProfile) {
+						Utility.saveProfile(getActivity(), buildProfile());
+					}
+
 					// Prepare new intent.
-					Intent intent = new Intent(getActivity(),
-							CommandCenterActivity.class);
+					Intent intent = new Intent(getActivity(), CommandCenterActivity.class);
 					intent.putExtra("authInfo", authInfo);
 					intent.putExtra("ab_subtitle", proin.getProduct_name()); // changes
 																				// subtitle.
@@ -366,16 +376,10 @@ public class DirectLoginFragment extends Fragment {
 					startActivity(intent);
 					getActivity().finish();
 				} else {
-					Toast.makeText(getActivity(),
-							response.getResponseInfo().getReason(),
-							Toast.LENGTH_LONG).show();
+					Toast.makeText(getActivity(), response.getResponseInfo().getReason(), Toast.LENGTH_LONG).show();
 				}
 			} else {
-				Toast.makeText(
-						getActivity(),
-						getResources().getString(
-								R.string.gpio_get_null_response),
-						Toast.LENGTH_LONG).show();
+				Toast.makeText(getActivity(), getResources().getString(R.string.gpio_get_null_response), Toast.LENGTH_LONG).show();
 			}
 		}
 	}

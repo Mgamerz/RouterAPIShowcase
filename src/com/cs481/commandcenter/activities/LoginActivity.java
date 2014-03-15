@@ -147,10 +147,10 @@ public class LoginActivity extends SpiceActivity {
 			String tag = null;
 			if (loginType.equals(loginValues[1])) {
 				fragment = new DirectLoginFragment();
-				tag = "DirectFragment";
+				tag = fragment.getClass().getName();
 			} else if (loginType.equals(loginValues[2])) {
 				fragment = new ECMLoginFragment();
-				tag = "ECMFragment";
+				tag = fragment.getClass().getName();
 			} else {
 				fragment = new SplashScreenFragment();
 			}
@@ -555,5 +555,13 @@ public class LoginActivity extends SpiceActivity {
 			}
 		});
 		whatsNewDialog = alertDialogBuilder.show();
+	}
+
+	/**
+	 * Gets the list of profiles from this activity that should have already loaded.
+	 * @return List of profiles in the database
+	 */
+	public ArrayList<Profile> getProfiles() {
+		return profiles;
 	}
 }

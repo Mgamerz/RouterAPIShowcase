@@ -124,4 +124,40 @@ public class AuthInfo implements Parcelable {
             return new AuthInfo[size];
         }
     };
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + (ecm ? 1231 : 1237);
+		result = prime * result + ((routerId == null) ? 0 : routerId.hashCode());
+		result = prime * result + ((routerip == null) ? 0 : routerip.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		AuthInfo other = (AuthInfo) obj;
+		if (ecm != other.ecm)
+			return false;
+		if (routerId == null) {
+			if (other.routerId != null)
+				return false;
+		} else if (!routerId.equals(other.routerId))
+			return false;
+		if (routerip == null) {
+			if (other.routerip != null)
+				return false;
+		} else if (!routerip.equals(other.routerip))
+			return false;
+		return true;
+	}
+    
+    
 }

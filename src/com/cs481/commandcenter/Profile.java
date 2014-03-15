@@ -10,6 +10,7 @@ import android.os.Parcelable;
  * 
  */
 public class Profile implements Parcelable {
+
 	private String profileName; // e.g. "Cloud Router"
 	private AuthInfo authInfo; // Authentication information:
 	
@@ -61,4 +62,30 @@ public class Profile implements Parcelable {
             return new Profile[size];
         }
     };
+    
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((authInfo == null) ? 0 : authInfo.hashCode());
+		result = prime * result + ((profileName == null) ? 0 : profileName.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Profile other = (Profile) obj;
+		if (profileName == null) {
+			if (other.profileName != null)
+				return false;
+		} else if (!profileName.equals(other.profileName))
+			return false;
+		return true;
+	}
 }
