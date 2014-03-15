@@ -293,6 +293,42 @@ public class DashboardFragment extends ListFragment {
 			}
 		}
 			break;
+		case lWLAN: {
+			String wifiTag = WifiFragment.class.getName();
+			Log.i(CommandCenterActivity.TAG, "WIFI WAS CLICKED");
+
+			// Check if fragment is visible on the screen.
+			WifiFragment wifiVisibility = (WifiFragment) getActivity()
+					.getSupportFragmentManager().findFragmentByTag(wifiTag);
+			if (wifiVisibility != null && wifiVisibility.isVisible()) {
+				return; // fragment is currently visible, do nothing.
+			}
+
+			FragmentManager fm = getActivity().getSupportFragmentManager();
+
+			boolean fragmentPopped = fm.popBackStackImmediate(wifiTag, 0);
+
+			if (!fragmentPopped) {
+				Log.i(CommandCenterActivity.TAG,
+						"Not in backstack - creating new fragment.");
+				WifiFragment infoFragment = WifiFragment
+						.newInstance(authInfo);
+				FragmentTransaction transaction = fm.beginTransaction();
+				// check if the parent activity is dual pane based.
+				CommandCenterActivity parent = (CommandCenterActivity) getActivity();
+				if (parent.isDualPane()) {
+					transaction.replace(R.id.rightside_fragment, infoFragment,
+							wifiTag);
+				} else {
+					transaction.replace(R.id.leftside_fragment, infoFragment, wifiTag);
+				}
+				transaction.addToBackStack(wifiTag);
+				transaction
+						.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+				transaction.commit();
+			}
+		}
+			break;
 		case lLAN:
 		{
 			String lanTag = LanClientFragment.class.getName();

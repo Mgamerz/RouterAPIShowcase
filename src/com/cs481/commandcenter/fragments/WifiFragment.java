@@ -1,15 +1,12 @@
 package com.cs481.commandcenter.fragments;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 
 import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
 import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
 import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
@@ -19,25 +16,17 @@ import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
-import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.Switch;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cs481.commandcenter.AuthInfo;
 import com.cs481.commandcenter.R;
-import com.cs481.commandcenter.Utility;
 import com.cs481.commandcenter.activities.CommandCenterActivity;
 import com.cs481.commandcenter.activities.SpiceActivity;
-import com.cs481.commandcenter.dialog.WifiWanDialogFragment;
-import com.cs481.commandcenter.listrows.WlanListRow;
 import com.cs481.commandcenter.responses.GetRequest;
 import com.cs481.commandcenter.responses.PostRequest;
 import com.cs481.commandcenter.responses.PutRequest;
@@ -47,7 +36,6 @@ import com.cs481.commandcenter.responses.config.wwan.Radio;
 import com.cs481.commandcenter.responses.config.wwan.WANProfile;
 import com.cs481.commandcenter.responses.config.wwan.WWAN;
 import com.cs481.commandcenter.responses.status.wlan.StatusWlan;
-import com.cs481.commandcenter.responses.status.wlan.WAP;
 import com.octo.android.robospice.SpiceManager;
 import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
@@ -60,8 +48,8 @@ public class WifiFragment extends ListFragment implements OnRefreshListener {
 	private ProgressDialog progressDialog;
 	private SpiceManager spiceManager;
 	private AuthInfo authInfo;
-	private ArrayList<WlanListRow> rows;
-	private ArrayList<WAP> waps;
+	//private ArrayList<WlanListRow> rows;
+	//private ArrayList<WAP> waps;
 	private boolean shouldLoadData = true;
 	private boolean wifiState = false;
 	private boolean wifiStateEnabled = false;
@@ -113,7 +101,7 @@ public class WifiFragment extends ListFragment implements OnRefreshListener {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		// Inflate the layout for this fragment
-		return inflater.inflate(R.layout.fragment_wificlient, container, false);
+		return inflater.inflate(R.layout.fragment_wifi, container, false);
 	}
 
 	@Override
@@ -140,7 +128,7 @@ public class WifiFragment extends ListFragment implements OnRefreshListener {
 		super.onStart();
 		// /You will setup the action bar with pull to refresh layout
 		SpiceActivity sa = (SpiceActivity) getActivity();
-		sa.setTitle(getResources().getString(R.string.wifiwan_title)); // TODO
+		sa.setTitle(getResources().getString(R.string.wifi_title)); // TODO
 																		// change
 																		// to
 																		// string
@@ -148,10 +136,10 @@ public class WifiFragment extends ListFragment implements OnRefreshListener {
 		spiceManager = sa.getSpiceManager();
 		if (shouldLoadData) {
 			setWifiState();
-			readWlanConfig(true);
+			//readWlanConfig(true);
 			shouldLoadData = false;
 		} else {
-			Log.i(CommandCenterActivity.TAG, waps.toString());
+			//Log.i(CommandCenterActivity.TAG, waps.toString());
 			//updateWapList(waps);
 		}
 	}
@@ -179,7 +167,7 @@ public class WifiFragment extends ListFragment implements OnRefreshListener {
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		// super.onCreateOptionsMenu(menu, inflater);
 		this.menu = menu;
-		inflater.inflate(R.menu.wifiwan_menu, this.menu);
+		inflater.inflate(R.menu.wifi_menu, this.menu);
 		// Get widget's instance
 		setWifiToggleListener();
 	}
@@ -224,7 +212,7 @@ public class WifiFragment extends ListFragment implements OnRefreshListener {
 			progressDialog.show();
 			progressDialog.setCanceledOnTouchOutside(false);
 			progressDialog.setCancelable(false);
-		} 
+		}
 
 		spiceManager.execute(wapListrequest, lastRequestCacheKey,
 				DurationInMillis.ALWAYS_EXPIRED,

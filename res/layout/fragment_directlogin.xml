@@ -126,6 +126,7 @@
             android:id="@+id/show_direct_advanced_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="3dp"
             android:gravity="center"
             android:singleLine="true"
             android:text="@string/show_direct_advanced" />
@@ -134,6 +135,7 @@
             android:id="@+id/connect_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="3dp"
             android:gravity="center"
             android:singleLine="true"
             android:text="@string/connect" />

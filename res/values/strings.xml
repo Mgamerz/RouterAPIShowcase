@@ -182,6 +182,10 @@
     <string name="contextmenu_copy">Copy Log Message</string>
     <string name="no_logs">No router logs to display or none could be retreived.</string>
 
+    <!-- Wireless Fragment -->
+    <string name="wifi_title">Wireless Access Points</string>
+    <string name="wifi_loading">There doesn\'t seem to be anything here yet</string>
+
     <!-- Color Strings (for the custom dialogs - doesn't support R.color values. -->
     <string name="dialogcolor_title">#FFFFFF</string>
 
@@ -262,6 +266,6 @@
 
     <!-- Whats new - keep this at the bottom -->
     <string name="whats_new_title">What\'s new</string>
-    <string name="whats_new">What\'s new in Alpha 1.01:\n\n - Added bug reporter that uploads logs to a privately owned Pastebin account, accessible through the menu (only visible to us)\n\n - Added this What\'s New dialog\n\n - Fixed username space trimming\n\n - Setting direct login as your preferred type via the splash screen dialog now has an effect\n\n - ECM Login failure gives detailed response in a toast \n\n - Other small fixes</string>
+    <string name="whats_new">What\'s new in Alpha 1.02_testing:\n\n - Added direct login advanced options\n - Added ability to change ECM server url in the settings\n - Added licensing information\n - Added ability to delete profiles\n - Made app ignore unknown json fields (should fix a lot of bugs) \n - Added prototype of wifi kick/ban interface page\n - Other misc items</string>
 
 </resources>
