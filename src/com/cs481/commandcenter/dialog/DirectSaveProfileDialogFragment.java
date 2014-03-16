@@ -1,5 +1,6 @@
 package com.cs481.commandcenter.dialog;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
@@ -121,6 +122,10 @@ public class DirectSaveProfileDialogFragment extends DialogFragment {
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		Log.i(CommandCenterActivity.TAG, "onActivityResult() in DSPDF: " + requestCode + " with result " + resultCode);
+		if (resultCode != Activity.RESULT_OK) {
+			super.onActivityResult(requestCode, resultCode, data);
+			return;
+		}
 		switch (requestCode) {
 		case LoginActivity.PROFILE_PIN_ENCRYPT:
 			AuthInfo encryptedInfo = Utility.encryptAuthInfo(getActivity(), data.getExtras().getString("pin"), authInfo);

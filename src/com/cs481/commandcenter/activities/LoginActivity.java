@@ -103,7 +103,7 @@ public class LoginActivity extends SpiceActivity {
 		SharedPreferences crypto = getSharedPreferences(resources.getString(R.string.crypto_prefsdb), MODE_PRIVATE);
 		String uuid = crypto.getString("uuid", null);
 		if (uuid == null) {
-			Log.i(CommandCenterActivity.TAG, "UUID is null - app should be running from a fresh data set.");
+			Log.e(CommandCenterActivity.TAG, "UUID is null - Generating new key");
 			// writing
 			SecureRandom secureRandom = new SecureRandom();
 			// Do *not* seed secureRandom! Automatically seeded from system.
@@ -403,9 +403,6 @@ public class LoginActivity extends SpiceActivity {
 					String decryptedPassword = Cryptography.decryptMsg(Base64.decode(unlockProfile.getAuthInfo().getPassword(), Base64.DEFAULT), secret);
 					profileAuth.setPassword(decryptedPassword);
 					profileAuth.setUsername(decryptedUsername);
-
-					Log.e(CommandCenterActivity.TAG, "username: "+decryptedUsername);
-					Log.e(CommandCenterActivity.TAG, "password: "+decryptedPassword);
 					// Log.
 
 					// Login via ECM.

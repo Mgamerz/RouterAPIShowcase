@@ -267,6 +267,9 @@ public class PINFragment extends Fragment implements OnClickListener {
 	 *            current pin (it is not read - only the length matters)
 	 */
 	private void updateProgress(String pin) {
+		if (!isAdded()) {
+			return; //screen was rotated.
+		}
 		ImageView progressPos = null;
 		for (int i = 1; i < 5; i++) {
 			GradientDrawable circleIcon = (GradientDrawable) getActivity()
