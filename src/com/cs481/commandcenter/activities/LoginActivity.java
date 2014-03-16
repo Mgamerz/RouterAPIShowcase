@@ -404,6 +404,8 @@ public class LoginActivity extends SpiceActivity {
 					profileAuth.setPassword(decryptedPassword);
 					profileAuth.setUsername(decryptedUsername);
 
+					Log.e(CommandCenterActivity.TAG, "username: "+decryptedUsername);
+					Log.e(CommandCenterActivity.TAG, "password: "+decryptedPassword);
 					// Log.
 
 					// Login via ECM.
@@ -421,8 +423,7 @@ public class LoginActivity extends SpiceActivity {
 						// It's a direct login
 						// Perform a credential login before we load up the
 						// management interface.
-
-						GetRequest request = new GetRequest(this, authInfo, "status/product_info", Product_info.class, "direct_login");
+						GetRequest request = new GetRequest(this, profileAuth, "status/product_info", Product_info.class, "direct_login");
 						String lastRequestCacheKey = request.createCacheKey();
 
 						progressDialog = new ProgressDialog(this, R.style.DialogTheme);
