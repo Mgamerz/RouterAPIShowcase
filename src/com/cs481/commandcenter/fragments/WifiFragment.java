@@ -5,22 +5,21 @@ import java.util.ArrayList;
 import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
 import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
 import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
-import android.app.Activity;
-import android.app.ProgressDialog;
-import android.content.Intent;
-import android.content.res.Resources;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.util.Log;
-import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
+import android.widget.ProgressBar;
 import android.widget.Switch;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cs481.commandcenter.AuthInfo;
@@ -28,32 +27,30 @@ import com.cs481.commandcenter.R;
 import com.cs481.commandcenter.activities.CommandCenterActivity;
 import com.cs481.commandcenter.activities.SpiceActivity;
 import com.cs481.commandcenter.responses.GetRequest;
-import com.cs481.commandcenter.responses.PostRequest;
 import com.cs481.commandcenter.responses.PutRequest;
 import com.cs481.commandcenter.responses.Response;
+import com.cs481.commandcenter.responses.config.wlan.Bss;
 import com.cs481.commandcenter.responses.config.wlan.ConfigWlan;
-import com.cs481.commandcenter.responses.config.wwan.Radio;
-import com.cs481.commandcenter.responses.config.wwan.WANProfile;
-import com.cs481.commandcenter.responses.config.wwan.WWAN;
-import com.cs481.commandcenter.responses.status.wlan.StatusWlan;
+import com.cs481.commandcenter.responses.config.wlan.Radio;
 import com.octo.android.robospice.SpiceManager;
 import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
 
 public class WifiFragment extends ListFragment implements OnRefreshListener {
-	private static final int WANDIALOG_FRAGMENT = 0;
-	private static final String CACHEKEY_WLANGET = "config_wlan_get";
+	private static final String CACHEKEY_WWAPGET = "config_wlan_get";
+	private static final int WWAP_LOADING = 0;
+	private static final int WWAP_LOADED = 1;
+	private static final int WWAP_FAILED = 2;
 	private PullToRefreshLayout mPullToRefreshLayout;
-	private ProgressDialog progressDialog;
 	private SpiceManager spiceManager;
 	private AuthInfo authInfo;
-	//private ArrayList<WlanListRow> rows;
-	//private ArrayList<WAP> waps;
+	private WWAPAdapter adapter;
+	private ArrayList<Bss> wwaps;
+	private int wwapListState = WWAP_LOADING;
 	private boolean shouldLoadData = true;
 	private boolean wifiState = false;
 	private boolean wifiStateEnabled = false;
-	private ArrayList<WANProfile> wanprofiles;
 
 	private Menu menu;
 
@@ -63,9 +60,11 @@ public class WifiFragment extends ListFragment implements OnRefreshListener {
 		setHasOptionsMenu(true);
 		if (savedInstanceState != null) {
 			authInfo = savedInstanceState.getParcelable("authInfo");
-			wifiStateEnabled = savedInstanceState
-					.getBoolean("wifiStateEnabled");
+			wifiStateEnabled = savedInstanceState.getBoolean("wifiStateEnabled");
 			wifiState = savedInstanceState.getBoolean("wifiState");
+			wwapListState = savedInstanceState.getInt("wlanListState");
+			wwaps = savedInstanceState.getParcelableArrayList("wwaps");
+			shouldLoadData = savedInstanceState.getBoolean("shouldLoadData");
 		} else {
 			Bundle passedArgs = getArguments();
 			if (passedArgs != null) {
@@ -80,7 +79,6 @@ public class WifiFragment extends ListFragment implements OnRefreshListener {
 		Bundle args = new Bundle();
 		args.putParcelable("authInfo", authInfo);
 		wifiFrag.setArguments(args);
-
 		return wifiFrag;
 	}
 
@@ -90,18 +88,32 @@ public class WifiFragment extends ListFragment implements OnRefreshListener {
 
 		// Save data on rotate. This bundle will be passed to onCreate() by
 		// Android.
-		Log.i(CommandCenterActivity.TAG, "Saving instance");
+		Log.i(CommandCenterActivity.TAG, "Saving wifi instance");
 		outState.putParcelable("authInfo", authInfo);
 		outState.putBoolean("shouldLoadData", shouldLoadData);
 		outState.putBoolean("wifiState", wifiState);
 		outState.putBoolean("wifiStateEnabled", wifiStateEnabled);
+		outState.putInt("wlanListState", wwapListState);
+		
+		if (wwaps == null) {
+			Log.i(CommandCenterActivity.TAG, "WWAPS are null for onSaveInstanceState(), creating empty list to prevent crash.");
+			wwaps = new ArrayList<Bss>();
+		}
+		outState.putParcelableArrayList("wwaps", wwaps); 
 	}
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		// Inflate the layout for this fragment
-		return inflater.inflate(R.layout.fragment_wifi, container, false);
+		View v = inflater.inflate(R.layout.fragment_wifi, container, false);
+		if (wwapListState == WWAP_FAILED) {
+			ProgressBar bar = (ProgressBar) v.findViewById(R.id.wwap_loadingprogressbar);
+			bar.setVisibility(ProgressBar.GONE);
+
+			TextView message = (TextView) v.findViewById(R.id.wireless_loadingtext);
+			message.setText(getActivity().getResources().getString(R.string.wifi_load_failed));
+		}
+		return v;
 	}
 
 	@Override
@@ -115,12 +127,7 @@ public class WifiFragment extends ListFragment implements OnRefreshListener {
 		mPullToRefreshLayout = new PullToRefreshLayout(viewGroup.getContext());
 
 		// We can now setup the PullToRefreshLayout
-		ActionBarPullToRefresh
-				.from(getActivity())
-				.insertLayoutInto(viewGroup)
-				.theseChildrenArePullable(getListView(),
-						getListView().getEmptyView()).listener(this)
-				.setup(mPullToRefreshLayout);
+		ActionBarPullToRefresh.from(getActivity()).insertLayoutInto(viewGroup).theseChildrenArePullable(getListView(), getListView().getEmptyView()).listener(this).setup(mPullToRefreshLayout);
 	}
 
 	@Override
@@ -128,19 +135,15 @@ public class WifiFragment extends ListFragment implements OnRefreshListener {
 		super.onStart();
 		// /You will setup the action bar with pull to refresh layout
 		SpiceActivity sa = (SpiceActivity) getActivity();
-		sa.setTitle(getResources().getString(R.string.wifi_title)); // TODO
-																		// change
-																		// to
-																		// string
-																		// resource
+		sa.setTitle(getResources().getString(R.string.wifi_title));
 		spiceManager = sa.getSpiceManager();
 		if (shouldLoadData) {
 			setWifiState();
-			//readWlanConfig(true);
+			readWlanConfig();
 			shouldLoadData = false;
 		} else {
-			//Log.i(CommandCenterActivity.TAG, waps.toString());
-			//updateWapList(waps);
+			 Log.i(CommandCenterActivity.TAG, "Reloading existing WWAPS from onStart() "+wwaps);
+			 updateWWAPList(wwaps);
 		}
 	}
 
@@ -149,18 +152,15 @@ public class WifiFragment extends ListFragment implements OnRefreshListener {
 	 */
 	private void setWifiState() {
 		// perform the request.
-		GetRequest request = new GetRequest(getActivity(), authInfo, "config/wlan",
-				ConfigWlan.class, "wlanconfigget");
+		GetRequest request = new GetRequest(getActivity(), authInfo, "config/wlan", ConfigWlan.class, "wlanconfigget");
 		String lastRequestCacheKey = request.createCacheKey();
 
-		spiceManager.execute(request, lastRequestCacheKey,
-				DurationInMillis.ALWAYS_EXPIRED,
-				new WLANConfigGetRequestListener());
+		spiceManager.execute(request, lastRequestCacheKey, DurationInMillis.ALWAYS_EXPIRED, new WLANConfigGetRequestListener());
 	}
 
 	@Override
 	public void onRefreshStarted(View view) {
-		readWlanConfig(false);
+		readWlanConfig();
 	}
 
 	@Override
@@ -173,109 +173,72 @@ public class WifiFragment extends ListFragment implements OnRefreshListener {
 	}
 
 	private void setWifiToggleListener() {
-		Switch wifiToggle = (Switch) menu.findItem(R.id.wifi_toggle)
-				.getActionView();
+		Switch wifiToggle = (Switch) menu.findItem(R.id.wifi_toggle).getActionView();
 		wifiToggle.setChecked(wifiState);
 		wifiToggle.setEnabled(wifiStateEnabled);
 		wifiToggle.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 
 			@Override
-			public void onCheckedChanged(CompoundButton buttonView,
-					boolean isChecked) {
-				Log.i(CommandCenterActivity.TAG,
-						"Performing put request to enabled wlan");
-				PutRequest request = new PutRequest(getActivity(), Boolean.valueOf(isChecked),
-						authInfo, "config/wlan/radio/0/enabled", Boolean.class);
+			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+				Log.i(CommandCenterActivity.TAG, "Performing put request to enabled wlan");
+				PutRequest request = new PutRequest(getActivity(), Boolean.valueOf(isChecked), authInfo, "config/wlan/radio/0/enabled", Boolean.class);
 				String lastRequestCacheKey = request.createCacheKey();
 
-				spiceManager.execute(request, lastRequestCacheKey,
-						DurationInMillis.ALWAYS_EXPIRED,
-						new WLANEnabledPutRequestListener());
+				spiceManager.execute(request, lastRequestCacheKey, DurationInMillis.ALWAYS_EXPIRED, new WLANEnabledPutRequestListener());
 			}
 
 		});
 	}
 
-	private void readWlanConfig(boolean dialog) {
+	private void readWlanConfig() {
 		// perform the request.
-		 GetRequest wapListrequest = new GetRequest(getActivity(), authInfo, "status/wlan",
-				StatusWlan.class, CACHEKEY_WLANGET);
-		String lastRequestCacheKey = wapListrequest.createCacheKey();
-		Resources resources = getResources();
-		 if (dialog) {
-			ContextThemeWrapper wrapper = new ContextThemeWrapper(
-					getActivity(), android.R.style.Theme_Holo_Light);
-
-			progressDialog = new ProgressDialog(wrapper);
-			progressDialog.setMessage(resources
-					.getString(R.string.wlan_reading));
-			progressDialog.show();
-			progressDialog.setCanceledOnTouchOutside(false);
-			progressDialog.setCancelable(false);
-		}
-
-		spiceManager.execute(wapListrequest, lastRequestCacheKey,
-				DurationInMillis.ALWAYS_EXPIRED,
-				new WLANStatusGetRequestListener()); 
+		GetRequest wwapRequest = new GetRequest(getActivity(), authInfo, "config/wlan", ConfigWlan.class, CACHEKEY_WWAPGET);
+		String lastRequestCacheKey = wwapRequest.createCacheKey();
+		spiceManager.execute(wwapRequest, lastRequestCacheKey, DurationInMillis.ALWAYS_EXPIRED, new WWAPSGetRequestListener());
 	}
 
-	private class WLANStatusGetRequestListener implements
-			RequestListener<Response> {
+	/* private class WLANStatusGetRequestListener implements RequestListener<Response> {
 
 		@Override
 		public void onRequestFailure(SpiceException e) {
 			Resources resources = getResources();
 			// update your UI
-			if (progressDialog != null) {
-				progressDialog.dismiss();
-			}
 			Log.i(CommandCenterActivity.TAG, "Failed to read WLAN!");
-			Toast.makeText(getActivity(),
-					resources.getString(R.string.wlan_get_config_failure),
-					Toast.LENGTH_SHORT).show();
+			Toast.makeText(getActivity(), resources.getString(R.string.wlan_get_config_failure), Toast.LENGTH_SHORT).show();
 			mPullToRefreshLayout.setRefreshComplete();
 		}
 
 		@Override
 		public void onRequestSuccess(Response response) {
 			// update your UI
-			if (progressDialog != null) {
-				progressDialog.dismiss();
-			}
 
 			if (response.getResponseInfo().getSuccess()) {
 				StatusWlan wlan = (StatusWlan) response.getData();
 				Log.i(CommandCenterActivity.TAG, "WLAN request successful");
-				//updateWlanList(wlan);
-				Log.i(CommandCenterActivity.TAG, "isRefresh(): "
-						+ mPullToRefreshLayout.isRefreshing());
+				// updateWlanList(wlan);
+				Log.i(CommandCenterActivity.TAG, "isRefresh(): " + mPullToRefreshLayout.isRefreshing());
 			} else {
 
-				Toast.makeText(getActivity(),
-						response.getResponseInfo().getReason(),
-						Toast.LENGTH_LONG).show();
+				Toast.makeText(getActivity(), response.getResponseInfo().getReason(), Toast.LENGTH_LONG).show();
 			}
 			mPullToRefreshLayout.setRefreshComplete();
 
 		}
-	}
+	} */
 
-	private class WLANEnabledPutRequestListener implements
-			RequestListener<Response> {
+	private class WLANEnabledPutRequestListener implements RequestListener<Response> {
 
 		@Override
 		public void onRequestFailure(SpiceException e) {
 			Log.i(CommandCenterActivity.TAG, "Failed to put the wifi status!");
-			Toast.makeText(getActivity(), "Failed to change the wifi status.",
-					Toast.LENGTH_SHORT).show();
+			Toast.makeText(getActivity(), "Failed to change the wifi status.", Toast.LENGTH_SHORT).show();
 		}
 
 		@Override
 		public void onRequestSuccess(Response enabledPutResult) {
 			Log.i(CommandCenterActivity.TAG, "UPDATING SWITCH!");
 			Boolean bool = (Boolean) enabledPutResult.getData();
-			Switch wifiToggle = (Switch) menu.findItem(R.id.wifi_toggle)
-					.getActionView();
+			Switch wifiToggle = (Switch) menu.findItem(R.id.wifi_toggle).getActionView();
 			wifiToggle.setOnCheckedChangeListener(null);
 			wifiState = bool.booleanValue();
 			wifiStateEnabled = true;
@@ -285,14 +248,12 @@ public class WifiFragment extends ListFragment implements OnRefreshListener {
 		}
 	}
 
-	private class WLANConfigGetRequestListener implements
-			RequestListener<Response> {
+	private class WLANConfigGetRequestListener implements RequestListener<Response> {
 
 		@Override
 		public void onRequestFailure(SpiceException e) {
 			Log.i(CommandCenterActivity.TAG, "Failed to read WLAN!");
-			Toast.makeText(getActivity(), "Failed to get the WLAN Config.",
-					Toast.LENGTH_SHORT).show();
+			Toast.makeText(getActivity(), "Failed to get the WLAN Config.", Toast.LENGTH_SHORT).show();
 			mPullToRefreshLayout.setRefreshComplete();
 		}
 
@@ -300,8 +261,7 @@ public class WifiFragment extends ListFragment implements OnRefreshListener {
 		public void onRequestSuccess(Response wlanConfig) {
 			Log.i(CommandCenterActivity.TAG, "UPDATING SWITCH!");
 			ConfigWlan cwlan = (ConfigWlan) wlanConfig.getData();
-			Switch wifiToggle = (Switch) menu.findItem(R.id.wifi_toggle)
-					.getActionView();
+			Switch wifiToggle = (Switch) menu.findItem(R.id.wifi_toggle).getActionView();
 			wifiToggle.setOnCheckedChangeListener(null);
 			wifiState = cwlan.getRadios().get(0).getEnabled();
 			wifiStateEnabled = true;
@@ -312,98 +272,96 @@ public class WifiFragment extends ListFragment implements OnRefreshListener {
 		}
 	}
 
-	public void connectAsWAN(WANProfile wanprofile) {
-		Log.w(CommandCenterActivity.TAG, "Connecting as WAN.");
+	private class WWAPSGetRequestListener implements RequestListener<Response> {
 
-		for (WANProfile knownProfile : wanprofiles) {
-			if (wanprofile.equals(knownProfile)) {
-				Log.e(CommandCenterActivity.TAG,
-						"This profile is already defined!");
-				return; // it's known
-			}
-		}
-
-		// Profile is not yet defined. Do a POST to the router.
-		Log.i(CommandCenterActivity.TAG,
-				"Performing put request to enabled wlan");
-		PostRequest request = new PostRequest(getActivity(), wanprofile, authInfo,
-				"config/wwan/radio/0/profiles", WANProfile.class); // TODO will
-																	// have to
-																	// deal with
-																	// dual band
-																	// again.
-		String lastRequestCacheKey = request.createCacheKey();
-
-		spiceManager.execute(request, lastRequestCacheKey,
-				DurationInMillis.ALWAYS_EXPIRED,
-				new WANProfilePostRequestListener());
-
-	}
-
-	private class WANProfilesGetRequestListener implements
-			RequestListener<Response> {
 
 		@Override
 		public void onRequestFailure(SpiceException e) {
-			Log.i(CommandCenterActivity.TAG, "Failed to read WAN Profile list!");
-			Toast.makeText(getActivity(),
-					"Failed to get the WAN Profile listg.", Toast.LENGTH_SHORT)
-					.show();
+			if (!isAdded()) {
+				return;
+			}
+			Log.i(CommandCenterActivity.TAG, "Failed to read the list of WAP configs!");
+			Toast.makeText(getActivity(), getResources().getString(R.string.failed_wlan_config), Toast.LENGTH_SHORT).show();
+			wwapListState = WWAP_FAILED;
+
 		}
 
 		@Override
-		public void onRequestSuccess(Response wanProfileList) {
-			Log.i(CommandCenterActivity.TAG, "Got wan profiles list.");
-			WWAN wwan = (WWAN) wanProfileList.getData();
-			ArrayList<Radio> profileRadios = wwan.getRadios();
-			ArrayList<WANProfile> wanprofiles = new ArrayList<WANProfile>();
-
-			if (profileRadios != null) {
-				for (Radio radio : profileRadios) {
-					ArrayList<WANProfile> singleRadioProfiles = radio
-							.getProfiles();
-					if (singleRadioProfiles != null) {
-						for (WANProfile profile : singleRadioProfiles) {
-							wanprofiles.add(profile);
-						}
-					}
-				}
+		public void onRequestSuccess(Response response) {
+			if (!isAdded()) {
+				return;
 			}
-			WifiFragment.this.wanprofiles = wanprofiles;
+			Log.i(CommandCenterActivity.TAG, "Fetched the WLAN Config in WifiFragment");
+			ConfigWlan wlan = (ConfigWlan) response.getData();
+			ArrayList<Radio> radios = wlan.getRadios();
+			wwapListState = WWAP_LOADED;
+			updateWWAPList(radios.get(0).getBss());
 		}
 	}
-
-	private class WANProfilePostRequestListener implements
-			RequestListener<Response> {
-
-		@Override
-		public void onRequestFailure(SpiceException e) {
-			Log.w(CommandCenterActivity.TAG, "Failed to post the WAN Profile!");
-			Toast.makeText(getActivity(), "Failed to POST Profile to router.",
-					Toast.LENGTH_SHORT).show();
+	
+	private void updateWWAPList(ArrayList<Bss> wwaps) {
+		if (getActivity() == null) {
+			return; // fragment has died
 		}
+		// TODO Auto-generated method stub
+		Log.i(CommandCenterActivity.TAG, "Updating adapter with new wwap information.");
 
-		@Override
-		public void onRequestSuccess(Response wanProfileList) {
-			Log.i(CommandCenterActivity.TAG, "Posted the WAN profile.");
-			// WWAN wwan = (WWAN) wanProfileList.getData();
-			Toast.makeText(getActivity(), "POST successful.", Toast.LENGTH_LONG)
-					.show();
-		}
+		adapter = new WWAPAdapter(getActivity(), wwaps); // make a new
+														// adapter, as
+														// adapters can edit
+														// the existing
+														// dataset
+		Log.i(CommandCenterActivity.TAG, "created new log adapter :" + adapter);
+
+		setListAdapter(adapter);
+
+		// Log.i(CommandCenterActivity.TAG, "Number of preclear: " +
+		// logs.size()+ " and instance v: "+this.logs.size());
+		Log.i(CommandCenterActivity.TAG, "Number of wwaps: " + wwaps.size());
+		this.wwaps = wwaps;
+		Log.i(CommandCenterActivity.TAG, "Number of wwaps pa: " + wwaps.size());
+
+		Log.i(CommandCenterActivity.TAG, "notifying adapter of new dataset");
+		shouldLoadData = false;
+		adapter.notifyDataSetChanged();
 	}
 
-	@Override
-	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-		switch (requestCode) {
-		case WANDIALOG_FRAGMENT:
+	public class WWAPAdapter extends ArrayAdapter<Bss> {
+		private final Context context;
+		private final ArrayList<Bss> rows;
 
-			if (resultCode == Activity.RESULT_OK) {
-				// After Ok code.
-			} else if (resultCode == Activity.RESULT_CANCELED) {
-				// After Cancel code.
+		public WWAPAdapter(Context context, ArrayList<Bss> rows) {
+			super(context, R.layout.listrow_bss, rows);
+			this.context = context;
+			this.rows = rows;
+		}
+
+		@Override
+		public Bss getItem(int position) {
+			return rows.get(position);
+		}
+
+		@Override
+		public View getView(int position, View convertView, ViewGroup parent) {
+			LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+			View rowView;
+			if (convertView == null) {
+				rowView = inflater.inflate(R.layout.listrow_bss, parent, false);
+			} else {
+				rowView = convertView;
 			}
+			// Setup wwap stuff here. rowView is the container for each
+			// individual wwap in the list, so you can call
+			// v.findViewById(<id here>) to find sub elements to set.
 
-			break;
+			Bss wwap = rows.get(position);
+
+			TextView messageView = (TextView) rowView.findViewById(R.id.listrow_wwap_name);
+			messageView.setText(wwap.getSsid());
+			
+			Switch apEnabled = (Switch) rowView.findViewById(R.id.listrow_wwap_switch);
+			apEnabled.setChecked(wwap.getEnabled());
+			return rowView;
 		}
 	}
 }

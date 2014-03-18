@@ -77,13 +77,13 @@
     <style name="EditTextTheme" parent="@android:style/Widget.EditText">
         <item name="android:textColor">@color/White</item>
         <item name="android:textColorHint">#CCCCCC</item>
-        <item name="android:background">@drawable/apptheme_edit_text_holo_dark</item>
+        <item name="android:background">@drawable/white_edit_text_holo_dark</item>
     </style>
 
     <!-- Checkbox Theme -->
     <style name="CheckBoxTheme" parent="@android:style/Widget.CompoundButton.CheckBox">
         <item name="android:textColor">@color/selector_textcolor</item>
-        <item name="android:button">@drawable/apptheme_btn_check_holo_dark</item>
+        <item name="android:button">@drawable/white_checkbox_holo_dark</item>
     </style>
 
     <!-- ListView Theme -->

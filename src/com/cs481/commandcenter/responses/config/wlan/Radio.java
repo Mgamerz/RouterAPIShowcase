@@ -1,6 +1,7 @@
 
 package com.cs481.commandcenter.responses.config.wlan;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -8,7 +9,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 public class Radio{
    	private Number beacon;
-   	private List bss;
+   	private ArrayList<Bss> bss;
    	private Number channel;
    	private String channel_selection;
    	private Number client_timeout;
@@ -43,10 +44,10 @@ public class Radio{
 	public void setBeacon(Number beacon){
 		this.beacon = beacon;
 	}
- 	public List getBss(){
+ 	public ArrayList<Bss> getBss(){
 		return this.bss;
 	}
-	public void setBss(List bss){
+	public void setBss(ArrayList<Bss> bss){
 		this.bss = bss;
 	}
  	public Number getChannel(){

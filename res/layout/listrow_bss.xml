@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="5dp" >
+
+    <Switch
+        android:id="@+id/listrow_wwap_switch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:checked="true"
+        android:thumb="@drawable/blue_switch_inner_track_dark" />
+
+    <TextView
+        android:id="@+id/listrow_wwap_name"
+        style="@style/TextTheme"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:text="WWAP Name" />
+
+    <TextView
+        android:id="@+id/listrow_wwap_desc"
+        style="@style/SubTextTheme"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/listrow_wwap_name"
+        android:text="Description"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+
+</RelativeLayout>

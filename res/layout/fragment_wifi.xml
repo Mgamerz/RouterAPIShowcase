@@ -14,13 +14,28 @@
         android:layout_height="match_parent" >
     </ListView>
 
-    <TextView
-        android:id="@android:id/empty"
-        style="@style/TextTheme"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+    <LinearLayout
+        android:id="@id/android:empty"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:gravity="center"
-        android:text="@string/wifi_loading" />
+        android:orientation="horizontal" >
+
+        <ProgressBar
+            android:id="@+id/wwap_loadingprogressbar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center" />
+
+        <TextView
+            android:id="@+id/wireless_loadingtext"
+            style="@style/TextTheme"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="@string/wifi_loading" />
+    </LinearLayout>
 
 </uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout>

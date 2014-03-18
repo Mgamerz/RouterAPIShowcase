@@ -1,11 +1,11 @@
-
 package com.cs481.commandcenter.responses.config.wlan;
 
-import java.util.List;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Bss{
+public class Bss implements Parcelable {
    	private String authmode;
    	private Number defaultwepkey;
    	private boolean enabled;
@@ -28,6 +28,10 @@ public class Bss{
    	private Number wparekeyinterval;
    	private Wps wps;
 
+   	public Bss(){
+   		//empty constructor for jackson
+   	}
+   	
  	public String getAuthmode(){
 		return this.authmode;
 	}
@@ -154,4 +158,71 @@ public class Bss{
 	public void setWps(Wps wps){
 		this.wps = wps;
 	}
+
+    protected Bss(Parcel in) {
+        authmode = in.readString();
+        defaultwepkey = (Number) in.readValue(Number.class.getClassLoader());
+        enabled = in.readByte() != 0x00;
+        hidden = in.readByte() != 0x00;
+        isolate = in.readByte() != 0x00;
+        radius0ip = in.readString();
+        radius0key = in.readString();
+        radius0nasid = in.readString();
+        radius0port = (Number) in.readValue(Number.class.getClassLoader());
+        radius1ip = in.readString();
+        ssid = in.readString();
+        uid = in.readString();
+        wepkey0 = in.readString();
+        wepkey1 = in.readString();
+        wepkey2 = in.readString();
+        wepkey3 = in.readString();
+        wmm = in.readByte() != 0x00;
+        wpacipher = in.readString();
+        wpapsk = in.readString();
+        wparekeyinterval = (Number) in.readValue(Number.class.getClassLoader());
+        wps = (Wps) in.readValue(Wps.class.getClassLoader());
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(authmode);
+        dest.writeValue(defaultwepkey);
+        dest.writeByte((byte) (enabled ? 0x01 : 0x00));
+        dest.writeByte((byte) (hidden ? 0x01 : 0x00));
+        dest.writeByte((byte) (isolate ? 0x01 : 0x00));
+        dest.writeString(radius0ip);
+        dest.writeString(radius0key);
+        dest.writeString(radius0nasid);
+        dest.writeValue(radius0port);
+        dest.writeString(radius1ip);
+        dest.writeString(ssid);
+        dest.writeString(uid);
+        dest.writeString(wepkey0);
+        dest.writeString(wepkey1);
+        dest.writeString(wepkey2);
+        dest.writeString(wepkey3);
+        dest.writeByte((byte) (wmm ? 0x01 : 0x00));
+        dest.writeString(wpacipher);
+        dest.writeString(wpapsk);
+        dest.writeValue(wparekeyinterval);
+        dest.writeValue(wps);
+    }
+
+    @SuppressWarnings("unused")
+    public static final Parcelable.Creator<Bss> CREATOR = new Parcelable.Creator<Bss>() {
+        @Override
+        public Bss createFromParcel(Parcel in) {
+            return new Bss(in);
+        }
+
+        @Override
+        public Bss[] newArray(int size) {
+            return new Bss[size];
+        }
+    };
 }

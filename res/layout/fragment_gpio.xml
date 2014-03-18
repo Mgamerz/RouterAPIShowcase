@@ -35,7 +35,7 @@
                     android:id="@+id/powerled_state"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:thumb="@drawable/greentheme_switch_inner_holo_light" />
+                    android:thumb="@drawable/green_switch_inner_track_light" />
             </TableRow>
 
             <View
@@ -60,7 +60,7 @@
                     android:id="@+id/wifiledr_state"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:thumb="@drawable/apptheme_switch_inner_holo_dark" />
+                    android:thumb="@drawable/red_switch_inner_track_dark" />
             </TableRow>
 
             <TableRow
@@ -80,7 +80,7 @@
                     android:id="@+id/wifiledg_state"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:thumb="@drawable/greentheme_switch_inner_holo_light" />
+                    android:thumb="@drawable/green_switch_inner_track_light" />
             </TableRow>
 
             <TableRow
@@ -205,7 +205,7 @@
                     android:id="@+id/usb1ledr_state"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:thumb="@drawable/apptheme_switch_inner_holo_dark" />
+                    android:thumb="@drawable/red_switch_inner_track_dark" />
             </TableRow>
 
             <TableRow
@@ -225,7 +225,7 @@
                     android:id="@+id/usb1ledg_state"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:thumb="@drawable/greentheme_switch_inner_holo_light" />
+                    android:thumb="@drawable/green_switch_inner_track_light" />
             </TableRow>
 
             <View
@@ -250,7 +250,7 @@
                     android:id="@+id/usb2ledr_state"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:thumb="@drawable/apptheme_switch_inner_holo_dark" />
+                    android:thumb="@drawable/red_switch_inner_track_dark" />
             </TableRow>
 
             <TableRow
@@ -270,7 +270,7 @@
                     android:id="@+id/usb2ledg_state"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:thumb="@drawable/greentheme_switch_inner_holo_light" />
+                    android:thumb="@drawable/green_switch_inner_track_light" />
             </TableRow>
 
             <View
@@ -295,7 +295,7 @@
                     android:id="@+id/usb3ledr_state"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:thumb="@drawable/apptheme_switch_inner_holo_dark" />
+                    android:thumb="@drawable/red_switch_inner_track_dark" />
             </TableRow>
 
             <TableRow
@@ -315,7 +315,7 @@
                     android:id="@+id/usb3ledg_state"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:thumb="@drawable/greentheme_switch_inner_holo_light" />
+                    android:thumb="@drawable/green_switch_inner_track_light" />
             </TableRow>
 
             <View
@@ -340,7 +340,7 @@
                     android:id="@+id/expansionbay1ledr_state"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:thumb="@drawable/apptheme_switch_inner_holo_dark" />
+                    android:thumb="@drawable/red_switch_inner_track_dark" />
             </TableRow>
 
             <TableRow
@@ -360,7 +360,7 @@
                     android:id="@+id/expansionbay1ledg_state"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:thumb="@drawable/greentheme_switch_inner_holo_light" />
+                    android:thumb="@drawable/green_switch_inner_track_light" />
             </TableRow>
 
             <View
@@ -385,7 +385,7 @@
                     android:id="@+id/expansionbay2ledr_state"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:thumb="@drawable/apptheme_switch_inner_holo_dark" />
+                    android:thumb="@drawable/red_switch_inner_track_dark" />
             </TableRow>
 
             <TableRow
@@ -405,7 +405,7 @@
                     android:id="@+id/expansionbay2ledg_state"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:thumb="@drawable/greentheme_switch_inner_holo_light" />
+                    android:thumb="@drawable/green_switch_inner_track_light" />
             </TableRow>
         </TableLayout>
     </ScrollView>

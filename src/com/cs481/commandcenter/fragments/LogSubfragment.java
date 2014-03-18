@@ -1,7 +1,6 @@
 package com.cs481.commandcenter.fragments;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 
 import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
 import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
@@ -34,7 +33,6 @@ import com.cs481.commandcenter.responses.GetRequest;
 import com.cs481.commandcenter.responses.Response;
 import com.cs481.commandcenter.responses.status.log.LogMessage;
 import com.cs481.commandcenter.responses.status.log.Logs;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.octo.android.robospice.SpiceManager;
 import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
@@ -54,7 +52,7 @@ public class LogSubfragment extends ListFragment implements OnRefreshListener {
 	private Parcelable listState;
 	private ArrayList<LogMessage> logs;
 	private boolean shouldLoadData = true;
-	private int logState = 0;
+	private int logState = LOG_LOADING;
 	private LogsGetRequestListener rl;
 
 	@Override
@@ -138,8 +136,7 @@ public class LogSubfragment extends ListFragment implements OnRefreshListener {
 		mPullToRefreshLayout = new PullToRefreshLayout(viewGroup.getContext());
 
 		// We can now setup the PullToRefreshLayout
-		ActionBarPullToRefresh
-				.from(getActivity()).insertLayoutInto(viewGroup).theseChildrenArePullable(getListView(), getListView().getEmptyView()).listener(this).setup(mPullToRefreshLayout);
+		ActionBarPullToRefresh.from(getActivity()).insertLayoutInto(viewGroup).theseChildrenArePullable(getListView(), getListView().getEmptyView()).listener(this).setup(mPullToRefreshLayout);
 	}
 
 	@Override
@@ -271,23 +268,11 @@ public class LogSubfragment extends ListFragment implements OnRefreshListener {
 		// TODO Auto-generated method stub
 		Log.i(CommandCenterActivity.TAG, "Updating adapter with new log information.");
 
-		if (adapter == null) {
-			adapter = new LogAdapter(getActivity(), logs); // nothing in it
-															// right now as
-															// we will add
-															// it below
-															// (performance
-															// gain)
-			Log.i(CommandCenterActivity.TAG, "created new adapter :" + adapter);
+		adapter = new LogAdapter(getActivity(), logs); //make a new adapter, as adapters can edit the existing dataset
+		Log.i(CommandCenterActivity.TAG, "created new log adapter :" + adapter);
 
-			setListAdapter(adapter);
-		} else {
-			if (clearExisting) {
-				adapter.clear(); // clear if the adapter might have already had
-									// data in it.
-			}
-			adapter.addAll(logs);
-		}
+		setListAdapter(adapter);
+
 		// Log.i(CommandCenterActivity.TAG, "Number of preclear: " +
 		// logs.size()+ " and instance v: "+this.logs.size());
 		Log.i(CommandCenterActivity.TAG, "Number of logs: " + logs.size());

@@ -79,6 +79,9 @@
     <string name="wwan">wwan</string>
     <string name="no_access">No access points or wireless is off.</string>
 
+    <!-- Wifi AP Fragment(s) -->
+    <string name="failed_wlan_config">Failed to read WLAN AP Config</string>
+
     <!-- LAN Clients -->
     <string name="no_clients">No clients are currently connected</string>
     <string name="ip_address">IP Address</string>
@@ -198,8 +201,9 @@
     <string name="no_logs">No router logs to display or none could be retreived.</string>
 
     <!-- Wireless Fragment -->
-    <string name="wifi_title">Wireless Access Points</string>
-    <string name="wifi_loading">There doesn\'t seem to be anything here yet</string>
+    <string name="wifi_title">Wireless APs</string>
+    <string name="wifi_loading">Loading wireless access points</string>
+    <string name="wifi_load_failed">Failed to retrieve list of wireless access points</string>
 
     <!-- Color Strings (for the custom dialogs - doesn't support R.color values. -->
     <string name="dialogcolor_title">#FFFFFF</string>
