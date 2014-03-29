@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
+import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -26,6 +27,7 @@ import com.cs481.commandcenter.AuthInfo;
 import com.cs481.commandcenter.R;
 import com.cs481.commandcenter.activities.CommandCenterActivity;
 import com.cs481.commandcenter.activities.SpiceActivity;
+import com.cs481.commandcenter.listrows.DashboardListRow;
 import com.cs481.commandcenter.responses.GetRequest;
 import com.cs481.commandcenter.responses.PutRequest;
 import com.cs481.commandcenter.responses.Response;
@@ -94,12 +96,12 @@ public class WifiFragment extends ListFragment implements OnRefreshListener {
 		outState.putBoolean("wifiState", wifiState);
 		outState.putBoolean("wifiStateEnabled", wifiStateEnabled);
 		outState.putInt("wlanListState", wwapListState);
-		
+
 		if (wwaps == null) {
 			Log.i(CommandCenterActivity.TAG, "WWAPS are null for onSaveInstanceState(), creating empty list to prevent crash.");
 			wwaps = new ArrayList<Bss>();
 		}
-		outState.putParcelableArrayList("wwaps", wwaps); 
+		outState.putParcelableArrayList("wwaps", wwaps);
 	}
 
 	@Override
@@ -137,13 +139,14 @@ public class WifiFragment extends ListFragment implements OnRefreshListener {
 		SpiceActivity sa = (SpiceActivity) getActivity();
 		sa.setTitle(getResources().getString(R.string.wifi_title));
 		spiceManager = sa.getSpiceManager();
+	//	getListView().set
 		if (shouldLoadData) {
 			setWifiState();
 			readWlanConfig();
 			shouldLoadData = false;
 		} else {
-			 Log.i(CommandCenterActivity.TAG, "Reloading existing WWAPS from onStart() "+wwaps);
-			 updateWWAPList(wwaps);
+			Log.i(CommandCenterActivity.TAG, "Reloading existing WWAPS from onStart() " + wwaps);
+			updateWWAPList(wwaps);
 		}
 	}
 
@@ -197,35 +200,6 @@ public class WifiFragment extends ListFragment implements OnRefreshListener {
 		spiceManager.execute(wwapRequest, lastRequestCacheKey, DurationInMillis.ALWAYS_EXPIRED, new WWAPSGetRequestListener());
 	}
 
-	/* private class WLANStatusGetRequestListener implements RequestListener<Response> {
-
-		@Override
-		public void onRequestFailure(SpiceException e) {
-			Resources resources = getResources();
-			// update your UI
-			Log.i(CommandCenterActivity.TAG, "Failed to read WLAN!");
-			Toast.makeText(getActivity(), resources.getString(R.string.wlan_get_config_failure), Toast.LENGTH_SHORT).show();
-			mPullToRefreshLayout.setRefreshComplete();
-		}
-
-		@Override
-		public void onRequestSuccess(Response response) {
-			// update your UI
-
-			if (response.getResponseInfo().getSuccess()) {
-				StatusWlan wlan = (StatusWlan) response.getData();
-				Log.i(CommandCenterActivity.TAG, "WLAN request successful");
-				// updateWlanList(wlan);
-				Log.i(CommandCenterActivity.TAG, "isRefresh(): " + mPullToRefreshLayout.isRefreshing());
-			} else {
-
-				Toast.makeText(getActivity(), response.getResponseInfo().getReason(), Toast.LENGTH_LONG).show();
-			}
-			mPullToRefreshLayout.setRefreshComplete();
-
-		}
-	} */
-
 	private class WLANEnabledPutRequestListener implements RequestListener<Response> {
 
 		@Override
@@ -272,8 +246,17 @@ public class WifiFragment extends ListFragment implements OnRefreshListener {
 		}
 	}
 
-	private class WWAPSGetRequestListener implements RequestListener<Response> {
+	@Override
+	public void onListItemClick(ListView l, View v, int position, long id) {
+		// TODO Auto-generated method stub
+		Log.w(CommandCenterActivity.TAG, "Item was clicked at pos " + position + ", id " + id);
+		Bss row = (Bss) (l.getAdapter().getItem(position));
+		Log.w(CommandCenterActivity.TAG, "BSS clicked: "+row.getSsid());
+		
+		v.setVisibility(View.GONE);
+	}
 
+	private class WWAPSGetRequestListener implements RequestListener<Response> {
 
 		@Override
 		public void onRequestFailure(SpiceException e) {
@@ -298,7 +281,7 @@ public class WifiFragment extends ListFragment implements OnRefreshListener {
 			updateWWAPList(radios.get(0).getBss());
 		}
 	}
-	
+
 	private void updateWWAPList(ArrayList<Bss> wwaps) {
 		if (getActivity() == null) {
 			return; // fragment has died
@@ -307,10 +290,10 @@ public class WifiFragment extends ListFragment implements OnRefreshListener {
 		Log.i(CommandCenterActivity.TAG, "Updating adapter with new wwap information.");
 
 		adapter = new WWAPAdapter(getActivity(), wwaps); // make a new
-														// adapter, as
-														// adapters can edit
-														// the existing
-														// dataset
+															// adapter, as
+															// adapters can edit
+															// the existing
+															// dataset
 		Log.i(CommandCenterActivity.TAG, "created new log adapter :" + adapter);
 
 		setListAdapter(adapter);
@@ -358,7 +341,7 @@ public class WifiFragment extends ListFragment implements OnRefreshListener {
 
 			TextView messageView = (TextView) rowView.findViewById(R.id.listrow_wwap_name);
 			messageView.setText(wwap.getSsid());
-			
+
 			Switch apEnabled = (Switch) rowView.findViewById(R.id.listrow_wwap_switch);
 			apEnabled.setChecked(wwap.getEnabled());
 			return rowView;
