@@ -2,22 +2,22 @@ package com.cs481.commandcenter.fragments;
 
 import java.util.ArrayList;
 
-import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
-import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
 import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
 import android.app.ActionBar;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.res.Resources;
+import android.database.DataSetObserver;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.ListFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
+import android.widget.BaseExpandableListAdapter;
+import android.widget.ExpandableListView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -36,17 +36,17 @@ import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
 
-public class LanClientFragment extends ListFragment implements
+public class LanClientFragment extends Fragment implements
 		OnRefreshListener {
 
-	private PullToRefreshLayout mPullToRefreshLayout;
+	//private PullToRefreshLayout mPullToRefreshLayout;
 	private ProgressDialog progressDialog;
 	private SpiceManager spiceManager;
 	private AuthInfo authInfo;
 	private ClientAdapter adapter;
 	private boolean shouldLoadData = true;
-	private ArrayList<ClientListRow> rows;
 	private ArrayList<Client> clients;
+	private ExpandableListView mExpandableList;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -92,29 +92,18 @@ public class LanClientFragment extends ListFragment implements
 	}
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		// Inflate the layout for this fragment
-		return inflater.inflate(R.layout.fragment_clients, container, false);
-	}
+		View v = inflater.inflate(R.layout.fragment_clients, container, false);
+		mExpandableList = (ExpandableListView) v.findViewById(R.id.expandable_clientlist);
 
-	@Override
-	public void onViewCreated(View view, Bundle savedInstanceState) {
-		super.onViewCreated(view, savedInstanceState);
+		//ArrayList<Profile> profilesArray = Utility.getProfiles(getActivity());
 
-		// This is the View which is created by ListFragment
-		ViewGroup viewGroup = (ViewGroup) view;
+		// sets the adapter that provides data to the list.
+		//final ClientAdapter cla = new ClientAdapter(getActivity(), profilesArray);
 
-		// We need to create a PullToRefreshLayout manually
-		mPullToRefreshLayout = new PullToRefreshLayout(viewGroup.getContext());
-
-		// We can now setup the PullToRefreshLayout
-		ActionBarPullToRefresh
-				.from(getActivity())
-				.insertLayoutInto(viewGroup)
-				.theseChildrenArePullable(getListView(),
-						getListView().getEmptyView()).listener(this)
-				.setup(mPullToRefreshLayout);
+		mExpandableList.setAdapter(adapter);
+		return v;
 	}
 
 	@Override
@@ -146,41 +135,120 @@ public class LanClientFragment extends ListFragment implements
 				new ClientsGetRequestListener());
 	}
 
-	public class ClientAdapter extends ArrayAdapter<ClientListRow> {
-		private final Context context;
-		private final ArrayList<ClientListRow> rows;
+	public class ClientAdapter extends BaseExpandableListAdapter {
+		private LayoutInflater inflater;
+		private ArrayList<Client> clients;
 
-		public ClientAdapter(Context context, ArrayList<ClientListRow> rows) {
-			super(context, R.layout.listrow_clients, rows);
-			this.context = context;
-			this.rows = rows;
+		public ClientAdapter(Context context, ArrayList<Client> clients) {
+			this.clients = clients;
+			inflater = LayoutInflater.from(context);
 		}
 
 		@Override
-		public ClientListRow getItem(int position) {
-			return rows.get(position);
+		// counts the number of group/profile items so the list knows how many
+		// times calls getGroupView() method
+		public int getGroupCount() {
+			return clients.size();
 		}
 
 		@Override
-		public View getView(int position, View convertView, ViewGroup parent) {
-			LayoutInflater inflater = (LayoutInflater) context
-					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		// counts the number of children items so the list knows how many times
+		// calls getChildView() method
+		public int getChildrenCount(int i) {
+			return 2;
+		}
 
-			View rowView = inflater.inflate(R.layout.listrow_clients, parent,
-					false);
+		@Override
+		// gets the title of each InstructionType/group
+		public Object getGroup(int i) {
+			return clients.get(i).getIp_address();
+		}
 
-			Client cli = rows.get(position).getClient();
+		@Override
+		// gets the name of each item
+		public Object getChild(int i, int i1) {
+			return clients.get(i);
+		}
 
-			// mac address
-			TextView title = (TextView) rowView
-					.findViewById(R.id.clients_mac_value);
-			title.setText(cli.getMac());
+		@Override
+		public long getGroupId(int i) {
+			return i;
+		}
 
-			// ip address
-			title = (TextView) rowView.findViewById(R.id.ip_address_value);
-			title.setText(cli.getIp_address());
+		@Override
+		public long getChildId(int i, int i1) {
+			return i1;
+		}
 
-			return rowView;
+		@Override
+		public boolean hasStableIds() {
+			return true;
+		}
+
+		@Override
+		// in this method you must set the text to see the InstructionType/group
+		// on the list
+		public View getGroupView(final int i, boolean b, View view, ViewGroup viewGroup) {
+
+			if (view == null) {
+				view = inflater.inflate(R.layout.listrow_clients, viewGroup, false);
+			}
+
+			final Client client = (Client) clients.get(i);
+			TextView textView = (TextView) view.findViewById(R.id.ip_address_value);
+			textView.setText(client.getIp_address());
+			
+			textView = (TextView) view.findViewById(R.id.clients_mac_value);
+			textView.setText(client.getMac());
+
+//			ImageView deleteIcon = (ImageView) view.findViewById(R.id.profilerow_deleteicon);
+//			deleteIcon.setOnClickListener(new OnClickListener() {
+//				public void onClick(View v) {
+//					Toast.makeText(getActivity(), "Clicked delete on profile", Toast.LENGTH_LONG).show();
+//					Utility.deleteProfile(getActivity(), profile);
+//					profiles.remove(i);
+//					notifyDataSetChanged();
+//				}
+//			});
+
+			// return the entire view
+			return view;
+		}
+
+		@Override
+		// in this method you must set the text to see the children on the list
+		public View getChildView(int profileindex, int profileinfo_index, boolean b, View view, ViewGroup viewGroup) {
+			if (view == null) {
+				view = inflater.inflate(R.layout.expandable_client, viewGroup, false);
+			}
+
+			TextView descriptor = (TextView) view.findViewById(R.id.expandableclient_text);
+			Resources resources = getResources();
+			switch (profileinfo_index) {
+			case 0:
+				descriptor.setText(resources.getString(R.string.kick));
+				break;
+			case 1:
+				descriptor.setText(resources.getString(R.string.ban));
+				break;
+			default:
+				descriptor.setText("unknown");
+				break;
+			}
+
+			// return the entire view
+			return view;
+		}
+
+		@Override
+		public boolean isChildSelectable(int i, int i1) {
+			return true;
+		}
+
+		@Override
+		public void registerDataSetObserver(DataSetObserver observer) {
+			/* used to make the notifyDataSetChanged() method work */
+			super.registerDataSetObserver(observer);
 		}
 	}
 
@@ -206,7 +274,7 @@ public class LanClientFragment extends ListFragment implements
 			Toast.makeText(getActivity(),
 					resources.getString(R.string.lan_clients_failure),
 					Toast.LENGTH_SHORT).show();
-			mPullToRefreshLayout.setRefreshComplete();
+			//mPullToRefreshLayout.setRefreshComplete();
 		}
 
 		@Override
@@ -226,6 +294,9 @@ public class LanClientFragment extends ListFragment implements
 				clients = lan.getClients();
 				Log.i(CommandCenterActivity.TAG,
 						"LAN Client request successful");
+				View v = getView();
+				TextView textView = (TextView) v.findViewById(R.id.clients_value);
+				textView.setText("");
 				updateClientList(clients);
 			} else {
 
@@ -233,29 +304,44 @@ public class LanClientFragment extends ListFragment implements
 						response.getResponseInfo().getReason(),
 						Toast.LENGTH_LONG).show();
 			}
-			mPullToRefreshLayout.setRefreshComplete();
+			//mPullToRefreshLayout.setRefreshComplete();
 		}
 	}
 
 	public void updateClientList(ArrayList<Client> clients) {
 		Log.i(CommandCenterActivity.TAG, "Updating client list");
-		rows = new ArrayList<ClientListRow>();
-		adapter = new ClientAdapter(getActivity(), rows);
-		setListAdapter(adapter);
+		adapter = new ClientAdapter(getActivity(), clients);
+		mExpandableList.setAdapter(adapter);
+		View v = getView();
+//		if (clients.size() == 0) {
+//			
+//			TextView textVal = (TextView) v.findViewById(R.id.clients_value);
+//			textVal.setText(R.string.no_clients);
+//		} else {
+//			for (Client cli : clients) {
+//				String ip = cli.getIp_address();
+//				String mac = cli.getMac();
+//				rows.add(new ClientListRow(cli, mac, ip));
+//			}
+//			View v = getView();
+//			TextView textVal = (TextView) v.findViewById(R.id.clients_value);
+//			textVal.setText("");
+//			adapter.notifyDataSetChanged();
+//		}
+		
+		mExpandableList = (ExpandableListView) v.findViewById(R.id.expandable_clientlist);
+
 		if (clients.size() == 0) {
-			View v = getView();
-			TextView textVal = (TextView) v.findViewById(R.id.clients_value);
-			textVal.setText(R.string.no_clients);
-		} else {
-			for (Client cli : clients) {
-				String ip = cli.getIp_address();
-				String mac = cli.getMac();
-				rows.add(new ClientListRow(cli, mac, ip));
-			}
-			View v = getView();
-			TextView textVal = (TextView) v.findViewById(R.id.clients_value);
-			textVal.setText("");
-			adapter.notifyDataSetChanged();
+			TextView banner = (TextView) v.findViewById(R.id.clients_value);
+			banner.setText(getResources().getString(R.string.no_clients));
+			mExpandableList.setVisibility(ExpandableListView.GONE);
+
+//			LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+//			//params.weight = 1.0f;
+//			params.gravity = Gravity.CENTER;
+
+//			LinearLayout profilesLayout = (LinearLayout) v.findViewById(R.id.profilemanager_layout);
+//			profilesLayout.setLayoutParams(params);
 		}
 	}
 
@@ -274,7 +360,6 @@ public class LanClientFragment extends ListFragment implements
 		}
 	}
 
-	@Override
 	public void onListItemClick(ListView l, View v, int position, long id) {
 		ClientListRow row = (ClientListRow) (l.getAdapter().getItem(position));
 		Log.w(CommandCenterActivity.TAG, "Client IP clicked: "

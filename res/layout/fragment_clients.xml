@@ -7,12 +7,12 @@
     android:layout_height="match_parent"
     android:padding="6dp" >
 
-    <ListView
-        android:id="@android:id/list"
+    <ExpandableListView
+        android:id="@+id/expandable_clientlist"
         style="@style/ListViewTheme"
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
-    </ListView>
+    </ExpandableListView>
 
     <TextView
         android:id="@+id/clients_value"

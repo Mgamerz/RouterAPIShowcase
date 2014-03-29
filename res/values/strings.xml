@@ -87,6 +87,8 @@
     <string name="ip_address">IP Address</string>
     <string name="lan_clients_failure">Failed to read LAN/Clients</string>
     <string name="lan_title">LAN Clients</string>
+    <string name="kick">Kick</string>
+    <string name="ban">Ban</string>
 
     <!-- WifiAsWanDialog -->
     <string name="excellent">Excellent</string>
