@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ScrollView01"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    android:scrollbars="none" >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp" >
+
+        <LinearLayout
+            android:id="@+id/wapconnect_ssidlayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/wapconnect_ssidset_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/ssid" />
+
+            <EditText
+                android:id="@+id/wapconnect_ssidset_field"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="@string/ssidname"
+                android:inputType="text" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/wapconnect_signalstrength_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/wapconnect_ssidlayout"
+            android:text="@string/signal_strength" />
+
+        <TextView
+            android:id="@+id/wapconnect_signalstrength_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/wapconnect_signalstrength_text"
+            android:text="@string/ssvalue"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <TextView
+            android:id="@+id/wapconnect_securitytype_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/wapconnect_signalstrength_value"
+            android:layout_marginTop="5dp"
+            android:text="@string/network_security" />
+
+        <TextView
+            android:id="@+id/wapconnect_securitytype_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/wapconnect_securitytype_text"
+            android:text="@string/security_type"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <TextView
+            android:id="@+id/wapconnect_insecure_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/wapconnect_securitytype_value"
+            android:text="@string/wan_connection_insecure" />
+        
+        <CheckBox
+                android:id="@+id/wapconnect_roaming"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/wapconnect_insecure_text"
+                android:text="@string/wan_allow_roaming" />
+
+        <RelativeLayout
+            android:id="@+id/wapconnect_passwordlayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/wapconnect_roaming"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/wapconnect_password_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_marginTop="10dp"
+                android:text="@string/password" />
+
+            <EditText
+                android:id="@+id/wapconnect_password_field"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/wapconnect_password_text"
+                android:ems="10"
+                android:hint="@string/password"
+                android:inputType="textPassword" >
+            </EditText>
+
+            <CheckBox
+                android:id="@+id/wapconnect_showpassword"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/wapconnect_password_field"
+                android:text="@string/show_password" />
+        </RelativeLayout>
+    </RelativeLayout>
+
+</ScrollView>

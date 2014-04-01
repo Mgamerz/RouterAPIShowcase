@@ -7,6 +7,8 @@ import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
 import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.ListFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -48,7 +50,9 @@ public class WifiFragment extends ListFragment implements OnRefreshListener {
 	private SpiceManager spiceManager;
 	private AuthInfo authInfo;
 	private WWAPAdapter adapter;
-	private ArrayList<Bss> wwaps;
+	private boolean editingwap = false;
+	private ArrayList<Bss> wwaps; // this is the original one that should never
+									// be modified unless on a refresh
 	private int wwapListState = WWAP_LOADING;
 	private boolean shouldLoadData = true;
 	private boolean wifiState = false;
@@ -139,7 +143,7 @@ public class WifiFragment extends ListFragment implements OnRefreshListener {
 		SpiceActivity sa = (SpiceActivity) getActivity();
 		sa.setTitle(getResources().getString(R.string.wifi_title));
 		spiceManager = sa.getSpiceManager();
-	//	getListView().set
+		// getListView().set
 		if (shouldLoadData) {
 			setWifiState();
 			readWlanConfig();
@@ -248,12 +252,26 @@ public class WifiFragment extends ListFragment implements OnRefreshListener {
 
 	@Override
 	public void onListItemClick(ListView l, View v, int position, long id) {
-		// TODO Auto-generated method stub
 		Log.w(CommandCenterActivity.TAG, "Item was clicked at pos " + position + ", id " + id);
-		Bss row = (Bss) (l.getAdapter().getItem(position));
-		Log.w(CommandCenterActivity.TAG, "BSS clicked: "+row.getSsid());
-		
-		v.setVisibility(View.GONE);
+		String wwap = WifiWAPFragment.class.getName();
+
+		Bss bss = (Bss) (l.getAdapter().getItem(position));
+		FragmentManager fm = getActivity().getSupportFragmentManager();
+
+		WifiWAPFragment wlanFragment = WifiWAPFragment.newInstance(authInfo, bss, position);
+		FragmentTransaction transaction = fm.beginTransaction();
+
+		// check if the parent activity is dual pane based.
+		CommandCenterActivity parent = (CommandCenterActivity) getActivity();
+		if (parent.isDualPane()) {
+			transaction.replace(R.id.rightside_fragment, wlanFragment, wwap);
+		} else {
+			transaction.replace(R.id.leftside_fragment, wlanFragment, wwap);
+		}
+		transaction.addToBackStack(wwap);
+		transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+		transaction.commit();
+
 	}
 
 	private class WWAPSGetRequestListener implements RequestListener<Response> {
@@ -288,18 +306,11 @@ public class WifiFragment extends ListFragment implements OnRefreshListener {
 		}
 		// TODO Auto-generated method stub
 		Log.i(CommandCenterActivity.TAG, "Updating adapter with new wwap information.");
-
-		adapter = new WWAPAdapter(getActivity(), wwaps); // make a new
-															// adapter, as
-															// adapters can edit
-															// the existing
-															// dataset
+		this.wwaps = wwaps;
+		adapter = new WWAPAdapter(getActivity(), wwaps);
 		Log.i(CommandCenterActivity.TAG, "created new log adapter :" + adapter);
 
 		setListAdapter(adapter);
-
-		// Log.i(CommandCenterActivity.TAG, "Number of preclear: " +
-		// logs.size()+ " and instance v: "+this.logs.size());
 		Log.i(CommandCenterActivity.TAG, "Number of wwaps: " + wwaps.size());
 		this.wwaps = wwaps;
 		Log.i(CommandCenterActivity.TAG, "Number of wwaps pa: " + wwaps.size());
