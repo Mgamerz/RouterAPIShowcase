@@ -77,6 +77,7 @@
     <style name="EditTextTheme" parent="@android:style/Widget.EditText">
         <item name="android:textColor">@color/White</item>
         <item name="android:textColorHint">#CCCCCC</item>
+        <item name="android:textCursorDrawable">@null</item>
         <item name="android:background">@drawable/white_edit_text_holo_dark</item>
     </style>
 
