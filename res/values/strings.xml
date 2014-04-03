@@ -3,8 +3,8 @@
 
     <!-- Xml Comment -->
     <string name="app_name">Command Center</string>
-    <string name="app_version">1.02a</string>
-    <string name="app_version_code">7</string>
+    <string name="app_version">1.03a</string>
+    <string name="app_version_code">9</string>
     <!-- General strings -->
     <string name="debug_title">CC Debugging</string>
     <string name="server_exception">Server returned exception</string>
@@ -202,10 +202,19 @@
     <string name="contextmenu_copy">Copy Log Message</string>
     <string name="no_logs">No router logs to display or none could be retreived.</string>
 
-    <!-- Wireless Fragment -->
+    <!-- Wireless APs Fragments -->
     <string name="wifi_title">Wireless APs</string>
     <string name="wifi_loading">Loading wireless access points</string>
     <string name="wifi_load_failed">Failed to retrieve list of wireless access points</string>
+    <string name="wap_client_connection_insecure">Client connections will not be insecure as network communication is not encrypted</string>
+    
+    <string-array name="wifiap_encryptiontype_values">
+        <item>None</item>
+        <item>WEP</item>
+        <item>WPA</item>
+        <item>WPA2</item>
+    </string-array>
+    
 
     <!-- Color Strings (for the custom dialogs - doesn't support R.color values. -->
     <string name="dialogcolor_title">#FFFFFF</string>
@@ -289,6 +298,5 @@
 
     <!-- Whats new - keep this at the bottom -->
     <string name="whats_new_title">What\'s new</string>
-    <string name="whats_new">What\'s new in Alpha 1.02_testing:\n\n - Added direct login advanced options\n - Added ability to change ECM server url in the settings\n - Added licensing information\n - Added ability to delete profiles\n - Made app ignore unknown json fields (should fix a lot of bugs) \n - Added prototype of wifi kick/ban interface page\n - Other misc items</string>
-
+    <string name="whats_new">What\'s new in Alpha 1.03:\n\n - Various bug fixes\n - Added in progress items: Settings pages, Wireless AP editor, LAN Wifi client management</string>
 </resources>

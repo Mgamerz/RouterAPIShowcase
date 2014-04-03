@@ -50,7 +50,6 @@ public class WifiFragment extends ListFragment implements OnRefreshListener {
 	private SpiceManager spiceManager;
 	private AuthInfo authInfo;
 	private WWAPAdapter adapter;
-	private boolean editingwap = false;
 	private ArrayList<Bss> wwaps; // this is the original one that should never
 									// be modified unless on a refresh
 	private int wwapListState = WWAP_LOADING;
@@ -344,9 +343,6 @@ public class WifiFragment extends ListFragment implements OnRefreshListener {
 			} else {
 				rowView = convertView;
 			}
-			// Setup wwap stuff here. rowView is the container for each
-			// individual wwap in the list, so you can call
-			// v.findViewById(<id here>) to find sub elements to set.
 
 			Bss wwap = rows.get(position);
 

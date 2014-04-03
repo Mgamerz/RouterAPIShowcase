@@ -1,10 +1,6 @@
 package com.cs481.commandcenter.fragments;
 
-import java.util.ArrayList;
-
-import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
 import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
-import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -13,25 +9,18 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CompoundButton;
-import android.widget.CompoundButton.OnCheckedChangeListener;
-import android.widget.ProgressBar;
-import android.widget.Switch;
-import android.widget.TextView;
+import android.widget.ArrayAdapter;
+import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.cs481.commandcenter.AuthInfo;
 import com.cs481.commandcenter.R;
 import com.cs481.commandcenter.activities.CommandCenterActivity;
 import com.cs481.commandcenter.activities.SpiceActivity;
-import com.cs481.commandcenter.fragments.WifiFragment.WWAPAdapter;
-import com.cs481.commandcenter.responses.GetRequest;
-import com.cs481.commandcenter.responses.PutRequest;
 import com.cs481.commandcenter.responses.Response;
 import com.cs481.commandcenter.responses.config.wlan.Bss;
-import com.cs481.commandcenter.responses.config.wlan.ConfigWlan;
 import com.octo.android.robospice.SpiceManager;
-import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
 
@@ -88,6 +77,20 @@ public class WifiWAPFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		// Inflate the layout for this fragment
 		View v = inflater.inflate(R.layout.fragment_wifiwap, container, false);
+		
+		EditText ssidField = (EditText) v.findViewById(R.id.wap_ssid_value);
+		ssidField.setText(wapinfo.getSsid());
+		
+		
+		Spinner spinner = (Spinner) v.findViewById(R.id.wap_encryptiontype_spinner);
+		// Create an ArrayAdapter using the string array and a default spinner layout
+		ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(),
+		        R.array.wifiap_encryptiontype_values, android.R.layout.simple_spinner_item);
+		// Specify the layout to use when the list of choices appears
+		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		// Apply the adapter to the spinner
+		spinner.setAdapter(adapter);
+		
 		return v;
 	}
 	
