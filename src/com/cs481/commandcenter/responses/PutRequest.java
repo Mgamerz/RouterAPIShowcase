@@ -33,15 +33,14 @@ public class PutRequest extends SpiceRequest<Response> {
 	private Context context;
 
 	/**
-	 * Creates a new PutRequest object. It is executed when spiceManager.execute() is called.
-	 * @param data Object to put to the network.
-	 * @param authInfo Auth info to authenticate to the router.
-	 * @param suburl Suburl to access of where to send the put. For example, "config/wlan" puts to that subtree.
-	 * @param classId
-	 * @param clazz
+	 * Creates a new putrequest that will be executed when a spice manager object calls it via the request() method.
+	 * @param context Context to use for execution (usually getActivity())
+	 * @param data Data object to put to the network
+	 * @param authInfo Authinfo to use for connecting to the router 
+	 * @param suburl subtree url to put data to (e.g. control/wlan or status/log)
+	 * @param clazz Class type of the data parameter, like GPIO.class or Lan.class 
 	 */
-	public PutRequest(Context context, Object data, AuthInfo authInfo, String suburl,
-			 Class clazz) {
+	public PutRequest(Context context, Object data, AuthInfo authInfo, String suburl, Class clazz) {
 		super(Response.class);
 		this.context = context;
 		this.authInfo = authInfo;
@@ -86,6 +85,6 @@ public class PutRequest extends SpiceRequest<Response> {
 	 * @return
 	 */
 	public String createCacheKey() {
-		return "putrequest"+System.currentTimeMillis();
+		return "putrequest" + System.currentTimeMillis();
 	}
 }
