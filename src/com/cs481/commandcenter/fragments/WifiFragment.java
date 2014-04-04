@@ -185,7 +185,7 @@ public class WifiFragment extends ListFragment implements OnRefreshListener {
 	}
 
 	/*
-	 * 
+	 * Listener for the WiFi On/Off switch
 	 */
 	private void setWifiToggleListener() {
 		final Switch wifiToggle = (Switch) menu.findItem(R.id.wifi_toggle).getActionView();
@@ -222,12 +222,9 @@ public class WifiFragment extends ListFragment implements OnRefreshListener {
 					String lastRequestCacheKey = request.createCacheKey();
 					spiceManager.execute(request, lastRequestCacheKey, DurationInMillis.ALWAYS_EXPIRED, new WLANEnabledPutRequestListener());
 				}
-				
-				
 			}
 		});
 	}
-	
 
 	private void readWlanConfig() {
 		// perform the request.
@@ -236,7 +233,7 @@ public class WifiFragment extends ListFragment implements OnRefreshListener {
 		spiceManager.execute(wwapRequest, lastRequestCacheKey, DurationInMillis.ALWAYS_EXPIRED, new WWAPSGetRequestListener());
 	}
 
-/*	public class WLANEnabledPutRequestListener implements RequestListener<Response> {
+	public class WLANEnabledPutRequestListener implements RequestListener<Response> {
 
 		@Override
 		public void onRequestFailure(SpiceException e) {
@@ -256,7 +253,7 @@ public class WifiFragment extends ListFragment implements OnRefreshListener {
 			wifiToggle.setChecked(wifiState);
 			setWifiToggleListener();
 		}
-	}*/
+	}
 
 	private class WLANConfigGetRequestListener implements RequestListener<Response> {
 
