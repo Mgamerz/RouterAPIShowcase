@@ -43,7 +43,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  * 
  */
 public class Utility {
-
+	public static String AUTH_OPEN = "none";
+	public static String AUTH_WEPAUTO = "wepauto";
+	public static String AUTH_WPA1WPA2 = "wpa1wpa2psk";
+	public static String AUTH_WPA1 = "wpa1psk";
+	public static String AUTH_WPA2 = "wpa2psk";
 	/**
 	 * Bad way of converting a ecm reply to a normal reply.
 	 * 

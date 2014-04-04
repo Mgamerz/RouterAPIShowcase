@@ -2,6 +2,7 @@ package com.cs481.commandcenter.responses.config.wwan;
 
 import java.io.IOException;
 
+import com.cs481.commandcenter.Utility;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.core.JsonGenerator;
@@ -9,11 +10,6 @@ import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class WANProfileSerializer extends JsonSerializer<WANProfile> {
-	private static String AUTH_OPEN = "none";
-	private static String AUTH_WEPAUTO = "wepauto";
-	private static String AUTH_WPA1WPA2 = "wpa1wpa2psk";
-	private static String AUTH_WPA1 = "wpa1";
-	private static String AUTH_WPA2 = "wpa2psk";
 	/*
 	 * public WANProfileSerializer() { super(); }
 	 */
@@ -46,9 +42,9 @@ public class WANProfileSerializer extends JsonSerializer<WANProfile> {
 		String authMode = profile.getAuthmode();
 		
 		
-		if (authMode.equals(AUTH_WEPAUTO)){
+		if (authMode.equals(Utility.AUTH_WEPAUTO)){
 			jgen.writeStringField("wepkey0", profile.getSerializePassword());
-		} else if (authMode.equals(AUTH_WPA2) || authMode.equals(AUTH_WPA1WPA2)){
+		} else if (authMode.equals(Utility.AUTH_WPA2) || authMode.equals(Utility.AUTH_WPA1WPA2)){
 			jgen.writeStringField("wpacipher", profile.getWpacipher());
 			jgen.writeStringField("wpapsk", profile.getSerializePassword());
 		}

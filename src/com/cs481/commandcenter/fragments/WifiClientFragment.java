@@ -612,7 +612,6 @@ public class WifiClientFragment extends ListFragment implements
 																	// dual band
 																	// again.
 		String lastRequestCacheKey = request.createCacheKey();
-
 		spiceManager.execute(request, lastRequestCacheKey,
 				DurationInMillis.ALWAYS_EXPIRED,
 				new WANProfilePostRequestListener());

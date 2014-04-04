@@ -117,7 +117,7 @@ public class LoginActivity extends SpiceActivity {
 				// Commit the edits!
 				editor.commit();
 			} catch (NoSuchAlgorithmException e) {
-				Log.e(CommandCenterActivity.TAG, "This devices does not support AES (that's weird!)");
+				Log.e(CommandCenterActivity.TAG, "This device does not support AES (that's weird!)");
 			}
 		}
 

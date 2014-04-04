@@ -88,7 +88,7 @@ public class WifiWanDialogFragment extends DialogFragment {
 		String title = wap.getSsid();
 		boolean hiddenSsid = false; // used to show the SSID field
 		if (title.equals("")) {
-			title = "Hidden SSID";
+			title = getResources().getString(R.string.hidden_ssid);
 			hiddenSsid = true;
 		}
 

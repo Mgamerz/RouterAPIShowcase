@@ -45,15 +45,25 @@
 
         <Spinner
             android:id="@+id/wap_encryptiontype_spinner"
+            style="@style/SpinnerTheme"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/wapconnect_securitytype_text"
-            android:layout_below="@+id/wapconnect_securitytype_text"
-            android:textColor="@color/White"
-            android:layout_marginLeft="17dp" />
+            android:layout_alignLeft="@id/wapconnect_securitytype_text"
+            android:layout_below="@id/wapconnect_securitytype_text"
+            android:spinnerMode="dropdown" />
+
+        <Spinner
+            android:id="@+id/wap_ciphertype_spinner"
+            style="@style/SpinnerTheme"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@id/wap_encryptiontype_spinner"
+            android:layout_marginLeft="17dp"
+            android:layout_toRightOf="@id/wap_encryptiontype_spinner"
+            android:spinnerMode="dropdown" />
 
         <TextView
-            android:id="@+id/wapconnect_insecure_text"
+            android:id="@+id/wap_insecure_text"
             style="@style/SubTextTheme"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -61,41 +71,52 @@
             android:text="@string/wap_client_connection_insecure" />
 
         <CheckBox
-            android:id="@+id/wapconnect_roaming"
+            android:id="@+id/wap_broadcasting"
+            style="@style/CheckBoxTheme"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/wapconnect_insecure_text"
-            android:text="@string/wan_allow_roaming" />
+            android:layout_below="@+id/wap_insecure_text"
+            android:text="@string/wap_broadcast" />
+
+        <CheckBox
+            android:id="@+id/wap_isolating"
+            style="@style/CheckBoxTheme"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/wap_broadcasting"
+            android:text="@string/wap_isolate" />
 
         <RelativeLayout
             android:id="@+id/wapconnect_passwordlayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/wapconnect_roaming"
+            android:layout_below="@id/wap_isolating"
             android:orientation="vertical" >
 
             <TextView
-                android:id="@+id/wapconnect_password_text"
+                android:id="@+id/wap_newpassword_text"
                 style="@style/TextTheme"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_marginTop="10dp"
-                android:text="@string/password" />
+                android:text="@string/newpassword" />
 
             <CheckBox
                 android:id="@+id/wapconnect_showpassword"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/wapconnect_password_field"
+                android:layout_below="@+id/wap_newpassword_field"
+                style="@style/CheckBoxTheme"
                 android:text="@string/show_password" />
 
             <EditText
-                android:id="@+id/wapconnect_password_field"
+                android:id="@+id/wap_newpassword_field"
+                style="@style/EditTextTheme"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
-                android:layout_below="@+id/wapconnect_password_text"
+                android:layout_below="@+id/wap_newpassword_text"
                 android:ems="10"
                 android:hint="@string/password"
                 android:inputType="textPassword" >
