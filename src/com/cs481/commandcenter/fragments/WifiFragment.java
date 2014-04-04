@@ -5,7 +5,10 @@ import java.util.ArrayList;
 import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
 import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
 import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -14,6 +17,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.OrientationEventListener;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -29,7 +33,9 @@ import com.cs481.commandcenter.AuthInfo;
 import com.cs481.commandcenter.R;
 import com.cs481.commandcenter.activities.CommandCenterActivity;
 import com.cs481.commandcenter.activities.SpiceActivity;
-import com.cs481.commandcenter.listrows.DashboardListRow;
+import com.cs481.commandcenter.dialog.DisableWifiDialog;
+import com.cs481.commandcenter.dialog.RouterConfirmDialogFragment;
+import com.cs481.commandcenter.listeners.WLANEnabledPutRequestListener;
 import com.cs481.commandcenter.responses.GetRequest;
 import com.cs481.commandcenter.responses.PutRequest;
 import com.cs481.commandcenter.responses.Response;
@@ -178,23 +184,50 @@ public class WifiFragment extends ListFragment implements OnRefreshListener {
 		setWifiToggleListener();
 	}
 
+	/*
+	 * 
+	 */
 	private void setWifiToggleListener() {
-		Switch wifiToggle = (Switch) menu.findItem(R.id.wifi_toggle).getActionView();
+		final Switch wifiToggle = (Switch) menu.findItem(R.id.wifi_toggle).getActionView();
 		wifiToggle.setChecked(wifiState);
 		wifiToggle.setEnabled(wifiStateEnabled);
 		wifiToggle.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-
 			@Override
-			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-				Log.i(CommandCenterActivity.TAG, "Performing put request to enabled wlan");
-				PutRequest request = new PutRequest(getActivity(), Boolean.valueOf(isChecked), authInfo, "config/wlan/radio/0/enabled", Boolean.class);
-				String lastRequestCacheKey = request.createCacheKey();
-
-				spiceManager.execute(request, lastRequestCacheKey, DurationInMillis.ALWAYS_EXPIRED, new WLANEnabledPutRequestListener());
+			public void onCheckedChanged(CompoundButton buttonView, final boolean isChecked) {
+				// If we're going from ON to OFF, ask if user is sure
+				if(!isChecked){
+					new AlertDialog.Builder(getActivity())
+				    .setTitle("Disabling WiFi")
+				    .setMessage("Are you sure you want to disable WiFi?")
+				    .setCancelable(false)
+				    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+				        public void onClick(DialogInterface dialog, int which) { 
+				        	Log.i(CommandCenterActivity.TAG, "Performing put request to enabled wlan");
+							PutRequest request = new PutRequest(getActivity(), Boolean.valueOf(isChecked), authInfo, "config/wlan/radio/0/enabled", Boolean.class);
+							String lastRequestCacheKey = request.createCacheKey();
+							spiceManager.execute(request, lastRequestCacheKey, DurationInMillis.ALWAYS_EXPIRED, new WLANEnabledPutRequestListener());
+				        }
+				     })
+				    .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+				        public void onClick(DialogInterface dialog, int which) { 
+				            wifiToggle.setChecked(true);
+				        }
+				     })
+				    .show();
+				}
+				// Otherwise just turn it from OFF to ON
+				else{
+					Log.i(CommandCenterActivity.TAG, "Performing put request to enabled wlan");
+					PutRequest request = new PutRequest(getActivity(), Boolean.valueOf(isChecked), authInfo, "config/wlan/radio/0/enabled", Boolean.class);
+					String lastRequestCacheKey = request.createCacheKey();
+					spiceManager.execute(request, lastRequestCacheKey, DurationInMillis.ALWAYS_EXPIRED, new WLANEnabledPutRequestListener());
+				}
+				
+				
 			}
-
 		});
 	}
+	
 
 	private void readWlanConfig() {
 		// perform the request.
@@ -203,7 +236,7 @@ public class WifiFragment extends ListFragment implements OnRefreshListener {
 		spiceManager.execute(wwapRequest, lastRequestCacheKey, DurationInMillis.ALWAYS_EXPIRED, new WWAPSGetRequestListener());
 	}
 
-	private class WLANEnabledPutRequestListener implements RequestListener<Response> {
+/*	public class WLANEnabledPutRequestListener implements RequestListener<Response> {
 
 		@Override
 		public void onRequestFailure(SpiceException e) {
@@ -223,7 +256,7 @@ public class WifiFragment extends ListFragment implements OnRefreshListener {
 			wifiToggle.setChecked(wifiState);
 			setWifiToggleListener();
 		}
-	}
+	}*/
 
 	private class WLANConfigGetRequestListener implements RequestListener<Response> {
 
