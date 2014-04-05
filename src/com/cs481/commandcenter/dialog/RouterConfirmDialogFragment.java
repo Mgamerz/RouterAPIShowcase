@@ -181,9 +181,9 @@ public class RouterConfirmDialogFragment extends DialogFragment {
 	 * Creates a new RouterConfirmDialogFragment, which allows the user to
 	 * confirm editing this router, as well as choosing to save a profile.
 	 * 
-	 * @param router
-	 * @param authInfo
-	 * @return
+	 * @param router Router that will be edited. Contains information about the router such as the ID. Obtained from ECM.
+	 * @param authInfo Authinfo to use when communicating to the router. Should be setup to use ECM.
+	 * @return New RouterConfirmDialogFragment with the proper arguments set.
 	 */
 	public static RouterConfirmDialogFragment newInstance(Router router, AuthInfo authInfo) {
 		// TODO Auto-generated method stub
