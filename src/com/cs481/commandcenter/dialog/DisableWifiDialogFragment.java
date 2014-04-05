@@ -24,7 +24,8 @@ public class DisableWifiDialogFragment extends DialogFragment {
 	}
 
 	/**
-	 * This constructor must be empty or the Fragment won't be able to start.
+	 * Creates a new DisableWifiDialogFragment. This fragment currently doesn't have any parameters
+	 * but using this method keeps it in line with the other dialogs and allows easier parameter adding in the future.
 	 */
 	public static DisableWifiDialogFragment newInstance() {
 		DisableWifiDialogFragment dwdf = new DisableWifiDialogFragment();
