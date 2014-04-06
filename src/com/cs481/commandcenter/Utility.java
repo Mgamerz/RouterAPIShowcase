@@ -48,6 +48,7 @@ public class Utility {
 	public static String AUTH_WPA1WPA2 = "wpa1wpa2psk";
 	public static String AUTH_WPA1 = "wpa1psk";
 	public static String AUTH_WPA2 = "wpa2psk";
+
 	/**
 	 * Bad way of converting a ecm reply to a normal reply.
 	 * 
@@ -416,7 +417,7 @@ public class Utility {
 		p.writeValue(unencryptedAuthInfo);
 		p.setDataPosition(0);
 		AuthInfo authInfo = (AuthInfo) p.readValue(AuthInfo.class.getClassLoader());
-		
+
 		Log.i(CommandCenterActivity.TAG, "Encrypting authinfo " + authInfo);
 		p.recycle();
 		try {
@@ -461,8 +462,24 @@ public class Utility {
 
 	public static void deleteProfile(Context context, Profile profile) {
 		DatabaseAdapter dbAdapter = new DatabaseAdapter(context);
-		//dbAdapter.open();
+		// dbAdapter.open();
 		dbAdapter.deleteProfile(profile);
-		//dbAdapter.close();
+		// dbAdapter.close();
+	}
+
+	public static String authToHumanString(Context context, String authmode) {
+		Resources resources = context.getResources();
+		if (authmode.equals(AUTH_OPEN)) {
+			return resources.getString(R.string.encryption_none);
+		} else if (authmode.equals(AUTH_WEPAUTO)) {
+			return resources.getString(R.string.encryption_wep);
+		} else if (authmode.equals(AUTH_WPA1)) {
+			return resources.getString(R.string.encryption_wpa1);
+		} else if (authmode.equals(AUTH_WPA2)) {
+			return resources.getString(R.string.encryption_wpa2);
+		} else if (authmode.equals(AUTH_WPA1WPA2)) {
+			return resources.getString(R.string.encryption_wpa1wpa2);
+		}
+		return "Unknown encryption type";
 	}
 }

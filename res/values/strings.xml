@@ -213,6 +213,8 @@
     <string name="wap_broadcast">Broadcast SSID</string>
     <string name="wap_isolate">Isolate clients</string>
     <string name="newpassword">New Password</string>
+    <string name="ap_hidden">hidden</string>
+    <string name="ap_isolated">clients isolated</string>
     <string name="confirm_wifi_disable">Are you sure you want to disable the WiFi radio? This may make the router unable to be managed by this device.</string>
 
     <string-array name="wifiap_encryptiontype_values">
@@ -307,6 +309,13 @@
     <string name="bugreport_title">Bug Reporter</string>
     <string name="gen_bugreport">Generate bug report</string>
     <string name="bugreport_description">Bug reports capture the Android Logcat logs of this app and upload them into our privately owned Pastebin account. It is not accessible to anybody but our team. The posts expire after 1 month. The URL to the pastebin (which you won\'t be able to view as it is private) will be copied to your clipboard once the post finishes. Posting it to the Google+ group is the easiest way to get us the report.</string>
+
+    <!-- Human readable security types -->
+    <string name="encryption_none">Open</string>
+    <string name="encryption_wep">WEP</string>
+    <string name="encryption_wpa1">WPA1</string>
+    <string name="encryption_wpa2">WPA2</string>
+    <string name="encryption_wpa1wpa2">WPA1/WPA2</string>
 
     <!-- Whats new - keep this at the bottom -->
     <string name="whats_new_title">What\'s new</string>

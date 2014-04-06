@@ -31,6 +31,7 @@ import android.widget.Toast;
 
 import com.cs481.commandcenter.AuthInfo;
 import com.cs481.commandcenter.R;
+import com.cs481.commandcenter.Utility;
 import com.cs481.commandcenter.activities.CommandCenterActivity;
 import com.cs481.commandcenter.activities.SpiceActivity;
 import com.cs481.commandcenter.dialog.DisableWifiDialogFragment;
@@ -462,10 +463,33 @@ public class WifiFragment extends ListFragment implements OnRefreshListener {
 
 			TextView messageView = (TextView) rowView.findViewById(R.id.listrow_wwap_name);
 			messageView.setText(wwap.getSsid());
+			
+			TextView descView = (TextView) rowView.findViewById(R.id.listrow_wwap_desc);
+			descView.setText(wifiDescriptionBuilder(wwap));
 
 			Switch apEnabled = (Switch) rowView.findViewById(R.id.listrow_wwap_switch);
 			apEnabled.setChecked(wwap.getEnabled());
 			return rowView;
 		}
+	}
+	
+	/**
+	 * Builds the description string for an AP based on the bss information given (which is the known information about the AP from the router)
+	 * @param bss Information about the AP
+	 * @return String to set as the subtitle of the listrow
+	 */
+	private String wifiDescriptionBuilder(Bss bss){
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append(Utility.authToHumanString(getActivity(), bss.getAuthmode()));
+		if (bss.getHidden()){
+			sb.append(" - ");
+			sb.append(getResources().getString(R.string.ap_hidden));
+		}
+		if (bss.getHidden()){
+			sb.append(" - ");
+			sb.append(getResources().getString(R.string.ap_isolated));
+		}
+		return sb.toString();
 	}
 }
