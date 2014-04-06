@@ -1,6 +1,7 @@
 package com.cs481.commandcenter;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -45,9 +46,15 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class Utility {
 	public static String AUTH_OPEN = "none";
 	public static String AUTH_WEPAUTO = "wepauto";
-	public static String AUTH_WPA1WPA2 = "wpa1wpa2psk";
+	public static String AUTH_WPA1WPA2 = "wpa1wpa2";
 	public static String AUTH_WPA1 = "wpa1psk";
 	public static String AUTH_WPA2 = "wpa2psk";
+	
+	public static String CIPHER_AES = "aes";
+	//public static String CIPHER_TKIP = "tkip";
+	public static String CIPHER_TKIPAES = "tkipaes";
+
+
 	/**
 	 * Bad way of converting a ecm reply to a normal reply.
 	 * 
@@ -172,19 +179,13 @@ public class Utility {
 	}
 
 	/**
-	 * Prepares a PUT request. Automatically sets the put request up with
-	 * correct values for ECM or direct login based on the authInfo object.
+	 * Prepares a put request.
 	 * 
-	 * @param authInfo
-	 *            Authinfo to use for connection
-	 * @param put
-	 *            HttpPut object that will be modified
-	 * @param data
-	 *            String data to include as the entity
-	 * @return modified httpput that points to the correct place based on the
-	 *         authinfo object
-	 * @throws JsonProcessingException
-	 * @throws IOException
+	 * @param authInfo AuthInfo to use for connecting to the router. It is parsed to prepare the request.
+	 * @param put put object that will be used to execute the network request
+	 * @param data string data to set as the body of the message
+	 * @return modified HttpPut object that will be used for the request with the correct parameters set.
+	 * @throws UnsupportedEncodingException If the data to be put onto the body of the post request is not encoded properly
 	 */
 	public static HttpPut preparePutRequest(AuthInfo authInfo, HttpPut put, String data) throws JsonProcessingException, IOException {
 		// TODO Auto-generated method stub
@@ -209,14 +210,13 @@ public class Utility {
 	 * Prepares a post request. Same as prepare put request but returns a post
 	 * one instead.
 	 * 
-	 * @param authInfo
-	 * @param post
-	 * @param data
-	 * @return
-	 * @throws JsonProcessingException
-	 * @throws IOException
+	 * @param authInfo AuthInfo to use for connecting to the router. It is parsed to prepare the request.
+	 * @param post Post object that will be used to execute the network request
+	 * @param data string data to set as the body of the message
+	 * @return modified HttpPost object that will be used for the request with the correct parameters set.
+	 * @throws UnsupportedEncodingException If the data to be put onto the body of the post request is not encoded properly
 	 */
-	public static HttpPost preparePostRequest(AuthInfo authInfo, HttpPost post, String data) throws JsonProcessingException, IOException {
+	public static HttpPost preparePostRequest(AuthInfo authInfo, HttpPost post, String data) throws UnsupportedEncodingException {
 		// TODO Auto-generated method stub
 		// Log.i(CommandCenterActivity.TAG, "PPR: "+r.getData());
 
@@ -416,7 +416,7 @@ public class Utility {
 		p.writeValue(unencryptedAuthInfo);
 		p.setDataPosition(0);
 		AuthInfo authInfo = (AuthInfo) p.readValue(AuthInfo.class.getClassLoader());
-		
+
 		Log.i(CommandCenterActivity.TAG, "Encrypting authinfo " + authInfo);
 		p.recycle();
 		try {
@@ -437,6 +437,12 @@ public class Utility {
 		}
 	}
 
+	/**
+	 * Gets a domain name from a url.
+	 * @param url  url to parse for a domain name
+	 * @return domain name only string.
+	 * @throws URISyntaxException if the passed string is not a url
+	 */
 	public static String getDomainName(String url) throws URISyntaxException {
 		URI uri = new URI(url);
 		String domain = uri.getHost();
@@ -459,10 +465,38 @@ public class Utility {
 		System.exit(0);
 	}
 
+	/**
+	 * Delete's a profile from the database.
+	 * @param context context to use for deleting the profile.
+	 * @param profile profile to delete.
+	 */
 	public static void deleteProfile(Context context, Profile profile) {
 		DatabaseAdapter dbAdapter = new DatabaseAdapter(context);
-		//dbAdapter.open();
+		// dbAdapter.open();
 		dbAdapter.deleteProfile(profile);
-		//dbAdapter.close();
+		// dbAdapter.close();
+	}
+
+	/**
+	 * Converts an encryption-type string (from the router) to a human readable one.
+	 * E.g. none -> Open, wepauto -> WEP. 
+	 * @param context Context to load string resources from
+	 * @param authmode authmode string the router presented.
+	 * @return human readable version of the string
+	 */
+	public static String authToHumanString(Context context, String authmode) {
+		Resources resources = context.getResources();
+		if (authmode.equals(AUTH_OPEN)) {
+			return resources.getString(R.string.encryption_none);
+		} else if (authmode.equals(AUTH_WEPAUTO)) {
+			return resources.getString(R.string.encryption_wep);
+		} else if (authmode.equals(AUTH_WPA1)) {
+			return resources.getString(R.string.encryption_wpa1);
+		} else if (authmode.equals(AUTH_WPA2)) {
+			return resources.getString(R.string.encryption_wpa2);
+		} else if (authmode.equals(AUTH_WPA1WPA2)) {
+			return resources.getString(R.string.encryption_wpa1wpa2);
+		}
+		return "Unknown encryption type";
 	}
 }

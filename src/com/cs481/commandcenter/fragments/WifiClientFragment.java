@@ -57,8 +57,7 @@ import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
 
-public class WifiClientFragment extends ListFragment implements
-		OnRefreshListener, ActionBar.OnNavigationListener {
+public class WifiClientFragment extends ListFragment implements OnRefreshListener, ActionBar.OnNavigationListener {
 
 	private final int WIFICLIENT_DISABLED = 0;
 	private final int WIFICLIENT_WAN = 1;
@@ -89,19 +88,15 @@ public class WifiClientFragment extends ListFragment implements
 		setHasOptionsMenu(true);
 		if (savedInstanceState != null) {
 			waps = savedInstanceState.getParcelableArrayList("waps");
-			wanprofiles = savedInstanceState
-					.getParcelableArrayList("wanprofiles");
+			wanprofiles = savedInstanceState.getParcelableArrayList("wanprofiles");
 			authInfo = savedInstanceState.getParcelable("authInfo");
 			shouldLoadData = savedInstanceState.getBoolean("shouldLoadData");
-			wifiStateEnabled = savedInstanceState
-					.getBoolean("wifiStateEnabled");
+			wifiStateEnabled = savedInstanceState.getBoolean("wifiStateEnabled");
 			wifiState = savedInstanceState.getBoolean("wifiState");
 			currentClientMode = savedInstanceState.getInt("currentClientMode");
-			temporaryClientMode = savedInstanceState
-					.getInt("temporaryClientMode");
+			temporaryClientMode = savedInstanceState.getInt("temporaryClientMode");
 
-			Log.i(CommandCenterActivity.TAG, "current: " + currentClientMode
-					+ ", temp: " + temporaryClientMode);
+			Log.i(CommandCenterActivity.TAG, "current: " + currentClientMode + ", temp: " + temporaryClientMode);
 		} else {
 			Bundle passedArgs = getArguments();
 			if (passedArgs != null) {
@@ -110,6 +105,14 @@ public class WifiClientFragment extends ListFragment implements
 		}
 	}
 
+	/**
+	 * Creates a new instance of WifiClient fragment, passing the arguments of
+	 * this method into the fragment.
+	 * 
+	 * @param authInfo
+	 *            Authinfo used to connect to the router
+	 * @return New WifiClientFragment with the parameters set
+	 */
 	public static WifiClientFragment newInstance(AuthInfo authInfo) {
 		WifiClientFragment wawFrag = new WifiClientFragment();
 
@@ -141,8 +144,7 @@ public class WifiClientFragment extends ListFragment implements
 	}
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		// Inflate the layout for this fragment
 		return inflater.inflate(R.layout.fragment_wificlient, container, false);
 	}
@@ -158,12 +160,7 @@ public class WifiClientFragment extends ListFragment implements
 		mPullToRefreshLayout = new PullToRefreshLayout(viewGroup.getContext());
 
 		// We can now setup the PullToRefreshLayout
-		ActionBarPullToRefresh
-				.from(getActivity())
-				.insertLayoutInto(viewGroup)
-				.theseChildrenArePullable(getListView(),
-						getListView().getEmptyView()).listener(this)
-				.setup(mPullToRefreshLayout);
+		ActionBarPullToRefresh.from(getActivity()).insertLayoutInto(viewGroup).theseChildrenArePullable(getListView(), getListView().getEmptyView()).listener(this).setup(mPullToRefreshLayout);
 	}
 
 	@Override
@@ -171,17 +168,11 @@ public class WifiClientFragment extends ListFragment implements
 		super.onStart();
 		// Setup navigation stuff.
 		// onStart is called before onResume()
-		ArrayList<String> values = new ArrayList<String>(
-				Arrays.asList(getResources().getStringArray(
-						R.array.wificlient_values)));
-		mSpinnerAdapter = new DropdownAdapter(getActivity(), values,
-				getActivity().getActionBar().getSubtitle().toString());
+		ArrayList<String> values = new ArrayList<String>(Arrays.asList(getResources().getStringArray(R.array.wificlient_values)));
+		mSpinnerAdapter = new DropdownAdapter(getActivity(), values, getActivity().getActionBar().getSubtitle().toString());
 		SpiceActivity sa = (SpiceActivity) getActivity();
-		sa.getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST); // makes
-																				// the
-																				// dropdown
-																				// list
-																				// appear
+		//Make the dropdown list appear
+		sa.getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
 
 		// set the callbacks.
 		sa.getActionBar().setListNavigationCallbacks(mSpinnerAdapter, this);
@@ -197,24 +188,27 @@ public class WifiClientFragment extends ListFragment implements
 			// Log.i(CommandCenterActivity.TAG, waps.toString());
 			updateWapList(waps);
 			if (temporaryClientMode != -1) {
-				sa.getActionBar()
-						.setSelectedNavigationItem(temporaryClientMode);
+				sa.getActionBar().setSelectedNavigationItem(temporaryClientMode);
 			} else {
 				sa.getActionBar().setSelectedNavigationItem(currentClientMode);
 			}
 		}
 	}
 
+	/**
+	 * Makes a network request to read the client mode from the router, e.g. Wifi as WAN or Wifi as Bridge.
+	 */
 	private void readClientMode() {
 		// TODO Auto-generated method stub
-		GetRequest clientModeReq = new GetRequest(getActivity(), authInfo,
-				"config/wwan/radio/0/mode", String.class, "ConfigClientGet");
+		GetRequest clientModeReq = new GetRequest(getActivity(), authInfo, "config/wwan/radio/0/mode", String.class, "ConfigClientGet");
 		String lastRequestCacheKey = clientModeReq.createCacheKey();
-		spiceManager.execute(clientModeReq, lastRequestCacheKey,
-				DurationInMillis.ALWAYS_EXPIRED,
-				new WIFIClientModeGetRequestListener());
+		spiceManager.execute(clientModeReq, lastRequestCacheKey, DurationInMillis.ALWAYS_EXPIRED, new WIFIClientModeGetRequestListener());
 	}
 
+	/**
+	 * Adapter to use for tying the list of WAPs this router can see to the listview.
+	 * @author Mgamerz
+	 */
 	public class WlanAdapter extends ArrayAdapter<WlanListRow> {
 		private final Context context;
 		private final ArrayList<WlanListRow> rows;
@@ -232,53 +226,49 @@ public class WifiClientFragment extends ListFragment implements
 
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
-			LayoutInflater inflater = (LayoutInflater) context
-					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+			LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-			View rowView = inflater.inflate(R.layout.listrow_wlan_network,
-					parent, false);
+			View rowView = inflater.inflate(R.layout.listrow_wlan_network, parent, false);
 
 			WAP wap = rows.get(position).getWap();
 
 			// title
-			TextView title = (TextView) rowView
-					.findViewById(R.id.wlan_ssid_text);
+			TextView title = (TextView) rowView.findViewById(R.id.wlan_ssid_text);
 			title.setText(rows.get(position).getTitle());
 
 			// signal indicator
-			ImageView signalStrengthIcon = (ImageView) rowView
-					.findViewById(R.id.signal_strength);
+			ImageView signalStrengthIcon = (ImageView) rowView.findViewById(R.id.signal_strength);
 			int dbm = rows.get(position).getWap().getRssi();
 
 			int signalStrength = (Utility.rssiToHumanSignal(dbm) / 25);
 			signalStrength = Math.min(signalStrength, 3); // cap it.
 			if (wap.getAuthmode().equals("none")) {
-				signalStrengthIcon.setImageDrawable(getResources().getDrawable(
-						R.drawable.ic_wifi_dark_open));
+				signalStrengthIcon.setImageDrawable(getResources().getDrawable(R.drawable.ic_wifi_dark_open));
 			} else {
-				signalStrengthIcon.setImageDrawable(getResources().getDrawable(
-						R.drawable.ic_wifi_dark_locked));
+				signalStrengthIcon.setImageDrawable(getResources().getDrawable(R.drawable.ic_wifi_dark_locked));
 			}
 			// signalStrengthIcon.setImageDrawable(getResources().getDrawable(R.drawable.ic_wifi_dark_open));
 			signalStrengthIcon.setImageLevel(signalStrength);
 
 			// subtitle
-			TextView subtitle = (TextView) rowView
-					.findViewById(R.id.wlan_type_mode_text);
+			TextView subtitle = (TextView) rowView.findViewById(R.id.wlan_type_mode_text);
 			subtitle.setText(rows.get(position).getSubtitle());
 
 			return rowView;
 		}
 	}
 
-	public class DropdownAdapter extends ArrayAdapter<String> implements
-			SpinnerAdapter {
+	/**
+	 * Adapter that ties the actionbar dropdown menu (to change router modes) to views and strings.
+	 * @author Mgamerz
+	 *
+	 */
+	public class DropdownAdapter extends ArrayAdapter<String> implements SpinnerAdapter {
 		private final Context context;
 		private final ArrayList<String> rows;
 		private String subtitle;
 
-		public DropdownAdapter(Context context, ArrayList<String> rows,
-				String subtitle) {
+		public DropdownAdapter(Context context, ArrayList<String> rows, String subtitle) {
 			super(context, R.layout.actionbar_spinner_item, rows);
 			this.context = context;
 			this.rows = rows;
@@ -294,40 +284,31 @@ public class WifiClientFragment extends ListFragment implements
 		public View getView(int position, View convertView, ViewGroup parent) {
 			// actionbar view
 
-			LayoutInflater inflater = (LayoutInflater) context
-					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+			LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-			View rowView = inflater.inflate(R.layout.actionbar_spinner_item,
-					parent, false);
-			TextView title = (TextView) rowView
-					.findViewById(R.id.actionbar_title);
+			View rowView = inflater.inflate(R.layout.actionbar_spinner_item, parent, false);
+			TextView title = (TextView) rowView.findViewById(R.id.actionbar_title);
 			title.setText(dropdownToString(position));
 
-			TextView subtitleView = (TextView) rowView
-					.findViewById(R.id.actionbar_subtitle);
+			TextView subtitleView = (TextView) rowView.findViewById(R.id.actionbar_subtitle);
 			subtitleView.setText(subtitle);
 
 			return rowView;
 		}
 
 		@Override
-		public View getDropDownView(int position, View convertView,
-				ViewGroup parent) {
+		public View getDropDownView(int position, View convertView, ViewGroup parent) {
 			// Return a view which appears in the spinner list.
 
 			// Ignoring convertView to make things simpler, considering
 			// we have different types of views. If the list is long, think
 			// twice!
 
-			LayoutInflater inflater = (LayoutInflater) context
-					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+			LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-			View rowView = inflater.inflate(
-					android.R.layout.simple_spinner_dropdown_item, parent,
-					false);
+			View rowView = inflater.inflate(android.R.layout.simple_spinner_dropdown_item, parent, false);
 
-			TextView dropdownItem = (TextView) rowView
-					.findViewById(android.R.id.text1);
+			TextView dropdownItem = (TextView) rowView.findViewById(android.R.id.text1);
 			String text = dropdownToString(position);
 			dropdownItem.setText(text);
 			return dropdownItem;
@@ -336,6 +317,11 @@ public class WifiClientFragment extends ListFragment implements
 		}
 	}
 
+	/**
+	 * Converts the index of the dropdown item (0/1/2) to the proper human readable string.
+	 * @param position Position to get string for
+	 * @return human readable string
+	 */
 	private String dropdownToString(int position) {
 		if (!isAdded()) {
 			return null;
@@ -362,39 +348,41 @@ public class WifiClientFragment extends ListFragment implements
 		inflater.inflate(R.menu.wifiwan_menu, this.menu);
 	}
 
+	/**
+	 * Reads two areas of the router:
+	 *  - Wlan status from status/wlan: 
+	 *  - WAN profiles from config/wwan: Profiles this router has that define what WAP to connect to in wifi bridge and wifi WAN modes.
+	 * @param dialog boolean to show the dialog, false to not show the dialog
+	 */
 	private void readWlanWANConfig(boolean dialog) {
 		// perform the request.
-		GetRequest wapListrequest = new GetRequest(getActivity(), authInfo, "status/wlan",
-				StatusWlan.class, "statuswlanget");
+		GetRequest wapListrequest = new GetRequest(getActivity(), authInfo, "status/wlan", StatusWlan.class, "statuswlanget");
 		String lastRequestCacheKey = wapListrequest.createCacheKey();
 		Resources resources = getResources();
 		if (dialog) {
-			ContextThemeWrapper wrapper = new ContextThemeWrapper(
-					getActivity(), android.R.style.Theme_Holo_Light);
+			ContextThemeWrapper wrapper = new ContextThemeWrapper(getActivity(), android.R.style.Theme_Holo_Light);
 
 			progressDialog = new ProgressDialog(wrapper);
-			progressDialog.setMessage(resources
-					.getString(R.string.wlan_reading));
+			progressDialog.setMessage(resources.getString(R.string.wlan_reading));
 			progressDialog.show();
 			progressDialog.setCanceledOnTouchOutside(false);
 		}
 
-		spiceManager.execute(wapListrequest, lastRequestCacheKey,
-				DurationInMillis.ALWAYS_EXPIRED,
-				new WLANStatusGetRequestListener());
+		spiceManager.execute(wapListrequest, lastRequestCacheKey, DurationInMillis.ALWAYS_EXPIRED, new WLANStatusGetRequestListener());
 
 		// get wwan profiles
 
-		GetRequest profilesRequest = new GetRequest(getActivity(), authInfo, "config/wwan",
-				WWAN.class, "configwwanget");
+		GetRequest profilesRequest = new GetRequest(getActivity(), authInfo, "config/wwan", WWAN.class, "configwwanget");
 
-		spiceManager.execute(profilesRequest, profilesRequest.createCacheKey(),
-				DurationInMillis.ALWAYS_EXPIRED,
-				new WANProfilesGetRequestListener());
+		spiceManager.execute(profilesRequest, profilesRequest.createCacheKey(), DurationInMillis.ALWAYS_EXPIRED, new WANProfilesGetRequestListener());
 	}
 
-	private class WLANStatusGetRequestListener implements
-			RequestListener<Response> {
+	/**
+	 * Listener for getting the status/wlan subtree. Contains a Wlan object in the response object.
+	 * @author Mgamerz
+	 *
+	 */
+	private class WLANStatusGetRequestListener implements RequestListener<Response> {
 
 		@Override
 		public void onRequestFailure(SpiceException e) {
@@ -404,9 +392,7 @@ public class WifiClientFragment extends ListFragment implements
 				progressDialog.dismiss();
 			}
 			Log.i(CommandCenterActivity.TAG, "Failed to read WLAN!");
-			Toast.makeText(getActivity(),
-					resources.getString(R.string.wlan_get_config_failure),
-					Toast.LENGTH_SHORT).show();
+			Toast.makeText(getActivity(), resources.getString(R.string.wlan_get_config_failure), Toast.LENGTH_SHORT).show();
 			mPullToRefreshLayout.setRefreshComplete();
 		}
 
@@ -423,17 +409,14 @@ public class WifiClientFragment extends ListFragment implements
 				updateWlanList(wlan);
 			} else {
 
-				Toast.makeText(getActivity(),
-						response.getResponseInfo().getReason(),
-						Toast.LENGTH_LONG).show();
+				Toast.makeText(getActivity(), response.getResponseInfo().getReason(), Toast.LENGTH_LONG).show();
 			}
 			mPullToRefreshLayout.setRefreshComplete();
 
 		}
 	}
 
-	private class WIFIClientModeGetRequestListener implements
-			RequestListener<Response> {
+	private class WIFIClientModeGetRequestListener implements RequestListener<Response> {
 
 		@Override
 		public void onRequestFailure(SpiceException e) {
@@ -441,11 +424,8 @@ public class WifiClientFragment extends ListFragment implements
 				return;
 			}
 			Resources resources = getResources();
-			Log.i(CommandCenterActivity.TAG,
-					"Failed to read the client wan mode!");
-			Toast.makeText(getActivity(),
-					resources.getString(R.string.wlan_get_config_failure),
-					Toast.LENGTH_SHORT).show();
+			Log.i(CommandCenterActivity.TAG, "Failed to read the client wan mode!");
+			Toast.makeText(getActivity(), resources.getString(R.string.wlan_get_config_failure), Toast.LENGTH_SHORT).show();
 			mPullToRefreshLayout.setRefreshComplete();
 		}
 
@@ -468,16 +448,12 @@ public class WifiClientFragment extends ListFragment implements
 					position = WIFICLIENT_DISABLED;
 				}
 
-				getActivity().getActionBar()
-						.setSelectedNavigationItem(position);
+				getActivity().getActionBar().setSelectedNavigationItem(position);
 				currentClientMode = position;
-				Log.i(CommandCenterActivity.TAG,
-						"WWAN Mode get request successful");
+				Log.i(CommandCenterActivity.TAG, "WWAN Mode get request successful");
 			} else {
 
-				Toast.makeText(getActivity(),
-						response.getResponseInfo().getReason(),
-						Toast.LENGTH_LONG).show();
+				Toast.makeText(getActivity(), response.getResponseInfo().getReason(), Toast.LENGTH_LONG).show();
 			}
 			mPullToRefreshLayout.setRefreshComplete();
 
@@ -548,8 +524,7 @@ public class WifiClientFragment extends ListFragment implements
 
 				@Override
 				public int compare(WlanListRow lhs, WlanListRow rhs) {
-					return lhs.getWap().getSsid()
-							.compareToIgnoreCase(rhs.getWap().getSsid());
+					return lhs.getWap().getSsid().compareToIgnoreCase(rhs.getWap().getSsid());
 				}
 			});
 			adapter.notifyDataSetChanged();
@@ -565,11 +540,9 @@ public class WifiClientFragment extends ListFragment implements
 		// getActivity();
 
 		// authInfo = activity.getAuthInfo();
-		WifiWanDialogFragment wwFragment = WifiWanDialogFragment
-				.newInstance(this);
+		WifiWanDialogFragment wwFragment = WifiWanDialogFragment.newInstance(this);
 		wwFragment.setData(row.getWap(), authInfo);
-		wwFragment
-				.show(getActivity().getSupportFragmentManager(), "WAPConfirm");
+		wwFragment.show(getActivity().getSupportFragmentManager(), "WAPConfirm");
 	}
 
 	/**
@@ -596,37 +569,33 @@ public class WifiClientFragment extends ListFragment implements
 
 		for (WANProfile knownProfile : wanprofiles) {
 			if (wanprofile.equals(knownProfile)) {
-				Log.e(CommandCenterActivity.TAG,
-						"This profile is already defined!");
+				Log.e(CommandCenterActivity.TAG, "This profile is already defined!");
 				return; // it's known
 			}
 		}
 
 		// Profile is not yet defined. Do a POST to the router.
-		Log.i(CommandCenterActivity.TAG,
-				"Performing put request to enabled wlan");
-		PostRequest request = new PostRequest(getActivity(), wanprofile, authInfo,
-				"config/wwan/radio/0/profiles", WANProfile.class); // TODO will
-																	// have to
-																	// deal with
-																	// dual band
-																	// again.
+		Log.i(CommandCenterActivity.TAG, "Performing put request to enabled wlan");
+		PostRequest request = new PostRequest(getActivity(), wanprofile, authInfo, "config/wwan/radio/0/profiles", WANProfile.class); // TODO
+																																		// will
+																																		// have
+																																		// to
+																																		// deal
+																																		// with
+																																		// dual
+																																		// band
+																																		// again.
 		String lastRequestCacheKey = request.createCacheKey();
-		spiceManager.execute(request, lastRequestCacheKey,
-				DurationInMillis.ALWAYS_EXPIRED,
-				new WANProfilePostRequestListener());
+		spiceManager.execute(request, lastRequestCacheKey, DurationInMillis.ALWAYS_EXPIRED, new WANProfilePostRequestListener());
 
 	}
 
-	private class WANProfilesGetRequestListener implements
-			RequestListener<Response> {
+	private class WANProfilesGetRequestListener implements RequestListener<Response> {
 
 		@Override
 		public void onRequestFailure(SpiceException e) {
 			Log.i(CommandCenterActivity.TAG, "Failed to read WAN Profile list!");
-			Toast.makeText(getActivity(),
-					"Failed to get the WAN Profile listg.", Toast.LENGTH_SHORT)
-					.show();
+			Toast.makeText(getActivity(), "Failed to get the WAN Profile listg.", Toast.LENGTH_SHORT).show();
 		}
 
 		@Override
@@ -638,8 +607,7 @@ public class WifiClientFragment extends ListFragment implements
 
 			if (profileRadios != null) {
 				for (Radio radio : profileRadios) {
-					ArrayList<WANProfile> singleRadioProfiles = radio
-							.getProfiles();
+					ArrayList<WANProfile> singleRadioProfiles = radio.getProfiles();
 					if (singleRadioProfiles != null) {
 						for (WANProfile profile : singleRadioProfiles) {
 							wanprofiles.add(profile);
@@ -651,22 +619,19 @@ public class WifiClientFragment extends ListFragment implements
 		}
 	}
 
-	private class WANProfilePostRequestListener implements
-			RequestListener<Response> {
+	private class WANProfilePostRequestListener implements RequestListener<Response> {
 
 		@Override
 		public void onRequestFailure(SpiceException e) {
 			Log.w(CommandCenterActivity.TAG, "Failed to post the WAN Profile!");
-			Toast.makeText(getActivity(), "Failed to POST Profile to router.",
-					Toast.LENGTH_SHORT).show();
+			Toast.makeText(getActivity(), "Failed to POST Profile to router.", Toast.LENGTH_SHORT).show();
 		}
 
 		@Override
 		public void onRequestSuccess(Response wanProfileList) {
 			Log.i(CommandCenterActivity.TAG, "Posted the WAN profile.");
 			// WWAN wwan = (WWAN) wanProfileList.getData();
-			Toast.makeText(getActivity(), "POST successful.", Toast.LENGTH_LONG)
-					.show();
+			Toast.makeText(getActivity(), "POST successful.", Toast.LENGTH_LONG).show();
 		}
 	}
 
@@ -678,31 +643,23 @@ public class WifiClientFragment extends ListFragment implements
 			if (resultCode == Activity.RESULT_OK) {
 				// After Ok code.
 				Log.i(CommandCenterActivity.TAG, "user pressed ok");
-				currentClientMode = getActivity().getActionBar()
-						.getSelectedNavigationIndex();
+				currentClientMode = getActivity().getActionBar().getSelectedNavigationIndex();
 				temporaryClientMode = -1;
 
 				// Send data to server to change modes
 				String newMode = getClientMode();
-				PutRequest profilesRequest = new PutRequest(getActivity(), newMode, authInfo,
-						"config/wwan/radio/0/mode", String.class);
+				PutRequest profilesRequest = new PutRequest(getActivity(), newMode, authInfo, "config/wwan/radio/0/mode", String.class);
 
-				spiceManager.execute(profilesRequest,
-						profilesRequest.createCacheKey(),
-						DurationInMillis.ALWAYS_EXPIRED,
-						new WIFIClientModePutRequestListener());
+				spiceManager.execute(profilesRequest, profilesRequest.createCacheKey(), DurationInMillis.ALWAYS_EXPIRED, new WIFIClientModePutRequestListener());
 
 			} else if (resultCode == Activity.RESULT_CANCELED) {
 				// After Cancel code.
-				Log.i(CommandCenterActivity.TAG,
-						"user pressed cancel, mode now " + currentClientMode);
+				Log.i(CommandCenterActivity.TAG, "user pressed cancel, mode now " + currentClientMode);
 				// currentClientMode = temporaryClientMode;
 				temporaryClientMode = -1;
-				Log.i(CommandCenterActivity.TAG, "reverted mode, mode now "
-						+ currentClientMode);
+				Log.i(CommandCenterActivity.TAG, "reverted mode, mode now " + currentClientMode);
 
-				getActivity().getActionBar().setSelectedNavigationItem(
-						currentClientMode);
+				getActivity().getActionBar().setSelectedNavigationItem(currentClientMode);
 			}
 
 			break;
@@ -717,8 +674,7 @@ public class WifiClientFragment extends ListFragment implements
 	 */
 	private String getClientMode() {
 		// TODO Auto-generated method stub
-		int selected = getActivity().getActionBar()
-				.getSelectedNavigationIndex();
+		int selected = getActivity().getActionBar().getSelectedNavigationIndex();
 		Resources resources = getResources();
 		switch (selected) {
 		case WIFICLIENT_WAN:
@@ -736,20 +692,16 @@ public class WifiClientFragment extends ListFragment implements
 			return true; // nothing changed.
 		}
 
-		Log.w(CommandCenterActivity.TAG, "Changing from mode "
-				+ currentClientMode + " to mode " + itemPosition);
+		Log.w(CommandCenterActivity.TAG, "Changing from mode " + currentClientMode + " to mode " + itemPosition);
 		temporaryClientMode = itemPosition;
-		FragmentTransaction ft = getActivity().getSupportFragmentManager()
-				.beginTransaction();
-		Fragment prev = getActivity().getSupportFragmentManager()
-				.findFragmentByTag("dialog");
+		FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+		Fragment prev = getActivity().getSupportFragmentManager().findFragmentByTag("dialog");
 		if (prev != null) {
 			ft.remove(prev);
 		}
 		ft.addToBackStack(null);
 
-		DialogFragment dialogFrag = WifiClientChangeDialog
-				.newInstance(dropdownToString(itemPosition));
+		DialogFragment dialogFrag = WifiClientChangeDialog.newInstance(dropdownToString(itemPosition));
 		dialogFrag.setTargetFragment(this, WAN_CHANGE_FRAGMENT);
 		dialogFrag.show(ft, "dialog");
 
@@ -762,16 +714,12 @@ public class WifiClientFragment extends ListFragment implements
 	 * @author mjperez
 	 * 
 	 */
-	private class WIFIClientModePutRequestListener implements
-			RequestListener<Response> {
+	private class WIFIClientModePutRequestListener implements RequestListener<Response> {
 
 		@Override
 		public void onRequestFailure(SpiceException e) {
-			Log.w(CommandCenterActivity.TAG,
-					"Failed to update the WiFi Client type!");
-			Toast.makeText(getActivity(),
-					"Failed to update the WiFi Client type.",
-					Toast.LENGTH_SHORT).show();
+			Log.w(CommandCenterActivity.TAG, "Failed to update the WiFi Client type!");
+			Toast.makeText(getActivity(), "Failed to update the WiFi Client type.", Toast.LENGTH_SHORT).show();
 		}
 
 		@Override

@@ -5,10 +5,12 @@ import java.util.ArrayList;
 import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
 import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
 import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
-import android.app.AlertDialog;
+import android.app.Activity;
 import android.content.Context;
-import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.ListFragment;
@@ -29,8 +31,10 @@ import android.widget.Toast;
 
 import com.cs481.commandcenter.AuthInfo;
 import com.cs481.commandcenter.R;
+import com.cs481.commandcenter.Utility;
 import com.cs481.commandcenter.activities.CommandCenterActivity;
 import com.cs481.commandcenter.activities.SpiceActivity;
+import com.cs481.commandcenter.dialog.DisableWifiDialogFragment;
 import com.cs481.commandcenter.responses.GetRequest;
 import com.cs481.commandcenter.responses.PutRequest;
 import com.cs481.commandcenter.responses.Response;
@@ -42,8 +46,19 @@ import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
 
+/**
+ * Wifi Fragment is the fragment that is shown when the Wireless item in the
+ * dashboard fragment is clicked. It does the following: - Allows you to see all
+ * AP's that the router can configure - Turn on or off each AP from broadcasting
+ * - Turn wireless radio (entire system) off or on - Select an AP to edit (which
+ * loads WifiWAPFragment and pushes this one on to the back stack)
+ * 
+ * @author Mgamerz
+ * 
+ */
 public class WifiFragment extends ListFragment implements OnRefreshListener {
 	private static final String CACHEKEY_WWAPGET = "config_wlan_get";
+	private static final int WIFI_STATE_CHANGE_FRAGMENT = 0;
 	private static final int WWAP_LOADING = 0;
 	private static final int WWAP_LOADED = 1;
 	private static final int WWAP_FAILED = 2;
@@ -79,6 +94,14 @@ public class WifiFragment extends ListFragment implements OnRefreshListener {
 		}
 	}
 
+	/**
+	 * Creates a new instance of this class, passing arguments that will be set
+	 * to the fragment, which can be retreived using getArguments() in the code.
+	 * 
+	 * @param authInfo
+	 *            Authinfo to use when doing network requests
+	 * @return New instance of WifiFragment
+	 */
 	public static WifiFragment newInstance(AuthInfo authInfo) {
 		WifiFragment wifiFrag = new WifiFragment();
 
@@ -155,13 +178,13 @@ public class WifiFragment extends ListFragment implements OnRefreshListener {
 	}
 
 	/**
-	 * Set's a network operation to change the Wifi Toggle switch state
+	 * Performs a GET request to the router to get the state of the wireless
+	 * radio system.
 	 */
 	private void setWifiState() {
 		// perform the request.
 		GetRequest request = new GetRequest(getActivity(), authInfo, "config/wlan", ConfigWlan.class, "wlanconfigget");
 		String lastRequestCacheKey = request.createCacheKey();
-
 		spiceManager.execute(request, lastRequestCacheKey, DurationInMillis.ALWAYS_EXPIRED, new WLANConfigGetRequestListener());
 	}
 
@@ -179,8 +202,12 @@ public class WifiFragment extends ListFragment implements OnRefreshListener {
 		setWifiToggleListener();
 	}
 
-	/*
-	 * Listener for the WiFi On/Off switch
+	/**
+	 * Set's a listener to the wifi toggle switch in the actionbar menu. Set's
+	 * the switch to the specified wifistate, and enable/disables changing it
+	 * depending on if that flag is set. You would not want the switch enabled
+	 * if it is not currently reflecting the correct state (e.g. it is actually
+	 * on but has not yet loaded, showing that there is data to load)
 	 */
 	private void setWifiToggleListener() {
 		final Switch wifiToggle = (Switch) menu.findItem(R.id.wifi_toggle).getActionView();
@@ -190,37 +217,45 @@ public class WifiFragment extends ListFragment implements OnRefreshListener {
 			@Override
 			public void onCheckedChanged(CompoundButton buttonView, final boolean isChecked) {
 				// If we're going from ON to OFF, ask if user is sure
-				if(!isChecked){
-					new AlertDialog.Builder(getActivity())
-				    .setTitle("Disabling WiFi")
-				    .setMessage("Are you sure you want to disable WiFi?")
-				    .setCancelable(false)
-				    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-				        public void onClick(DialogInterface dialog, int which) { 
-				        	Log.i(CommandCenterActivity.TAG, "Performing put request to enabled wlan");
-							PutRequest request = new PutRequest(getActivity(), Boolean.valueOf(isChecked), authInfo, "config/wlan/radio/0/enabled", Boolean.class);
-							String lastRequestCacheKey = request.createCacheKey();
-							spiceManager.execute(request, lastRequestCacheKey, DurationInMillis.ALWAYS_EXPIRED, new WLANEnabledPutRequestListener());
-				        }
-				     })
-				    .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-				        public void onClick(DialogInterface dialog, int which) { 
-				            wifiToggle.setChecked(true);
-				        }
-				     })
-				    .show();
-				}
-				// Otherwise just turn it from OFF to ON
-				else{
+				Log.i(CommandCenterActivity.TAG, "The wifi toggle switch has changed and the listener is enabled. Firing event handler.");
+				if (!isChecked) {
+
+					FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+					Fragment prev = getActivity().getSupportFragmentManager().findFragmentByTag("dialog");
+					if (prev != null) {
+						ft.remove(prev);
+					}
+					//ft.addToBackStack(null);
+
+					DialogFragment dialogFrag = DisableWifiDialogFragment.newInstance();
+					dialogFrag.setTargetFragment(WifiFragment.this, WIFI_STATE_CHANGE_FRAGMENT);
+					dialogFrag.show(ft, "dialog");
+				} else {
 					Log.i(CommandCenterActivity.TAG, "Performing put request to enabled wlan");
-					PutRequest request = new PutRequest(getActivity(), Boolean.valueOf(isChecked), authInfo, "config/wlan/radio/0/enabled", Boolean.class);
-					String lastRequestCacheKey = request.createCacheKey();
-					spiceManager.execute(request, lastRequestCacheKey, DurationInMillis.ALWAYS_EXPIRED, new WLANEnabledPutRequestListener());
+					putWifiState(isChecked);
 				}
 			}
 		});
 	}
 
+	/**
+	 * Put's a state to the wifi (radio 0 currently) enable/disable field in the
+	 * router API. This will turn all wifi on or off on the router.
+	 * 
+	 * @param state
+	 *            Boolean value to put to the router (true for on, false for
+	 *            off)
+	 */
+	protected void putWifiState(boolean state) {
+		wifiState = state;
+		PutRequest request = new PutRequest(getActivity(), Boolean.valueOf(state), authInfo, "config/wlan/radio/0/enabled", Boolean.class);
+		String lastRequestCacheKey = request.createCacheKey();
+		spiceManager.execute(request, lastRequestCacheKey, DurationInMillis.ALWAYS_EXPIRED, new WLANEnabledPutRequestListener());
+	}
+
+	/**
+	 * Read's the Wlan configuration from config/wlan. Gets a list of wireless access points this router can broadcast.
+	 */
 	private void readWlanConfig() {
 		// perform the request.
 		GetRequest wwapRequest = new GetRequest(getActivity(), authInfo, "config/wlan", ConfigWlan.class, CACHEKEY_WWAPGET);
@@ -228,6 +263,11 @@ public class WifiFragment extends ListFragment implements OnRefreshListener {
 		spiceManager.execute(wwapRequest, lastRequestCacheKey, DurationInMillis.ALWAYS_EXPIRED, new WWAPSGetRequestListener());
 	}
 
+	/**
+	 * Listener for the wifi/wlan enabled/disabled put request. It return
+	 * @author Mgamerz
+	 *
+	 */
 	public class WLANEnabledPutRequestListener implements RequestListener<Response> {
 
 		@Override
@@ -238,18 +278,16 @@ public class WifiFragment extends ListFragment implements OnRefreshListener {
 
 		@Override
 		public void onRequestSuccess(Response enabledPutResult) {
-			Log.i(CommandCenterActivity.TAG, "UPDATING SWITCH!");
-			Boolean bool = (Boolean) enabledPutResult.getData();
-			Switch wifiToggle = (Switch) menu.findItem(R.id.wifi_toggle).getActionView();
-			wifiToggle.setOnCheckedChangeListener(null);
-			wifiState = bool.booleanValue();
-			wifiStateEnabled = true;
-			wifiToggle.setEnabled(wifiStateEnabled);
-			wifiToggle.setChecked(wifiState);
-			setWifiToggleListener();
+			Log.i(CommandCenterActivity.TAG, "Successfully updated the wifi to on/off.");
+			// TODO : Add checking to see if there was any errors even though it responded properly...
 		}
 	}
 
+	/**
+	 * Listener for get requests getting the wireless configuration. It receives a ConfigWlan object in the response object.
+	 * @author Mgamerz
+	 *
+	 */
 	private class WLANConfigGetRequestListener implements RequestListener<Response> {
 
 		@Override
@@ -298,6 +336,13 @@ public class WifiFragment extends ListFragment implements OnRefreshListener {
 
 	}
 
+	/**
+	 * Listener for get requests getting the wireless access point configuration. 
+	 * It receives a ConfigWlan object in the response object.
+	 * This is the primary data request for this fragment, populating most of the interface on success.
+	 * @author Mgamerz
+	 *
+	 */
 	private class WWAPSGetRequestListener implements RequestListener<Response> {
 
 		@Override
@@ -308,6 +353,7 @@ public class WifiFragment extends ListFragment implements OnRefreshListener {
 			Log.i(CommandCenterActivity.TAG, "Failed to read the list of WAP configs!");
 			Toast.makeText(getActivity(), getResources().getString(R.string.failed_wlan_config), Toast.LENGTH_SHORT).show();
 			wwapListState = WWAP_FAILED;
+			// TODO : Set the interface to show it failed.
 
 		}
 
@@ -324,26 +370,61 @@ public class WifiFragment extends ListFragment implements OnRefreshListener {
 		}
 	}
 
+	/**
+	 * Updates the interface with a list of new wireless access points this interface can manage.
+	 * Once this method has been called, when the screen rotates, data will no longer refresh on rotate, as 
+	 * data has been laoded.
+	 * @param wwaps List of bss objects (wap) that will be tied to the listview through an adapter.
+	 */
 	private void updateWWAPList(ArrayList<Bss> wwaps) {
 		if (getActivity() == null) {
 			return; // fragment has died
 		}
-		// TODO Auto-generated method stub
 		Log.i(CommandCenterActivity.TAG, "Updating adapter with new wwap information.");
 		this.wwaps = wwaps;
 		adapter = new WWAPAdapter(getActivity(), wwaps);
 		Log.i(CommandCenterActivity.TAG, "created new log adapter :" + adapter);
 
 		setListAdapter(adapter);
-		Log.i(CommandCenterActivity.TAG, "Number of wwaps: " + wwaps.size());
 		this.wwaps = wwaps;
-		Log.i(CommandCenterActivity.TAG, "Number of wwaps pa: " + wwaps.size());
 
 		Log.i(CommandCenterActivity.TAG, "notifying adapter of new dataset");
 		shouldLoadData = false;
 		adapter.notifyDataSetChanged();
 	}
 
+	@Override
+	/**
+	 * Called when the dialog for turning wifi off has finished. This method is built into android and will invoke the correct parameters.
+	 */
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		Log.i(CommandCenterActivity.TAG, "Activity result.");
+		switch (requestCode) {
+		case WIFI_STATE_CHANGE_FRAGMENT:
+			final Switch wifiToggle = (Switch) menu.findItem(R.id.wifi_toggle).getActionView();
+			if (resultCode == Activity.RESULT_OK) {
+				putWifiState(wifiToggle.isChecked());
+			} else if (resultCode == Activity.RESULT_CANCELED) {
+				Log.i(CommandCenterActivity.TAG, "Reverting wifi change on the switch");
+
+				// disable the listener so when we revert the switch it doesn't
+				// fire another on change event
+				wifiToggle.setOnCheckedChangeListener(null);
+				// revert change
+				wifiToggle.setChecked(!wifiToggle.isChecked());
+				// set the listener again
+				setWifiToggleListener();
+			}
+
+			break;
+		}
+	}
+
+	/**
+	 * Custom adapter for tying the returned Bss objects to the list view. Set's up the interface for the list view.
+	 * @author Mgamerz
+	 *
+	 */
 	public class WWAPAdapter extends ArrayAdapter<Bss> {
 		private final Context context;
 		private final ArrayList<Bss> rows;
@@ -373,10 +454,33 @@ public class WifiFragment extends ListFragment implements OnRefreshListener {
 
 			TextView messageView = (TextView) rowView.findViewById(R.id.listrow_wwap_name);
 			messageView.setText(wwap.getSsid());
+			
+			TextView descView = (TextView) rowView.findViewById(R.id.listrow_wwap_desc);
+			descView.setText(wifiDescriptionBuilder(wwap));
 
 			Switch apEnabled = (Switch) rowView.findViewById(R.id.listrow_wwap_switch);
 			apEnabled.setChecked(wwap.getEnabled());
 			return rowView;
 		}
+	}
+	
+	/**
+	 * Builds the description string for an AP based on the bss information given (which is the known information about the AP from the router)
+	 * @param bss Information about the AP
+	 * @return String to set as the subtitle of the listrow
+	 */
+	private String wifiDescriptionBuilder(Bss bss){
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append(Utility.authToHumanString(getActivity(), bss.getAuthmode()));
+		if (bss.getHidden()){
+			sb.append(" - ");
+			sb.append(getResources().getString(R.string.ap_hidden));
+		}
+		if (bss.getIsolate()){
+			sb.append(" - ");
+			sb.append(getResources().getString(R.string.ap_isolated));
+		}
+		return sb.toString();
 	}
 }

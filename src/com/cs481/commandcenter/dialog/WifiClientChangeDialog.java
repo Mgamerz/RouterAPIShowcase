@@ -65,7 +65,7 @@ public class WifiClientChangeDialog extends DialogFragment {
 		dialogBuilder.setTitle(getActivity().getResources().getString(R.string.warning_clientchange));
 		dialogBuilder
 				.setMessage(String
-						.format("Are you sure you want to change the Wireless Client mode to %s? This may affect network connectivity.",
+						.format(getResources().getString(R.string.confirm_client_change),
 								newMode));
 
 		// setup buttons
