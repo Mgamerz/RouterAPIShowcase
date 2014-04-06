@@ -225,7 +225,7 @@
         <item>WPA1/WPA2</item>
     </string-array>
     <string-array name="wifiap_ciphertype_values">
-        <item>TKIP</item>
+        <!-- <item>TKIP</item> -->
         <item>AES</item>
         <item>TKIP/AES</item>
     </string-array>

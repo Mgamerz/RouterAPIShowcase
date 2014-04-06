@@ -107,7 +107,7 @@ public class WifiWAPFragment extends Fragment {
 
 		CheckBox isolating = (CheckBox) v.findViewById(R.id.wap_isolating);
 		isolating.setChecked(wapinfo.getIsolate());
-		
+
 		parseSecurity(v);
 
 		// listeners
@@ -115,11 +115,18 @@ public class WifiWAPFragment extends Fragment {
 			@Override
 			public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
 				TextView insecure_text = (TextView) v.findViewById(R.id.wap_insecure_text);
+				Spinner cipherSpinner = (Spinner) v.findViewById(R.id.wap_ciphertype_spinner);
 				if (position == 0) {
 					// its set to none
 					insecure_text.setVisibility(TextView.VISIBLE);
+					cipherSpinner.setVisibility(Spinner.GONE);
 				} else {
 					insecure_text.setVisibility(TextView.GONE);
+					if (position > 1) { //higher than WEP 
+						cipherSpinner.setVisibility(Spinner.VISIBLE);
+					} else {
+						cipherSpinner.setVisibility(Spinner.GONE);
+					}
 				}
 			}
 
@@ -135,12 +142,36 @@ public class WifiWAPFragment extends Fragment {
 
 	private void parseSecurity(View v) {
 		// TODO Auto-generated method stub
-		Log.i(CommandCenterActivity.TAG, "WAP security: "+wapinfo.getAuthmode());
+		Log.i(CommandCenterActivity.TAG, "WAP security: " + wapinfo.getAuthmode());
 		Spinner cipher_spinner = (Spinner) v.findViewById(R.id.wap_ciphertype_spinner);
 		Spinner encryption_spinner = (Spinner) v.findViewById(R.id.wap_encryptiontype_spinner);
 
-		if (wapinfo.getAuthmode().equals(Utility.AUTH_WPA1)){
+		boolean setCipher = false; // if this get set to true a block of code
+									// down below will execute to set the cipher
+									// in the UI
+		if (wapinfo.getAuthmode().equals(Utility.AUTH_OPEN)) {
+			encryption_spinner.setSelection(0);
+		} else if (wapinfo.getAuthmode().equals(Utility.AUTH_WEPAUTO)) {
+			encryption_spinner.setSelection(1);
+		} else if (wapinfo.getAuthmode().equals(Utility.AUTH_WPA1)) {
+			setCipher = true;
 			encryption_spinner.setSelection(2);
+		} else if (wapinfo.getAuthmode().equals(Utility.AUTH_WPA2)) {
+			setCipher = true;
+			encryption_spinner.setSelection(3);
+		} else if (wapinfo.getAuthmode().equals(Utility.AUTH_WPA1WPA2)) {
+			setCipher = true;
+			encryption_spinner.setSelection(4);
+		}
+
+		if (setCipher) {
+			if (wapinfo.getWpacipher().equals(Utility.CIPHER_AES)) {
+				cipher_spinner.setSelection(0);
+			} else if (wapinfo.getWpacipher().equals(Utility.CIPHER_TKIPAES)) {
+				cipher_spinner.setSelection(1);
+			}
+		} else {
+			cipher_spinner.setVisibility(View.GONE);
 		}
 	}
 
@@ -179,8 +210,6 @@ public class WifiWAPFragment extends Fragment {
 			}
 			Log.i(CommandCenterActivity.TAG, "Failed to put data to server for WAP!");
 			Toast.makeText(getActivity(), getResources().getString(R.string.failed_wlan_config), Toast.LENGTH_SHORT).show();
-			// wwapListState = WWAP_FAILED;
-
 		}
 
 		@Override
