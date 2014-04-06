@@ -28,9 +28,11 @@ import com.cs481.commandcenter.activities.CommandCenterActivity;
 import com.cs481.commandcenter.activities.SpiceActivity;
 import com.cs481.commandcenter.listrows.ClientListRow;
 import com.cs481.commandcenter.responses.GetRequest;
+import com.cs481.commandcenter.responses.PutRequest;
 import com.cs481.commandcenter.responses.Response;
 import com.cs481.commandcenter.responses.status.lan.Client;
 import com.cs481.commandcenter.responses.status.lan.Lan;
+import com.cs481.commandcenter.responses.status.wlan.StatusWlan;
 import com.octo.android.robospice.SpiceManager;
 import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
@@ -362,11 +364,44 @@ public class LanClientFragment extends Fragment implements
 
 	public void onListItemClick(ListView l, View v, int position, long id) {
 		ClientListRow row = (ClientListRow) (l.getAdapter().getItem(position));
+		Client client = row.getClient();
 		Log.w(CommandCenterActivity.TAG, "Client IP clicked: "
-				+ row.getClient().getIp_address());
+				+ client.getIp_address());
 
 		/** TODO: Add kick/ban options */
+		// Send data to server to kick/ban
+		String clientMac = client.getMac();
+		PutRequest kickRequest = new PutRequest(getActivity(), clientMac, authInfo,
+				"control/wlan/kick_mac", String.class);
 
+		spiceManager.execute(kickRequest,
+				kickRequest.createCacheKey(),
+				DurationInMillis.ALWAYS_EXPIRED,
+				new LanKickPutRequestListener());
+
+
+	}
+	/**
+	 * Listener for a kick request.
+	 * 
+	 */
+	private class LanKickPutRequestListener implements
+			RequestListener<Response> {
+
+		@Override
+		public void onRequestFailure(SpiceException e) {
+			Log.w(CommandCenterActivity.TAG,
+					"Failed to Kick!");
+			Toast.makeText(getActivity(),
+					"Failed to kick.",
+					Toast.LENGTH_SHORT).show();
+		}
+
+		@Override
+		public void onRequestSuccess(Response clientChange) {
+			Log.i(CommandCenterActivity.TAG, "Kick successful.");
+
+		}
 	}
 
 }
