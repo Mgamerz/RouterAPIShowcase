@@ -486,7 +486,7 @@ public class WifiFragment extends ListFragment implements OnRefreshListener {
 			sb.append(" - ");
 			sb.append(getResources().getString(R.string.ap_hidden));
 		}
-		if (bss.getHidden()){
+		if (bss.getIsolate()){
 			sb.append(" - ");
 			sb.append(getResources().getString(R.string.ap_isolated));
 		}
