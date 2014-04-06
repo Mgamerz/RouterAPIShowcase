@@ -280,15 +280,6 @@ public class WifiFragment extends ListFragment implements OnRefreshListener {
 		public void onRequestSuccess(Response enabledPutResult) {
 			Log.i(CommandCenterActivity.TAG, "Successfully updated the wifi to on/off.");
 			// TODO : Add checking to see if there was any errors even though it responded properly...
-			
-			/*Boolean bool = (Boolean) enabledPutResult.getData();
-			Switch wifiToggle = (Switch) menu.findItem(R.id.wifi_toggle).getActionView();
-			wifiToggle.setOnCheckedChangeListener(null);
-			wifiState = bool.booleanValue();
-			wifiStateEnabled = true;
-			wifiToggle.setEnabled(wifiStateEnabled);
-			wifiToggle.setChecked(wifiState);
-			setWifiToggleListener();*/
 		}
 	}
 
