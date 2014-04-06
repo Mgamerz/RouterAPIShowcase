@@ -208,7 +208,8 @@
     <string name="wifi_title">Wireless APs</string>
     <string name="wifi_loading">Loading wireless access points</string>
     <string name="wifi_load_failed">Failed to retrieve list of wireless access points</string>
-    <string name="wap_client_connection_insecure">Client connections will not be insecure as network communication is not encrypted</string>
+    <string name="wap_client_connection_insecure">Client connections will not be secure as network communication is not encrypted</string>
+    <string name="wap_client_connection_insecure_wep">WEP encryption has known weakness\' and should be avoided unless necessary</string>
     <string name="wap_editor_title">AP Editor</string>
     <string name="wap_broadcast">Broadcast SSID</string>
     <string name="wap_isolate">Isolate clients</string>

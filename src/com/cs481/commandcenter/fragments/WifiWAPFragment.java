@@ -2,10 +2,12 @@ package com.cs481.commandcenter.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -200,6 +202,20 @@ public class WifiWAPFragment extends Fragment {
 		// spiceManager.execute(wwapRequest, lastRequestCacheKey,
 		// DurationInMillis.ALWAYS_EXPIRED, new WWAPSGetRequestListener());
 	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case android.R.id.home:
+			// up navigation
+			Log.i(CommandCenterActivity.TAG, "UP in WAP Editor is being handled.");
+			FragmentManager fm = getActivity().getSupportFragmentManager();
+			fm.popBackStack();
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
+	}
 
 	private class WAPPutRequestListener implements RequestListener<Response> {
 
@@ -219,5 +235,7 @@ public class WifiWAPFragment extends Fragment {
 			}
 			Log.i(CommandCenterActivity.TAG, "Pushed data to the WLAN Config in WifiWAPFragment");
 		}
+		
+		
 	}
 }
