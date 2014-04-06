@@ -216,6 +216,7 @@ public class WifiFragment extends ListFragment implements OnRefreshListener {
 			@Override
 			public void onCheckedChanged(CompoundButton buttonView, final boolean isChecked) {
 				// If we're going from ON to OFF, ask if user is sure
+				Log.i(CommandCenterActivity.TAG, "The wifi toggle switch has changed and the listener is enabled. Firing event handler.");
 				if (!isChecked) {
 
 					FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
@@ -223,7 +224,7 @@ public class WifiFragment extends ListFragment implements OnRefreshListener {
 					if (prev != null) {
 						ft.remove(prev);
 					}
-					ft.addToBackStack(null);
+					//ft.addToBackStack(null);
 
 					DialogFragment dialogFrag = DisableWifiDialogFragment.newInstance();
 					dialogFrag.setTargetFragment(WifiFragment.this, WIFI_STATE_CHANGE_FRAGMENT);
@@ -245,6 +246,7 @@ public class WifiFragment extends ListFragment implements OnRefreshListener {
 	 *            off)
 	 */
 	protected void putWifiState(boolean state) {
+		wifiState = state;
 		PutRequest request = new PutRequest(getActivity(), Boolean.valueOf(state), authInfo, "config/wlan/radio/0/enabled", Boolean.class);
 		String lastRequestCacheKey = request.createCacheKey();
 		spiceManager.execute(request, lastRequestCacheKey, DurationInMillis.ALWAYS_EXPIRED, new WLANEnabledPutRequestListener());
