@@ -44,31 +44,32 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  * 
  */
 public class Utility {
+
+	// Encryption constants for wifi: Enterprise denotes a radius server is used
+	// to generate passwords, PSKs are pre shared keys which
+	// normal folk use.
 	public static String AUTH_OPEN = "none";
+
+	// WEP
 	public static String AUTH_WEPAUTO = "wepauto";
-	public static String AUTH_WPA1WPA2 = "wpa1wpa2";
+	public static String AUTH_WEPOPEN = "wepopen";
+	public static String AUTH_WEPSHARED = "wepshared";
+
+	// WPA1
 	public static String AUTH_WPA1 = "wpa1psk";
+	public static String AUTH_WPA1_ENTERPRISE = "wpa1";
+
+	// WPA2
 	public static String AUTH_WPA2 = "wpa2psk";
-	
+	public static String AUTH_WPA2_ENTERPRISE = "wpa2";
+
+	// Mixed WPA
+	public static String AUTH_WPA1WPA2 = "wpa1wpa2psk";
+	public static String AUTH_WPA1WPA2_ENTERPRISE = "wpa1wpa2";
+
+	// ciphers for WPA and WPA2
 	public static String CIPHER_AES = "aes";
-	//public static String CIPHER_TKIP = "tkip";
 	public static String CIPHER_TKIPAES = "tkipaes";
-
-
-	/**
-	 * Bad way of converting a ecm reply to a normal reply.
-	 * 
-	 * @param str
-	 *            string to convert to only the data
-	 * @return modified string only showing the data
-	 */
-	public static String convertToDataSegment(String str) {
-		// JsonObject json = new JsonObject()
-		str = str.substring(0, str.length() - 1); // remove last }
-		str = str.substring(1, str.length()); // remove first {
-		str = str.replaceFirst("\"data\":", "");
-		return str;
-	}
 
 	/**
 	 * Converts an ECM reply into a normal direct-interface based response
@@ -181,11 +182,18 @@ public class Utility {
 	/**
 	 * Prepares a put request.
 	 * 
-	 * @param authInfo AuthInfo to use for connecting to the router. It is parsed to prepare the request.
-	 * @param put put object that will be used to execute the network request
-	 * @param data string data to set as the body of the message
-	 * @return modified HttpPut object that will be used for the request with the correct parameters set.
-	 * @throws UnsupportedEncodingException If the data to be put onto the body of the post request is not encoded properly
+	 * @param authInfo
+	 *            AuthInfo to use for connecting to the router. It is parsed to
+	 *            prepare the request.
+	 * @param put
+	 *            put object that will be used to execute the network request
+	 * @param data
+	 *            string data to set as the body of the message
+	 * @return modified HttpPut object that will be used for the request with
+	 *         the correct parameters set.
+	 * @throws UnsupportedEncodingException
+	 *             If the data to be put onto the body of the post request is
+	 *             not encoded properly
 	 */
 	public static HttpPut preparePutRequest(AuthInfo authInfo, HttpPut put, String data) throws JsonProcessingException, IOException {
 		// TODO Auto-generated method stub
@@ -210,11 +218,18 @@ public class Utility {
 	 * Prepares a post request. Same as prepare put request but returns a post
 	 * one instead.
 	 * 
-	 * @param authInfo AuthInfo to use for connecting to the router. It is parsed to prepare the request.
-	 * @param post Post object that will be used to execute the network request
-	 * @param data string data to set as the body of the message
-	 * @return modified HttpPost object that will be used for the request with the correct parameters set.
-	 * @throws UnsupportedEncodingException If the data to be put onto the body of the post request is not encoded properly
+	 * @param authInfo
+	 *            AuthInfo to use for connecting to the router. It is parsed to
+	 *            prepare the request.
+	 * @param post
+	 *            Post object that will be used to execute the network request
+	 * @param data
+	 *            string data to set as the body of the message
+	 * @return modified HttpPost object that will be used for the request with
+	 *         the correct parameters set.
+	 * @throws UnsupportedEncodingException
+	 *             If the data to be put onto the body of the post request is
+	 *             not encoded properly
 	 */
 	public static HttpPost preparePostRequest(AuthInfo authInfo, HttpPost post, String data) throws UnsupportedEncodingException {
 		// TODO Auto-generated method stub
@@ -439,9 +454,12 @@ public class Utility {
 
 	/**
 	 * Gets a domain name from a url.
-	 * @param url  url to parse for a domain name
+	 * 
+	 * @param url
+	 *            url to parse for a domain name
 	 * @return domain name only string.
-	 * @throws URISyntaxException if the passed string is not a url
+	 * @throws URISyntaxException
+	 *             if the passed string is not a url
 	 */
 	public static String getDomainName(String url) throws URISyntaxException {
 		URI uri = new URI(url);
@@ -467,8 +485,11 @@ public class Utility {
 
 	/**
 	 * Delete's a profile from the database.
-	 * @param context context to use for deleting the profile.
-	 * @param profile profile to delete.
+	 * 
+	 * @param context
+	 *            context to use for deleting the profile.
+	 * @param profile
+	 *            profile to delete.
 	 */
 	public static void deleteProfile(Context context, Profile profile) {
 		DatabaseAdapter dbAdapter = new DatabaseAdapter(context);
@@ -478,10 +499,13 @@ public class Utility {
 	}
 
 	/**
-	 * Converts an encryption-type string (from the router) to a human readable one.
-	 * E.g. none -> Open, wepauto -> WEP. 
-	 * @param context Context to load string resources from
-	 * @param authmode authmode string the router presented.
+	 * Converts an encryption-type string (from the router) to a human readable
+	 * one. E.g. none -> Open, wepauto -> WEP.
+	 * 
+	 * @param context
+	 *            Context to load string resources from
+	 * @param authmode
+	 *            authmode string the router presented.
 	 * @return human readable version of the string
 	 */
 	public static String authToHumanString(Context context, String authmode) {

@@ -219,12 +219,18 @@
 
     <string-array name="wifiap_encryptiontype_values">
         <item>None</item>
-        <item>WEP</item>
-        <item>WPA</item>
+        <item>WEP AUTO</item>
+        <item>WEP OPEN</item>
+        <item>WEP SHARED</item>
+        <item>WPA1</item>
+        <item>WPA1 Enterprise</item>
         <item>WPA2</item>
+        <item>WPA2 Enterprise</item>
         <item>WPA1/WPA2</item>
+        <item>WPA1/WPA2 Enterprise</item>
     </string-array>
     <string-array name="wifiap_ciphertype_values">
+
         <!-- <item>TKIP</item> -->
         <item>AES</item>
         <item>TKIP/AES</item>
