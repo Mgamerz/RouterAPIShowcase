@@ -535,4 +535,59 @@ public class Utility {
 		}
 		return "Unknown encryption type";
 	}
+
+	/**
+	 * Converts an index value to the on-router encryption string. It always
+	 * goes in this order: Open wepauto wepopen wepshared wpa1 wpa1 enterprise
+	 * wpa2 wpa2 enterprise wpa1wpa2 wpa1wpa2 enterprise
+	 * 
+	 * @param authIndex
+	 *            index to convert to string
+	 * @return on-router string for encryption types.
+	 */
+	public static String indexToAuthString(int authIndex) {
+		switch (authIndex) {
+		case 0:
+			return AUTH_OPEN;
+		case 1:
+			return AUTH_WEPAUTO;
+		case 2:
+			return AUTH_WEPOPEN;
+		case 3:
+			return AUTH_WEPSHARED;
+		case 4:
+			return AUTH_WPA1;
+		case 5:
+			return AUTH_WPA1_ENTERPRISE;
+		case 6:
+			return AUTH_WPA2;
+		case 7:
+			return AUTH_WPA2_ENTERPRISE;
+		case 8:
+			return AUTH_WPA1WPA2;
+		case 9:
+			return AUTH_WPA1WPA2_ENTERPRISE;
+		default:
+			return AUTH_OPEN; // this should be handled differently, in the
+								// event something strange happens...
+		}
+	}
+
+	/**
+	 * Converts an index (likely from a spinner) to a on-router cipher string
+	 * for WPA. Always goes in this order: TKIP/AES AES
+	 * 
+	 * @param cipherIndex
+	 *            Index to convert to on-router string
+	 * @return on-router string version of the index
+	 */
+	public static String indexToCipherString(int cipherIndex) {
+		switch (cipherIndex) {
+		case 0:
+			return CIPHER_TKIPAES;
+		case 1:
+			return CIPHER_AES;
+		}
+		return null;
+	}
 }

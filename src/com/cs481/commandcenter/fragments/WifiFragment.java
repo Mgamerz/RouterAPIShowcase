@@ -204,7 +204,7 @@ public class WifiFragment extends ListFragment implements OnRefreshListener {
 	}
 
 	/**
-	 * Set's a listener to the wifi toggle switch in the actionbar menu. Set's
+	 * Sets a listener to the wifi toggle switch in the actionbar menu. Set's
 	 * the switch to the specified wifistate, and enable/disables changing it
 	 * depending on if that flag is set. You would not want the switch enabled
 	 * if it is not currently reflecting the correct state (e.g. it is actually

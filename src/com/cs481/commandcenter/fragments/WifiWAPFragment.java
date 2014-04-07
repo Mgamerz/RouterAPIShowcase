@@ -1,8 +1,12 @@
 package com.cs481.commandcenter.fragments;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -24,14 +28,18 @@ import com.cs481.commandcenter.R;
 import com.cs481.commandcenter.Utility;
 import com.cs481.commandcenter.activities.CommandCenterActivity;
 import com.cs481.commandcenter.activities.SpiceActivity;
+import com.cs481.commandcenter.dialog.CommitWAPDialogFragment;
+import com.cs481.commandcenter.responses.PutRequest;
 import com.cs481.commandcenter.responses.Response;
 import com.cs481.commandcenter.responses.config.wlan.Bss;
 import com.octo.android.robospice.SpiceManager;
+import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
 
 public class WifiWAPFragment extends Fragment {
 	private static final String CACHEKEY_WWAPPUT = "config_wapedit_put";
+	private static final int COMMIT_CHANGES_FRAGMENT = 0;
 	private SpiceManager spiceManager;
 	private AuthInfo authInfo;
 	private Bss wapinfo;
@@ -207,13 +215,47 @@ public class WifiWAPFragment extends Fragment {
 		// Get widget's instance
 	}
 
+	/**
+	 * Constructs a modified BSS object and puts it to the router. It determines
+	 * if something should be collected and modified if it is showing; if it is
+	 * not showing, then it could not have been edited. Passwords are only
+	 * updated if a new one is filled, if the field is empty, it is ignored.
+	 */
 	private void putWAPConfig() {
 		// perform the request.
-		// PutRequest wwapRequest = new PutRequest(getActivity(), authInfo,
-		// "config/wlan", ConfigWlan.class, CACHEKEY_WWAPPUT);
-		// String lastRequestCacheKey = wwapRequest.createCacheKey();
-		// spiceManager.execute(wwapRequest, lastRequestCacheKey,
-		// DurationInMillis.ALWAYS_EXPIRED, new WWAPSGetRequestListener());
+		// construct BSS to put
+		Bss modified_wap = wapinfo; // edit the existing one
+
+		// get network auth type
+		View v = getView();
+		Spinner authSpinner = (Spinner) v.findViewById(R.id.wap_encryptiontype_spinner);
+		if (authSpinner.getVisibility() == View.VISIBLE) {
+			int authIndex = authSpinner.getSelectedItemPosition();
+			modified_wap.setAuthmode(Utility.indexToAuthString(authIndex));
+		}
+
+		// get cipher type if it has changed
+		Spinner cipherSpinner = (Spinner) v.findViewById(R.id.wap_ciphertype_spinner);
+		if (cipherSpinner.getVisibility() == View.VISIBLE) {
+			int cipherIndex = cipherSpinner.getSelectedItemPosition();
+			modified_wap.setWpacipher(Utility.indexToCipherString(cipherIndex));
+		}
+		
+		//get hidden var
+		CheckBox broadcasting = (CheckBox) v.findViewById(R.id.wap_broadcasting);
+		modified_wap.setHidden(!broadcasting.isChecked()); //broadcasting is the opposite of hidden, so we reverse the result.
+		
+		// get isolated var
+		CheckBox isolated = (CheckBox) v.findViewById(R.id.wap_isolating);
+		modified_wap.setIsolate(isolated.isChecked()); //broadcasting is the opposite of hidden, so we reverse the result.
+
+		EditText passwordField = (EditText) v.findViewById(R.id.wap_newpassword_field);
+		if (passwordField.getVisibility() == View.VISIBLE && !passwordField.getText().toString().equals("")){
+			//new password has been entered
+			modified_wap.setWpapsk(passwordField.getText().toString()); //router should encrypt this... not sure what it will do if the old password is pushed to the same field.
+		}
+		PutRequest commitRequest = new PutRequest(getActivity(), modified_wap, authInfo, "config/wlan/radio/0/bss/" + wapindex, Bss.class);
+		spiceManager.execute(commitRequest, commitRequest.createCacheKey(), DurationInMillis.ALWAYS_EXPIRED, new WAPPutRequestListener());
 	}
 
 	@Override
@@ -225,8 +267,36 @@ public class WifiWAPFragment extends Fragment {
 			FragmentManager fm = getActivity().getSupportFragmentManager();
 			fm.popBackStack();
 			return true;
+		case R.id.wifiwap_commit:
+			Log.i(CommandCenterActivity.TAG, "Commit changes in WAP Editor is being handled.");
+			FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+			Fragment prev = getActivity().getSupportFragmentManager().findFragmentByTag("dialog");
+			if (prev != null) {
+				ft.remove(prev);
+			}
+			ft.addToBackStack(null);
+
+			DialogFragment dialogFrag = CommitWAPDialogFragment.newInstance();
+			dialogFrag.setTargetFragment(this, COMMIT_CHANGES_FRAGMENT);
+			dialogFrag.show(ft, "dialog");
+			return true;
 		default:
 			return super.onOptionsItemSelected(item);
+		}
+	}
+
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		Log.i(CommandCenterActivity.TAG, "Activity result.");
+		switch (requestCode) {
+		case COMMIT_CHANGES_FRAGMENT:
+			if (resultCode == Activity.RESULT_OK) {
+				// After Ok code.
+				Log.i(CommandCenterActivity.TAG, "User accepted changes, commiting them now.");
+				putWAPConfig();
+			}
+
+			break;
 		}
 	}
 
