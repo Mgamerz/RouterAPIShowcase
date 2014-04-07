@@ -33,7 +33,7 @@ public class PutRequest extends SpiceRequest<Response> {
 	private Context context;
 
 	/**
-	 * Creates a new putrequest that will be executed when a spice manager object calls it via the request() method.
+	 * Creates a new putrequest that will be executed when a spice manager object calls it via the execute() method.
 	 * @param context Context to use for execution (usually getActivity())
 	 * @param data Data object to put to the network
 	 * @param authInfo Authinfo to use for connecting to the router 

@@ -166,7 +166,7 @@
     <!-- Direct Router Confirm Dialog -->
     <string name="direct_profile_dialog_title">Direct Login Profile</string>
     <string name="save_profile_direct">Save this connection as a profile if connection succeeds</string>
-    <string name="confirm_router_direct">\?\?\? Placeholder text... maybe \?\?\?</string>
+    <string name="confirm_router_direct">Saving a direct connection as a profile saves login information for easy future connections to this router.</string>
 
     <!-- Preferences Databases -->
     <string name="crypto_prefsdb">crypto</string>
@@ -203,6 +203,9 @@
     <string name="loading_logs">Retreiving Router Log</string>
     <string name="contextmenu_copy">Copy Log Message</string>
     <string name="no_logs">No router logs to display or none could be retreived.</string>
+    <string name="reboot_router">Reboot router</string>
+    <string name="confirm_router_reboot">Rebooting the router will automatically log you out once the request succeeds. Continue?</string>
+    <string name="reboot_fail">Failed to reboot the router</string>
 
     <!-- Wireless APs Fragments -->
     <string name="wifi_title">Wireless APs</string>
@@ -225,6 +228,7 @@
         <item>WPA1/WPA2</item>
     </string-array>
     <string-array name="wifiap_ciphertype_values">
+
         <!-- <item>TKIP</item> -->
         <item>AES</item>
         <item>TKIP/AES</item>

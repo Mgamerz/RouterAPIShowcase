@@ -3,13 +3,18 @@ package com.cs481.commandcenter.fragments;
 import org.apache.commons.lang3.time.DurationFormatUtils;
 
 import android.app.ActionBar;
+import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,8 +24,11 @@ import android.widget.Toast;
 import com.cs481.commandcenter.AuthInfo;
 import com.cs481.commandcenter.R;
 import com.cs481.commandcenter.activities.CommandCenterActivity;
+import com.cs481.commandcenter.activities.LoginActivity;
 import com.cs481.commandcenter.activities.SpiceActivity;
+import com.cs481.commandcenter.dialog.RebootRouterDialogFragment;
 import com.cs481.commandcenter.responses.GetRequest;
+import com.cs481.commandcenter.responses.PutRequest;
 import com.cs481.commandcenter.responses.Response;
 import com.cs481.commandcenter.responses.status.product_info.Fw_info;
 import com.cs481.commandcenter.responses.status.product_info.Product_info;
@@ -43,6 +51,9 @@ public class RouterInfoFragment extends Fragment {
 	private final static String CACHEKEY_MACADDRESS = "macaddress_get";
 	private final static String CACHEKEY_UPTIME = "uptime_get";
 	private final static String CACHEKEY_CLIENTS = "numclients_get";
+	private final static String CACHEKEY_REBOOT = "reboot_put";
+
+	private final static int ROUTER_REBOOT_FRAGMENT = 0;
 
 	private AuthInfo authInfo;
 	private SpiceManager spiceManager;
@@ -56,8 +67,7 @@ public class RouterInfoFragment extends Fragment {
 		if (savedInstanceState != null) {
 			/* save whatever data */
 			authInfo = savedInstanceState.getParcelable("authInfo");
-			shouldLoadData = savedInstanceState.getBoolean("shouldLoadData",
-					true);
+			shouldLoadData = savedInstanceState.getBoolean("shouldLoadData", true);
 		} else {
 			Bundle passedArgs = getArguments();
 			if (passedArgs != null) {
@@ -86,9 +96,86 @@ public class RouterInfoFragment extends Fragment {
 			FragmentManager fm = getActivity().getSupportFragmentManager();
 			fm.popBackStack();
 			return true;
+		case R.id.reboot_router:
+			Log.i(CommandCenterActivity.TAG, "User selected reboot router. Showing confirmation dialog.");
+			FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+			Fragment prev = getActivity().getSupportFragmentManager().findFragmentByTag("dialog");
+			if (prev != null) {
+				ft.remove(prev);
+			}
+
+			DialogFragment dialogFrag = RebootRouterDialogFragment.newInstance();
+			dialogFrag.setTargetFragment(this, ROUTER_REBOOT_FRAGMENT);
+			dialogFrag.show(ft, "dialog");
+			return true;
 		default:
 			return false;
 		}
+	}
+
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		Log.i(CommandCenterActivity.TAG, "Activity result.");
+		switch (requestCode) {
+		case ROUTER_REBOOT_FRAGMENT:
+			if (resultCode == Activity.RESULT_OK) {
+				Log.w(CommandCenterActivity.TAG, "User has elected to reboot the router: Sending request.");
+				rebootRouter();
+			}
+			break;
+		}
+	}
+
+	private void rebootRouter() {
+		// TODO Auto-generated method stub
+		PutRequest request = new PutRequest(getActivity(), Boolean.valueOf(true), authInfo, "control/system/reboot", Boolean.class);
+		String lastRequestCacheKey = request.createCacheKey();
+		spiceManager.execute(request, lastRequestCacheKey, DurationInMillis.ALWAYS_EXPIRED, new RouterRebootPutListener());
+	}
+
+	private class RouterRebootPutListener implements RequestListener<Response>, PendingRequestListener<Response> {
+		@Override
+		public void onRequestFailure(SpiceException e) {
+			// update your UI
+			if (!isAdded()) {
+				return;
+			}
+			Log.i(CommandCenterActivity.TAG, "Failed to reboot the router");
+
+			Toast.makeText(getActivity(), getResources().getString(R.string.reboot_fail), Toast.LENGTH_SHORT).show();
+		}
+
+		@Override
+		public void onRequestSuccess(Response response) {
+			if (!isAdded()) {
+				return;
+			}
+
+			if (response.getResponseInfo() != null) {
+				if (response.getResponseInfo().getSuccess()) {
+					//success
+					Intent logoutIntent = new Intent(getActivity(), LoginActivity.class);
+					Toast.makeText(getActivity(), getResources().getString(R.string.logged_out), Toast.LENGTH_SHORT).show();
+					startActivity(logoutIntent);
+					getActivity().finish();
+					getActivity().overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+					return;
+				}
+			} else {
+				Toast.makeText(getActivity(), getResources().getString(R.string.reboot_fail), Toast.LENGTH_LONG).show();
+			}
+		}
+
+		@Override
+		public void onRequestNotFound() {
+			// TODO Auto-generated method stub
+
+		}
+	}
+
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		inflater.inflate(R.menu.routerinfo_menu, menu);
 	}
 
 	@Override
@@ -126,11 +213,9 @@ public class RouterInfoFragment extends Fragment {
 	}
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		// Inflate the layout for this fragment
-		View v = inflater.inflate(R.layout.fragment_routerinfo, container,
-				false);
+		View v = inflater.inflate(R.layout.fragment_routerinfo, container, false);
 
 		// If savedinstancestate is not null, then this fragment will already be
 		// created and should be automatically reattached for us.
@@ -143,8 +228,7 @@ public class RouterInfoFragment extends Fragment {
 			ft.add(R.id.log_container, logFrag);
 			ft.commit();
 		} else {
-			Log.i(CommandCenterActivity.TAG,
-					"Restoring saved values from the previous layout.");
+			Log.i(CommandCenterActivity.TAG, "Restoring saved values from the previous layout.");
 
 			TextView textVal = (TextView) v.findViewById(R.id.product_value);
 			textVal.setText(savedInstanceState.getString("product"));
@@ -173,21 +257,14 @@ public class RouterInfoFragment extends Fragment {
 		SpiceActivity sa = (SpiceActivity) getActivity();
 		sa.getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
 		sa.getActionBar().setDisplayShowTitleEnabled(true);
-		sa.getActionBar().setTitle(
-				getResources().getString(R.string.routerinfo));
+		sa.getActionBar().setTitle(getResources().getString(R.string.routerinfo));
 		spiceManager = sa.getSpiceManager();
-		spiceManager.addListenerIfPending(Response.class, CACHEKEY_PRODUCT,
-				new InfoGetRequestListener());
-		spiceManager.addListenerIfPending(Response.class, CACHEKEY_HOSTNAME,
-				new InfoGetConfigListener());
-		spiceManager.addListenerIfPending(Response.class, CACHEKEY_FIRMWARE,
-				new InfoGetFWListener());
-		spiceManager.addListenerIfPending(Response.class, CACHEKEY_MACADDRESS,
-				new InfoGetSystemListener());
-		spiceManager.addListenerIfPending(Response.class, CACHEKEY_UPTIME,
-				new InfoGetSystemListener());
-		spiceManager.addListenerIfPending(Response.class, CACHEKEY_CLIENTS,
-				new InfoGetClientListener());
+		spiceManager.addListenerIfPending(Response.class, CACHEKEY_PRODUCT, new InfoGetRequestListener());
+		spiceManager.addListenerIfPending(Response.class, CACHEKEY_HOSTNAME, new InfoGetConfigListener());
+		spiceManager.addListenerIfPending(Response.class, CACHEKEY_FIRMWARE, new InfoGetFWListener());
+		spiceManager.addListenerIfPending(Response.class, CACHEKEY_MACADDRESS, new InfoGetSystemListener());
+		spiceManager.addListenerIfPending(Response.class, CACHEKEY_UPTIME, new InfoGetSystemListener());
+		spiceManager.addListenerIfPending(Response.class, CACHEKEY_CLIENTS, new InfoGetClientListener());
 
 		/* call the reading methods */
 
@@ -203,75 +280,56 @@ public class RouterInfoFragment extends Fragment {
 
 	private void readProductInfo(boolean dialog) {
 		// perform the request.
-		GetRequest request = new GetRequest(getActivity(), authInfo, "status/product_info",
-				Product_info.class, CACHEKEY_PRODUCT);
+		GetRequest request = new GetRequest(getActivity(), authInfo, "status/product_info", Product_info.class, CACHEKEY_PRODUCT);
 		String lastRequestCacheKey = request.createCacheKey();
 
 		if (dialog) {
-			progressDialog = new ProgressDialog(getActivity(),
-					R.style.DialogTheme);
-			progressDialog.setMessage(getResources().getString(
-					R.string.info_reading));
+			progressDialog = new ProgressDialog(getActivity(), R.style.DialogTheme);
+			progressDialog.setMessage(getResources().getString(R.string.info_reading));
 			progressDialog.show();
 			progressDialog.setCanceledOnTouchOutside(false);
 		}
-		spiceManager.execute(request, lastRequestCacheKey,
-				DurationInMillis.ALWAYS_EXPIRED, new InfoGetRequestListener());
+		spiceManager.execute(request, lastRequestCacheKey, DurationInMillis.ALWAYS_EXPIRED, new InfoGetRequestListener());
 	}
 
 	private void readFWInfo() {
 		// perform the request.
-		GetRequest request = new GetRequest(getActivity(), authInfo, "status/fw_info",
-				Fw_info.class, CACHEKEY_FIRMWARE);
+		GetRequest request = new GetRequest(getActivity(), authInfo, "status/fw_info", Fw_info.class, CACHEKEY_FIRMWARE);
 		String lastRequestCacheKey = request.createCacheKey();
 
-		spiceManager.execute(request, lastRequestCacheKey,
-				DurationInMillis.ALWAYS_EXPIRED, new InfoGetFWListener());
+		spiceManager.execute(request, lastRequestCacheKey, DurationInMillis.ALWAYS_EXPIRED, new InfoGetFWListener());
 	}
 
 	private void readUptimeInfo() {
 		// perform the request.
-		GetRequest request = new GetRequest(getActivity(), 
-				authInfo,
-				"status/system",
-				com.cs481.commandcenter.responses.status.product_info.System.class,
-				CACHEKEY_UPTIME);
+		GetRequest request = new GetRequest(getActivity(), authInfo, "status/system", com.cs481.commandcenter.responses.status.product_info.System.class, CACHEKEY_UPTIME);
 		String lastRequestCacheKey = request.createCacheKey();
 
-		spiceManager.execute(request, lastRequestCacheKey,
-				DurationInMillis.ONE_SECOND, new InfoGetSystemListener());
+		spiceManager.execute(request, lastRequestCacheKey, DurationInMillis.ONE_SECOND, new InfoGetSystemListener());
 	}
 
 	private void readHostNameInfo() {
 		// perform the request.
-		GetRequest request = new GetRequest(getActivity(), 
-				authInfo,
-				"status/wan/devices/ethernet-wan/config",
-				com.cs481.commandcenter.responses.status.wan.devices.ethernetwan.Config.class,
-				CACHEKEY_HOSTNAME);
+		GetRequest request = new GetRequest(getActivity(), authInfo, "status/wan/devices/ethernet-wan/config", com.cs481.commandcenter.responses.status.wan.devices.ethernetwan.Config.class, CACHEKEY_HOSTNAME);
 		String lastRequestCacheKey = request.createCacheKey();
 
-		spiceManager.execute(request, lastRequestCacheKey,
-				DurationInMillis.ALWAYS_EXPIRED, new InfoGetConfigListener());
+		spiceManager.execute(request, lastRequestCacheKey, DurationInMillis.ALWAYS_EXPIRED, new InfoGetConfigListener());
 	}
 
 	private void readNumClientsInfo() {
 		// perform the request.
-		GetRequest request = new GetRequest(getActivity(), authInfo, "status/lan",
-				com.cs481.commandcenter.responses.status.lan.Lan.class,
-				CACHEKEY_CLIENTS);
-		// GetRequest request = new GetRequest(getActivity(), authInfo, "status/lan/devices/",
+		GetRequest request = new GetRequest(getActivity(), authInfo, "status/lan", com.cs481.commandcenter.responses.status.lan.Lan.class, CACHEKEY_CLIENTS);
+		// GetRequest request = new GetRequest(getActivity(), authInfo,
+		// "status/lan/devices/",
 		// com.cs481.mobilemapper.responses.status.lan.Devices.class,
 		// "client_get");
 		String lastRequestCacheKey = request.createCacheKey();
 
-		spiceManager.execute(request, lastRequestCacheKey,
-				DurationInMillis.ALWAYS_EXPIRED, new InfoGetClientListener());
+		spiceManager.execute(request, lastRequestCacheKey, DurationInMillis.ALWAYS_EXPIRED, new InfoGetClientListener());
 
 	}
 
-	private class InfoGetRequestListener implements RequestListener<Response>,
-			PendingRequestListener<Response> {
+	private class InfoGetRequestListener implements RequestListener<Response>, PendingRequestListener<Response> {
 
 		@Override
 		public void onRequestFailure(SpiceException e) {
@@ -283,9 +341,7 @@ public class RouterInfoFragment extends Fragment {
 				progressDialog.dismiss();
 			Log.i(CommandCenterActivity.TAG, "Failed to read Product Info!");
 
-			Toast.makeText(getActivity(),
-					getResources().getString(R.string.product_info_fail),
-					Toast.LENGTH_SHORT).show();
+			Toast.makeText(getActivity(), getResources().getString(R.string.product_info_fail), Toast.LENGTH_SHORT).show();
 		}
 
 		@Override
@@ -301,24 +357,17 @@ public class RouterInfoFragment extends Fragment {
 			if (response.getResponseInfo() != null) {
 				if (response.getResponseInfo().getSuccess()) {
 					View v = getView();
-					TextView textVal = (TextView) v
-							.findViewById(R.id.product_value);
+					TextView textVal = (TextView) v.findViewById(R.id.product_value);
 					if (textVal != null)
 						textVal.setText(proin.getProduct_name());
 					textVal = (TextView) v.findViewById(R.id.mac_address_value);
 					if (textVal != null)
 						textVal.setText(proin.getMac0());
 				} else {
-					Toast.makeText(getActivity(),
-							response.getResponseInfo().getReason(),
-							Toast.LENGTH_LONG).show();
+					Toast.makeText(getActivity(), response.getResponseInfo().getReason(), Toast.LENGTH_LONG).show();
 				}
 			} else {
-				Toast.makeText(
-						getActivity(),
-						getResources().getString(
-								R.string.info_get_response_null),
-						Toast.LENGTH_LONG).show();
+				Toast.makeText(getActivity(), getResources().getString(R.string.info_get_response_null), Toast.LENGTH_LONG).show();
 			}
 		}
 
@@ -329,8 +378,7 @@ public class RouterInfoFragment extends Fragment {
 		}
 	}
 
-	private class InfoGetFWListener implements RequestListener<Response>,
-			PendingRequestListener<Response> {
+	private class InfoGetFWListener implements RequestListener<Response>, PendingRequestListener<Response> {
 		@Override
 		public void onRequestFailure(SpiceException e) {
 			if (getActivity() == null || getView() == null) {
@@ -341,9 +389,7 @@ public class RouterInfoFragment extends Fragment {
 				progressDialog.dismiss();
 			Log.i(CommandCenterActivity.TAG, "Failed to read Firmware Info!");
 
-			Toast.makeText(getActivity(),
-					getResources().getString(R.string.fw_info_fail),
-					Toast.LENGTH_SHORT).show();
+			Toast.makeText(getActivity(), getResources().getString(R.string.fw_info_fail), Toast.LENGTH_SHORT).show();
 		}
 
 		@Override
@@ -360,22 +406,15 @@ public class RouterInfoFragment extends Fragment {
 			if (response.getResponseInfo() != null) {
 				if (response.getResponseInfo().getSuccess()) {
 					View v = getView();
-					TextView textVal = (TextView) v
-							.findViewById(R.id.firmware_value);
+					TextView textVal = (TextView) v.findViewById(R.id.firmware_value);
 					if (textVal != null) {
 						textVal.setText(fw.getFirmware());
 					}
 				} else {
-					Toast.makeText(getActivity(),
-							response.getResponseInfo().getReason(),
-							Toast.LENGTH_LONG).show();
+					Toast.makeText(getActivity(), response.getResponseInfo().getReason(), Toast.LENGTH_LONG).show();
 				}
 			} else {
-				Toast.makeText(
-						getActivity(),
-						getResources().getString(
-								R.string.info_get_response_null),
-						Toast.LENGTH_LONG).show();
+				Toast.makeText(getActivity(), getResources().getString(R.string.info_get_response_null), Toast.LENGTH_LONG).show();
 			}
 		}
 
@@ -386,8 +425,7 @@ public class RouterInfoFragment extends Fragment {
 		}
 	}
 
-	private class InfoGetSystemListener implements RequestListener<Response>,
-			PendingRequestListener<Response> {
+	private class InfoGetSystemListener implements RequestListener<Response>, PendingRequestListener<Response> {
 		@Override
 		public void onRequestFailure(SpiceException e) {
 			// update your UI
@@ -398,9 +436,7 @@ public class RouterInfoFragment extends Fragment {
 				progressDialog.dismiss();
 			Log.i(CommandCenterActivity.TAG, "Failed to read Status Info!");
 
-			Toast.makeText(getActivity(),
-					getResources().getString(R.string.status_fail),
-					Toast.LENGTH_SHORT).show();
+			Toast.makeText(getActivity(), getResources().getString(R.string.status_fail), Toast.LENGTH_SHORT).show();
 		}
 
 		@Override
@@ -408,8 +444,7 @@ public class RouterInfoFragment extends Fragment {
 			if (getActivity() == null || getView() == null) {
 				return;
 			}
-			com.cs481.commandcenter.responses.status.product_info.System sys = (com.cs481.commandcenter.responses.status.product_info.System) response
-					.getData();
+			com.cs481.commandcenter.responses.status.product_info.System sys = (com.cs481.commandcenter.responses.status.product_info.System) response.getData();
 
 			// update your UI
 			if (progressDialog != null)
@@ -417,24 +452,15 @@ public class RouterInfoFragment extends Fragment {
 			if (response.getResponseInfo() != null) {
 				if (response.getResponseInfo().getSuccess()) {
 					View v = getView();
-					TextView textVal = (TextView) v
-							.findViewById(R.id.uptime_value);
+					TextView textVal = (TextView) v.findViewById(R.id.uptime_value);
 					if (textVal != null) {
-						textVal.setText((DurationFormatUtils.formatDuration(
-								(long) sys.getUptime() * 1000,
-								"d'd,' H'h, 'm'm, 's's'")));
+						textVal.setText((DurationFormatUtils.formatDuration((long) sys.getUptime() * 1000, "d'd,' H'h, 'm'm, 's's'")));
 					}
 				} else {
-					Toast.makeText(getActivity(),
-							response.getResponseInfo().getReason(),
-							Toast.LENGTH_LONG).show();
+					Toast.makeText(getActivity(), response.getResponseInfo().getReason(), Toast.LENGTH_LONG).show();
 				}
 			} else {
-				Toast.makeText(
-						getActivity(),
-						getResources().getString(
-								R.string.info_get_response_null),
-						Toast.LENGTH_LONG).show();
+				Toast.makeText(getActivity(), getResources().getString(R.string.info_get_response_null), Toast.LENGTH_LONG).show();
 			}
 		}
 
@@ -445,8 +471,7 @@ public class RouterInfoFragment extends Fragment {
 		}
 	}
 
-	private class InfoGetConfigListener implements RequestListener<Response>,
-			PendingRequestListener<Response> {
+	private class InfoGetConfigListener implements RequestListener<Response>, PendingRequestListener<Response> {
 		@Override
 		public void onRequestFailure(SpiceException e) {
 			if (getActivity() == null || getView() == null) {
@@ -459,9 +484,7 @@ public class RouterInfoFragment extends Fragment {
 
 			if (getActivity() != null) { // prevent crash in the event the user
 											// navigates away.
-				Toast.makeText(getActivity(),
-						getResources().getString(R.string.config_fail),
-						Toast.LENGTH_SHORT).show();
+				Toast.makeText(getActivity(), getResources().getString(R.string.config_fail), Toast.LENGTH_SHORT).show();
 			}
 		}
 
@@ -470,8 +493,7 @@ public class RouterInfoFragment extends Fragment {
 			if (getActivity() == null || getView() == null) {
 				return;
 			}
-			com.cs481.commandcenter.responses.status.wan.devices.ethernetwan.Config con = (com.cs481.commandcenter.responses.status.wan.devices.ethernetwan.Config) response
-					.getData();
+			com.cs481.commandcenter.responses.status.wan.devices.ethernetwan.Config con = (com.cs481.commandcenter.responses.status.wan.devices.ethernetwan.Config) response.getData();
 
 			// update your UI
 			if (progressDialog != null)
@@ -479,22 +501,15 @@ public class RouterInfoFragment extends Fragment {
 			if (response.getResponseInfo() != null) {
 				if (response.getResponseInfo().getSuccess()) {
 					View v = getView();
-					TextView textVal = (TextView) v
-							.findViewById(R.id.hostname_value);
+					TextView textVal = (TextView) v.findViewById(R.id.hostname_value);
 					if (textVal != null) {
 						textVal.setText(con.getHostname());
 					}
 				} else {
-					Toast.makeText(getActivity(),
-							response.getResponseInfo().getReason(),
-							Toast.LENGTH_LONG).show();
+					Toast.makeText(getActivity(), response.getResponseInfo().getReason(), Toast.LENGTH_LONG).show();
 				}
 			} else {
-				Toast.makeText(
-						getActivity(),
-						getResources().getString(
-								R.string.info_get_response_null),
-						Toast.LENGTH_LONG).show();
+				Toast.makeText(getActivity(), getResources().getString(R.string.info_get_response_null), Toast.LENGTH_LONG).show();
 			}
 		}
 
@@ -505,8 +520,7 @@ public class RouterInfoFragment extends Fragment {
 		}
 	}
 
-	private class InfoGetClientListener implements RequestListener<Response>,
-			PendingRequestListener<Response> {
+	private class InfoGetClientListener implements RequestListener<Response>, PendingRequestListener<Response> {
 		@Override
 		public void onRequestFailure(SpiceException e) {
 			if (getActivity() == null || getView() == null) {
@@ -517,9 +531,7 @@ public class RouterInfoFragment extends Fragment {
 				progressDialog.dismiss();
 			Log.i(CommandCenterActivity.TAG, "Failed to read Client Info!");
 
-			Toast.makeText(getActivity(),
-					getResources().getString(R.string.config_fail),
-					Toast.LENGTH_SHORT).show();
+			Toast.makeText(getActivity(), getResources().getString(R.string.config_fail), Toast.LENGTH_SHORT).show();
 		}
 
 		@Override
@@ -527,8 +539,7 @@ public class RouterInfoFragment extends Fragment {
 			if (getActivity() == null || getView() == null) {
 				return;
 			}
-			com.cs481.commandcenter.responses.status.lan.Lan dat = (com.cs481.commandcenter.responses.status.lan.Lan) response
-					.getData();
+			com.cs481.commandcenter.responses.status.lan.Lan dat = (com.cs481.commandcenter.responses.status.lan.Lan) response.getData();
 			// Devices dat = (Devices) response.getData();
 			// Log.i(CommandCenterActivity.TAG,
 			// "Successfully parsed a Devices object");
@@ -539,23 +550,15 @@ public class RouterInfoFragment extends Fragment {
 			if (response.getResponseInfo() != null) {
 				if (response.getResponseInfo().getSuccess()) {
 					View v = getView();
-					TextView textVal = (TextView) v
-							.findViewById(R.id.numclients_value);
+					TextView textVal = (TextView) v.findViewById(R.id.numclients_value);
 					if (textVal != null) {
-						textVal.setText(Integer.toString(dat.getClients()
-								.size()));
+						textVal.setText(Integer.toString(dat.getClients().size()));
 					}
 				} else {
-					Toast.makeText(getActivity(),
-							response.getResponseInfo().getReason(),
-							Toast.LENGTH_LONG).show();
+					Toast.makeText(getActivity(), response.getResponseInfo().getReason(), Toast.LENGTH_LONG).show();
 				}
 			} else {
-				Toast.makeText(
-						getActivity(),
-						getResources().getString(
-								R.string.info_get_response_null),
-						Toast.LENGTH_LONG).show();
+				Toast.makeText(getActivity(), getResources().getString(R.string.info_get_response_null), Toast.LENGTH_LONG).show();
 			}
 		}
 

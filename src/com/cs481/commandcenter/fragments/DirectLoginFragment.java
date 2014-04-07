@@ -37,7 +37,6 @@ import com.cs481.commandcenter.activities.CommandCenterActivity;
 import com.cs481.commandcenter.activities.LoginActivity;
 import com.cs481.commandcenter.activities.SpiceActivity;
 import com.cs481.commandcenter.dialog.DirectSaveProfileDialogFragment;
-import com.cs481.commandcenter.dialog.RouterConfirmDialogFragment;
 import com.cs481.commandcenter.responses.GetRequest;
 import com.cs481.commandcenter.responses.Response;
 import com.cs481.commandcenter.responses.status.product_info.Product_info;
