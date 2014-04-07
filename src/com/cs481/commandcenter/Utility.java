@@ -510,16 +510,28 @@ public class Utility {
 	 */
 	public static String authToHumanString(Context context, String authmode) {
 		Resources resources = context.getResources();
+		String[] humanEncryptionTypes = resources.getStringArray(R.array.wifiap_encryptiontype_values);
+
 		if (authmode.equals(AUTH_OPEN)) {
-			return resources.getString(R.string.encryption_none);
+			return humanEncryptionTypes[0];
 		} else if (authmode.equals(AUTH_WEPAUTO)) {
-			return resources.getString(R.string.encryption_wep);
+			return humanEncryptionTypes[1];
+		} else if (authmode.equals(AUTH_WEPOPEN)) {
+			return humanEncryptionTypes[2];
+		} else if (authmode.equals(AUTH_WEPSHARED)) {
+			return humanEncryptionTypes[3];
 		} else if (authmode.equals(AUTH_WPA1)) {
-			return resources.getString(R.string.encryption_wpa1);
+			return humanEncryptionTypes[4];
+		} else if (authmode.equals(AUTH_WPA1_ENTERPRISE)) {
+			return humanEncryptionTypes[5];
 		} else if (authmode.equals(AUTH_WPA2)) {
-			return resources.getString(R.string.encryption_wpa2);
+			return humanEncryptionTypes[6];
+		} else if (authmode.equals(AUTH_WPA2_ENTERPRISE)) {
+			return humanEncryptionTypes[7];
 		} else if (authmode.equals(AUTH_WPA1WPA2)) {
-			return resources.getString(R.string.encryption_wpa1wpa2);
+			return humanEncryptionTypes[8];
+		} else if (authmode.equals(AUTH_WPA1WPA2_ENTERPRISE)) {
+			return humanEncryptionTypes[9];
 		}
 		return "Unknown encryption type";
 	}

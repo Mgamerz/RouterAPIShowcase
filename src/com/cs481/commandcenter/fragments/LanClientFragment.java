@@ -17,6 +17,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.ExpandableListView.OnChildClickListener;
 import android.widget.ListView;
@@ -314,8 +315,8 @@ public class LanClientFragment extends Fragment implements OnRefreshListener {
 			@Override
 			public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
 				// TODO Auto-generated method stub
-				ClientListRow row = (ClientListRow) (parent.getAdapter().getItem(groupPosition));
-				Client client = row.getClient();
+				ExpandableListAdapter ela = parent.getExpandableListAdapter();
+				Client client = (Client) ela.getChild(groupPosition, childPosition);
 				String clientMac = client.getMac();
 
 				switch (childPosition) {
