@@ -219,7 +219,10 @@
     <string name="newpassword">New Password</string>
     <string name="ap_hidden">hidden</string>
     <string name="ap_isolated">clients isolated</string>
+    <string name="warning_reboot">Reboot router</string>
     <string name="confirm_wifi_disable">Are you sure you want to disable the WiFi radio? This may make the router unable to be managed by this device.</string>
+    <string name="warning_commit">Confirm changes</string>
+    <string name="confirm_wap_commit">Commit changes to the router? This may disrupt network access temporarily.</string>
 
     <string-array name="wifiap_encryptiontype_values">
         <item>None</item>

@@ -58,7 +58,7 @@ public class RebootRouterDialogFragment extends DialogFragment {
 
 		dialogBuilder.setDividerColor(typedValue.resourceId);
 		dialogBuilder.setTitleColor(typedValue.resourceId);
-		dialogBuilder.setTitle(getActivity().getResources().getString(R.string.warning_clientchange));
+		dialogBuilder.setTitle(getActivity().getResources().getString(R.string.warning_reboot));
 		dialogBuilder.setMessage(getResources().getString(R.string.confirm_router_reboot));
 
 		// setup buttons
