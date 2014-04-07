@@ -80,9 +80,6 @@
     <string name="wwan">wwan</string>
     <string name="no_access">No access points or wireless is off.</string>
 
-    <!-- Wifi AP Fragment(s) -->
-    <string name="failed_wlan_config">Failed to read WLAN AP Config</string>
-
     <!-- LAN Clients -->
     <string name="no_clients">No clients are currently connected</string>
     <string name="ip_address">IP Address</string>
@@ -223,6 +220,11 @@
     <string name="confirm_wifi_disable">Are you sure you want to disable the WiFi radio? This may make the router unable to be managed by this device.</string>
     <string name="warning_commit">Confirm changes</string>
     <string name="confirm_wap_commit">Commit changes to the router? This may disrupt network access temporarily.</string>
+    <string name="failed_wlan_config">Failed to read WLAN AP Config</string>
+    <string name="wepkey_0">WEP Key 1</string>
+    <string name="wepkey_1">WEP Key 2</string>
+    <string name="wepkey_2">WEP Key 3</string>
+    <string name="wepkey_3">WEP Key 4</string>
 
     <string-array name="wifiap_encryptiontype_values">
         <item>None</item>
