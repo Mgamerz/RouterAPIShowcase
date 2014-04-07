@@ -17,7 +17,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
+import android.widget.ExpandableListView.OnChildClickListener;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -32,16 +34,14 @@ import com.cs481.commandcenter.responses.PutRequest;
 import com.cs481.commandcenter.responses.Response;
 import com.cs481.commandcenter.responses.status.lan.Client;
 import com.cs481.commandcenter.responses.status.lan.Lan;
-import com.cs481.commandcenter.responses.status.wlan.StatusWlan;
 import com.octo.android.robospice.SpiceManager;
 import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
 
-public class LanClientFragment extends Fragment implements
-		OnRefreshListener {
+public class LanClientFragment extends Fragment implements OnRefreshListener {
 
-	//private PullToRefreshLayout mPullToRefreshLayout;
+	// private PullToRefreshLayout mPullToRefreshLayout;
 	private ProgressDialog progressDialog;
 	private SpiceManager spiceManager;
 	private AuthInfo authInfo;
@@ -99,10 +99,12 @@ public class LanClientFragment extends Fragment implements
 		View v = inflater.inflate(R.layout.fragment_clients, container, false);
 		mExpandableList = (ExpandableListView) v.findViewById(R.id.expandable_clientlist);
 
-		//ArrayList<Profile> profilesArray = Utility.getProfiles(getActivity());
+		// ArrayList<Profile> profilesArray =
+		// Utility.getProfiles(getActivity());
 
 		// sets the adapter that provides data to the list.
-		//final ClientAdapter cla = new ClientAdapter(getActivity(), profilesArray);
+		// final ClientAdapter cla = new ClientAdapter(getActivity(),
+		// profilesArray);
 
 		mExpandableList.setAdapter(adapter);
 		return v;
@@ -116,25 +118,20 @@ public class LanClientFragment extends Fragment implements
 		spiceManager = sa.getSpiceManager();
 		sa.getActionBar().setDisplayShowTitleEnabled(true);
 		sa.getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
-		sa.getActionBar()
-				.setTitle(getResources().getString(R.string.lan_title));
+		sa.getActionBar().setTitle(getResources().getString(R.string.lan_title));
 		if (shouldLoadData) {
 			Log.i(CommandCenterActivity.TAG, "shouldLoadData was set to true");
 			readClients();
 			shouldLoadData = false;
-		}
-		else{
+		} else {
 			updateClientList(clients);
 		}
 	}
 
 	private void readClients() {
-		GetRequest clientReq = new GetRequest(getActivity(), authInfo,
-				"status/lan", Lan.class, "LanGet");
+		GetRequest clientReq = new GetRequest(getActivity(), authInfo, "status/lan", Lan.class, "LanGet");
 		String lastRequestCacheKey = clientReq.createCacheKey();
-		spiceManager.execute(clientReq, lastRequestCacheKey,
-				DurationInMillis.ALWAYS_EXPIRED,
-				new ClientsGetRequestListener());
+		spiceManager.execute(clientReq, lastRequestCacheKey, DurationInMillis.ALWAYS_EXPIRED, new ClientsGetRequestListener());
 	}
 
 	public class ClientAdapter extends BaseExpandableListAdapter {
@@ -157,7 +154,8 @@ public class LanClientFragment extends Fragment implements
 		// counts the number of children items so the list knows how many times
 		// calls getChildView() method
 		public int getChildrenCount(int i) {
-			return 2;
+			return 1; // can be up to 2 - we don't have ban implemented so its
+						// only 1.
 		}
 
 		@Override
@@ -199,19 +197,21 @@ public class LanClientFragment extends Fragment implements
 			final Client client = (Client) clients.get(i);
 			TextView textView = (TextView) view.findViewById(R.id.ip_address_value);
 			textView.setText(client.getIp_address());
-			
+
 			textView = (TextView) view.findViewById(R.id.clients_mac_value);
 			textView.setText(client.getMac());
 
-//			ImageView deleteIcon = (ImageView) view.findViewById(R.id.profilerow_deleteicon);
-//			deleteIcon.setOnClickListener(new OnClickListener() {
-//				public void onClick(View v) {
-//					Toast.makeText(getActivity(), "Clicked delete on profile", Toast.LENGTH_LONG).show();
-//					Utility.deleteProfile(getActivity(), profile);
-//					profiles.remove(i);
-//					notifyDataSetChanged();
-//				}
-//			});
+			// ImageView deleteIcon = (ImageView)
+			// view.findViewById(R.id.profilerow_deleteicon);
+			// deleteIcon.setOnClickListener(new OnClickListener() {
+			// public void onClick(View v) {
+			// Toast.makeText(getActivity(), "Clicked delete on profile",
+			// Toast.LENGTH_LONG).show();
+			// Utility.deleteProfile(getActivity(), profile);
+			// profiles.remove(i);
+			// notifyDataSetChanged();
+			// }
+			// });
 
 			// return the entire view
 			return view;
@@ -259,8 +259,7 @@ public class LanClientFragment extends Fragment implements
 		readClients();
 	}
 
-	private class ClientsGetRequestListener implements
-			RequestListener<Response> {
+	private class ClientsGetRequestListener implements RequestListener<Response> {
 
 		@Override
 		public void onRequestFailure(SpiceException e) {
@@ -273,10 +272,8 @@ public class LanClientFragment extends Fragment implements
 				progressDialog.dismiss();
 			}
 			Log.i(CommandCenterActivity.TAG, "Failed to read LAN!");
-			Toast.makeText(getActivity(),
-					resources.getString(R.string.lan_clients_failure),
-					Toast.LENGTH_SHORT).show();
-			//mPullToRefreshLayout.setRefreshComplete();
+			Toast.makeText(getActivity(), resources.getString(R.string.lan_clients_failure), Toast.LENGTH_SHORT).show();
+			// mPullToRefreshLayout.setRefreshComplete();
 		}
 
 		@Override
@@ -294,56 +291,53 @@ public class LanClientFragment extends Fragment implements
 					return;
 				Lan lan = (Lan) response.getData();
 				clients = lan.getClients();
-				Log.i(CommandCenterActivity.TAG,
-						"LAN Client request successful");
+				Log.i(CommandCenterActivity.TAG, "LAN Client request successful");
 				View v = getView();
 				TextView textView = (TextView) v.findViewById(R.id.clients_value);
 				textView.setText("");
 				updateClientList(clients);
 			} else {
 
-				Toast.makeText(getActivity(),
-						response.getResponseInfo().getReason(),
-						Toast.LENGTH_LONG).show();
+				Toast.makeText(getActivity(), response.getResponseInfo().getReason(), Toast.LENGTH_LONG).show();
 			}
-			//mPullToRefreshLayout.setRefreshComplete();
+			// mPullToRefreshLayout.setRefreshComplete();
 		}
 	}
 
 	public void updateClientList(ArrayList<Client> clients) {
 		Log.i(CommandCenterActivity.TAG, "Updating client list");
+		View v = getView();
+		mExpandableList = (ExpandableListView) v.findViewById(R.id.expandable_clientlist);
 		adapter = new ClientAdapter(getActivity(), clients);
 		mExpandableList.setAdapter(adapter);
-		View v = getView();
-//		if (clients.size() == 0) {
-//			
-//			TextView textVal = (TextView) v.findViewById(R.id.clients_value);
-//			textVal.setText(R.string.no_clients);
-//		} else {
-//			for (Client cli : clients) {
-//				String ip = cli.getIp_address();
-//				String mac = cli.getMac();
-//				rows.add(new ClientListRow(cli, mac, ip));
-//			}
-//			View v = getView();
-//			TextView textVal = (TextView) v.findViewById(R.id.clients_value);
-//			textVal.setText("");
-//			adapter.notifyDataSetChanged();
-//		}
-		
-		mExpandableList = (ExpandableListView) v.findViewById(R.id.expandable_clientlist);
+		mExpandableList.setOnChildClickListener(new OnChildClickListener() {
+
+			@Override
+			public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
+				// TODO Auto-generated method stub
+				ExpandableListAdapter ela = parent.getExpandableListAdapter();
+				Client client = (Client) ela.getChild(groupPosition, childPosition);
+				String clientMac = client.getMac();
+
+				switch (childPosition) {
+				case 0: // kick
+					// Send data to server to kick
+					PutRequest kickRequest = new PutRequest(getActivity(), clientMac, authInfo, "control/wlan/kick_mac", String.class);
+					spiceManager.execute(kickRequest, kickRequest.createCacheKey(), DurationInMillis.ALWAYS_EXPIRED, new LanKickPutRequestListener());
+					break;
+				case 1:
+					// ban - not yet implemented.
+					break;
+				}
+				return true;
+			}
+
+		});
 
 		if (clients.size() == 0) {
 			TextView banner = (TextView) v.findViewById(R.id.clients_value);
 			banner.setText(getResources().getString(R.string.no_clients));
 			mExpandableList.setVisibility(ExpandableListView.GONE);
-
-//			LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
-//			//params.weight = 1.0f;
-//			params.gravity = Gravity.CENTER;
-
-//			LinearLayout profilesLayout = (LinearLayout) v.findViewById(R.id.profilemanager_layout);
-//			profilesLayout.setLayoutParams(params);
 		}
 	}
 
@@ -352,8 +346,7 @@ public class LanClientFragment extends Fragment implements
 		switch (item.getItemId()) {
 		case android.R.id.home:
 			// up navigation
-			Log.i(CommandCenterActivity.TAG,
-					"UP in LAN Clients is being handled.");
+			Log.i(CommandCenterActivity.TAG, "UP in LAN Clients is being handled.");
 			FragmentManager fm = getActivity().getSupportFragmentManager();
 			fm.popBackStack();
 			return true;
@@ -365,36 +358,22 @@ public class LanClientFragment extends Fragment implements
 	public void onListItemClick(ListView l, View v, int position, long id) {
 		ClientListRow row = (ClientListRow) (l.getAdapter().getItem(position));
 		Client client = row.getClient();
-		Log.w(CommandCenterActivity.TAG, "Client IP clicked: "
-				+ client.getIp_address());
+		Log.w(CommandCenterActivity.TAG, "Client IP clicked: " + client.getIp_address());
 
-		/** TODO: Add kick/ban options */
-		// Send data to server to kick/ban
-		String clientMac = client.getMac();
-		PutRequest kickRequest = new PutRequest(getActivity(), clientMac, authInfo,
-				"control/wlan/kick_mac", String.class);
-
-		spiceManager.execute(kickRequest,
-				kickRequest.createCacheKey(),
-				DurationInMillis.ALWAYS_EXPIRED,
-				new LanKickPutRequestListener());
-
-
+		// this handles clicking on a list item click... we need to handle kicks
+		// in the subchild handler defined above.
 	}
+
 	/**
 	 * Listener for a kick request.
 	 * 
 	 */
-	private class LanKickPutRequestListener implements
-			RequestListener<Response> {
+	private class LanKickPutRequestListener implements RequestListener<Response> {
 
 		@Override
 		public void onRequestFailure(SpiceException e) {
-			Log.w(CommandCenterActivity.TAG,
-					"Failed to Kick!");
-			Toast.makeText(getActivity(),
-					"Failed to kick.",
-					Toast.LENGTH_SHORT).show();
+			Log.w(CommandCenterActivity.TAG, "Failed to Kick!");
+			Toast.makeText(getActivity(), "Failed to kick.", Toast.LENGTH_SHORT).show();
 		}
 
 		@Override

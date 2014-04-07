@@ -2,10 +2,12 @@ package com.cs481.commandcenter.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -122,7 +124,7 @@ public class WifiWAPFragment extends Fragment {
 					cipherSpinner.setVisibility(Spinner.GONE);
 				} else {
 					insecure_text.setVisibility(TextView.GONE);
-					if (position > 1) { //higher than WEP 
+					if (position > 1) { // higher than WEP
 						cipherSpinner.setVisibility(Spinner.VISIBLE);
 					} else {
 						cipherSpinner.setVisibility(Spinner.GONE);
@@ -153,15 +155,28 @@ public class WifiWAPFragment extends Fragment {
 			encryption_spinner.setSelection(0);
 		} else if (wapinfo.getAuthmode().equals(Utility.AUTH_WEPAUTO)) {
 			encryption_spinner.setSelection(1);
+		} else if (wapinfo.getAuthmode().equals(Utility.AUTH_WEPOPEN)) {
+			encryption_spinner.setSelection(2);
+		} else if (wapinfo.getAuthmode().equals(Utility.AUTH_WEPSHARED)) {
+			encryption_spinner.setSelection(3);
 		} else if (wapinfo.getAuthmode().equals(Utility.AUTH_WPA1)) {
 			setCipher = true;
-			encryption_spinner.setSelection(2);
+			encryption_spinner.setSelection(4);
+		} else if (wapinfo.getAuthmode().equals(Utility.AUTH_WPA1_ENTERPRISE)) {
+			setCipher = true;
+			encryption_spinner.setSelection(5);
 		} else if (wapinfo.getAuthmode().equals(Utility.AUTH_WPA2)) {
 			setCipher = true;
-			encryption_spinner.setSelection(3);
+			encryption_spinner.setSelection(6);
+		} else if (wapinfo.getAuthmode().equals(Utility.AUTH_WPA2_ENTERPRISE)) {
+			setCipher = true;
+			encryption_spinner.setSelection(7);
 		} else if (wapinfo.getAuthmode().equals(Utility.AUTH_WPA1WPA2)) {
 			setCipher = true;
-			encryption_spinner.setSelection(4);
+			encryption_spinner.setSelection(8);
+		} else if (wapinfo.getAuthmode().equals(Utility.AUTH_WPA1WPA2_ENTERPRISE)) {
+			setCipher = true;
+			encryption_spinner.setSelection(9);
 		}
 
 		if (setCipher) {
@@ -201,6 +216,20 @@ public class WifiWAPFragment extends Fragment {
 		// DurationInMillis.ALWAYS_EXPIRED, new WWAPSGetRequestListener());
 	}
 
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case android.R.id.home:
+			// up navigation
+			Log.i(CommandCenterActivity.TAG, "UP in WAP Editor is being handled.");
+			FragmentManager fm = getActivity().getSupportFragmentManager();
+			fm.popBackStack();
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
+	}
+
 	private class WAPPutRequestListener implements RequestListener<Response> {
 
 		@Override
@@ -219,5 +248,6 @@ public class WifiWAPFragment extends Fragment {
 			}
 			Log.i(CommandCenterActivity.TAG, "Pushed data to the WLAN Config in WifiWAPFragment");
 		}
+
 	}
 }

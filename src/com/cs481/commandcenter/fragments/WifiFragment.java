@@ -18,6 +18,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -482,5 +483,19 @@ public class WifiFragment extends ListFragment implements OnRefreshListener {
 			sb.append(getResources().getString(R.string.ap_isolated));
 		}
 		return sb.toString();
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case android.R.id.home:
+			// up navigation
+			Log.i(CommandCenterActivity.TAG, "UP in Wifi Fragment is being handled.");
+			FragmentManager fm = getActivity().getSupportFragmentManager();
+			fm.popBackStack();
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
 	}
 }
