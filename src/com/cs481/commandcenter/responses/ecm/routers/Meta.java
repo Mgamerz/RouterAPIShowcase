@@ -1,8 +1,6 @@
 
 package com.cs481.commandcenter.responses.ecm.routers;
 
-import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @JsonIgnoreProperties(ignoreUnknown = true)
 

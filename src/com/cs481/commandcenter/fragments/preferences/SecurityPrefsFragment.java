@@ -1,23 +1,18 @@
 package com.cs481.commandcenter.fragments.preferences;
 
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnDismissListener;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
 import android.preference.EditTextPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
-import android.preference.PreferenceCategory;
 import android.preference.Preference.OnPreferenceClickListener;
+import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
 import android.view.View;
-import android.widget.Toast;
 
 import com.cs481.commandcenter.R;
-import com.cs481.commandcenter.Utility;
 import com.cs481.commandcenter.dialog.DeleteProfilesPINDialog;
-import com.cs481.commandcenter.dialog.RouterConfirmDialogFragment;
 
 /**
  * Preference Fragment for the ui preferences page.

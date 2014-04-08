@@ -1,7 +1,5 @@
 package com.cs481.commandcenter.fragments.preferences;
 
-import java.util.prefs.Preferences;
-
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
@@ -10,8 +8,6 @@ import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
-import android.preference.PreferenceManager;
-import android.view.View;
 
 import com.cs481.commandcenter.R;
 

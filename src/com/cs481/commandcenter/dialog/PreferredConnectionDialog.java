@@ -8,14 +8,12 @@ import android.content.res.Resources.Theme;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.DialogFragment;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.CheckBox;
 
 import com.cs481.commandcenter.R;
-import com.cs481.commandcenter.activities.CommandCenterActivity;
 
 /**
  * Dialog fragment that asks the user if their choice

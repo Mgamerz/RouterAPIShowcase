@@ -16,15 +16,9 @@ import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.provider.Settings.Secure;
-import android.util.Base64;
-import android.util.Log;
-
-import com.cs481.commandcenter.R;
-import com.cs481.commandcenter.activities.CommandCenterActivity;
 
 public class Cryptography {
 	public static SecretKey generateKey(String code, byte[] salt)
