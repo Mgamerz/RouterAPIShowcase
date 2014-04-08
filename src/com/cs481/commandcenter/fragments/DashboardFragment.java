@@ -25,13 +25,18 @@ import com.cs481.commandcenter.activities.CommandCenterActivity;
 import com.cs481.commandcenter.activities.SpiceActivity;
 import com.cs481.commandcenter.listrows.DashboardListRow;
 
+/**
+ * Dashboard fragment that shows the root of the navigation once logged in. It shows up full screen in phones and on the left side on tablets.
+ * @author Mgamerz
+ *
+ */
 public class DashboardFragment extends ListFragment {
 	private final int lWLAN = 0;
 	private final int lLAN = 1;
 	private final int lWAN = 2;
 	private final int lGPIO = 3;
 	private final int lABOUT = 4;
-	private final int lPRINTSTACK = 5;
+	private final int lPRINTSTACK = 5; //debug item
 
 	private AuthInfo authInfo;
 	private int currentSelection = -1;
@@ -68,6 +73,11 @@ public class DashboardFragment extends ListFragment {
 		return inflater.inflate(R.layout.fragment_dash, container, false);
 	}
 
+	/**
+	 * Creates a new instance of the Dashboard Fragment, with an AuthInfo object set as a parameter.
+	 * @param authInfo Authinfo to use in this fragment (currently not used)
+	 * @return New dashboard instance fragment
+	 */
 	public static DashboardFragment newInstance(AuthInfo authInfo) {
 		DashboardFragment routerFrag = new DashboardFragment();
 
