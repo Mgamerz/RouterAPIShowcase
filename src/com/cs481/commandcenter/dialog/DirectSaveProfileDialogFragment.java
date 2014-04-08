@@ -24,9 +24,8 @@ import com.cs481.commandcenter.activities.PINActivity;
 import com.cs481.commandcenter.fragments.DirectLoginFragment;
 
 /**
- * This class shows the Direct profile save dialog. It is shown
- * 
- * @author Mgamerz
+ * This class shows the Direct profile save dialog
+ * @author Mike Perez
  * 
  */
 public class DirectSaveProfileDialogFragment extends DialogFragment {

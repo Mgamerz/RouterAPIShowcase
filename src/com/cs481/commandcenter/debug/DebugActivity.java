@@ -9,6 +9,12 @@ import com.cs481.commandcenter.R;
 import com.cs481.commandcenter.activities.CommandCenterActivity;
 import com.cs481.commandcenter.activities.SpiceActivity;
 
+/**
+ * The debug activity used for debugging
+ * @author Mike Perez
+ *
+ */
+
 public class DebugActivity extends SpiceActivity {
 	private AuthInfo authInfo;
 	public boolean create_new = false;

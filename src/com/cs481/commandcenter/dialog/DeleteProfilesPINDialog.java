@@ -14,6 +14,12 @@ import com.cs481.commandcenter.R;
 import com.cs481.commandcenter.Utility;
 import com.cs481.commandcenter.activities.CommandCenterActivity;
 
+/**
+ * Dialog fragment that asks the user if they're sure they want
+ * to delete a profile
+ * @author Mike Perez
+ */
+
 public class DeleteProfilesPINDialog extends DialogFragment {
 	// Context context;
 

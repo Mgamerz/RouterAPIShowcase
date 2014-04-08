@@ -13,6 +13,12 @@ import android.widget.Toast;
 import com.cs481.commandcenter.R;
 import com.cs481.commandcenter.activities.CommandCenterActivity;
 
+/**
+ * Dialog fragment that asks the user if they're sure
+ * about their router commit
+ * @author Mike Perez
+ */
+
 public class CommitWAPDialogFragment extends DialogFragment {
 
 	/**

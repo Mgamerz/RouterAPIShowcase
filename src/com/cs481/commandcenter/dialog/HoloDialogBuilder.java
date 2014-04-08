@@ -13,9 +13,10 @@ import com.cs481.commandcenter.R;
 
 /**
  * Drop in replacement for AlertDialogBuilder that allows us to set the color of the title text and the divider, which is normally Blue on 4.0 - 4.3 and White on 4.4.
- * @author Mgamerz
+ * @author Mike Perez
  * Obtained from Github
  */
+
 public class HoloDialogBuilder extends AlertDialog.Builder {
 
 	/** The custom_body layout */

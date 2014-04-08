@@ -17,6 +17,14 @@ import android.widget.CheckBox;
 import com.cs481.commandcenter.R;
 import com.cs481.commandcenter.activities.CommandCenterActivity;
 
+/**
+ * Dialog fragment that asks the user if their choice
+ * of ECM or Direct connect is their preferred
+ * choice of connection type
+ * @author Sasa Rkman
+ *
+ */
+
 public class PreferredConnectionDialog extends DialogFragment {
 	private String connectionType;
 	

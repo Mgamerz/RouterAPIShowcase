@@ -12,6 +12,11 @@ import com.cs481.commandcenter.R;
 import com.cs481.commandcenter.activities.CommandCenterActivity;
 import com.cs481.commandcenter.fragments.PINFragment;
 
+/**
+ * The debug fragment used by debug activity
+ * @author Mike Perez
+ */
+
 public class DebugFragment extends Fragment {
 
 	@Override

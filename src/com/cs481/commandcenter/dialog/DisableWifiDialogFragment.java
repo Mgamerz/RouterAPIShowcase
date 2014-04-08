@@ -13,6 +13,13 @@ import android.widget.Toast;
 import com.cs481.commandcenter.R;
 import com.cs481.commandcenter.activities.CommandCenterActivity;
 
+/**
+ * Dialog fragment that asks the user if they're
+ * sure they want to disable the router's wifi
+ * @author Sasa Rkman
+ *
+ */
+
 public class DisableWifiDialogFragment extends DialogFragment {
 
 	/**

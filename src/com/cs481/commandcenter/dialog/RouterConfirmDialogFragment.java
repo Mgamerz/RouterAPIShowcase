@@ -26,6 +26,12 @@ import com.cs481.commandcenter.activities.LoginActivity;
 import com.cs481.commandcenter.activities.PINActivity;
 import com.cs481.commandcenter.responses.ecm.routers.Router;
 
+/**
+ * Dialog fragment that asks the user if their choice 
+ * of ECM router is the profile they'd like to save
+ * @author Mike Perez
+ */
+
 public class RouterConfirmDialogFragment extends DialogFragment {
 	private Router router;
 	private AuthInfo authInfo;
