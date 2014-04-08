@@ -17,6 +17,11 @@ import com.cs481.commandcenter.fragments.preferences.ProfilesFragment;
 import com.cs481.commandcenter.fragments.preferences.SecurityPrefsFragment;
 import com.cs481.commandcenter.fragments.preferences.UIPrefsFragment;
 
+/**
+ * User application preferences activity
+ * @author Mike Perez
+ */
+
 public class PrefsActivity extends PreferenceActivity {
 	public static final int THEME_RED = 0;
 	public static final int THEME_BLUE = 1;

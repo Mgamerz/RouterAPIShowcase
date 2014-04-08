@@ -15,7 +15,7 @@ import com.cs481.commandcenter.fragments.PINFragment;
 /**
  * This activity exists because the PIN screen would be required to show up in both Preferences and LoginActivity, which use
  * different fragment managers, because they are completely isolated.
- * @author Mgamerz
+ * @author Mike Perez
  *
  */
 public class PINActivity extends FragmentActivity {

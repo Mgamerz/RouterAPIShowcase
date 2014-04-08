@@ -19,6 +19,11 @@ import com.cs481.commandcenter.Utility;
 import com.cs481.commandcenter.fragments.DashboardFragment;
 import com.cs481.commandcenter.fragments.WifiClientFragment;
 
+/**
+ * The main activity for the application
+ * @author Mike Perez, Sasa Rkman
+ */
+
 public class CommandCenterActivity extends SpiceActivity implements OnBackStackChangedListener {
 
 	public static final String TAG = "CommandCenter";

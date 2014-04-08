@@ -8,7 +8,7 @@ import com.octo.android.robospice.SpiceManager;
 
 /**
  * The Spice Activity is a parent activity so we don't have to 'spice' every activity with our REST request setup.
- * @author Mgamerz
+ * @author Mike Perez
  */
 public class SpiceActivity extends FragmentActivity {
 	//use JacksonSpringAndroidSpiceService.class instead of JsonSpiceService.class

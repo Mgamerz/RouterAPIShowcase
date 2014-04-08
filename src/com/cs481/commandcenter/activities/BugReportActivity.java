@@ -15,6 +15,7 @@ import com.mgamerzproductions.logthislib.LogCollector;
 /**
  * This activity is for sending a bug report. It is forced into portrait mode so the user doesn't cause rotating issues. 
  */
+
 public class BugReportActivity extends SpiceActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

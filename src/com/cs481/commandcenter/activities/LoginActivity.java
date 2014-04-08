@@ -59,6 +59,12 @@ import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
 
+/**
+ * Shows the desired router connection type 
+ * depending on user input and preferences
+ * @author Mike Perez
+ */
+
 public class LoginActivity extends SpiceActivity {
 	public final static int PROFILE_PIN_DECRYPT = 0;
 	public final static int PROFILE_PIN_ENCRYPT = 0;
