@@ -17,7 +17,7 @@ import com.cs481.commandcenter.AuthInfo;
 import com.cs481.commandcenter.R;
 import com.cs481.commandcenter.Utility;
 import com.cs481.commandcenter.fragments.DashboardFragment;
-import com.cs481.commandcenter.fragments.WifiClientFragment;
+import com.cs481.commandcenter.fragments.WifiAsWANFragment;
 
 /**
  * The main activity for the application
@@ -117,7 +117,7 @@ public class CommandCenterActivity extends SpiceActivity implements OnBackStackC
 		int backStackEntryCount = getSupportFragmentManager().getBackStackEntryCount();
 		if (backStackEntryCount > 0) {
 			FragmentManager fm = getSupportFragmentManager();
-			Fragment wcf = fm.findFragmentByTag(WifiClientFragment.class.getName());
+			Fragment wcf = fm.findFragmentByTag(WifiAsWANFragment.class.getName());
 
 			if (wcf == null) {
 				// its not showing

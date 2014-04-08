@@ -57,7 +57,13 @@ import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
 
-public class WifiClientFragment extends ListFragment implements OnRefreshListener, ActionBar.OnNavigationListener {
+/**
+ * Fragment that shows a list of wireless routers
+ * that the router can see and connect to
+ * @author Mike Perez
+ */
+
+public class WifiAsWANFragment extends ListFragment implements OnRefreshListener, ActionBar.OnNavigationListener {
 
 	private final int WIFICLIENT_DISABLED = 0;
 	private final int WIFICLIENT_WAN = 1;
@@ -113,8 +119,8 @@ public class WifiClientFragment extends ListFragment implements OnRefreshListene
 	 *            Authinfo used to connect to the router
 	 * @return New WifiClientFragment with the parameters set
 	 */
-	public static WifiClientFragment newInstance(AuthInfo authInfo) {
-		WifiClientFragment wawFrag = new WifiClientFragment();
+	public static WifiAsWANFragment newInstance(AuthInfo authInfo) {
+		WifiAsWANFragment wawFrag = new WifiAsWANFragment();
 
 		Bundle args = new Bundle();
 		args.putParcelable("authInfo", authInfo);
@@ -615,7 +621,7 @@ public class WifiClientFragment extends ListFragment implements OnRefreshListene
 					}
 				}
 			}
-			WifiClientFragment.this.wanprofiles = wanprofiles;
+			WifiAsWANFragment.this.wanprofiles = wanprofiles;
 		}
 	}
 

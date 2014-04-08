@@ -12,6 +12,13 @@ import android.widget.TextView;
 
 import com.cs481.commandcenter.R;
 
+/**
+ * Fragment that shows information on how to use
+ * the PIN creator and also shows the status
+ * of PIN entry
+ * @author Mike Perez
+ */
+
 public class PINHeaderSubfragment extends Fragment {
 	@Override
 	public void onCreate(Bundle savedInstancedState) {

@@ -33,6 +33,12 @@ import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
 
+/**
+ * Fragment that allows connected users of a router to
+ * change the router's LED light status
+ * @author Mike Perez
+ */
+
 public class GPIOFragment extends Fragment implements OnRefreshListener,
 		OnCheckedChangeListener {
 	private static final String CACHEKEY_GPIOGET = "gpio_get";

@@ -22,8 +22,9 @@ import com.cs481.commandcenter.R;
 import com.cs481.commandcenter.dialog.PreferredConnectionDialog;
 
 /**
- * This is the first screen the user sees.
- * 
+ * Fragment that displays an animation letting
+ * the user choose between connecting to a local
+ * router or an ECM cloud router
  * @author: Sasa Rkman
  */
 
@@ -44,9 +45,6 @@ public class SplashScreenFragment extends Fragment {
 	Animation fadeInAnim; 
 	Animation fadeInAndOutAnim;
 
-	/*
-	 * TranslateAnimation moveUp; TranslateAnimation moveDown;
-	 */
 	Animation moveUp;
 	Animation moveDown;
 

@@ -31,6 +31,11 @@ import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
 
+/**
+ * Fragment for connecting to a ECM cloud managed router
+ * @author Mike Perez
+ */
+
 public class ECMLoginFragment extends Fragment {
 	private ProgressDialog progressDialog;
 	private SpiceManager spiceManager;

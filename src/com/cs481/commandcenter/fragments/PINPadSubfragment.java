@@ -12,6 +12,12 @@ import android.widget.Button;
 
 import com.cs481.commandcenter.R;
 
+/**
+ * Fragment that shows the PIN input pad and
+ * has the logic for PIN pad entry
+ * @author Mike Perez
+ */
+
 public class PINPadSubfragment extends Fragment {
 	@Override
 	public void onCreate(Bundle savedInstancedState) {

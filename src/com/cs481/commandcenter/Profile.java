@@ -5,9 +5,7 @@ import android.os.Parcelable;
 
 /**
  * Profile object is stored in the database and defines a profile
- * 
- * @author Mgamerz
- * 
+ * @author Mike Perez
  */
 public class Profile implements Parcelable {
 

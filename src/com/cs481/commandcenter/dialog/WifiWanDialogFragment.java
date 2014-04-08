@@ -26,14 +26,20 @@ import com.cs481.commandcenter.AuthInfo;
 import com.cs481.commandcenter.R;
 import com.cs481.commandcenter.Utility;
 import com.cs481.commandcenter.activities.CommandCenterActivity;
-import com.cs481.commandcenter.fragments.WifiClientFragment;
+import com.cs481.commandcenter.fragments.WifiAsWANFragment;
 import com.cs481.commandcenter.responses.config.wwan.WANProfile;
 import com.cs481.commandcenter.responses.status.wlan.WAP;
+
+/**
+ * Dialog fragment that shows options for when the user
+ * tries to connect to a wireless access point as the router
+ * @author Mike Perez
+ */
 
 public class WifiWanDialogFragment extends DialogFragment {
 	private WAP wap;
 	private AuthInfo authInfo;
-	private WifiClientFragment hostingFragment;
+	private WifiAsWANFragment hostingFragment;
 
 
 	/**
@@ -47,7 +53,7 @@ public class WifiWanDialogFragment extends DialogFragment {
 	/**
 	 * This constructor must be empty or the Fragment won't be able to start.
 	 */
-	public static WifiWanDialogFragment newInstance(WifiClientFragment wawf) {
+	public static WifiWanDialogFragment newInstance(WifiAsWANFragment wawf) {
 		WifiWanDialogFragment wwdf = new WifiWanDialogFragment();
 		wwdf.hostingFragment = wawf;
 		return wwdf;

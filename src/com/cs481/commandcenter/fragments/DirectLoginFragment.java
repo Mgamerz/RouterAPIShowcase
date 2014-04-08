@@ -45,6 +45,11 @@ import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
 
+/**
+ * Fragment for connecting directly to a local router
+ * @author Mike Perez
+ */
+
 public class DirectLoginFragment extends Fragment {
 
 	private SpiceManager spiceManager;

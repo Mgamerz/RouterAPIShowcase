@@ -39,10 +39,8 @@ import com.octo.android.robospice.request.listener.PendingRequestListener;
 import com.octo.android.robospice.request.listener.RequestListener;
 
 /**
- * [Description]
- * 
+ * Holds router information as well as the LogSubFragment
  * @author Sean Wright
- * 
  */
 public class RouterInfoFragment extends Fragment {
 	private final static String CACHEKEY_PRODUCT = "productinfo_get";

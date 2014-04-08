@@ -9,7 +9,7 @@ import android.os.Parcelable;
  * username, password and routerId to not be null. If the ecm flag is set to
  * false, the routerip, username, and password must not be null.
  * 
- * @author Mgamerz
+ * @author Mike Perez
  * 
  */
 public class AuthInfo implements Parcelable {
