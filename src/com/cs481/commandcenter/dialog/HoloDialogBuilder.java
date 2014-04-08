@@ -11,6 +11,11 @@ import android.widget.TextView;
 
 import com.cs481.commandcenter.R;
 
+/**
+ * Drop in replacement for AlertDialogBuilder that allows us to set the color of the title text and the divider, which is normally Blue on 4.0 - 4.3 and White on 4.4.
+ * @author Mgamerz
+ * Obtained from Github
+ */
 public class HoloDialogBuilder extends AlertDialog.Builder {
 
 	/** The custom_body layout */
@@ -31,8 +36,7 @@ public class HoloDialogBuilder extends AlertDialog.Builder {
 	public HoloDialogBuilder(Context context) {
 		super(context);
 
-		mDialogView = View
-				.inflate(context, R.layout.qustom_dialog_layout, null);
+		mDialogView = View.inflate(context, R.layout.qustom_dialog_layout, null);
 		setView(mDialogView);
 
 		mTitle = (TextView) mDialogView.findViewById(R.id.alertTitle);
@@ -52,10 +56,12 @@ public class HoloDialogBuilder extends AlertDialog.Builder {
 		mDivider.setBackgroundColor(Color.parseColor(colorString));
 		return this;
 	}
-	
+
 	/**
 	 * This method defines the divider color.
-	 * @param colorId R id that specifies the color value
+	 * 
+	 * @param colorId
+	 *            R id that specifies the color value
 	 */
 	public HoloDialogBuilder setDividerColor(int colorId) {
 		mDivider.setBackgroundColor(colorId);
@@ -72,7 +78,7 @@ public class HoloDialogBuilder extends AlertDialog.Builder {
 		mTitle.setTextColor(Color.parseColor(colorString));
 		return this;
 	}
-	
+
 	public HoloDialogBuilder setTitleColor(int colorId) {
 		mTitle.setTextColor(colorId);
 		return this;
@@ -120,8 +126,7 @@ public class HoloDialogBuilder extends AlertDialog.Builder {
 	 */
 	public HoloDialogBuilder setCustomView(int resId, Context context) {
 		View customView = View.inflate(context, resId, null);
-		((FrameLayout) mDialogView.findViewById(R.id.customPanel))
-				.addView(customView);
+		((FrameLayout) mDialogView.findViewById(R.id.customPanel)).addView(customView);
 		return this;
 	}
 

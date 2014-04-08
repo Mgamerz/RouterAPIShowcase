@@ -126,97 +126,103 @@
             </EditText>
         </RelativeLayout>
 
-        <RelativeLayout
+        <TableLayout
             android:id="@+id/wapconnect_wepkeyslayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/wap_isolating"
-            android:orientation="vertical" >
+            android:layout_below="@id/wap_isolating" >
 
-            <TextView
-                android:id="@+id/wap_wepkey0_text"
-                style="@style/TextTheme"
+            <!-- 2 columns -->
+
+            <TableRow
+                android:id="@+id/wep0row"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_marginTop="10dp"
-                android:text="@string/wepkey_0" />
+                android:layout_height="wrap_content" >
 
-            <TextView
-                android:id="@+id/wap_wepkey1_text"
-                style="@style/TextTheme"
+                <TextView
+                    android:id="@+id/wap_wepkey0_text"
+                    style="@style/TextTheme"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/wepkey_0" />
+
+                <EditText
+                    android:id="@+id/wap_wepkey0_value"
+                    style="@style/EditTextTheme"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:inputType="textNoSuggestions"
+                    android:paddingLeft="10dp" />
+            </TableRow>
+
+            <TableRow
+                android:id="@+id/wep1row"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_below="@id/wap_wepkey0_text"
-                android:layout_marginTop="10dp"
-                android:text="@string/wepkey_1" />
+                android:layout_height="wrap_content" >
 
-            <TextView
-                android:id="@+id/wap_wepkey2_text"
-                style="@style/TextTheme"
+                <TextView
+                    android:id="@+id/wap_wepkey1_text"
+                    style="@style/TextTheme"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/wepkey_1" />
+
+                <EditText
+                    android:id="@+id/wap_wepkey1_value"
+                    style="@style/EditTextTheme"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:inputType="textNoSuggestions"
+                    android:paddingBottom="-4dp"
+                    android:paddingLeft="10dp" />
+            </TableRow>
+
+            <TableRow
+                android:id="@+id/wep2row"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_below="@id/wap_wepkey1_text"
-                android:layout_marginTop="10dp"
-                android:text="@string/wepkey_2" />
+                android:layout_height="wrap_content" >
 
-            <TextView
-                android:id="@+id/wap_wepkey3_text"
-                style="@style/TextTheme"
+                <TextView
+                    android:id="@+id/wap_wepkey2_text"
+                    style="@style/TextTheme"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/wepkey_2" />
+
+                <EditText
+                    android:id="@+id/wap_wepkey2_value"
+                    style="@style/EditTextTheme"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:inputType="textNoSuggestions"
+                    android:paddingLeft="10dp" />
+            </TableRow>
+
+            <TableRow
+                android:id="@+id/wep3row"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_below="@id/wap_wepkey2_text"
-                android:layout_marginTop="10dp"
-                android:text="@string/wepkey_3" />
+                android:layout_height="wrap_content" >
 
-            <EditText
-                android:id="@+id/wap_wepkey0_value"
-                style="@style/EditTextTheme"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignBottom="@id/wap_wepkey0_text"
-                android:layout_toRightOf="@id/wap_wepkey0_text"
-                android:ems="10"
-                android:inputType="textNoSuggestions"
-                android:paddingLeft="10dp" />
+                <TextView
+                    android:id="@+id/wap_wepkey3_text"
+                    style="@style/TextTheme"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/wepkey_3" />
 
-            <EditText
-                android:id="@+id/wap_wepkey1_value"
-                style="@style/EditTextTheme"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignBottom="@id/wap_wepkey1_text"
-                android:layout_toRightOf="@id/wap_wepkey1_text"
-                android:ems="10"
-                android:inputType="textNoSuggestions"
-                android:layout_paddingBottom="-4dp"
-                android:paddingLeft="10dp" />
-
-            <EditText
-                android:id="@+id/wap_wepkey2_value"
-                style="@style/EditTextTheme"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignBottom="@id/wap_wepkey2_text"
-                android:layout_toRightOf="@id/wap_wepkey2_text"
-                android:ems="10"
-                android:inputType="textNoSuggestions"
-                android:paddingLeft="10dp" />
-
-            <EditText
-                android:id="@+id/wap_wepkey3_value"
-                style="@style/EditTextTheme"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignBottom="@id/wap_wepkey3_text"
-                android:layout_toRightOf="@id/wap_wepkey3_text"
-                android:ems="10"
-                android:inputType="textNoSuggestions"
-                android:paddingLeft="10dp" />
-        </RelativeLayout>
+                <EditText
+                    android:id="@+id/wap_wepkey3_value"
+                    style="@style/EditTextTheme"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:inputType="textNoSuggestions"
+                    android:paddingLeft="10dp" />
+            </TableRow>
+        </TableLayout>
     </RelativeLayout>
 
 </ScrollView>
