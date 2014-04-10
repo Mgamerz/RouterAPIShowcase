@@ -3,8 +3,8 @@
 
     <!-- Xml Comment -->
     <string name="app_name">Command Center</string>
-    <string name="app_version">1.03a</string>
-    <string name="app_version_code">9</string>
+    <string name="app_version">1.06a</string>
+    <string name="app_version_code">11</string>
     <!-- General strings -->
     <string name="debug_title">CC Debugging</string>
     <string name="server_exception">Server returned exception</string>
@@ -226,6 +226,8 @@
     <string name="wepkey_1">WEP Key 2</string>
     <string name="wepkey_2">WEP Key 3</string>
     <string name="wepkey_3">WEP Key 4</string>
+    <string name="toggle_wap_title">Disabling access point</string>
+    <string name="toggle_wap_confirm">Turn off the %1$s access point?</string>
 
     <string-array name="wifiap_encryptiontype_values">
         <item>None</item>

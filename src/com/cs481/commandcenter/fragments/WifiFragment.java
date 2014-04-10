@@ -36,6 +36,7 @@ import com.cs481.commandcenter.Utility;
 import com.cs481.commandcenter.activities.CommandCenterActivity;
 import com.cs481.commandcenter.activities.SpiceActivity;
 import com.cs481.commandcenter.dialog.DisableWifiDialogFragment;
+import com.cs481.commandcenter.dialog.ToggleWAPDialogFragment;
 import com.cs481.commandcenter.responses.GetRequest;
 import com.cs481.commandcenter.responses.PutRequest;
 import com.cs481.commandcenter.responses.Response;
@@ -60,9 +61,11 @@ import com.octo.android.robospice.request.listener.RequestListener;
 public class WifiFragment extends ListFragment implements OnRefreshListener {
 	private static final String CACHEKEY_WWAPGET = "config_wlan_get";
 	private static final int WIFI_STATE_CHANGE_FRAGMENT = 0;
+	private static final int WAP_STATE_CHANGE_FRAGMENT = 1;
 	private static final int WWAP_LOADING = 0;
 	private static final int WWAP_LOADED = 1;
 	private static final int WWAP_FAILED = 2;
+	private int pendingDisableIndex = -1; //-1 means nothing is pending.
 	private PullToRefreshLayout mPullToRefreshLayout;
 	private SpiceManager spiceManager;
 	private AuthInfo authInfo;
@@ -87,6 +90,7 @@ public class WifiFragment extends ListFragment implements OnRefreshListener {
 			wwapListState = savedInstanceState.getInt("wlanListState");
 			wwaps = savedInstanceState.getParcelableArrayList("wwaps");
 			shouldLoadData = savedInstanceState.getBoolean("shouldLoadData");
+			pendingDisableIndex = savedInstanceState.getInt("pendingDisableIndex");
 		} else {
 			Bundle passedArgs = getArguments();
 			if (passedArgs != null) {
@@ -124,6 +128,7 @@ public class WifiFragment extends ListFragment implements OnRefreshListener {
 		outState.putBoolean("wifiState", wifiState);
 		outState.putBoolean("wifiStateEnabled", wifiStateEnabled);
 		outState.putInt("wlanListState", wwapListState);
+		outState.putInt("pendingDisableIndex", pendingDisableIndex);
 
 		if (wwaps == null) {
 			Log.i(CommandCenterActivity.TAG, "WWAPS are null for onSaveInstanceState(), creating empty list to prevent crash.");
@@ -440,6 +445,25 @@ public class WifiFragment extends ListFragment implements OnRefreshListener {
 			break;
 		}
 	}
+	
+	/**
+	 * Toggles a network on or off.
+	 * @param index Index to toggle
+	 * @param b 
+	 */
+	public void toggleNetwork(int index, boolean newState){
+		Log.i(CommandCenterActivity.TAG, "Commit changes in WAP Editor is being handled.");
+		FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+		Fragment prev = getActivity().getSupportFragmentManager().findFragmentByTag("dialog");
+		if (prev != null) {
+			ft.remove(prev);
+		}
+		ft.addToBackStack(null);
+
+		//DialogFragment dialogFrag = ToggleWAPDialogFragment.newInstance();
+		//dialogFrag.setTargetFragment(this, WAP_STATE_CHANGE_FRAGMENT);
+		//dialogFrag.show(ft, "dialog");
+	}
 
 	/**
 	 * Custom adapter for tying the returned Bss objects to the list view. Set's
@@ -464,7 +488,7 @@ public class WifiFragment extends ListFragment implements OnRefreshListener {
 		}
 
 		@Override
-		public View getView(int position, View convertView, ViewGroup parent) {
+		public View getView(final int position, View convertView, ViewGroup parent) {
 			LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			View rowView;
 			if (convertView == null) {
@@ -481,8 +505,16 @@ public class WifiFragment extends ListFragment implements OnRefreshListener {
 			TextView descView = (TextView) rowView.findViewById(R.id.listrow_wwap_desc);
 			descView.setText(wifiDescriptionBuilder(wwap));
 
-			Switch apEnabled = (Switch) rowView.findViewById(R.id.listrow_wwap_switch);
+			final Switch apEnabled = (Switch) rowView.findViewById(R.id.listrow_wwap_switch);
 			apEnabled.setChecked(wwap.getEnabled());
+			apEnabled.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+				
+				@Override
+				public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+					// TODO Auto-generated method stub
+					toggleNetwork(position, apEnabled.isChecked());
+				}
+			});
 			return rowView;
 		}
 	}
