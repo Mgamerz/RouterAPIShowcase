@@ -108,15 +108,15 @@ public class DashboardFragment extends ListFragment {
 		}
 		ArrayList<DashboardListRow> rows = new ArrayList<DashboardListRow>();
 		rows.add(new DashboardListRow(lWLAN, resources
-				.getString(R.string.wireless), "In Progress"));
+				.getString(R.string.wireless), "In Testing"));
 		rows.add(new DashboardListRow(lLAN, resources.getString(R.string.lan),
 				"In Testing"));
 		rows.add(new DashboardListRow(lWAN, resources.getString(R.string.wan),
-				"In progress"));
+				"In Testing"));
 		rows.add(new DashboardListRow(lGPIO,
 				resources.getString(R.string.gpio), "Fully Operational"));
 		rows.add(new DashboardListRow(lABOUT, resources
-				.getString(R.string.routerinfo), "In Testing"));
+				.getString(R.string.routerinfo), "Fully Operational"));
 		/* rows.add(new DashboardListRow(lPRINTSTACK, "Print Fragment backstack",
 				"Debug Option")); */
 		setListAdapter(new DashboardAdapter(getActivity(), rows));
