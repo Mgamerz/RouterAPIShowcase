@@ -340,6 +340,6 @@
 
     <!-- Whats new - keep this at the bottom -->
     <string name="whats_new_title">What\'s new</string>
-    <string name="whats_new">What\'s new in Alpha 1.04:\n\n - Various bug fixes\n - Added warning to turning off wifi</string>
+    <string name="whats_new">What\'s new in Alpha 1.05:\n\n - Implemented WAP Editor</string>
 
 </resources>
