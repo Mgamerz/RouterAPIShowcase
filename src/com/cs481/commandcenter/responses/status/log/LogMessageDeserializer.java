@@ -26,7 +26,7 @@ public final class LogMessageDeserializer extends JsonDeserializer<LogMessage> {
 			Log.e(CommandCenterActivity.TAG, node.toString());
 			throw new JsonMappingException("LogMessageDeserializer: expected an object");
 		}
-		Log.i(CommandCenterActivity.TAG, "Log message parsing: "+node.toString());
+		//Log.i(CommandCenterActivity.TAG, "Log message parsing: "+node.toString());
 		LogMessage logMessage = new LogMessage();
 
 		// Build the log object manually...

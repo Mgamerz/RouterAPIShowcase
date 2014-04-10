@@ -144,7 +144,8 @@ public class CommandCenterActivity extends SpiceActivity implements OnBackStackC
 			getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
 			Intent intent = getIntent();
 			getActionBar().setSubtitle(intent.getStringExtra("ab_subtitle"));
-			getActionBar().setTitle(getResources().getString(R.string.dashboard_title));
+			//following line may be not making this work properly where the wrong title and not showing up arrow occurs
+			//getActionBar().setTitle(getResources().getString(R.string.dashboard_title));
 		}
 	}
 }

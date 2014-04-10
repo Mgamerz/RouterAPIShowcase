@@ -69,6 +69,7 @@ public class Utility {
 
 	// ciphers for WPA and WPA2
 	public static String CIPHER_AES = "aes";
+	public static String CIPHER_TKIP = "tkip";
 	public static String CIPHER_TKIPAES = "tkipaes";
 
 	/**
@@ -581,12 +582,30 @@ public class Utility {
 	 *            Index to convert to on-router string
 	 * @return on-router string version of the index
 	 */
-	public static String indexToCipherString(int cipherIndex) {
-		switch (cipherIndex) {
+	public static String indexToCipherString(int encryptionIndex, int cipherIndex) {
+		switch (encryptionIndex){
 		case 0:
-			return CIPHER_TKIPAES;
+			//wpa1
+			switch(cipherIndex){
+			case 0:
+				return CIPHER_TKIP;
+			case 1:
+				return CIPHER_AES;
+			}
 		case 1:
-			return CIPHER_AES;
+			//wpa2
+			switch(cipherIndex){
+			case 0:
+				return CIPHER_TKIP;
+			}
+		case 2:
+			//wpa1wpa2
+			switch(cipherIndex){
+			case 0:
+				return CIPHER_TKIPAES;
+			case 1:
+				return CIPHER_AES;
+			}
 		}
 		return null;
 	}

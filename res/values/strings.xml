@@ -239,11 +239,16 @@
         <item>WPA1/WPA2</item>
         <item>WPA1/WPA2 Enterprise</item>
     </string-array>
-    <string-array name="wifiap_ciphertype_values">
-
-        <!-- <item>TKIP</item> -->
+    <string-array name="wifiap_ciphertype_wpa1values">
+        <item>TKIP</item>
         <item>AES</item>
+    </string-array>
+    <string-array name="wifiap_ciphertype_wpa2values">
+        <item>AES</item>
+    </string-array>
+    <string-array name="wifiap_ciphertype_wpa1wpa2values">
         <item>TKIP/AES</item>
+        <item>AES</item>
     </string-array>
 
     <!-- Color Strings (for the custom dialogs - doesn't support R.color values. -->

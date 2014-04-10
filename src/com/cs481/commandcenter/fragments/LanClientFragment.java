@@ -118,6 +118,7 @@ public class LanClientFragment extends Fragment implements OnRefreshListener {
 		spiceManager = sa.getSpiceManager();
 		sa.getActionBar().setDisplayShowTitleEnabled(true);
 		sa.getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+		sa.getActionBar().setDisplayHomeAsUpEnabled(true);
 		sa.getActionBar().setTitle(getResources().getString(R.string.lan_title));
 		if (shouldLoadData) {
 			Log.i(CommandCenterActivity.TAG, "shouldLoadData was set to true");

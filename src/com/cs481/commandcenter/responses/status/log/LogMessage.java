@@ -53,6 +53,9 @@ public class LogMessage implements Parcelable {
 	}
 
 	public String getTrace() {
+		if (trace.equals("null")) {
+			return null;
+		}
 		return trace;
 	}
 
@@ -69,7 +72,7 @@ public class LogMessage implements Parcelable {
 		double seconds = getTimeStamp(); 
 		long millis = (long) (seconds * 1000); //saves some precision... not all of it as we don't have nanoseconds.
 		Date date = new Date(millis);
-		SimpleDateFormat sdf = new SimpleDateFormat("EEEE,MMMM d h:mm:ssa", Locale.ENGLISH);
+		SimpleDateFormat sdf = new SimpleDateFormat("EEEE, MMMM d h:mm:ssa", Locale.ENGLISH);
 		sdf.setTimeZone(TimeZone.getDefault());
 		return sdf.format(date);
 	}

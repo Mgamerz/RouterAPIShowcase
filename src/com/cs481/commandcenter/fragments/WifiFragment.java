@@ -166,6 +166,8 @@ public class WifiFragment extends ListFragment implements OnRefreshListener {
 		// /You will setup the action bar with pull to refresh layout
 		SpiceActivity sa = (SpiceActivity) getActivity();
 		sa.setTitle(getResources().getString(R.string.wifi_title));
+		sa.getActionBar().setDisplayHomeAsUpEnabled(true);
+
 		spiceManager = sa.getSpiceManager();
 		// getListView().set
 		if (shouldLoadData) {
@@ -354,6 +356,7 @@ public class WifiFragment extends ListFragment implements OnRefreshListener {
 			Log.i(CommandCenterActivity.TAG, "Failed to read the list of WAP configs!");
 			Toast.makeText(getActivity(), getResources().getString(R.string.failed_wlan_config), Toast.LENGTH_SHORT).show();
 			wwapListState = WWAP_FAILED;
+			mPullToRefreshLayout.setRefreshComplete();
 			// TODO : Set the interface to show it failed.
 
 		}
@@ -363,6 +366,7 @@ public class WifiFragment extends ListFragment implements OnRefreshListener {
 			if (!isAdded()) {
 				return;
 			}
+			mPullToRefreshLayout.setRefreshComplete();
 			Log.i(CommandCenterActivity.TAG, "Fetched the WLAN Config in WifiFragment");
 			ConfigWlan wlan = (ConfigWlan) response.getData();
 			ArrayList<Radio> radios = wlan.getRadios();

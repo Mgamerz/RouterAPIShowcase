@@ -51,8 +51,6 @@ public class RouterInfoFragment extends Fragment {
 	private final static String CACHEKEY_MACADDRESS = "macaddress_get";
 	private final static String CACHEKEY_UPTIME = "uptime_get";
 	private final static String CACHEKEY_CLIENTS = "numclients_get";
-	private final static String CACHEKEY_REBOOT = "reboot_put";
-
 	private final static int ROUTER_REBOOT_FRAGMENT = 0;
 
 	private AuthInfo authInfo;
@@ -255,9 +253,13 @@ public class RouterInfoFragment extends Fragment {
 	public void onStart() {
 		super.onStart();
 		SpiceActivity sa = (SpiceActivity) getActivity();
+		//actionbar stuff
 		sa.getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+		sa.getActionBar().setDisplayHomeAsUpEnabled(true);
 		sa.getActionBar().setDisplayShowTitleEnabled(true);
 		sa.getActionBar().setTitle(getResources().getString(R.string.routerinfo));
+		
+		//listeners for network requests
 		spiceManager = sa.getSpiceManager();
 		spiceManager.addListenerIfPending(Response.class, CACHEKEY_PRODUCT, new InfoGetRequestListener());
 		spiceManager.addListenerIfPending(Response.class, CACHEKEY_HOSTNAME, new InfoGetConfigListener());
@@ -278,6 +280,10 @@ public class RouterInfoFragment extends Fragment {
 		}
 	}
 
+	/**
+	 * Reads product information from the router (model name)
+	 * @param dialog boolean to show the dialog (or not)
+	 */
 	private void readProductInfo(boolean dialog) {
 		// perform the request.
 		GetRequest request = new GetRequest(getActivity(), authInfo, "status/product_info", Product_info.class, CACHEKEY_PRODUCT);
@@ -292,6 +298,9 @@ public class RouterInfoFragment extends Fragment {
 		spiceManager.execute(request, lastRequestCacheKey, DurationInMillis.ALWAYS_EXPIRED, new InfoGetRequestListener());
 	}
 
+	/**
+	 * Reads the firmware info from the router.
+	 */
 	private void readFWInfo() {
 		// perform the request.
 		GetRequest request = new GetRequest(getActivity(), authInfo, "status/fw_info", Fw_info.class, CACHEKEY_FIRMWARE);
@@ -300,6 +309,9 @@ public class RouterInfoFragment extends Fragment {
 		spiceManager.execute(request, lastRequestCacheKey, DurationInMillis.ALWAYS_EXPIRED, new InfoGetFWListener());
 	}
 
+	/**
+	 * Reads the uptime from the router.
+	 */
 	private void readUptimeInfo() {
 		// perform the request.
 		GetRequest request = new GetRequest(getActivity(), authInfo, "status/system", com.cs481.commandcenter.responses.status.product_info.System.class, CACHEKEY_UPTIME);
@@ -308,6 +320,9 @@ public class RouterInfoFragment extends Fragment {
 		spiceManager.execute(request, lastRequestCacheKey, DurationInMillis.ONE_SECOND, new InfoGetSystemListener());
 	}
 
+	/**
+	 * Reads the hostname from the router. Might fail if not connected to a network.
+	 */
 	private void readHostNameInfo() {
 		// perform the request.
 		GetRequest request = new GetRequest(getActivity(), authInfo, "status/wan/devices/ethernet-wan/config", com.cs481.commandcenter.responses.status.wan.devices.ethernetwan.Config.class, CACHEKEY_HOSTNAME);
@@ -316,6 +331,9 @@ public class RouterInfoFragment extends Fragment {
 		spiceManager.execute(request, lastRequestCacheKey, DurationInMillis.ALWAYS_EXPIRED, new InfoGetConfigListener());
 	}
 
+	/**
+	 * Reads the number of clients connected to this router.
+	 */
 	private void readNumClientsInfo() {
 		// perform the request.
 		GetRequest request = new GetRequest(getActivity(), authInfo, "status/lan", com.cs481.commandcenter.responses.status.lan.Lan.class, CACHEKEY_CLIENTS);

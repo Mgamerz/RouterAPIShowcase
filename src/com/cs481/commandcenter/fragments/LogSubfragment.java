@@ -203,10 +203,16 @@ public class LogSubfragment extends ListFragment implements OnRefreshListener {
 			TextView severityView = (TextView) rowView.findViewById(R.id.log_severity);
 			TextView timeView = (TextView) rowView.findViewById(R.id.log_time);
 
+
 			messageView.setText(log.getMessage());
 			tagView.setText(log.getTag());
 			severityView.setText(log.getSeverity());
 			timeView.setText(log.getDateString());
+			if (log.getTrace()!=null){
+				TextView traceView = (TextView) rowView.findViewById(R.id.log_trace);
+				traceView.setVisibility(View.VISIBLE);
+				traceView.setText(log.getTrace());
+			}
 			return rowView;
 		}
 	}

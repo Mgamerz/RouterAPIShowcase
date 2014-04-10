@@ -80,11 +80,9 @@ public class DashboardFragment extends ListFragment {
 	 */
 	public static DashboardFragment newInstance(AuthInfo authInfo) {
 		DashboardFragment routerFrag = new DashboardFragment();
-
 		Bundle args = new Bundle();
 		args.putParcelable("authInfo", authInfo);
 		routerFrag.setArguments(args);
-
 		return routerFrag;
 	}
 

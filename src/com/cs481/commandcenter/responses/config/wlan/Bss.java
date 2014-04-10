@@ -3,7 +3,9 @@ package com.cs481.commandcenter.responses.config.wlan;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Bss implements Parcelable {
    	@Override
@@ -31,6 +33,8 @@ public class Bss implements Parcelable {
 		return true;
 	}
 
+	@JsonIgnore
+	private transient String Exception;
 	private String authmode;
    	private Number defaultwepkey;
    	private boolean enabled;
@@ -215,6 +219,7 @@ public class Bss implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+    	dest.writeString(Exception);
         dest.writeString(authmode);
         dest.writeValue(defaultwepkey);
         dest.writeByte((byte) (enabled ? 0x01 : 0x00));
@@ -250,4 +255,28 @@ public class Bss implements Parcelable {
             return new Bss[size];
         }
     };
+    
+
+	@JsonProperty("exception")
+	public void setException(String exception) {
+		this.Exception = exception;
+	}
+
+	@JsonIgnore
+	public String getException() {
+		// TODO Auto-generated method stub
+		return Exception;
+	}
+	
+	@JsonProperty("reason")
+	private transient String reason;
+
+	@JsonIgnore
+	public String getReason() {
+		return reason;
+	}
+
+	public void setReason(String reason) {
+		this.reason = reason;
+	}
 }

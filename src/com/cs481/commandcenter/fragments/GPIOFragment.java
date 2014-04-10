@@ -116,10 +116,8 @@ public class GPIOFragment extends Fragment implements OnRefreshListener,
 		SpiceActivity sa = (SpiceActivity) getActivity();
 		sa.getActionBar().setDisplayShowTitleEnabled(true);
 		sa.getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
-		sa.getActionBar().setTitle(getResources().getString(R.string.gpio_title)); // TODO
-																	// change to
-																	// string
-																	// resource
+		sa.getActionBar().setDisplayHomeAsUpEnabled(true);
+		sa.getActionBar().setTitle(getResources().getString(R.string.gpio_title));
 		spiceManager = sa.getSpiceManager();
 		if (shouldLoadData) {
 			readGPIOConfig(true);

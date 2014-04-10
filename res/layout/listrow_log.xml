@@ -23,12 +23,22 @@
         android:text="Message" />
 
     <TextView
+        android:id="@+id/log_trace"
+        style="@style/TextTheme"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/log_message"
+        android:visibility="gone"
+        android:text="Trace" />
+
+    <TextView
         android:id="@+id/log_tag"
         style="@style/SubTextTheme"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:layout_below="@id/log_message"
+        android:layout_below="@id/log_trace"
         android:text="Tag"
         android:textAppearance="?android:attr/textAppearanceSmall" />
 
@@ -38,7 +48,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:layout_below="@id/log_message"
+        android:layout_below="@id/log_trace"
         android:text="Severity"
         android:textAppearance="?android:attr/textAppearanceSmall" />
 

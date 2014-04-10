@@ -1,5 +1,6 @@
 package com.cs481.commandcenter.fragments;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -105,15 +106,6 @@ public class WifiWAPFragment extends Fragment {
 		// Apply the adapter to the spinner
 		encryption_spinner.setAdapter(encryption_adapter);
 
-		Spinner cipher_spinner = (Spinner) v.findViewById(R.id.wap_ciphertype_spinner);
-		// Create an ArrayAdapter using the string array and a default spinner
-		// layout
-		ArrayAdapter<CharSequence> cipher_adapter = ArrayAdapter.createFromResource(getActivity(), R.array.wifiap_ciphertype_values, R.layout.spinner_header);
-		// Specify the layout to use when the list of choices appears
-		cipher_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		// Apply the adapter to the spinner
-		cipher_spinner.setAdapter(cipher_adapter);
-
 		CheckBox broadcasting = (CheckBox) v.findViewById(R.id.wap_broadcasting);
 		broadcasting.setChecked(!wapinfo.getHidden());
 
@@ -151,6 +143,24 @@ public class WifiWAPFragment extends Fragment {
 					cipherSpinner.setVisibility(Spinner.VISIBLE);
 					passwordLayout.setVisibility(View.VISIBLE);
 					wepkeysLayout.setVisibility(View.GONE);
+
+					// set the array adapters for the positions:
+					if (position == 4 || position == 5) {
+						// WPA1
+						ArrayAdapter<CharSequence> cipher_adapter = ArrayAdapter.createFromResource(getActivity(), R.array.wifiap_ciphertype_wpa1values, R.layout.spinner_header);
+						cipher_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+						cipherSpinner.setAdapter(cipher_adapter);
+					} else if (position == 6 || position == 7) {
+						// WPA2
+						ArrayAdapter<CharSequence> cipher_adapter = ArrayAdapter.createFromResource(getActivity(), R.array.wifiap_ciphertype_wpa2values, R.layout.spinner_header);
+						cipher_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+						cipherSpinner.setAdapter(cipher_adapter);
+					} else if (position == 8 || position == 9) {
+						// WPA1/WPA2
+						ArrayAdapter<CharSequence> cipher_adapter = ArrayAdapter.createFromResource(getActivity(), R.array.wifiap_ciphertype_wpa1wpa2values, R.layout.spinner_header);
+						cipher_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+						cipherSpinner.setAdapter(cipher_adapter);
+					}
 				}
 			}
 
@@ -247,6 +257,8 @@ public class WifiWAPFragment extends Fragment {
 		// /You will setup the action bar with pull to refresh layout
 		SpiceActivity sa = (SpiceActivity) getActivity();
 		sa.setTitle(getResources().getString(R.string.wap_editor_title));
+		sa.getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+		sa.getActionBar().setDisplayHomeAsUpEnabled(true);		
 		spiceManager = sa.getSpiceManager();
 	}
 
@@ -272,8 +284,9 @@ public class WifiWAPFragment extends Fragment {
 		// get network auth type
 		View v = getView();
 		Spinner authSpinner = (Spinner) v.findViewById(R.id.wap_encryptiontype_spinner);
+		int authIndex = authSpinner.getSelectedItemPosition();
+
 		if (authSpinner.getVisibility() == View.VISIBLE) {
-			int authIndex = authSpinner.getSelectedItemPosition();
 			modified_wap.setAuthmode(Utility.indexToAuthString(authIndex));
 		}
 
@@ -281,7 +294,7 @@ public class WifiWAPFragment extends Fragment {
 		Spinner cipherSpinner = (Spinner) v.findViewById(R.id.wap_ciphertype_spinner);
 		if (cipherSpinner.getVisibility() == View.VISIBLE) {
 			int cipherIndex = cipherSpinner.getSelectedItemPosition();
-			modified_wap.setWpacipher(Utility.indexToCipherString(cipherIndex));
+			modified_wap.setWpacipher(Utility.indexToCipherString(authIndex, cipherIndex));
 		}
 
 		// get hidden var
@@ -302,25 +315,9 @@ public class WifiWAPFragment extends Fragment {
 		EditText passwordField = (EditText) v.findViewById(R.id.wap_newpassword_field);
 		if (passwordField.getVisibility() == View.VISIBLE && !passwordField.getText().toString().equals("")) {
 			// new password has been entered
-			modified_wap.setWpapsk(passwordField.getText().toString()); // router
-																		// should
-																		// encrypt
-																		// this...
-																		// not
-																		// sure
-																		// what
-																		// it
-																		// will
-																		// do if
-																		// the
-																		// old
-																		// password
-																		// is
-																		// pushed
-																		// to
-																		// the
-																		// same
-																		// field.
+			// router knows if the password being pushed is the original or a
+			// new one.
+			modified_wap.setWpapsk(passwordField.getText().toString());
 		}
 		PutRequest commitRequest = new PutRequest(getActivity(), modified_wap, authInfo, "config/wlan/radio/0/bss/" + wapindex, Bss.class);
 		spiceManager.execute(commitRequest, commitRequest.createCacheKey(), DurationInMillis.ALWAYS_EXPIRED, new WAPPutRequestListener());
@@ -383,9 +380,17 @@ public class WifiWAPFragment extends Fragment {
 			if (!isAdded()) {
 				return;
 			}
-			Toast.makeText(getActivity(), getResources().getString(R.string.success_wlan_config), Toast.LENGTH_SHORT).show();
-			Log.i(CommandCenterActivity.TAG, "Pushed data to the WLAN Config in WifiWAPFragment");
-		}
+			if (response.getResponseInfo() != null) {
 
+				if (response.getResponseInfo().getSuccess()) {
+					Toast.makeText(getActivity(), getResources().getString(R.string.success_wlan_config), Toast.LENGTH_SHORT).show();
+					Log.i(CommandCenterActivity.TAG, "Pushed data to the WLAN Config in WifiWAPFragment");
+				} else {
+					Bss errorInfo = (Bss) response.getData();
+					Log.i(CommandCenterActivity.TAG, "Error pushing to wifi profile to router: " + errorInfo.getException() + ": " + errorInfo.getReason());
+				}
+			}
+
+		}
 	}
 }
