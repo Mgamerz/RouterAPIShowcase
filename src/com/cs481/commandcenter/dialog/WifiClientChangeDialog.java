@@ -13,6 +13,14 @@ import android.widget.Toast;
 import com.cs481.commandcenter.R;
 import com.cs481.commandcenter.activities.CommandCenterActivity;
 
+/**
+ * Dialog fragment that asks the user if they are
+ * sure they want to change to a different wireless
+ * access point
+ * @author Mike Perez
+ *
+ */
+
 public class WifiClientChangeDialog extends DialogFragment {
 	private String newMode;
 

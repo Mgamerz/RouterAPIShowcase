@@ -39,9 +39,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * The utility class holds methods that are accessed by many classes.
- * 
- * @author Mgamerz
- * 
+ * @author Mike Perez
  */
 public class Utility {
 

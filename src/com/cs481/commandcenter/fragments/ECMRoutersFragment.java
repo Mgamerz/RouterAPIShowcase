@@ -25,6 +25,11 @@ import com.cs481.commandcenter.dialog.RouterConfirmDialogFragment;
 import com.cs481.commandcenter.listrows.RouterListRow;
 import com.cs481.commandcenter.responses.ecm.routers.Router;
 
+/**
+ * Fragment that displays all available ECM routers
+ * @author Mike Perez
+ */
+
 public class ECMRoutersFragment extends ListFragment implements
 		OnRefreshListener {
 	// private boolean checking = true;

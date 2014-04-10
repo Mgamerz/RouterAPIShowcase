@@ -17,6 +17,12 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.octo.android.robospice.request.SpiceRequest;
 
+/**
+ * This is a generic get request that allows you to get any object from the router
+ * or ECM.
+ * @author Mike Perez
+ */
+
 public class GetRequest extends SpiceRequest<Response> {
 
 	private AuthInfo authInfo;

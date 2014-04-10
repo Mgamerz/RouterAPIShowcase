@@ -20,6 +20,13 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.provider.Settings.Secure;
 
+/**
+ * Cryptography class used for encrypting
+ * user profile PINs
+ * @author Mike Perez
+ *
+ */
+
 public class Cryptography {
 	public static SecretKey generateKey(String code, byte[] salt)
 			throws NoSuchAlgorithmException, InvalidKeySpecException {

@@ -12,6 +12,12 @@ import android.util.Log;
 
 import com.cs481.commandcenter.activities.CommandCenterActivity;
 
+/**
+ * Database adapter used in managing router
+ * profile information
+ * @author Mike Perez, Melissa Neibaur
+ */
+
 public class DatabaseAdapter {
 
 	private static final String DATABASE_NAME = "RouterDB";

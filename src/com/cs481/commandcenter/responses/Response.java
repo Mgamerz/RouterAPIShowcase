@@ -1,5 +1,10 @@
 package com.cs481.commandcenter.responses;
 
+/**
+ * Object that is always returned on any request.
+ * Data is casted to a class
+ * @author Mike Perez
+ */
 
 public class Response {
 	private Object data; // cast to what you need.

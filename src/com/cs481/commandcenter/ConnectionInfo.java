@@ -7,7 +7,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
  * access URL and the HTTP Client that is used for authenticating to the
  * service.
  * 
- * @author Mgamerz
+ * @author Mike Perez
  * 
  */
 public class ConnectionInfo {

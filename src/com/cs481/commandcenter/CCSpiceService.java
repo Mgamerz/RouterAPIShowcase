@@ -7,6 +7,11 @@ import com.octo.android.robospice.persistence.CacheManager;
 import com.octo.android.robospice.persistence.exception.CacheCreationException;
 import com.octo.android.robospice.persistence.springandroid.json.jackson2.Jackson2ObjectPersisterFactory;
 
+/**
+ * Used for caching spice activities
+ * @author Mike Perez
+ */
+
 public class CCSpiceService extends SpiceService {
 
   @Override

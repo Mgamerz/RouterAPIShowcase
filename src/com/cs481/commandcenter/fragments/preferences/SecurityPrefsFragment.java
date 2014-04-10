@@ -16,8 +16,7 @@ import com.cs481.commandcenter.dialog.DeleteProfilesPINDialog;
 
 /**
  * Preference Fragment for the ui preferences page.
- * @author Mgamerz
- *
+ * @author Mike Perez
  */
 public class SecurityPrefsFragment extends PreferenceFragment implements OnSharedPreferenceChangeListener {
     @Override

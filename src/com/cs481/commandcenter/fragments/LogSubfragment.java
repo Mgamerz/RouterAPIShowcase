@@ -39,6 +39,11 @@ import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.PendingRequestListener;
 import com.octo.android.robospice.request.listener.RequestListener;
 
+/**
+ * Fragment that lists log information from the router
+ * @author Mike Perez
+ */
+
 public class LogSubfragment extends ListFragment implements OnRefreshListener {
 
 	private static final String CACHEKEY_LOGS = "logs_get";

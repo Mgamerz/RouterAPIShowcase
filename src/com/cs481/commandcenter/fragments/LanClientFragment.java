@@ -39,6 +39,12 @@ import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
 
+/**
+ * Fragment that allows users to kick and ban clients
+ * on a locally connected router
+ * @author Sean Wright, Mike Perez, Melissa Neibaur
+ */
+
 public class LanClientFragment extends Fragment implements OnRefreshListener {
 
 	// private PullToRefreshLayout mPullToRefreshLayout;

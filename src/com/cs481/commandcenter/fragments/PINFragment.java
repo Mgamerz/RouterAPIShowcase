@@ -48,6 +48,12 @@ import com.cs481.commandcenter.Cryptography;
 import com.cs481.commandcenter.R;
 import com.cs481.commandcenter.activities.CommandCenterActivity;
 
+/**
+ * Fragment that contains PIN header and PIN pad fragments
+ * and handles inputs from these fragments
+ * @author Mike Perez
+ */
+
 public class PINFragment extends Fragment implements OnClickListener {
 	//private static final Bundle savedInstancedState = null;
 	String currentPin = "", verifyPin = ""; // pin that has been currently entered

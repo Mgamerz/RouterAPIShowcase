@@ -14,8 +14,7 @@ import com.cs481.commandcenter.R;
 /**
  * Preference Fragment for the ui preferences page.
  * THIS MUST RUN IN ITS OWN ACTIVITY AS IT DOES NOT WORK WITH THE SUPPORT FRAGMENT MANAGER...
- * @author Mgamerz
- *
+ * @author Mike Perez
  */
 public class AdvancedPrefsFragment extends PreferenceFragment implements OnSharedPreferenceChangeListener  {
     @Override

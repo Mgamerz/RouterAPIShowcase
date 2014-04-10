@@ -26,9 +26,10 @@ import com.cs481.commandcenter.activities.SpiceActivity;
 import com.cs481.commandcenter.listrows.DashboardListRow;
 
 /**
- * Dashboard fragment that shows the root of the navigation once logged in. It shows up full screen in phones and on the left side on tablets.
- * @author Mgamerz
- *
+ * Dashboard fragment that shows the root of the navigation once 
+ * logged in. It shows up full screen in phones and on the left 
+ * side on tablets.
+ * @author Mike Perez
  */
 public class DashboardFragment extends ListFragment {
 	private final int lWLAN = 0;
@@ -225,11 +226,11 @@ public class DashboardFragment extends ListFragment {
 		}
 			break;
 		case lWAN: {
-			String wwanTag = WifiClientFragment.class.getName();
+			String wwanTag = WifiAsWANFragment.class.getName();
 			Log.i(CommandCenterActivity.TAG, "WLAN WAS CLICKED");
 
 			// Check if fragment is visible on the screen.
-			WifiClientFragment wificlientVisibility = (WifiClientFragment) getActivity()
+			WifiAsWANFragment wificlientVisibility = (WifiAsWANFragment) getActivity()
 					.getSupportFragmentManager().findFragmentByTag(wwanTag);
 			Log.i(CommandCenterActivity.TAG, "Checking for WCF via the SFM: "
 					+ wificlientVisibility);
@@ -246,7 +247,7 @@ public class DashboardFragment extends ListFragment {
 			if (!fragmentPopped) {
 				Log.i(CommandCenterActivity.TAG,
 						"Not in backstack - creating new fragment.");
-				WifiClientFragment wlanFragment = WifiClientFragment
+				WifiAsWANFragment wlanFragment = WifiAsWANFragment
 						.newInstance(authInfo);
 				FragmentTransaction transaction = fm.beginTransaction();
 

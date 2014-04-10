@@ -7,10 +7,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 /**
  * This class is only here so you can copy paste the code into 'root response' objects.
  * You can't sublcass this as annotations in Java are not inherited apparently.
- * 
- * @author Mgamerz
- * 
+ * @author Mike Perez 
  */
+
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class RootElement {
 

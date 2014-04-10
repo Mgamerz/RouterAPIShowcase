@@ -40,6 +40,12 @@ import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
 
+/**
+ * Fragment that allows the user to edit information
+ * on a router's wireless access point
+ * @author Mike Perez
+ */
+
 public class WifiWAPFragment extends Fragment {
 	private static final String CACHEKEY_WWAPPUT = "config_wapedit_put";
 	private static final int COMMIT_CHANGES_FRAGMENT = 0;

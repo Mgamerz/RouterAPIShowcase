@@ -20,10 +20,9 @@ import com.octo.android.robospice.request.SpiceRequest;
 /**
  * This is a generic put request that allows you to post any object to the router
  * or ECM.
- * 
- * @author Mgamerz
- * 
+ * @author Mike Perez
  */
+
 public class PostRequest extends SpiceRequest<Response> {
 
 	private AuthInfo authInfo;
