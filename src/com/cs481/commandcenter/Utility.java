@@ -575,7 +575,7 @@ public class Utility {
 	/**
 	 * Converts an index (likely from a spinner) to a on-router cipher string
 	 * for WPA. Always goes in this order: TKIP/AES AES
-	 * 
+	 * @param encryptionIndex index of encryption - 0 is wpa1, 1 is wpa2, 2 is wpa1wpa2. All other values will return null.
 	 * @param cipherIndex
 	 *            Index to convert to on-router string
 	 * @return on-router string version of the index
@@ -594,7 +594,7 @@ public class Utility {
 			//wpa2
 			switch(cipherIndex){
 			case 0:
-				return CIPHER_TKIP;
+				return CIPHER_AES;
 			}
 		case 2:
 			//wpa1wpa2

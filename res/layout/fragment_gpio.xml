@@ -34,7 +34,7 @@
                 <Switch
                     android:id="@+id/powerled_state"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="wrap_content"            
                     android:thumb="@drawable/green_switch_inner_track_light" />
             </TableRow>
 

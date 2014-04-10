@@ -179,7 +179,7 @@ public class WifiAsWANFragment extends ListFragment implements OnRefreshListener
 		SpiceActivity sa = (SpiceActivity) getActivity();
 		//Make the dropdown list appear
 		sa.getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
-
+		sa.getActionBar().setDisplayHomeAsUpEnabled(true);
 		// set the callbacks.
 		sa.getActionBar().setListNavigationCallbacks(mSpinnerAdapter, this);
 		Log.i(CommandCenterActivity.TAG, "Hiding title bar");

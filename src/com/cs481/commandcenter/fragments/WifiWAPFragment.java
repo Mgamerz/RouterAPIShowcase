@@ -41,13 +41,13 @@ import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
 
 /**
- * Fragment that allows the user to edit information
- * on a router's wireless access point
+ * Fragment that allows the user to edit information on a router's wireless
+ * access point
+ * 
  * @author Mike Perez
  */
 
 public class WifiWAPFragment extends Fragment {
-	private static final String CACHEKEY_WWAPPUT = "config_wapedit_put";
 	private static final int COMMIT_CHANGES_FRAGMENT = 0;
 	private SpiceManager spiceManager;
 	private AuthInfo authInfo;
@@ -264,7 +264,7 @@ public class WifiWAPFragment extends Fragment {
 		SpiceActivity sa = (SpiceActivity) getActivity();
 		sa.setTitle(getResources().getString(R.string.wap_editor_title));
 		sa.getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
-		sa.getActionBar().setDisplayHomeAsUpEnabled(true);		
+		sa.getActionBar().setDisplayHomeAsUpEnabled(true);
 		spiceManager = sa.getSpiceManager();
 	}
 
@@ -300,7 +300,17 @@ public class WifiWAPFragment extends Fragment {
 		Spinner cipherSpinner = (Spinner) v.findViewById(R.id.wap_ciphertype_spinner);
 		if (cipherSpinner.getVisibility() == View.VISIBLE) {
 			int cipherIndex = cipherSpinner.getSelectedItemPosition();
-			modified_wap.setWpacipher(Utility.indexToCipherString(authIndex, cipherIndex));
+			if (authIndex == 4 || authIndex == 5) {
+				// WPA 1 is index 0
+				modified_wap.setWpacipher(Utility.indexToCipherString(0, cipherIndex));
+			} else if (authIndex == 6 || authIndex == 7) {
+				// WPA 2 is index 1
+				modified_wap.setWpacipher(Utility.indexToCipherString(1, cipherIndex));
+			} else if (authIndex == 8 || authIndex == 9) {
+				// WPA1/WPA2 is index 2
+				modified_wap.setWpacipher(Utility.indexToCipherString(2, cipherIndex));
+
+			}
 		}
 
 		// get hidden var
@@ -324,6 +334,23 @@ public class WifiWAPFragment extends Fragment {
 			// router knows if the password being pushed is the original or a
 			// new one.
 			modified_wap.setWpapsk(passwordField.getText().toString());
+		}
+
+		// get wep keys
+		// WEP code fields
+		TableLayout wepkeysLayout = (TableLayout) v.findViewById(R.id.wapconnect_wepkeyslayout);
+		if (wepkeysLayout.getVisibility() == View.VISIBLE) {
+			EditText wep0 = (EditText) v.findViewById(R.id.wap_wepkey0_value);
+			modified_wap.setWepkey0(wep0.getText().toString());
+			EditText wep1 = (EditText) v.findViewById(R.id.wap_wepkey1_value);
+			modified_wap.setWepkey1(wep1.getText().toString());
+
+			EditText wep2 = (EditText) v.findViewById(R.id.wap_wepkey2_value);
+			modified_wap.setWepkey2(wep2.getText().toString());
+
+			EditText wep3 = (EditText) v.findViewById(R.id.wap_wepkey3_value);
+			modified_wap.setWepkey3(wep3.getText().toString());
+
 		}
 		PutRequest commitRequest = new PutRequest(getActivity(), modified_wap, authInfo, "config/wlan/radio/0/bss/" + wapindex, Bss.class);
 		spiceManager.execute(commitRequest, commitRequest.createCacheKey(), DurationInMillis.ALWAYS_EXPIRED, new WAPPutRequestListener());
