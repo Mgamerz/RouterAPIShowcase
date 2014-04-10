@@ -392,6 +392,9 @@ public class WifiAsWANFragment extends ListFragment implements OnRefreshListener
 
 		@Override
 		public void onRequestFailure(SpiceException e) {
+			if (!isAdded()){
+				return;
+			}
 			Resources resources = getResources();
 			// update your UI
 			if (progressDialog != null) {
@@ -404,6 +407,9 @@ public class WifiAsWANFragment extends ListFragment implements OnRefreshListener
 
 		@Override
 		public void onRequestSuccess(Response response) {
+			if (!isAdded()){
+				return;
+			}
 			// update your UI
 			if (progressDialog != null) {
 				progressDialog.dismiss();

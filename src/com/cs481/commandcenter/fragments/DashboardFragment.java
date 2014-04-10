@@ -93,12 +93,8 @@ public class DashboardFragment extends ListFragment {
 		SpiceActivity sa = (SpiceActivity) getActivity();
 		Resources resources = getResources();
 
+		sa.getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
 		sa.setTitle(resources.getString(R.string.dashboard_title));
-		sa.getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD); // makes
-																					// the
-																					// dropdown
-																					// list
-																					// appear
 		sa.getActionBar().setDisplayShowTitleEnabled(true);
 		boolean isDualPane = (getActivity().findViewById(
 				R.id.rightside_fragment) != null);

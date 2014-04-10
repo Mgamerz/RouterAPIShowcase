@@ -145,7 +145,7 @@ public class CommandCenterActivity extends SpiceActivity implements OnBackStackC
 			Intent intent = getIntent();
 			getActionBar().setSubtitle(intent.getStringExtra("ab_subtitle"));
 			//following line may be not making this work properly where the wrong title and not showing up arrow occurs
-			//getActionBar().setTitle(getResources().getString(R.string.dashboard_title));
+			getActionBar().setTitle(getResources().getString(R.string.dashboard_title));
 		}
 	}
 }
