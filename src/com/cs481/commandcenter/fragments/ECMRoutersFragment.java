@@ -187,10 +187,10 @@ public class ECMRoutersFragment extends ListFragment implements
 		@Override
 		public boolean isEnabled(int position) {
 			RouterListRow row = getItem(position);
-			if (row.getRouter().getState().equals("offline")){
-				return false;
+			if (row.getRouter().getState().equals("online")){
+				return true;
 			}
-			return true;
+			return false;
 		}
 	}
 

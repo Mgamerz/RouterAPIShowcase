@@ -488,6 +488,9 @@ public class WifiAsWANFragment extends ListFragment implements OnRefreshListener
 	}
 
 	public void updateWapList(ArrayList<WAP> waps) {
+		if (waps == null) {
+			return;
+		}
 		rows = new ArrayList<WlanListRow>();
 		// if (adapter == null) {
 		adapter = new WlanAdapter(getActivity(), rows);

@@ -12,7 +12,7 @@
     <item
         android:id="@+id/menu_preenter_ip"
         android:title="Preenter Cloud IP"
-        android:visible="false">
+        android:visible="true">
     </item>
         <item
         android:id="@+id/action_bugreport"

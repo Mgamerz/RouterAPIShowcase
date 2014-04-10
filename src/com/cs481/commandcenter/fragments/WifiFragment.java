@@ -228,7 +228,7 @@ public class WifiFragment extends ListFragment implements OnRefreshListener {
 					if (prev != null) {
 						ft.remove(prev);
 					}
-					//ft.addToBackStack(null);
+					// ft.addToBackStack(null);
 
 					DialogFragment dialogFrag = DisableWifiDialogFragment.newInstance();
 					dialogFrag.setTargetFragment(WifiFragment.this, WIFI_STATE_CHANGE_FRAGMENT);
@@ -257,7 +257,8 @@ public class WifiFragment extends ListFragment implements OnRefreshListener {
 	}
 
 	/**
-	 * Read's the Wlan configuration from config/wlan. Gets a list of wireless access points this router can broadcast.
+	 * Read's the Wlan configuration from config/wlan. Gets a list of wireless
+	 * access points this router can broadcast.
 	 */
 	private void readWlanConfig() {
 		// perform the request.
@@ -268,8 +269,9 @@ public class WifiFragment extends ListFragment implements OnRefreshListener {
 
 	/**
 	 * Listener for the wifi/wlan enabled/disabled put request. It return
+	 * 
 	 * @author Mgamerz
-	 *
+	 * 
 	 */
 	public class WLANEnabledPutRequestListener implements RequestListener<Response> {
 
@@ -282,19 +284,25 @@ public class WifiFragment extends ListFragment implements OnRefreshListener {
 		@Override
 		public void onRequestSuccess(Response enabledPutResult) {
 			Log.i(CommandCenterActivity.TAG, "Successfully updated the wifi to on/off.");
-			// TODO : Add checking to see if there was any errors even though it responded properly...
+			// TODO : Add checking to see if there was any errors even though it
+			// responded properly...
 		}
 	}
 
 	/**
-	 * Listener for get requests getting the wireless configuration. It receives a ConfigWlan object in the response object.
+	 * Listener for get requests getting the wireless configuration. It receives
+	 * a ConfigWlan object in the response object.
+	 * 
 	 * @author Mgamerz
-	 *
+	 * 
 	 */
 	private class WLANConfigGetRequestListener implements RequestListener<Response> {
 
 		@Override
 		public void onRequestFailure(SpiceException e) {
+			if (!isAdded()) {
+				return;
+			}
 			Log.i(CommandCenterActivity.TAG, "Failed to read WLAN!");
 			Toast.makeText(getActivity(), "Failed to get the WLAN Config.", Toast.LENGTH_SHORT).show();
 			mPullToRefreshLayout.setRefreshComplete();
@@ -302,6 +310,9 @@ public class WifiFragment extends ListFragment implements OnRefreshListener {
 
 		@Override
 		public void onRequestSuccess(Response wlanConfig) {
+			if (!isAdded()) {
+				return;
+			}
 			Log.i(CommandCenterActivity.TAG, "UPDATING SWITCH!");
 			ConfigWlan cwlan = (ConfigWlan) wlanConfig.getData();
 			Switch wifiToggle = (Switch) menu.findItem(R.id.wifi_toggle).getActionView();
@@ -340,11 +351,13 @@ public class WifiFragment extends ListFragment implements OnRefreshListener {
 	}
 
 	/**
-	 * Listener for get requests getting the wireless access point configuration. 
-	 * It receives a ConfigWlan object in the response object.
-	 * This is the primary data request for this fragment, populating most of the interface on success.
+	 * Listener for get requests getting the wireless access point
+	 * configuration. It receives a ConfigWlan object in the response object.
+	 * This is the primary data request for this fragment, populating most of
+	 * the interface on success.
+	 * 
 	 * @author Mgamerz
-	 *
+	 * 
 	 */
 	private class WWAPSGetRequestListener implements RequestListener<Response> {
 
@@ -376,10 +389,13 @@ public class WifiFragment extends ListFragment implements OnRefreshListener {
 	}
 
 	/**
-	 * Updates the interface with a list of new wireless access points this interface can manage.
-	 * Once this method has been called, when the screen rotates, data will no longer refresh on rotate, as 
-	 * data has been laoded.
-	 * @param wwaps List of bss objects (wap) that will be tied to the listview through an adapter.
+	 * Updates the interface with a list of new wireless access points this
+	 * interface can manage. Once this method has been called, when the screen
+	 * rotates, data will no longer refresh on rotate, as data has been laoded.
+	 * 
+	 * @param wwaps
+	 *            List of bss objects (wap) that will be tied to the listview
+	 *            through an adapter.
 	 */
 	private void updateWWAPList(ArrayList<Bss> wwaps) {
 		if (getActivity() == null) {
@@ -426,9 +442,11 @@ public class WifiFragment extends ListFragment implements OnRefreshListener {
 	}
 
 	/**
-	 * Custom adapter for tying the returned Bss objects to the list view. Set's up the interface for the list view.
+	 * Custom adapter for tying the returned Bss objects to the list view. Set's
+	 * up the interface for the list view.
+	 * 
 	 * @author Mgamerz
-	 *
+	 * 
 	 */
 	public class WWAPAdapter extends ArrayAdapter<Bss> {
 		private final Context context;
@@ -459,7 +477,7 @@ public class WifiFragment extends ListFragment implements OnRefreshListener {
 
 			TextView messageView = (TextView) rowView.findViewById(R.id.listrow_wwap_name);
 			messageView.setText(wwap.getSsid());
-			
+
 			TextView descView = (TextView) rowView.findViewById(R.id.listrow_wwap_desc);
 			descView.setText(wifiDescriptionBuilder(wwap));
 
@@ -468,27 +486,30 @@ public class WifiFragment extends ListFragment implements OnRefreshListener {
 			return rowView;
 		}
 	}
-	
+
 	/**
-	 * Builds the description string for an AP based on the bss information given (which is the known information about the AP from the router)
-	 * @param bss Information about the AP
+	 * Builds the description string for an AP based on the bss information
+	 * given (which is the known information about the AP from the router)
+	 * 
+	 * @param bss
+	 *            Information about the AP
 	 * @return String to set as the subtitle of the listrow
 	 */
-	private String wifiDescriptionBuilder(Bss bss){
+	private String wifiDescriptionBuilder(Bss bss) {
 		StringBuilder sb = new StringBuilder();
-		
+
 		sb.append(Utility.authToHumanString(getActivity(), bss.getAuthmode()));
-		if (bss.getHidden()){
+		if (bss.getHidden()) {
 			sb.append(" - ");
 			sb.append(getResources().getString(R.string.ap_hidden));
 		}
-		if (bss.getIsolate()){
+		if (bss.getIsolate()) {
 			sb.append(" - ");
 			sb.append(getResources().getString(R.string.ap_isolated));
 		}
 		return sb.toString();
 	}
-	
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
