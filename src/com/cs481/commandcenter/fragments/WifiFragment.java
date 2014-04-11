@@ -172,9 +172,6 @@ public class WifiFragment extends ListFragment implements OnRefreshListener {
 		// /You will setup the action bar with pull to refresh layout
 		Log.i(CommandCenterActivity.TAG, "WifiFragment: onStart()");
 		SpiceActivity sa = (SpiceActivity) getActivity();
-		sa.setTitle(getResources().getString(R.string.wifi_title));
-		sa.getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
-		sa.getActionBar().setDisplayHomeAsUpEnabled(true);
 
 		spiceManager = sa.getSpiceManager();
 		// getListView().set
@@ -186,6 +183,16 @@ public class WifiFragment extends ListFragment implements OnRefreshListener {
 			Log.i(CommandCenterActivity.TAG, "Reloading existing WWAPS from onStart() " + wwaps);
 			updateWWAPList(wwaps);
 		}
+	}
+	
+	@Override
+	public void onResume() {
+	    super.onResume();
+	    // Set title
+		SpiceActivity sa = (SpiceActivity) getActivity();
+		sa.getActionBar().setTitle(R.string.wifi_title);
+		sa.getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+		sa.getActionBar().setDisplayHomeAsUpEnabled(true);
 	}
 
 	/**
