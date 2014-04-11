@@ -65,7 +65,7 @@ public class WifiFragment extends ListFragment implements OnRefreshListener {
 	private static final int WWAP_LOADING = 0;
 	private static final int WWAP_LOADED = 1;
 	private static final int WWAP_FAILED = 2;
-	private int pendingDisableIndex = -1; //-1 means nothing is pending.
+	private int pendingDisableIndex = -1; // -1 means nothing is pending.
 	private PullToRefreshLayout mPullToRefreshLayout;
 	private SpiceManager spiceManager;
 	private AuthInfo authInfo;
@@ -295,6 +295,28 @@ public class WifiFragment extends ListFragment implements OnRefreshListener {
 	}
 
 	/**
+	 * Listener for the wifi/wlan enabled/disabled put request. It return
+	 * 
+	 * @author Mgamerz
+	 * 
+	 */
+	public class WAPTogglePutListener implements RequestListener<Response> {
+
+		@Override
+		public void onRequestFailure(SpiceException e) {
+			Log.i(CommandCenterActivity.TAG, "Failed to put the new status of the wifi AP!");
+			Toast.makeText(getActivity(), "Failed to change the WAP enabled status.", Toast.LENGTH_SHORT).show();
+		}
+
+		@Override
+		public void onRequestSuccess(Response enabledPutResult) {
+			Log.i(CommandCenterActivity.TAG, "Successfully updated the WAP enabled status.");
+			// TODO : Add checking to see if there was any errors even though it
+			// responded properly...
+		}
+	}
+
+	/**
 	 * Listener for get requests getting the wireless configuration. It receives
 	 * a ConfigWlan object in the response object.
 	 * 
@@ -443,15 +465,66 @@ public class WifiFragment extends ListFragment implements OnRefreshListener {
 			}
 
 			break;
+		case WAP_STATE_CHANGE_FRAGMENT:
+			ListView lv = getListView();
+			final Switch wapToggle = (Switch) (lv.getChildAt(pendingDisableIndex).findViewById(R.id.listrow_wwap_switch));
+			if (resultCode == Activity.RESULT_OK) {
+				putWAPState(pendingDisableIndex, false);
+			} else if (resultCode == Activity.RESULT_CANCELED) {
+				Log.i(CommandCenterActivity.TAG, "Reverting wifi change on the switch");
+
+				// disable the listener so when we revert the switch it doesn't
+				// fire another on change event
+				wapToggle.setOnCheckedChangeListener(null);
+				// revert change
+				wapToggle.setChecked(true);
+				// set the listener again
+				setWAPToggleListener(wapToggle, pendingDisableIndex);
+				
+				//Update the bss list
+				Bss bss = (Bss) (getListAdapter().getItem(pendingDisableIndex));
+				bss.setEnabled(false);
+				pendingDisableIndex = -1;
+			}
 		}
 	}
-	
+
+	private void putWAPState(int index, boolean state) {
+		// TODO Auto-generated method stub
+		PutRequest request = new PutRequest(getActivity(), Boolean.valueOf(state), authInfo, String.format("config/wlan/radio/0/bss/%d/enabled", index), Boolean.class);
+		String lastRequestCacheKey = request.createCacheKey();
+		spiceManager.execute(request, lastRequestCacheKey, DurationInMillis.ALWAYS_EXPIRED, new WAPTogglePutListener());
+
+	}
+
+	private void setWAPToggleListener(Switch wapToggle, final int position) {
+		// TODO Auto-generated method stub
+		wapToggle.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+
+			@Override
+			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+				// TODO Auto-generated method stub
+				if (!isChecked) {
+					toggleNetwork(position, false);
+				} else {
+					// put to network immediately
+					putWAPState(position, true);
+				}
+			}
+		});
+	}
+
 	/**
 	 * Toggles a network on or off.
-	 * @param index Index to toggle
-	 * @param b 
+	 * 
+	 * @param index
+	 *            Index to toggle
+	 * @param b
 	 */
-	public void toggleNetwork(int index, boolean newState){
+	public void toggleNetwork(int index, boolean newState) {
+		pendingDisableIndex = index;
+		Bss clickedAP = (Bss) getListAdapter().getItem(index);
+
 		Log.i(CommandCenterActivity.TAG, "Commit changes in WAP Editor is being handled.");
 		FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
 		Fragment prev = getActivity().getSupportFragmentManager().findFragmentByTag("dialog");
@@ -460,9 +533,9 @@ public class WifiFragment extends ListFragment implements OnRefreshListener {
 		}
 		ft.addToBackStack(null);
 
-		//DialogFragment dialogFrag = ToggleWAPDialogFragment.newInstance();
-		//dialogFrag.setTargetFragment(this, WAP_STATE_CHANGE_FRAGMENT);
-		//dialogFrag.show(ft, "dialog");
+		DialogFragment dialogFrag = ToggleWAPDialogFragment.newInstance(clickedAP.getSsid());
+		dialogFrag.setTargetFragment(this, WAP_STATE_CHANGE_FRAGMENT);
+		dialogFrag.show(ft, "dialog");
 	}
 
 	/**
@@ -504,17 +577,15 @@ public class WifiFragment extends ListFragment implements OnRefreshListener {
 
 			TextView descView = (TextView) rowView.findViewById(R.id.listrow_wwap_desc);
 			descView.setText(wifiDescriptionBuilder(wwap));
-
 			final Switch apEnabled = (Switch) rowView.findViewById(R.id.listrow_wwap_switch);
-			apEnabled.setChecked(wwap.getEnabled());
-			apEnabled.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-				
-				@Override
-				public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-					// TODO Auto-generated method stub
-					toggleNetwork(position, apEnabled.isChecked());
-				}
-			});
+
+			if (pendingDisableIndex == position) {
+				//this switch is pending a state change from the dialog box
+				apEnabled.setChecked(!wwap.getEnabled());
+			} else {
+				apEnabled.setChecked(wwap.getEnabled());
+			}
+			setWAPToggleListener(apEnabled, position);
 			return rowView;
 		}
 	}

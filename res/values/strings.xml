@@ -227,7 +227,7 @@
     <string name="wepkey_2">WEP Key 3</string>
     <string name="wepkey_3">WEP Key 4</string>
     <string name="toggle_wap_title">Disabling access point</string>
-    <string name="toggle_wap_confirm">Turn off the %1$s access point?</string>
+    <string name="toggle_wap_confirm">Turn off the %s access point?</string>
 
     <string-array name="wifiap_encryptiontype_values">
         <item>None</item>

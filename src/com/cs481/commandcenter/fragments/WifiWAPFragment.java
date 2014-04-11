@@ -289,6 +289,9 @@ public class WifiWAPFragment extends Fragment {
 
 		// get network auth type
 		View v = getView();
+		EditText ssidField = (EditText) v.findViewById(R.id.wap_ssid_value);
+		modified_wap.setSsid(ssidField.getText().toString());
+		
 		Spinner authSpinner = (Spinner) v.findViewById(R.id.wap_encryptiontype_spinner);
 		int authIndex = authSpinner.getSelectedItemPosition();
 

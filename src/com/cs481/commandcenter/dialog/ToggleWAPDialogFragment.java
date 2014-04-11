@@ -19,13 +19,14 @@ import com.cs481.commandcenter.activities.CommandCenterActivity;
  */
 
 public class ToggleWAPDialogFragment extends DialogFragment {
-
+	private String apName;
 	/**
 	 * This constructor must be empty or the Fragment won't be able to start.
 	 */
 	public ToggleWAPDialogFragment() {
 		Log.i(CommandCenterActivity.TAG, "Created reboot router fragment.");
 		// context = getActivity();
+		
 	}
 
 	/**
@@ -34,6 +35,7 @@ public class ToggleWAPDialogFragment extends DialogFragment {
 	 */
 	public static ToggleWAPDialogFragment newInstance(String apName) {
 		ToggleWAPDialogFragment dwdf = new ToggleWAPDialogFragment();
+		dwdf.apName = apName;
 		return dwdf;
 	}
 
@@ -41,7 +43,7 @@ public class ToggleWAPDialogFragment extends DialogFragment {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		if (savedInstanceState != null) {
-
+			apName = savedInstanceState.getString("apName");
 		}
 	}
 
@@ -51,6 +53,7 @@ public class ToggleWAPDialogFragment extends DialogFragment {
 
 		// Save data on rotate. This bundle will be passed to onCreate() by
 		// Android.
+		outState.putString("apName", apName);
 	}
 
 	@Override
@@ -64,7 +67,8 @@ public class ToggleWAPDialogFragment extends DialogFragment {
 		dialogBuilder.setDividerColor(typedValue.resourceId);
 		dialogBuilder.setTitleColor(typedValue.resourceId);
 		dialogBuilder.setTitle(getActivity().getResources().getString(R.string.toggle_wap_title));
-		dialogBuilder.setMessage(getResources().getString(R.string.toggle_wap_confirm));
+		String message = String.format(getActivity().getResources().getString(R.string.toggle_wap_confirm), apName);
+		dialogBuilder.setMessage(message);
 
 		// setup buttons
 		dialogBuilder.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {

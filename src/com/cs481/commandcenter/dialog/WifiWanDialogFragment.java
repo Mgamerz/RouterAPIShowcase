@@ -46,12 +46,12 @@ public class WifiWanDialogFragment extends DialogFragment {
 	 * This constructor must be empty or the Fragment won't be able to start.
 	 */
 	public WifiWanDialogFragment() {
-		Log.i(CommandCenterActivity.TAG, "Created fragment.");
+		Log.i(CommandCenterActivity.TAG, "Created wifi as wan fragment.");
 		// context = getActivity();
 	}
 
 	/**
-	 * This constructor must be empty or the Fragment won't be able to start.
+	 * This creates a new instance of WifiWanDialogFragment with the given parameters.
 	 */
 	public static WifiWanDialogFragment newInstance(WifiAsWANFragment wawf) {
 		WifiWanDialogFragment wwdf = new WifiWanDialogFragment();
