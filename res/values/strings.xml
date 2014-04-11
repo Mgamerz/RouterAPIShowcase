@@ -70,7 +70,7 @@
     <string name="wifimenu_sort_signal">Sort by signal</string>
     <string name="wifi_sort_alphabetically">Sort by name</string>
     <string name="wlan_reading">Reading WLAN Configuration</string>
-    <string name="wlan_get_config_failure">Failed to read WLANconfiguration</string>
+    <string name="wlan_get_config_failure">Failed to read WLAN configuration</string>
     <string name="wlan_hidden_ssid">&lt;Hidden&gt;</string>
     <string name="wifi">WiFi</string>
     <string name="warning_clientchange">Router Client Mode Change</string>
@@ -177,7 +177,7 @@
 
     <!-- Preferred Connection Dialog -->
     <string name="text_preferredconnection">Set this connection type as the default when launching the app?</string>
-    <string name="checkbox_donotaskagain">Do not ask again</string>
+    <string name="dont_ask_again">Don\'t ask again</string>
 
     <!-- Router Info -->
     <string name="routerinfo">Router Information</string>
@@ -200,6 +200,7 @@
     <string name="loading_logs">Retreiving Router Log</string>
     <string name="contextmenu_copy">Copy Log Message</string>
     <string name="no_logs">No router logs to display or none could be retreived.</string>
+    <string name="info_load_fail">Failed to load</string>
     <string name="reboot_router">Reboot router</string>
     <string name="confirm_router_reboot">Rebooting the router will automatically log you out once the request succeeds. Continue?</string>
     <string name="reboot_fail">Failed to reboot the router</string>

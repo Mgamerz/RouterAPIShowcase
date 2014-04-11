@@ -53,7 +53,6 @@ public class RouterInfoFragment extends Fragment {
 
 	private AuthInfo authInfo;
 	private SpiceManager spiceManager;
-	private ProgressDialog progressDialog;
 	private boolean shouldLoadData = true;
 
 	@Override
@@ -286,13 +285,6 @@ public class RouterInfoFragment extends Fragment {
 		// perform the request.
 		GetRequest request = new GetRequest(getActivity(), authInfo, "status/product_info", Product_info.class, CACHEKEY_PRODUCT);
 		String lastRequestCacheKey = request.createCacheKey();
-
-		if (dialog) {
-			progressDialog = new ProgressDialog(getActivity(), R.style.DialogTheme);
-			progressDialog.setMessage(getResources().getString(R.string.info_reading));
-			progressDialog.show();
-			progressDialog.setCanceledOnTouchOutside(false);
-		}
 		spiceManager.execute(request, lastRequestCacheKey, DurationInMillis.ALWAYS_EXPIRED, new InfoGetRequestListener());
 	}
 
@@ -352,12 +344,15 @@ public class RouterInfoFragment extends Fragment {
 			if (getActivity() == null || getView() == null) {
 				return;
 			}
-			// update your UI
-			if (progressDialog != null)
-				progressDialog.dismiss();
 			Log.i(CommandCenterActivity.TAG, "Failed to read Product Info!");
 
 			Toast.makeText(getActivity(), getResources().getString(R.string.product_info_fail), Toast.LENGTH_SHORT).show();
+			
+			TextView infoValue = (TextView) getView().findViewById(R.id.product_value);
+			infoValue.setText(R.string.info_load_fail);
+			
+			TextView macValue = (TextView) getView().findViewById(R.id.mac_address_value);
+			macValue.setText(R.string.info_load_fail);
 		}
 
 		@Override
@@ -366,10 +361,6 @@ public class RouterInfoFragment extends Fragment {
 				return;
 			}
 			Product_info proin = (Product_info) response.getData();
-
-			// update your UI
-			if (progressDialog != null)
-				progressDialog.dismiss(); // update your UI
 			if (response.getResponseInfo() != null) {
 				if (response.getResponseInfo().getSuccess()) {
 					View v = getView();
@@ -400,12 +391,12 @@ public class RouterInfoFragment extends Fragment {
 			if (getActivity() == null || getView() == null) {
 				return;
 			}
-			// update your UI
-			if (progressDialog != null)
-				progressDialog.dismiss();
 			Log.i(CommandCenterActivity.TAG, "Failed to read Firmware Info!");
 
 			Toast.makeText(getActivity(), getResources().getString(R.string.fw_info_fail), Toast.LENGTH_SHORT).show();
+			
+			TextView infoValue = (TextView) getView().findViewById(R.id.firmware_value);
+			infoValue.setText(R.string.info_load_fail);
 		}
 
 		@Override
@@ -415,10 +406,6 @@ public class RouterInfoFragment extends Fragment {
 						// awaiting GC
 			}
 			Fw_info fw = (Fw_info) response.getData();
-
-			// update your UI
-			if (progressDialog != null)
-				progressDialog.dismiss(); // update your UI
 			if (response.getResponseInfo() != null) {
 				if (response.getResponseInfo().getSuccess()) {
 					View v = getView();
@@ -448,11 +435,12 @@ public class RouterInfoFragment extends Fragment {
 			if (getActivity() == null || getView() == null) {
 				return;
 			}
-			if (progressDialog != null)
-				progressDialog.dismiss();
 			Log.i(CommandCenterActivity.TAG, "Failed to read Status Info!");
 
 			Toast.makeText(getActivity(), getResources().getString(R.string.status_fail), Toast.LENGTH_SHORT).show();
+			
+			TextView infoValue = (TextView) getView().findViewById(R.id.uptime_value);
+			infoValue.setText(R.string.info_load_fail);
 		}
 
 		@Override
@@ -462,9 +450,6 @@ public class RouterInfoFragment extends Fragment {
 			}
 			com.cs481.commandcenter.responses.status.product_info.System sys = (com.cs481.commandcenter.responses.status.product_info.System) response.getData();
 
-			// update your UI
-			if (progressDialog != null)
-				progressDialog.dismiss(); // update your UI
 			if (response.getResponseInfo() != null) {
 				if (response.getResponseInfo().getSuccess()) {
 					View v = getView();
@@ -493,15 +478,15 @@ public class RouterInfoFragment extends Fragment {
 			if (getActivity() == null || getView() == null) {
 				return;
 			}
-			// update your UI
-			if (progressDialog != null)
-				progressDialog.dismiss();
 			Log.i(CommandCenterActivity.TAG, "Failed to read Config Info!");
 
 			if (getActivity() != null) { // prevent crash in the event the user
 											// navigates away.
 				Toast.makeText(getActivity(), getResources().getString(R.string.config_fail), Toast.LENGTH_SHORT).show();
 			}
+			
+			TextView infoValue = (TextView) getView().findViewById(R.id.hostname_value);
+			infoValue.setText(R.string.info_load_fail);
 		}
 
 		@Override
@@ -511,9 +496,6 @@ public class RouterInfoFragment extends Fragment {
 			}
 			com.cs481.commandcenter.responses.status.wan.devices.ethernetwan.Config con = (com.cs481.commandcenter.responses.status.wan.devices.ethernetwan.Config) response.getData();
 
-			// update your UI
-			if (progressDialog != null)
-				progressDialog.dismiss(); // update your UI
 			if (response.getResponseInfo() != null) {
 				if (response.getResponseInfo().getSuccess()) {
 					View v = getView();
@@ -542,12 +524,12 @@ public class RouterInfoFragment extends Fragment {
 			if (getActivity() == null || getView() == null) {
 				return;
 			}
-			// update your UI
-			if (progressDialog != null)
-				progressDialog.dismiss();
 			Log.i(CommandCenterActivity.TAG, "Failed to read Client Info!");
 
 			Toast.makeText(getActivity(), getResources().getString(R.string.config_fail), Toast.LENGTH_SHORT).show();
+			
+			TextView infoValue = (TextView) getView().findViewById(R.id.numclients_value);
+			infoValue.setText(R.string.info_load_fail);
 		}
 
 		@Override
@@ -559,10 +541,6 @@ public class RouterInfoFragment extends Fragment {
 			// Devices dat = (Devices) response.getData();
 			// Log.i(CommandCenterActivity.TAG,
 			// "Successfully parsed a Devices object");
-
-			// update your UI
-			if (progressDialog != null)
-				progressDialog.dismiss(); // update your UI
 			if (response.getResponseInfo() != null) {
 				if (response.getResponseInfo().getSuccess()) {
 					View v = getView();

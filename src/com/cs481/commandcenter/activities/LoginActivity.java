@@ -408,7 +408,8 @@ public class LoginActivity extends SpiceActivity {
 					String decryptedPassword = Cryptography.decryptMsg(Base64.decode(unlockProfile.getAuthInfo().getPassword(), Base64.DEFAULT), secret);
 					profileAuth.setPassword(decryptedPassword);
 					profileAuth.setUsername(decryptedUsername);
-					// Log.
+					
+					authInfo = profileAuth; //login auth.
 
 					// Login via ECM.
 					if (profileAuth.isEcm()) {
@@ -460,7 +461,7 @@ public class LoginActivity extends SpiceActivity {
 				progressDialog.dismiss();
 			}
 			Log.i(CommandCenterActivity.TAG, "Failed to log in!");
-			Toast.makeText(LoginActivity.this, getResources().getString(R.string.direct_login_fail), Toast.LENGTH_SHORT).show();
+			Toast.makeText(LoginActivity.this, R.string.direct_login_fail, Toast.LENGTH_SHORT).show();
 		}
 
 		@Override
@@ -475,6 +476,9 @@ public class LoginActivity extends SpiceActivity {
 					// login successful
 					// Prepare new intent.
 					Intent intent = new Intent(LoginActivity.this, CommandCenterActivity.class);
+					if (authInfo == null) {
+						Log.e(CommandCenterActivity.TAG, "ERROR: request success authInfo is being passed when its null");
+					}
 					intent.putExtra("authInfo", authInfo);
 					intent.putExtra("ab_subtitle", proin.getProduct_name()); // changes
 																				// subtitle.
@@ -486,7 +490,7 @@ public class LoginActivity extends SpiceActivity {
 					Toast.makeText(LoginActivity.this, response.getResponseInfo().getReason(), Toast.LENGTH_LONG).show();
 				}
 			} else {
-				Toast.makeText(LoginActivity.this, getResources().getString(R.string.gpio_get_null_response), Toast.LENGTH_LONG).show();
+				Toast.makeText(LoginActivity.this, R.string.gpio_get_null_response, Toast.LENGTH_LONG).show();
 			}
 		}
 	}

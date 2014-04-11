@@ -55,17 +55,12 @@ public class PreferredConnectionDialog extends DialogFragment {
         alertDialogBuilder.setTitle(connectionType + " Connection");
         final Resources resources = getResources();
         
-        // THIS MAY NEED TO GET CHANGED (following two lines):
-        alertDialogBuilder.setTitleColor(resources.getString(R.color.CradlepointRed));
-        alertDialogBuilder.setDividerColor(resources.getString(R.color.CradlepointRed));
         
-        LayoutInflater inflator = getActivity().getLayoutInflater();
-        final View v = inflator.inflate(R.layout.dialog_preferredconnection, null);
+        alertDialogBuilder.setMessage(resources.getString(R.string.text_preferredconnection));
         
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
 		final SharedPreferences.Editor editor = prefs.edit();
-        
-        alertDialogBuilder.setCustomView(v);
+
         alertDialogBuilder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
@@ -75,14 +70,19 @@ public class PreferredConnectionDialog extends DialogFragment {
 			}
 		});
         
+        alertDialogBuilder.setNeutralButton(R.string.dont_ask_again, new DialogInterface.OnClickListener() {
+			
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				editor.putBoolean("prefs_connection_dontAskAgain", true);
+				editor.commit();
+				dismiss();
+			}
+		});
+        
         alertDialogBuilder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-            	CheckBox dontAskAgain = (CheckBox) v.findViewById(R.id.checkbox_donotaskagain);
-            	if(dontAskAgain.isChecked()){
-            		editor.putBoolean("prefs_connection_dontAskAgain", true);
-            		editor.commit();
-            	}
                 dialog.dismiss();
             }
         });

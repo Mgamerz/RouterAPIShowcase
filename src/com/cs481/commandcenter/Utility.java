@@ -39,6 +39,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * The utility class holds methods that are accessed by many classes.
+ * 
  * @author Mike Perez
  */
 public class Utility {
@@ -115,6 +116,7 @@ public class Utility {
 
 		ConnectionInfo ci = new ConnectionInfo();
 		DefaultHttpClient client = new DefaultHttpClient();
+		Log.i(CommandCenterActivity.TAG, "authinfo: "+authInfo.getUsername());
 		Credentials defaultcreds = new UsernamePasswordCredentials(authInfo.getUsername(), authInfo.getPassword());
 
 		// set auth type
@@ -474,12 +476,19 @@ public class Utility {
 	 *            Context to form the future intent with.
 	 */
 	public static void restartApp(Context context) {
-		Intent mStartActivity = new Intent(context, LoginActivity.class);
-		int mPendingIntentId = 123456;
-		PendingIntent mPendingIntent = PendingIntent.getActivity(context, mPendingIntentId, mStartActivity, PendingIntent.FLAG_CANCEL_CURRENT);
-		AlarmManager mgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-		mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 100, mPendingIntent);
-		System.exit(0);
+		/*
+		 * Intent mStartActivity = new Intent(context, LoginActivity.class); int
+		 * mPendingIntentId = 123456; PendingIntent mPendingIntent =
+		 * PendingIntent.getActivity(context, mPendingIntentId, mStartActivity,
+		 * PendingIntent.FLAG_CANCEL_CURRENT); PendingIntent. AlarmManager mgr =
+		 * (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+		 * mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 200,
+		 * mPendingIntent); //System.exit(0);
+		 * android.os.Process.killProcess(android.os.Process.myPid());
+		 */
+		Intent i = context.getPackageManager().getLaunchIntentForPackage(context.getPackageName());
+		i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		context.startActivity(i);
 	}
 
 	/**
@@ -575,30 +584,33 @@ public class Utility {
 	/**
 	 * Converts an index (likely from a spinner) to a on-router cipher string
 	 * for WPA. Always goes in this order: TKIP/AES AES
-	 * @param encryptionIndex index of encryption - 0 is wpa1, 1 is wpa2, 2 is wpa1wpa2. All other values will return null.
+	 * 
+	 * @param encryptionIndex
+	 *            index of encryption - 0 is wpa1, 1 is wpa2, 2 is wpa1wpa2. All
+	 *            other values will return null.
 	 * @param cipherIndex
 	 *            Index to convert to on-router string
 	 * @return on-router string version of the index
 	 */
 	public static String indexToCipherString(int encryptionIndex, int cipherIndex) {
-		switch (encryptionIndex){
+		switch (encryptionIndex) {
 		case 0:
-			//wpa1
-			switch(cipherIndex){
+			// wpa1
+			switch (cipherIndex) {
 			case 0:
 				return CIPHER_TKIP;
 			case 1:
 				return CIPHER_AES;
 			}
 		case 1:
-			//wpa2
-			switch(cipherIndex){
+			// wpa2
+			switch (cipherIndex) {
 			case 0:
 				return CIPHER_AES;
 			}
 		case 2:
-			//wpa1wpa2
-			switch(cipherIndex){
+			// wpa1wpa2
+			switch (cipherIndex) {
 			case 0:
 				return CIPHER_TKIPAES;
 			case 1:

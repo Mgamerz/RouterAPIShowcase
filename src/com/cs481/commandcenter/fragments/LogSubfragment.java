@@ -113,7 +113,9 @@ public class LogSubfragment extends ListFragment implements OnRefreshListener {
 														// must be parcelable
 		outState.putParcelable("authInfo", authInfo);
 		outState.putInt("logState", logState);
-		outState.putParcelable("listState", getListView().onSaveInstanceState());
+		if (isAdded()){
+			outState.putParcelable("listState", getListView().onSaveInstanceState());
+		}
 	}
 
 	@Override

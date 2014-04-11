@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
 import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
 import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
+import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -87,7 +88,7 @@ public class WifiFragment extends ListFragment implements OnRefreshListener {
 			authInfo = savedInstanceState.getParcelable("authInfo");
 			wifiStateEnabled = savedInstanceState.getBoolean("wifiStateEnabled");
 			wifiState = savedInstanceState.getBoolean("wifiState");
-			wwapListState = savedInstanceState.getInt("wlanListState");
+			wwapListState = savedInstanceState.getInt("wwapListState");
 			wwaps = savedInstanceState.getParcelableArrayList("wwaps");
 			shouldLoadData = savedInstanceState.getBoolean("shouldLoadData");
 			pendingDisableIndex = savedInstanceState.getInt("pendingDisableIndex");
@@ -127,7 +128,7 @@ public class WifiFragment extends ListFragment implements OnRefreshListener {
 		outState.putBoolean("shouldLoadData", shouldLoadData);
 		outState.putBoolean("wifiState", wifiState);
 		outState.putBoolean("wifiStateEnabled", wifiStateEnabled);
-		outState.putInt("wlanListState", wwapListState);
+		outState.putInt("wwapListState", wwapListState);
 		outState.putInt("pendingDisableIndex", pendingDisableIndex);
 
 		if (wwaps == null) {
@@ -169,8 +170,10 @@ public class WifiFragment extends ListFragment implements OnRefreshListener {
 	public void onStart() {
 		super.onStart();
 		// /You will setup the action bar with pull to refresh layout
+		Log.i(CommandCenterActivity.TAG, "WifiFragment: onStart()");
 		SpiceActivity sa = (SpiceActivity) getActivity();
 		sa.setTitle(getResources().getString(R.string.wifi_title));
+		sa.getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
 		sa.getActionBar().setDisplayHomeAsUpEnabled(true);
 
 		spiceManager = sa.getSpiceManager();
@@ -333,6 +336,14 @@ public class WifiFragment extends ListFragment implements OnRefreshListener {
 			Log.i(CommandCenterActivity.TAG, "Failed to read WLAN!");
 			Toast.makeText(getActivity(), "Failed to get the WLAN Config.", Toast.LENGTH_SHORT).show();
 			mPullToRefreshLayout.setRefreshComplete();
+			
+			ProgressBar bar = (ProgressBar) getView().findViewById(R.id.wwap_loadingprogressbar);
+			bar.setVisibility(ProgressBar.GONE);
+
+			TextView message = (TextView) getView().findViewById(R.id.wireless_loadingtext);
+			message.setText(getActivity().getResources().getString(R.string.wifi_load_failed));
+			
+			wwapListState = WWAP_FAILED;
 		}
 
 		@Override
@@ -350,6 +361,8 @@ public class WifiFragment extends ListFragment implements OnRefreshListener {
 			wifiToggle.setChecked(wifiState);
 			setWifiToggleListener();
 			mPullToRefreshLayout.setRefreshComplete();
+			
+			wwapListState = WWAP_LOADED;
 		}
 	}
 
