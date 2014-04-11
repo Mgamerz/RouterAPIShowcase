@@ -116,7 +116,6 @@ public class Utility {
 
 		ConnectionInfo ci = new ConnectionInfo();
 		DefaultHttpClient client = new DefaultHttpClient();
-		Log.i(CommandCenterActivity.TAG, "authinfo: "+authInfo.getUsername());
 		Credentials defaultcreds = new UsernamePasswordCredentials(authInfo.getUsername(), authInfo.getPassword());
 
 		// set auth type

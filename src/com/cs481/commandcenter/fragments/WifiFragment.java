@@ -504,8 +504,9 @@ public class WifiFragment extends ListFragment implements OnRefreshListener {
 				//Update the bss list
 				Bss bss = (Bss) (getListAdapter().getItem(pendingDisableIndex));
 				bss.setEnabled(false);
-				pendingDisableIndex = -1;
 			}
+			pendingDisableIndex = -1;
+
 		}
 	}
 
@@ -601,6 +602,7 @@ public class WifiFragment extends ListFragment implements OnRefreshListener {
 
 			if (pendingDisableIndex == position) {
 				//this switch is pending a state change from the dialog box
+				Log.w(CommandCenterActivity.TAG, "Pending index: "+position+", value inverted");
 				apEnabled.setChecked(!wwap.getEnabled());
 			} else {
 				apEnabled.setChecked(wwap.getEnabled());

@@ -47,7 +47,7 @@ public class GetRequest extends SpiceRequest<Response> {
 		ConnectionInfo ci = Utility.prepareConnection(context, suburl, authInfo);
 		DefaultHttpClient client = ci.getClient();
 		url = ci.getAccessUrl();
-		Log.i(CommandCenterActivity.TAG, "ECM  Get Request to " + url);
+		Log.i(CommandCenterActivity.TAG, "Get Request to " + url);
 		HttpGet get = new HttpGet(url);
 		HttpResponse resp = client.execute(get); // execute the call on the
 													// network.
