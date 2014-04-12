@@ -34,13 +34,13 @@ import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
 
 /**
- * Fragment that allows connected users of a router to
- * change the router's LED light status
+ * Fragment that allows connected users of a router to change the router's LED
+ * light status
+ * 
  * @author Mike Perez
  */
 
-public class GPIOFragment extends Fragment implements OnRefreshListener,
-		OnCheckedChangeListener {
+public class GPIOFragment extends Fragment implements OnRefreshListener, OnCheckedChangeListener {
 	private static final String CACHEKEY_GPIOGET = "gpio_get";
 	private PullToRefreshLayout mPullToRefreshLayout;
 	private AuthInfo authInfo;
@@ -64,8 +64,7 @@ public class GPIOFragment extends Fragment implements OnRefreshListener,
 			gpio = savedInstanceState.getParcelable("gpio");
 
 			authInfo = savedInstanceState.getParcelable("authInfo");
-			shouldLoadData = savedInstanceState.getBoolean("shouldLoadData",
-					true);
+			shouldLoadData = savedInstanceState.getBoolean("shouldLoadData", true);
 		} else {
 			Bundle passedArgs = getArguments();
 			if (passedArgs != null) {
@@ -83,29 +82,23 @@ public class GPIOFragment extends Fragment implements OnRefreshListener,
 	}
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
-		View rootView = inflater.inflate(R.layout.fragment_gpio, container,
-				false);
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		View rootView = inflater.inflate(R.layout.fragment_gpio, container, false);
 		return rootView;
 	}
 
 	private void readGPIOConfig(boolean dialog) {
 		// perform the request.
-		GetRequest request = new GetRequest(getActivity(), authInfo, "status/gpio",
-				GPIO.class, CACHEKEY_GPIOGET);
+		GetRequest request = new GetRequest(getActivity(), authInfo, "status/gpio", GPIO.class, CACHEKEY_GPIOGET);
 		String lastRequestCacheKey = request.createCacheKey();
 
 		if (dialog) {
-			progressDialog = new ProgressDialog(getActivity(),
-					R.style.DialogTheme);
-			progressDialog.setMessage(getResources().getString(
-					R.string.gpio_reading));
+			progressDialog = new ProgressDialog(getActivity(), R.style.DialogTheme);
+			progressDialog.setMessage(getResources().getString(R.string.gpio_reading));
 			progressDialog.show();
 			progressDialog.setCanceledOnTouchOutside(false);
 		}
-		spiceManager.execute(request, lastRequestCacheKey,
-				DurationInMillis.ALWAYS_EXPIRED, new GPIOGetRequestListener());
+		spiceManager.execute(request, lastRequestCacheKey, DurationInMillis.ALWAYS_EXPIRED, new GPIOGetRequestListener());
 	}
 
 	public static GPIOFragment newInstance(AuthInfo authInfo) {
@@ -134,8 +127,7 @@ public class GPIOFragment extends Fragment implements OnRefreshListener,
 		}
 
 		// Now find the PullToRefreshLayout to setup
-		mPullToRefreshLayout = (PullToRefreshLayout) getView().findViewById(
-				R.id.ptr_layout);
+		mPullToRefreshLayout = (PullToRefreshLayout) getView().findViewById(R.id.ptr_layout);
 
 		setupListeners();
 	}
@@ -152,11 +144,11 @@ public class GPIOFragment extends Fragment implements OnRefreshListener,
 		// Now setup the PullToRefreshLayout
 		ActionBarPullToRefresh.from(getActivity())
 		// Mark All Children as pullable
-				.allChildrenArePullable()
-				// Set the OnRefreshListener
-				.listener(this)
-				// Finally commit the setup to our PullToRefreshLayout
-				.setup(mPullToRefreshLayout);
+		.allChildrenArePullable()
+		// Set the OnRefreshListener
+		.listener(this)
+		// Finally commit the setup to our PullToRefreshLayout
+		.setup(mPullToRefreshLayout);
 
 		Switch toggle = (Switch) getView().findViewById(R.id.powerled_state);
 		toggle.setOnCheckedChangeListener(this);
@@ -253,9 +245,7 @@ public class GPIOFragment extends Fragment implements OnRefreshListener,
 			mPullToRefreshLayout.setRefreshComplete();
 			Log.i(CommandCenterActivity.TAG, "Failed to read GPIO!");
 
-			Toast.makeText(getActivity(),
-					getResources().getString(R.string.gpio_get_config_failure),
-					Toast.LENGTH_SHORT).show();
+			Toast.makeText(getActivity(), getResources().getString(R.string.gpio_get_config_failure), Toast.LENGTH_SHORT).show();
 			checking = false;
 		}
 
@@ -271,16 +261,10 @@ public class GPIOFragment extends Fragment implements OnRefreshListener,
 					setGPIO(gpio);
 					updateSwitches();
 				} else {
-					Toast.makeText(getActivity(),
-							response.getResponseInfo().getReason(),
-							Toast.LENGTH_LONG).show();
+					Toast.makeText(getActivity(), response.getResponseInfo().getReason(), Toast.LENGTH_LONG).show();
 				}
 			} else {
-				Toast.makeText(
-						getActivity(),
-						getResources().getString(
-								R.string.gpio_get_null_response),
-						Toast.LENGTH_LONG).show();
+				Toast.makeText(getActivity(), getResources().getString(R.string.gpio_get_null_response), Toast.LENGTH_LONG).show();
 			}
 			mPullToRefreshLayout.setRefreshComplete();
 			checking = false;
@@ -295,8 +279,7 @@ public class GPIOFragment extends Fragment implements OnRefreshListener,
 	public void updateSwitches() {
 		if (gpio != null && getView() != null) {
 			// Power LED Green (turns to orange if off)
-			Switch lswitch = (Switch) getView().findViewById(
-					R.id.powerled_state);
+			Switch lswitch = (Switch) getView().findViewById(R.id.powerled_state);
 			lswitch.setChecked((gpio.getLed_power() == 1) ? true : false);
 
 			// Wifi Red
@@ -356,59 +339,46 @@ public class GPIOFragment extends Fragment implements OnRefreshListener,
 			lswitch.setChecked((gpio.getLed_usb1_r() == 1) ? false : true);
 
 			// Expansion Bay 1 Red
-			lswitch = (Switch) getView().findViewById(
-					R.id.expansionbay1ledr_state);
+			lswitch = (Switch) getView().findViewById(R.id.expansionbay1ledr_state);
 			lswitch.setChecked((gpio.getLed_ex1_r() == 1) ? false : true);
 
 			// Expansion Bay 1 Green
-			lswitch = (Switch) getView().findViewById(
-					R.id.expansionbay1ledg_state);
+			lswitch = (Switch) getView().findViewById(R.id.expansionbay1ledg_state);
 			lswitch.setChecked((gpio.getLed_ex1_g() == 1) ? false : true);
 
 			// Expansion Bay 2 Red
-			lswitch = (Switch) getView().findViewById(
-					R.id.expansionbay2ledr_state);
+			lswitch = (Switch) getView().findViewById(R.id.expansionbay2ledr_state);
 			lswitch.setChecked((gpio.getLed_ex2_r() == 1) ? false : true);
 
 			// Expansion Bay 2 Green
-			lswitch = (Switch) getView().findViewById(
-					R.id.expansionbay2ledg_state);
+			lswitch = (Switch) getView().findViewById(R.id.expansionbay2ledg_state);
 			lswitch.setChecked((gpio.getLed_ex2_g() == 1) ? false : true);
 		}
 	}
 
 	// inner class of your spiced Activity
-	private class GPIONewPutRequestListener implements
-			RequestListener<Response> {
+	private class GPIONewPutRequestListener implements RequestListener<Response> {
 
 		@Override
 		public void onRequestFailure(SpiceException e) {
 			// update your UI
+			if (!isAdded()){
+				return; //don't care
+			}
 			Log.i(CommandCenterActivity.TAG, "Command failure!");
 		}
 
 		@Override
 		public void onRequestSuccess(Response response) {
 			// update your UI. We don't have anything to update right now.
-
+			if (!isAdded()){
+				return; //don't care
+			}
+			
 			if (response.getResponseInfo().getSuccess()) {
-				GPIO gpio = (GPIO) response.getData();
-				if (gpio.getException() == null) {
-					// handle here
-				} else {
-					Toast.makeText(
-							getActivity(),
-							getResources().getString(R.string.gpio)
-									+ getResources().getString(
-											R.string.server_exception)
-									+ gpio.getException(), Toast.LENGTH_LONG)
-							.show();
-				}
-
+				// we don't really care...
 			} else {
-				Toast.makeText(getActivity(),
-						response.getResponseInfo().getReason(),
-						Toast.LENGTH_LONG).show();
+				Toast.makeText(getActivity(), response.getResponseInfo().getReason(), Toast.LENGTH_LONG).show();
 			}
 		}
 	}
@@ -416,74 +386,91 @@ public class GPIOFragment extends Fragment implements OnRefreshListener,
 	@Override
 	public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 		if (gpio != null && checking == false) {
+			String changedElem = null;
 			switch (buttonView.getId()) {
 			case R.id.powerled_state:
 				gpio.setLed_power((isChecked) ? 1 : 0);
+				changedElem = "LED_POWER";
 				break;
 			case R.id.wifiledr_state:
 				gpio.setLed_wifi_red((isChecked) ? 0 : 1);
+				changedElem = "LED_WIFI_RED";
 				break;
 			case R.id.wifiledg_state:
 				gpio.setLed_wifi((isChecked) ? 0 : 1);
+				changedElem = "LED_WIFI";
 				break;
 			case R.id.wifiledb_state:
 				gpio.setLed_wifi_blue((isChecked) ? 0 : 1);
+				changedElem = "LED_WIFI_BLUE";
 				break;
 			case R.id.ss0_state:
 				gpio.setLed_ss_0((isChecked) ? 0 : 1);
+				changedElem = "LED_SS_0";
 				break;
 			case R.id.ss1_state:
 				gpio.setLed_ss_1((isChecked) ? 0 : 1);
+				changedElem = "LED_SS_1";
 				break;
 			case R.id.ss2_state:
 				gpio.setLed_ss_2((isChecked) ? 0 : 1);
+				changedElem = "LED_SS_2";
 				break;
 			case R.id.ss3_state:
 				gpio.setLed_ss_3((isChecked) ? 0 : 1);
+				changedElem = "LED_SS_3";
 				break;
 			case R.id.usb1ledr_state:
 				gpio.setLed_usb1_r((isChecked) ? 0 : 1);
+				changedElem = "LED_USB1_R";
 				break;
 			case R.id.usb1ledg_state:
 				gpio.setLed_usb1_g((isChecked) ? 0 : 1);
+				changedElem = "LED_USB1_G";
 				break;
 			case R.id.usb2ledr_state:
 				gpio.setLed_usb2_r((isChecked) ? 0 : 1);
+				changedElem = "LED_USB2_R";
 				break;
 			case R.id.usb2ledg_state:
 				gpio.setLed_usb2_g((isChecked) ? 0 : 1);
+				changedElem = "LED_USB2_G";
 				break;
 			case R.id.usb3ledr_state:
 				gpio.setLed_usb3_r((isChecked) ? 0 : 1);
+				changedElem = "LED_USB3_R";
 				break;
 			case R.id.usb3ledg_state:
 				gpio.setLed_usb3_g((isChecked) ? 0 : 1);
+				changedElem = "LED_USB3_G";
 				break;
 			case R.id.expansionbay1ledr_state:
 				gpio.setLed_ex1_r((isChecked) ? 0 : 1);
+				changedElem = "LED_EX1_R";
 				break;
 			case R.id.expansionbay1ledg_state:
 				gpio.setLed_ex1_g((isChecked) ? 0 : 1);
+				changedElem = "LED_EX1_G";
 				break;
 			case R.id.expansionbay2ledr_state:
 				gpio.setLed_ex2_r((isChecked) ? 0 : 1);
+				changedElem = "LED_EX2_R";
 				break;
 			case R.id.expansionbay2ledg_state:
 				gpio.setLed_ex2_g((isChecked) ? 0 : 1);
+				changedElem = "LED_EX2_G";
 				break;
 
 			default:
 				return;
 			}
+			
+			String subtree = "control/gpio/"+changedElem;
 
 			// perform the request.
-			PutRequest request = new PutRequest(getActivity(), gpio, authInfo, "control/gpio",
-					com.cs481.commandcenter.responses.control.gpio.GPIO.class);
+			PutRequest request = new PutRequest(getActivity(), Integer.valueOf((isChecked) ? 0 : 1), authInfo, subtree, Integer.class);
 			String lastRequestCacheKey = request.createCacheKey();
-
-			spiceManager.execute(request, lastRequestCacheKey,
-					DurationInMillis.ALWAYS_EXPIRED,
-					new GPIONewPutRequestListener());
+			spiceManager.execute(request, lastRequestCacheKey, DurationInMillis.ALWAYS_EXPIRED, new GPIONewPutRequestListener());
 		}
 	}
 
@@ -497,20 +484,17 @@ public class GPIOFragment extends Fragment implements OnRefreshListener,
 		// handle item selection
 		switch (item.getItemId()) {
 		case android.R.id.home:
-			//up navigation
+			// up navigation
 			Log.i(CommandCenterActivity.TAG, "UP in GPIO is being handled.");
 			FragmentManager fm = getActivity().getSupportFragmentManager();
 			fm.popBackStack();
 			return true;
 		case R.id.reset_leds:
 			// perform the request.
-			PutRequest request = new PutRequest(getActivity(), Boolean.valueOf(true), authInfo, "control/led/reset_leds",
-					Boolean.class);
+			PutRequest request = new PutRequest(getActivity(), Boolean.valueOf(true), authInfo, "control/led/reset_leds", Boolean.class);
 			String lastRequestCacheKey = request.createCacheKey();
 
-			spiceManager.execute(request, lastRequestCacheKey,
-					DurationInMillis.ALWAYS_EXPIRED,
-					new LEDPutRequestListener());
+			spiceManager.execute(request, lastRequestCacheKey, DurationInMillis.ALWAYS_EXPIRED, new LEDPutRequestListener());
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
@@ -522,21 +506,21 @@ public class GPIOFragment extends Fragment implements OnRefreshListener,
 		@Override
 		public void onRequestFailure(SpiceException e) {
 			Log.i(CommandCenterActivity.TAG, "Failed to reset LEDs!");
-			
-			if (!isAdded()){
+
+			if (!isAdded()) {
 				return;
 			}
-			/* Toast.makeText(getActivity(),
-					getResources().getString(R.string.gpio_get_config_failure),
-					Toast.LENGTH_SHORT).show(); */
-			Toast.makeText(getActivity(),
-					"LED reset request failed.",
-					Toast.LENGTH_SHORT).show();
+			/*
+			 * Toast.makeText(getActivity(),
+			 * getResources().getString(R.string.gpio_get_config_failure),
+			 * Toast.LENGTH_SHORT).show();
+			 */
+			Toast.makeText(getActivity(), "LED reset request failed.", Toast.LENGTH_SHORT).show();
 		}
 
 		@Override
 		public void onRequestSuccess(Response response) {
-		
+
 		}
 	}
 }

@@ -8,6 +8,7 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -19,6 +20,8 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
@@ -53,6 +56,7 @@ public class WifiWAPFragment extends Fragment {
 	private AuthInfo authInfo;
 	private Bss wapinfo;
 	private int wapindex;
+	private boolean unmaskPassword = false; // password masking
 	private Menu menu;
 
 	@Override
@@ -63,6 +67,8 @@ public class WifiWAPFragment extends Fragment {
 			authInfo = savedInstanceState.getParcelable("authInfo");
 			wapinfo = savedInstanceState.getParcelable("wapinfo");
 			wapindex = savedInstanceState.getInt("wapindex");
+			unmaskPassword = savedInstanceState.getBoolean("unmaskPassword");
+
 		} else {
 			Bundle passedArgs = getArguments();
 			if (passedArgs != null) {
@@ -73,6 +79,17 @@ public class WifiWAPFragment extends Fragment {
 		}
 	}
 
+	/**
+	 * Creates a new Wifi WAP fragment.
+	 * 
+	 * @param authInfo
+	 *            Authinfo to use when pushing data to the wap config
+	 * @param wapinfo
+	 *            WAP information to populate the display with
+	 * @param wapindex
+	 *            index in the bss list where to push (see the API)
+	 * @return
+	 */
 	public static WifiWAPFragment newInstance(AuthInfo authInfo, Bss wapinfo, int wapindex) {
 		WifiWAPFragment wifiFrag = new WifiWAPFragment();
 		Bundle args = new Bundle();
@@ -93,6 +110,7 @@ public class WifiWAPFragment extends Fragment {
 		outState.putParcelable("authInfo", authInfo);
 		outState.putParcelable("wapinfo", wapinfo);
 		outState.putInt("wapindex", wapindex);
+		outState.putBoolean("unmaskPassword", unmaskPassword);
 	}
 
 	@Override
@@ -177,6 +195,12 @@ public class WifiWAPFragment extends Fragment {
 
 		});
 
+		// Password masking on/off restoration
+		if (unmaskPassword) {
+			final EditText password_field = (EditText) v.findViewById(R.id.wapconnect_newpassword_field);
+			password_field.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
+		}
+
 		return v;
 	}
 
@@ -255,6 +279,26 @@ public class WifiWAPFragment extends Fragment {
 		wep1.setText(wapinfo.getWepkey1());
 		wep2.setText(wapinfo.getWepkey2());
 		wep3.setText(wapinfo.getWepkey3());
+
+		// password on/off listener
+		CheckBox show_password = (CheckBox) v.findViewById(R.id.wapconnect_showpassword);
+		final EditText password_field = (EditText) v.findViewById(R.id.wapconnect_newpassword_field);
+
+		show_password.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+
+			@Override
+			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+				// TODO Auto-generated method stub
+				if (isChecked) {
+					password_field.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
+					unmaskPassword = true;
+				} else {
+					password_field.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+					unmaskPassword = false;
+				}
+			}
+		});
+
 	}
 
 	@Override
@@ -291,7 +335,7 @@ public class WifiWAPFragment extends Fragment {
 		View v = getView();
 		EditText ssidField = (EditText) v.findViewById(R.id.wap_ssid_value);
 		modified_wap.setSsid(ssidField.getText().toString());
-		
+
 		Spinner authSpinner = (Spinner) v.findViewById(R.id.wap_encryptiontype_spinner);
 		int authIndex = authSpinner.getSelectedItemPosition();
 
@@ -331,7 +375,7 @@ public class WifiWAPFragment extends Fragment {
 														// so we reverse the
 														// result.
 
-		EditText passwordField = (EditText) v.findViewById(R.id.wap_newpassword_field);
+		EditText passwordField = (EditText) v.findViewById(R.id.wapconnect_newpassword_field);
 		if (passwordField.getVisibility() == View.VISIBLE && !passwordField.getText().toString().equals("")) {
 			// new password has been entered
 			// router knows if the password being pushed is the original or a

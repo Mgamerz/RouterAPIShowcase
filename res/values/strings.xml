@@ -59,6 +59,12 @@
     <string name="lan">LAN</string>
     <string name="wan">WAN</string>
     <string name="gpio">LED Control</string>
+    <string name="router_info">Router Information</string>
+    <string name="wireless_desc">Configure access points</string>
+    <string name="lan_desc">Kick wireless clients</string>
+    <string name="wan_desc">Connect to other routers</string>
+    <string name="gpio_desc">Turn LEDs on or off</string>
+    <string name="router_info_desc">General router information</string>
 
     <!-- Wifi Client Fragment -->
     <string name="wifiwan_title">WiFi as WAN</string>
@@ -177,7 +183,6 @@
     <string name="dont_ask_again">Don\'t ask again</string>
 
     <!-- Router Info -->
-    <string name="routerinfo">Router Information</string>
     <string name="product">Product</string>
     <string name="firmware">Firmware</string>
     <string name="mac_address">MAC Address</string>

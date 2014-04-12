@@ -108,11 +108,11 @@
                 style="@style/CheckBoxTheme"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/wap_newpassword_field"
+                android:layout_below="@+id/wapconnect_newpassword_field"
                 android:text="@string/show_password" />
 
             <EditText
-                android:id="@+id/wap_newpassword_field"
+                android:id="@+id/wapconnect_newpassword_field"
                 style="@style/EditTextTheme"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

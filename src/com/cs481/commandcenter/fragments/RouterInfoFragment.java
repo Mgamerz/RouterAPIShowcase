@@ -254,7 +254,7 @@ public class RouterInfoFragment extends Fragment {
 		sa.getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
 		sa.getActionBar().setDisplayHomeAsUpEnabled(true);
 		sa.getActionBar().setDisplayShowTitleEnabled(true);
-		sa.getActionBar().setTitle(getResources().getString(R.string.routerinfo));
+		sa.getActionBar().setTitle(getResources().getString(R.string.router_info));
 		
 		//listeners for network requests
 		spiceManager = sa.getSpiceManager();
