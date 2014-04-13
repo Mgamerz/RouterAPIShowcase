@@ -41,10 +41,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  */
 public class Utility {
 	// List loading constants
-	public static int CONTENT_LOADING = 0;
-	public static int CONTENT_LOADED = 1;
-	public static int CONTENT_LOAD_FAILED = 2;
-	
+	public static int CONTENT_LOADING = 0; //content is in the process of being loaded
+	public static int CONTENT_LOADED = 1; //content was loaded
+	public static int CONTENT_LOAD_FAILED = 2; //could not load content
+	public static int CONTENT_EMPTY = 3; //loaded, but no content
 	
 	// Encryption constants for wifi: Enterprise denotes a radius server is used
 	// to generate passwords, PSKs are pre shared keys which

@@ -10,7 +10,6 @@ import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
 import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
 import android.app.ActionBar;
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
@@ -21,7 +20,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.ListFragment;
 import android.util.Log;
-import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -58,8 +56,9 @@ import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
 
 /**
- * Fragment that shows a list of wireless routers
- * that the router can see and connect to
+ * Fragment that shows a list of wireless routers that the router can see and
+ * connect to
+ * 
  * @author Mike Perez
  */
 
@@ -73,7 +72,6 @@ public class WifiAsWANFragment extends ListFragment implements OnRefreshListener
 	public static final int WAN_CHANGE_FRAGMENT = 2;
 
 	private PullToRefreshLayout mPullToRefreshLayout;
-	private ProgressDialog progressDialog;
 	private SpiceManager spiceManager;
 	private AuthInfo authInfo;
 	private ArrayList<WlanListRow> rows;
@@ -86,6 +84,7 @@ public class WifiAsWANFragment extends ListFragment implements OnRefreshListener
 	private SpinnerAdapter mSpinnerAdapter;
 	private int temporaryClientMode = -1;
 	private int currentClientMode = 0;
+	private int listState = Utility.CONTENT_LOADING;
 	private Menu menu;
 
 	@Override
@@ -101,7 +100,7 @@ public class WifiAsWANFragment extends ListFragment implements OnRefreshListener
 			wifiState = savedInstanceState.getBoolean("wifiState");
 			currentClientMode = savedInstanceState.getInt("currentClientMode");
 			temporaryClientMode = savedInstanceState.getInt("temporaryClientMode");
-
+			listState = savedInstanceState.getInt("listState");
 			Log.i(CommandCenterActivity.TAG, "current: " + currentClientMode + ", temp: " + temporaryClientMode);
 		} else {
 			Bundle passedArgs = getArguments();
@@ -147,12 +146,14 @@ public class WifiAsWANFragment extends ListFragment implements OnRefreshListener
 		outState.putBoolean("wifiStateEnabled", wifiStateEnabled);
 		outState.putInt("currentClientMode", currentClientMode);
 		outState.putInt("temporaryClientMode", temporaryClientMode);
+		outState.putInt("listState", listState);
 	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		// Inflate the layout for this fragment
-		return inflater.inflate(R.layout.fragment_wificlient, container, false);
+		View v = inflater.inflate(R.layout.fragment_wificlient, container, false);
+		return v;
 	}
 
 	@Override
@@ -177,7 +178,7 @@ public class WifiAsWANFragment extends ListFragment implements OnRefreshListener
 		ArrayList<String> values = new ArrayList<String>(Arrays.asList(getResources().getStringArray(R.array.wificlient_values)));
 		mSpinnerAdapter = new DropdownAdapter(getActivity(), values, getActivity().getActionBar().getSubtitle().toString());
 		SpiceActivity sa = (SpiceActivity) getActivity();
-		//Make the dropdown list appear
+		// Make the dropdown list appear
 		sa.getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
 		sa.getActionBar().setDisplayHomeAsUpEnabled(true);
 		// set the callbacks.
@@ -187,7 +188,7 @@ public class WifiAsWANFragment extends ListFragment implements OnRefreshListener
 
 		spiceManager = sa.getSpiceManager();
 		if (shouldLoadData) {
-			readWlanWANConfig(true);
+			readWlanWANConfig();
 			readClientMode();
 			shouldLoadData = false;
 		} else {
@@ -202,7 +203,8 @@ public class WifiAsWANFragment extends ListFragment implements OnRefreshListener
 	}
 
 	/**
-	 * Makes a network request to read the client mode from the router, e.g. Wifi as WAN or Wifi as Bridge.
+	 * Makes a network request to read the client mode from the router, e.g.
+	 * Wifi as WAN or Wifi as Bridge.
 	 */
 	private void readClientMode() {
 		// TODO Auto-generated method stub
@@ -212,7 +214,9 @@ public class WifiAsWANFragment extends ListFragment implements OnRefreshListener
 	}
 
 	/**
-	 * Adapter to use for tying the list of WAPs this router can see to the listview.
+	 * Adapter to use for tying the list of WAPs this router can see to the
+	 * listview.
+	 * 
 	 * @author Mgamerz
 	 */
 	public class WlanAdapter extends ArrayAdapter<WlanListRow> {
@@ -265,9 +269,11 @@ public class WifiAsWANFragment extends ListFragment implements OnRefreshListener
 	}
 
 	/**
-	 * Adapter that ties the actionbar dropdown menu (to change router modes) to views and strings.
+	 * Adapter that ties the actionbar dropdown menu (to change router modes) to
+	 * views and strings.
+	 * 
 	 * @author Mgamerz
-	 *
+	 * 
 	 */
 	public class DropdownAdapter extends ArrayAdapter<String> implements SpinnerAdapter {
 		private final Context context;
@@ -324,8 +330,11 @@ public class WifiAsWANFragment extends ListFragment implements OnRefreshListener
 	}
 
 	/**
-	 * Converts the index of the dropdown item (0/1/2) to the proper human readable string.
-	 * @param position Position to get string for
+	 * Converts the index of the dropdown item (0/1/2) to the proper human
+	 * readable string.
+	 * 
+	 * @param position
+	 *            Position to get string for
 	 * @return human readable string
 	 */
 	private String dropdownToString(int position) {
@@ -344,7 +353,7 @@ public class WifiAsWANFragment extends ListFragment implements OnRefreshListener
 
 	@Override
 	public void onRefreshStarted(View view) {
-		readWlanWANConfig(false);
+		readWlanWANConfig();
 	}
 
 	@Override
@@ -355,24 +364,17 @@ public class WifiAsWANFragment extends ListFragment implements OnRefreshListener
 	}
 
 	/**
-	 * Reads two areas of the router:
-	 *  - Wlan status from status/wlan: 
-	 *  - WAN profiles from config/wwan: Profiles this router has that define what WAP to connect to in wifi bridge and wifi WAN modes.
-	 * @param dialog boolean to show the dialog, false to not show the dialog
+	 * Reads two areas of the router: - Wlan status from status/wlan: - WAN
+	 * profiles from config/wwan: Profiles this router has that define what WAP
+	 * to connect to in wifi bridge and wifi WAN modes.
+	 * 
+	 * @param dialog
+	 *            boolean to show the dialog, false to not show the dialog
 	 */
-	private void readWlanWANConfig(boolean dialog) {
+	private void readWlanWANConfig() {
 		// perform the request.
 		GetRequest wapListrequest = new GetRequest(getActivity(), authInfo, "status/wlan", StatusWlan.class, "statuswlanget");
 		String lastRequestCacheKey = wapListrequest.createCacheKey();
-		Resources resources = getResources();
-		if (dialog) {
-			ContextThemeWrapper wrapper = new ContextThemeWrapper(getActivity(), android.R.style.Theme_Holo_Light);
-
-			progressDialog = new ProgressDialog(wrapper);
-			progressDialog.setMessage(resources.getString(R.string.wlan_reading));
-			progressDialog.show();
-			progressDialog.setCanceledOnTouchOutside(false);
-		}
 
 		spiceManager.execute(wapListrequest, lastRequestCacheKey, DurationInMillis.ALWAYS_EXPIRED, new WLANStatusGetRequestListener());
 
@@ -384,22 +386,20 @@ public class WifiAsWANFragment extends ListFragment implements OnRefreshListener
 	}
 
 	/**
-	 * Listener for getting the status/wlan subtree. Contains a Wlan object in the response object.
+	 * Listener for getting the status/wlan subtree. Contains a Wlan object in
+	 * the response object.
+	 * 
 	 * @author Mgamerz
-	 *
+	 * 
 	 */
 	private class WLANStatusGetRequestListener implements RequestListener<Response> {
 
 		@Override
 		public void onRequestFailure(SpiceException e) {
-			if (!isAdded()){
+			if (!isAdded()) {
 				return;
 			}
 			Resources resources = getResources();
-			// update your UI
-			if (progressDialog != null) {
-				progressDialog.dismiss();
-			}
 			Log.i(CommandCenterActivity.TAG, "Failed to read WLAN!");
 			Toast.makeText(getActivity(), resources.getString(R.string.wlan_get_config_failure), Toast.LENGTH_SHORT).show();
 			mPullToRefreshLayout.setRefreshComplete();
@@ -407,12 +407,8 @@ public class WifiAsWANFragment extends ListFragment implements OnRefreshListener
 
 		@Override
 		public void onRequestSuccess(Response response) {
-			if (!isAdded()){
+			if (!isAdded()) {
 				return;
-			}
-			// update your UI
-			if (progressDialog != null) {
-				progressDialog.dismiss();
 			}
 
 			if (response.getResponseInfo().getSuccess()) {
@@ -420,8 +416,9 @@ public class WifiAsWANFragment extends ListFragment implements OnRefreshListener
 				Log.i(CommandCenterActivity.TAG, "WLAN request successful");
 				updateWlanList(wlan);
 			} else {
-
+				listState = Utility.CONTENT_LOAD_FAILED;
 				Toast.makeText(getActivity(), response.getResponseInfo().getReason(), Toast.LENGTH_LONG).show();
+				
 			}
 			mPullToRefreshLayout.setRefreshComplete();
 
@@ -491,11 +488,10 @@ public class WifiAsWANFragment extends ListFragment implements OnRefreshListener
 		if (waps == null) {
 			return;
 		}
+
 		rows = new ArrayList<WlanListRow>();
-		// if (adapter == null) {
 		adapter = new WlanAdapter(getActivity(), rows);
 		setListAdapter(adapter);
-		// }
 
 		Resources resources = getResources();
 		for (WAP wap : waps) {
@@ -505,6 +501,9 @@ public class WifiAsWANFragment extends ListFragment implements OnRefreshListener
 				ssid = resources.getString(R.string.wlan_hidden_ssid);
 			rows.add(new WlanListRow(wap, ssid, subtitle));
 		}
+
+		listState = Utility.CONTENT_LOADED;
+
 		adapter.notifyDataSetChanged();
 	}
 
