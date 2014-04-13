@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
 import android.app.ActionBar;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.res.Resources;
 import android.database.DataSetObserver;
@@ -20,7 +19,9 @@ import android.widget.BaseExpandableListAdapter;
 import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.ExpandableListView.OnChildClickListener;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -41,21 +42,23 @@ import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
 
 /**
- * Fragment that allows users to kick and ban clients
- * on a locally connected router
+ * Fragment that allows users to kick and ban clients on a locally connected
+ * router
+ * 
  * @author Sean Wright, Mike Perez, Melissa Neibaur
  */
 
 public class LanClientFragment extends Fragment implements OnRefreshListener {
 
 	// private PullToRefreshLayout mPullToRefreshLayout;
-	private ProgressDialog progressDialog;
+	private static int LIST_NOCLIENTS = 4;
 	private SpiceManager spiceManager;
 	private AuthInfo authInfo;
 	private ClientAdapter adapter;
 	private boolean shouldLoadData = true;
 	private ArrayList<Client> clients;
-	private int listState = Utility.CONTENT_LOADING; //default to the loading state
+	private int listState = Utility.CONTENT_LOADING; // default to the loading
+														// state
 	private ExpandableListView mExpandableList;
 
 	@Override
@@ -77,7 +80,9 @@ public class LanClientFragment extends Fragment implements OnRefreshListener {
 
 	/**
 	 * Creqtes a new LANClientFragment with the given parameters.
-	 * @param authInfo authinfo object to connect to the router with
+	 * 
+	 * @param authInfo
+	 *            authinfo object to connect to the router with
 	 * @return LanClientFragment with the authInfo attached
 	 */
 	public static LanClientFragment newInstance(AuthInfo authInfo) {
@@ -105,22 +110,21 @@ public class LanClientFragment extends Fragment implements OnRefreshListener {
 		outState.putParcelableArrayList("clients", clients);
 		outState.putBoolean("shouldLoadData", shouldLoadData);
 		outState.putParcelable("authInfo", authInfo);
+		outState.putInt("listState", listState);
 	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		// Inflate the layout for this fragment
 		View v = inflater.inflate(R.layout.fragment_clients, container, false);
-		mExpandableList = (ExpandableListView) v.findViewById(R.id.expandable_clientlist);
-
-		// ArrayList<Profile> profilesArray =
-		// Utility.getProfiles(getActivity());
-
-		// sets the adapter that provides data to the list.
-		// final ClientAdapter cla = new ClientAdapter(getActivity(),
-		// profilesArray);
-
-		mExpandableList.setAdapter(adapter);
+		// mExpandableList = (ExpandableListView)
+		// v.findViewById(R.id.expandable_clientlist);
+		// mExpandableList.setAdapter(adapter);
+		if (listState == Utility.CONTENT_LOADED) {
+			// hide the loading layout
+			LinearLayout loading_layout = (LinearLayout) v.findViewById(R.id.lan_loading_layout);
+			loading_layout.setVisibility(View.GONE);
+		}
 		return v;
 	}
 
@@ -153,9 +157,11 @@ public class LanClientFragment extends Fragment implements OnRefreshListener {
 	}
 
 	/**
-	 * Adapter that maps client objects to the user interface, including the drop objects.
+	 * Adapter that maps client objects to the user interface, including the
+	 * drop objects.
+	 * 
 	 * @author Mgamerz
-	 *
+	 * 
 	 */
 	public class ClientAdapter extends BaseExpandableListAdapter {
 		private LayoutInflater inflater;
@@ -272,8 +278,9 @@ public class LanClientFragment extends Fragment implements OnRefreshListener {
 
 	/**
 	 * Listener for the get request for the clients.
+	 * 
 	 * @author Mgamerz
-	 *
+	 * 
 	 */
 	private class ClientsGetRequestListener implements RequestListener<Response> {
 
@@ -284,9 +291,6 @@ public class LanClientFragment extends Fragment implements OnRefreshListener {
 			}
 			Resources resources = getResources();
 			// update your UI
-			if (progressDialog != null) {
-				progressDialog.dismiss();
-			}
 			Log.i(CommandCenterActivity.TAG, "Failed to read LAN!");
 			Toast.makeText(getActivity(), resources.getString(R.string.lan_clients_failure), Toast.LENGTH_SHORT).show();
 			// mPullToRefreshLayout.setRefreshComplete();
@@ -297,9 +301,6 @@ public class LanClientFragment extends Fragment implements OnRefreshListener {
 			// update your UI
 			if (!isAdded()) {
 				return;
-			}
-			if (progressDialog != null) {
-				progressDialog.dismiss();
 			}
 
 			if (response.getResponseInfo().getSuccess()) {
@@ -321,8 +322,10 @@ public class LanClientFragment extends Fragment implements OnRefreshListener {
 	}
 
 	/**
-	 * Updates the interface with the results of the get request listener. 
-	 * @param clients list of clients obtained from the get request listener
+	 * Updates the interface with the results of the get request listener.
+	 * 
+	 * @param clients
+	 *            list of clients obtained from the get request listener
 	 */
 	public void updateClientList(ArrayList<Client> clients) {
 		Log.i(CommandCenterActivity.TAG, "Updating client list");
@@ -357,7 +360,15 @@ public class LanClientFragment extends Fragment implements OnRefreshListener {
 		if (clients.size() == 0) {
 			TextView banner = (TextView) v.findViewById(R.id.clients_value);
 			banner.setText(getResources().getString(R.string.no_clients));
+			ProgressBar spinny = (ProgressBar) v.findViewById(R.id.clients_loading_progressbar);
+			spinny.setVisibility(View.GONE);
 			mExpandableList.setVisibility(ExpandableListView.GONE);
+			listState = LIST_NOCLIENTS;
+		} else {
+			// hide the loading layout
+			listState = Utility.CONTENT_LOADED;
+			LinearLayout loading_layout = (LinearLayout) v.findViewById(R.id.lan_loading_layout);
+			loading_layout.setVisibility(View.GONE);
 		}
 	}
 

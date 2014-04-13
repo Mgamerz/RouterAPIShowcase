@@ -21,7 +21,7 @@
         android:orientation="horizontal" >
 
         <ProgressBar
-            android:id="@+id/log_loadingprogressbar"
+            android:id="@+id/clients_loading_progressbar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center" />
