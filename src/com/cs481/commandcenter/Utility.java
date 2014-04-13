@@ -17,8 +17,6 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 
 import android.app.Activity;
-import android.app.AlarmManager;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -32,7 +30,6 @@ import android.util.Base64;
 import android.util.Log;
 
 import com.cs481.commandcenter.activities.CommandCenterActivity;
-import com.cs481.commandcenter.activities.LoginActivity;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -43,7 +40,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  * @author Mike Perez
  */
 public class Utility {
-
+	// List loading constants
+	public static int CONTENT_LOADING = 0;
+	public static int CONTENT_LOADED = 1;
+	public static int CONTENT_LOAD_FAILED = 2;
+	
+	
 	// Encryption constants for wifi: Enterprise denotes a radius server is used
 	// to generate passwords, PSKs are pre shared keys which
 	// normal folk use.

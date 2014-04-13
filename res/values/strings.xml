@@ -66,7 +66,7 @@
     <string name="gpio_desc">Turn LEDs on or off</string>
     <string name="router_info_desc">General router information</string>
 
-    <!-- Wifi Client Fragment -->
+    <!-- Wifi as WAN/Bridge Fragment -->
     <string name="wifiwan_title">WiFi as WAN</string>
     <string name="wifibridge_title">WiFi as Bridge</string>
     <string name="wificlient_title">WiFi Client</string>
@@ -84,6 +84,7 @@
     <string name="no_access">No access points or wireless is off.</string>
 
     <!-- LAN Clients -->
+    <string name="loading_lan_clients">Retreiving list of clients</string>
     <string name="no_clients">No clients are currently connected</string>
     <string name="ip_address">IP Address</string>
     <string name="lan_clients_failure">Failed to read LAN/Clients</string>

@@ -26,6 +26,7 @@ import android.widget.Toast;
 
 import com.cs481.commandcenter.AuthInfo;
 import com.cs481.commandcenter.R;
+import com.cs481.commandcenter.Utility;
 import com.cs481.commandcenter.activities.CommandCenterActivity;
 import com.cs481.commandcenter.activities.SpiceActivity;
 import com.cs481.commandcenter.listrows.ClientListRow;
@@ -54,6 +55,7 @@ public class LanClientFragment extends Fragment implements OnRefreshListener {
 	private ClientAdapter adapter;
 	private boolean shouldLoadData = true;
 	private ArrayList<Client> clients;
+	private int listState = Utility.CONTENT_LOADING; //default to the loading state
 	private ExpandableListView mExpandableList;
 
 	@Override
@@ -64,6 +66,7 @@ public class LanClientFragment extends Fragment implements OnRefreshListener {
 			clients = savedInstanceState.getParcelableArrayList("clients");
 			shouldLoadData = savedInstanceState.getBoolean("shouldLoadData");
 			authInfo = savedInstanceState.getParcelable("authInfo");
+			listState = savedInstanceState.getInt("listState");
 		} else {
 			Bundle passedArgs = getArguments();
 			if (passedArgs != null) {
@@ -72,6 +75,11 @@ public class LanClientFragment extends Fragment implements OnRefreshListener {
 		}
 	}
 
+	/**
+	 * Creqtes a new LANClientFragment with the given parameters.
+	 * @param authInfo authinfo object to connect to the router with
+	 * @return LanClientFragment with the authInfo attached
+	 */
 	public static LanClientFragment newInstance(AuthInfo authInfo) {
 		LanClientFragment lcFrag = new LanClientFragment();
 
@@ -135,12 +143,20 @@ public class LanClientFragment extends Fragment implements OnRefreshListener {
 		}
 	}
 
+	/**
+	 * Performs a network request to read the clients off of the router.
+	 */
 	private void readClients() {
 		GetRequest clientReq = new GetRequest(getActivity(), authInfo, "status/lan", Lan.class, "LanGet");
 		String lastRequestCacheKey = clientReq.createCacheKey();
 		spiceManager.execute(clientReq, lastRequestCacheKey, DurationInMillis.ALWAYS_EXPIRED, new ClientsGetRequestListener());
 	}
 
+	/**
+	 * Adapter that maps client objects to the user interface, including the drop objects.
+	 * @author Mgamerz
+	 *
+	 */
 	public class ClientAdapter extends BaseExpandableListAdapter {
 		private LayoutInflater inflater;
 		private ArrayList<Client> clients;
@@ -208,18 +224,6 @@ public class LanClientFragment extends Fragment implements OnRefreshListener {
 			textView = (TextView) view.findViewById(R.id.clients_mac_value);
 			textView.setText(client.getMac());
 
-			// ImageView deleteIcon = (ImageView)
-			// view.findViewById(R.id.profilerow_deleteicon);
-			// deleteIcon.setOnClickListener(new OnClickListener() {
-			// public void onClick(View v) {
-			// Toast.makeText(getActivity(), "Clicked delete on profile",
-			// Toast.LENGTH_LONG).show();
-			// Utility.deleteProfile(getActivity(), profile);
-			// profiles.remove(i);
-			// notifyDataSetChanged();
-			// }
-			// });
-
 			// return the entire view
 			return view;
 		}
@@ -266,6 +270,11 @@ public class LanClientFragment extends Fragment implements OnRefreshListener {
 		readClients();
 	}
 
+	/**
+	 * Listener for the get request for the clients.
+	 * @author Mgamerz
+	 *
+	 */
 	private class ClientsGetRequestListener implements RequestListener<Response> {
 
 		@Override
@@ -311,6 +320,10 @@ public class LanClientFragment extends Fragment implements OnRefreshListener {
 		}
 	}
 
+	/**
+	 * Updates the interface with the results of the get request listener. 
+	 * @param clients list of clients obtained from the get request listener
+	 */
 	public void updateClientList(ArrayList<Client> clients) {
 		Log.i(CommandCenterActivity.TAG, "Updating client list");
 		View v = getView();
