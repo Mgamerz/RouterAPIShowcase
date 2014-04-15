@@ -8,16 +8,17 @@ import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
+import android.widget.Toast;
 
 import com.cs481.commandcenter.R;
 
 /**
  * Preference Fragment for the ui preferences page. THIS MUST RUN IN ITS OWN
  * ACTIVITY AS IT DOES NOT WORK WITH THE SUPPORT FRAGMENT MANAGER...
+ * 
  * @author Mgamerz
  */
-public class UIPrefsFragment extends PreferenceFragment implements
-		OnSharedPreferenceChangeListener {
+public class UIPrefsFragment extends PreferenceFragment implements OnSharedPreferenceChangeListener {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -30,24 +31,27 @@ public class UIPrefsFragment extends PreferenceFragment implements
 		}
 	}
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        // Set up a listener whenever a key changes
-        getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
-    }
+	@Override
+	public void onResume() {
+		super.onResume();
+		// Set up a listener whenever a key changes
+		getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
+	}
 
-    @Override
-    public void onPause() {
-        super.onPause();
-        // Unregister the listener whenever a key changes
-        getPreferenceScreen().getSharedPreferences()
-                .unregisterOnSharedPreferenceChangeListener(this);
-    }
+	@Override
+	public void onPause() {
+		super.onPause();
+		// Unregister the listener whenever a key changes
+		getPreferenceScreen().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
+	}
 
-	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
-			String key) {
-		updatePrefSummary(findPreference(key));
+	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+		Preference pref = findPreference(key);
+		updatePrefSummary(pref);
+
+		if (key.equals(getResources().getString(R.string.prefskey_theme))) {
+			Toast.makeText(getActivity(), R.string.prefs_theme_restart, Toast.LENGTH_LONG).show();
+		}
 	}
 
 	private void initSummary(Preference p) {

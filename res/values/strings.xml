@@ -108,7 +108,7 @@
     <string name="security_type">SecurityType</string>
     <string name="password">Password</string>
     <string name="show_password">Show Password</string>
-    <string name="wan_allow_roaming">Match only the SSID</string>
+    <string name="wan_allow_roaming">Connect to any AP with this SSID</string>
     <string name="connecting_as_wan">Connecting as WAN&#8230;</string>
     <string name="hidden_ssid">Hidden SSID</string>
 
@@ -270,6 +270,7 @@
     <string name="prefs_header_securitysubtitle">App Security</string>
     <string name="prefs_header_advancedtitle">Advanced Mode</string>
     <string name="prefs_header_advancedsubtitle">Tweak advanced settings</string>
+    <string name="prefs_theme_restart">Theme will take full effect on app restart.</string>
 
     <!-- Prefs keys -->
     <string name="prefskey_theme">prefs_current_theme</string>
