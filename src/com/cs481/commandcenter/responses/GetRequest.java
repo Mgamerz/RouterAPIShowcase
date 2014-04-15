@@ -31,6 +31,14 @@ public class GetRequest extends SpiceRequest<Response> {
 	private String requestid;
 	private Context context;
 
+	/**
+	 * Creates a new get request.
+	 * @param context Context to use for performing the network operation.
+	 * @param authInfo Info to use for connection parameters
+	 * @param url subtree of the router to access
+	 * @param clazz Class (.class) of the response object you want to request
+	 * @param requestid ID to use for pending requests. If the ID matches an existing request the request will be ignored as one is already in progress.
+	 */
 	public GetRequest(Context context, AuthInfo authInfo, String url, Class clazz, String requestid) {
 		super(Response.class);
 		this.suburl = url;
@@ -76,7 +84,7 @@ public class GetRequest extends SpiceRequest<Response> {
 	 * This method generates a unique cache key for this request. In this case
 	 * our cache key depends just on the keyword.
 	 * 
-	 * @return
+	 * @return the requestid passed as the parameter to the constructor.
 	 */
 	public String createCacheKey() {
 		return requestid;

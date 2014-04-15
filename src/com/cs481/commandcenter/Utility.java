@@ -40,12 +40,17 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  * @author Mike Perez
  */
 public class Utility {
+	// restart constant
+	public static String FORCE_ACTION = "FORCE";
+	public static String RESTART = "RESTART";
+
 	// List loading constants
-	public static int CONTENT_LOADING = 0; //content is in the process of being loaded
-	public static int CONTENT_LOADED = 1; //content was loaded
-	public static int CONTENT_LOAD_FAILED = 2; //could not load content
-	public static int CONTENT_EMPTY = 3; //loaded, but no content
-	
+	public static int CONTENT_LOADING = 0; // content is in the process of being
+											// loaded
+	public static int CONTENT_LOADED = 1; // content was loaded
+	public static int CONTENT_LOAD_FAILED = 2; // could not load content
+	public static int CONTENT_EMPTY = 3; // loaded, but no content
+
 	// Encryption constants for wifi: Enterprise denotes a radius server is used
 	// to generate passwords, PSKs are pre shared keys which
 	// normal folk use.
@@ -361,11 +366,7 @@ public class Utility {
 	 *            Context that this method will use for environment information
 	 */
 	public static void deleteAllProfiles(Context context) {
-		// TODO Need help here. I don't understand what activity/context to pass
-		// on to this db as param
-		DatabaseAdapter dbAdapter = new DatabaseAdapter(context).open();
-		dbAdapter.deleteAllProfiles();
-		dbAdapter.close();
+		context.deleteDatabase(DatabaseAdapter.DATABASE_NAME);
 	}
 
 	/**
@@ -488,8 +489,10 @@ public class Utility {
 		 * android.os.Process.killProcess(android.os.Process.myPid());
 		 */
 		Intent i = context.getPackageManager().getLaunchIntentForPackage(context.getPackageName());
-		i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		i.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+		// System.exit(0);
 		context.startActivity(i);
+
 	}
 
 	/**

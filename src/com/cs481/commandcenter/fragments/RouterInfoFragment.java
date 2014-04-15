@@ -91,6 +91,13 @@ public class RouterInfoFragment extends Fragment {
 			FragmentManager fm = getActivity().getSupportFragmentManager();
 			fm.popBackStack();
 			return true;
+		case R.id.reload_info:
+			//product info read is skipped as the product name and mac address will never change
+			readFWInfo(); //FW might update if the user hasn't used the app in a while, e.g. they did an upgrade from ECM and then left it logged in
+			readUptimeInfo(); //this will always change
+			readHostNameInfo(); //this might change
+			readNumClientsInfo(); //this can change often
+			return true;
 		case R.id.reboot_router:
 			Log.i(CommandCenterActivity.TAG, "User selected reboot router. Showing confirmation dialog.");
 			FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
@@ -121,6 +128,9 @@ public class RouterInfoFragment extends Fragment {
 		}
 	}
 
+	/**
+	 * Sends a reboot request to the router
+	 */
 	private void rebootRouter() {
 		// TODO Auto-generated method stub
 		PutRequest request = new PutRequest(getActivity(), Boolean.valueOf(true), authInfo, "control/system/reboot", Boolean.class);
@@ -268,7 +278,7 @@ public class RouterInfoFragment extends Fragment {
 		/* call the reading methods */
 
 		if (shouldLoadData) {
-			readProductInfo(true);
+			readProductInfo();
 			readFWInfo();
 			readUptimeInfo();
 			readHostNameInfo();
@@ -281,7 +291,7 @@ public class RouterInfoFragment extends Fragment {
 	 * Reads product information from the router (model name)
 	 * @param dialog boolean to show the dialog (or not)
 	 */
-	private void readProductInfo(boolean dialog) {
+	private void readProductInfo() {
 		// perform the request.
 		GetRequest request = new GetRequest(getActivity(), authInfo, "status/product_info", Product_info.class, CACHEKEY_PRODUCT);
 		String lastRequestCacheKey = request.createCacheKey();
