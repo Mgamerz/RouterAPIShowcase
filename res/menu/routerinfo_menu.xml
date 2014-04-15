@@ -2,6 +2,11 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <item
+        android:id="@+id/reload_info"
+        android:title="@string/reload_info"
+        android:visible="true">
+    </item>
+    <item
         android:id="@+id/reboot_router"
         android:title="@string/reboot_router"
         android:visible="true">

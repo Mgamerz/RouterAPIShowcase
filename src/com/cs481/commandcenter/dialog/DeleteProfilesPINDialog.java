@@ -43,15 +43,6 @@ public class DeleteProfilesPINDialog extends DialogFragment {
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
 		HoloDialogBuilder alertDialogBuilder = new HoloDialogBuilder(getActivity());
-
-		// Theme theme = getActivity().getTheme();
-		// TypedValue typedValue = new TypedValue();
-		// theme.resolveAttribute(android.R.attr.windowBackground, typedValue,
-		// true);
-		// Color color = getResources().getColor(colorid);
-
-		// alertDialogBuilder.setDividerColor(typedValue.resourceId);
-		// alertDialogBuilder.setTitleColor(typedValue.resourceId);
 		Resources resources = getResources();
 
 		String title = resources.getString((fullwipe) ? R.string.prefs_delete_pin : R.string.prefs_delete_profiles);
@@ -73,7 +64,7 @@ public class DeleteProfilesPINDialog extends DialogFragment {
 					cryptoremover.commit();
 				}
 				dismiss();
-				Utility.restartApp(getActivity());
+				//Utility.restartApp(getActivity());
 			}
 		});
 		alertDialogBuilder.setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {

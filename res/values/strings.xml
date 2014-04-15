@@ -207,6 +207,7 @@
     <string name="no_logs">No router logs to display or none could be retreived.</string>
     <string name="info_load_fail">Failed to load</string>
     <string name="reboot_router">Reboot router</string>
+    <string name="reload_info">Reload Info</string>
     <string name="confirm_router_reboot">Rebooting the router will automatically log you out once the request succeeds. Continue?</string>
     <string name="reboot_fail">Failed to reboot the router</string>
 

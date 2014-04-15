@@ -2,7 +2,10 @@ package com.cs481.commandcenter.activities;
 
 import java.util.List;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
 import android.util.Log;
@@ -10,6 +13,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.cs481.commandcenter.R;
+import com.cs481.commandcenter.Utility;
 import com.cs481.commandcenter.fragments.preferences.AboutPrefsFragment;
 import com.cs481.commandcenter.fragments.preferences.AdvancedPrefsFragment;
 import com.cs481.commandcenter.fragments.preferences.LicensesFragment;
@@ -27,6 +31,7 @@ public class PrefsActivity extends PreferenceActivity {
 	public static final int THEME_BLUE = 1;
 	public static final int THEME_GREEN = 2;
 	public static final int THEME_BLACK = 3;
+
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
