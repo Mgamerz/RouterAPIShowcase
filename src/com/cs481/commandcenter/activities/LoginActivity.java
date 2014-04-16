@@ -84,6 +84,7 @@ public class LoginActivity extends SpiceActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		setTheme(Utility.getTheme(this));
 		if (savedInstanceState != null) {
 			unlockProfile = savedInstanceState.getParcelable("unlockProfile");
 			authInfo = savedInstanceState.getParcelable("authInfo");
@@ -92,7 +93,6 @@ public class LoginActivity extends SpiceActivity {
 		}
 		setDefaultPrefs();
 		Ln.getConfig().setLoggingLevel(Log.ERROR);
-		setTheme(Utility.getTheme(this));
 
 		setContentView(R.layout.activity_login);
 		checkIfNewVersion();

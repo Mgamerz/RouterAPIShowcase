@@ -79,7 +79,7 @@ public class ECMLoginFragment extends Fragment {
 		final Button connect = (Button) getView().findViewById(R.id.login_button);
 		passw.setOnEditorActionListener(new OnEditorActionListener() {
 			public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-				if (event.getAction()!=KeyEvent.ACTION_DOWN)
+				if (event!=null && event.getAction()!=KeyEvent.ACTION_DOWN)
 		            return false;
 				Log.i(CommandCenterActivity.TAG, "Action ID: " + actionId);
 				if (actionId == EditorInfo.IME_ACTION_SEND || actionId == EditorInfo.IME_NULL) {

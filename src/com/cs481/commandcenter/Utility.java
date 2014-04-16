@@ -405,6 +405,8 @@ public class Utility {
 		String green = colors[2];
 		String black = colors[3];
 
+		Log.i(CommandCenterActivity.TAG, "Setting theme to "+theme);
+		
 		if (theme.equals(blue)) {
 			return R.style.BlueAppTheme;
 		} else if (theme.equals(black)) {
