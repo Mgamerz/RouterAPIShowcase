@@ -138,9 +138,10 @@
     <string name="expansionBay1_led_green">Expansion Bay 1 LED Green</string>
     <string name="expansionBay2_led_red">Expansion Bay 2 LED Red</string>
     <string name="expansionBay2_led_green">Expansion Bay 2 LED Green</string>
-    <string name="gpio_reading">Reading GPIO Configuration</string>
-    <string name="gpio_get_config_failure">Failed to read GPIO configuration</string>
-    <string name="gpio_get_null_response">GPIO response was null.</string>
+    <string name="gpio_loading">Reading LED configuration</string>
+    <string name="gpio_get_config_failure">Failed to read LED configuration</string>
+    <string name="gpio_get_null_response">LED response was null.</string>
+    <string name="gpio_load_failed">Failed to read LED configuration</string>
 
     <!-- Router save profile dialog -->
     <string name="save_profile">Save connection as profile</string>
@@ -272,6 +273,7 @@
     <string name="prefs_header_advancedtitle">Advanced Mode</string>
     <string name="prefs_header_advancedsubtitle">Tweak advanced settings</string>
     <string name="prefs_theme_restart">Theme will take full effect on app restart.</string>
+    <string name="prefs_wipe_restart">Profiles will be fully removed on app restart.</string>
 
     <!-- Prefs keys -->
     <string name="prefskey_theme">prefs_current_theme</string>

@@ -4,7 +4,6 @@ import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
 import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
 import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
 import android.app.ActionBar;
-import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -17,11 +16,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.Switch;
+import android.widget.TableLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cs481.commandcenter.AuthInfo;
 import com.cs481.commandcenter.R;
+import com.cs481.commandcenter.Utility;
 import com.cs481.commandcenter.activities.CommandCenterActivity;
 import com.cs481.commandcenter.activities.SpiceActivity;
 import com.cs481.commandcenter.responses.GetRequest;
@@ -51,8 +55,9 @@ public class GPIOFragment extends Fragment implements OnRefreshListener, OnCheck
 										// to 'update' the switches
 										// and have them immediately change
 										// stuff when they are updated.
-	ProgressDialog progressDialog;
 	private SpiceManager spiceManager;
+	private int listState = Utility.CONTENT_LOADING; // defaults to the loading
+														// screen
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -65,6 +70,7 @@ public class GPIOFragment extends Fragment implements OnRefreshListener, OnCheck
 
 			authInfo = savedInstanceState.getParcelable("authInfo");
 			shouldLoadData = savedInstanceState.getBoolean("shouldLoadData", true);
+			listState = savedInstanceState.getInt("listState");
 		} else {
 			Bundle passedArgs = getArguments();
 			if (passedArgs != null) {
@@ -79,25 +85,23 @@ public class GPIOFragment extends Fragment implements OnRefreshListener, OnCheck
 		outState.putParcelable("gpio", gpio);
 		outState.putBoolean("shouldLoadData", shouldLoadData);
 		outState.putParcelable("authInfo", authInfo);
+		outState.putInt("listState", listState);
 	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View rootView = inflater.inflate(R.layout.fragment_gpio, container, false);
+		updateVisibility(rootView);
 		return rootView;
 	}
 
-	private void readGPIOConfig(boolean dialog) {
+	/**
+	 * Read's the GPIO configuation from the router.
+	 */
+	private void readGPIOConfig() {
 		// perform the request.
 		GetRequest request = new GetRequest(getActivity(), authInfo, "status/gpio", GPIO.class, CACHEKEY_GPIOGET);
 		String lastRequestCacheKey = request.createCacheKey();
-
-		if (dialog) {
-			progressDialog = new ProgressDialog(getActivity(), R.style.DialogTheme);
-			progressDialog.setMessage(getResources().getString(R.string.gpio_reading));
-			progressDialog.show();
-			progressDialog.setCanceledOnTouchOutside(false);
-		}
 		spiceManager.execute(request, lastRequestCacheKey, DurationInMillis.ALWAYS_EXPIRED, new GPIOGetRequestListener());
 	}
 
@@ -119,7 +123,7 @@ public class GPIOFragment extends Fragment implements OnRefreshListener, OnCheck
 		sa.getActionBar().setTitle(getResources().getString(R.string.gpio_title));
 		spiceManager = sa.getSpiceManager();
 		if (shouldLoadData) {
-			readGPIOConfig(true);
+			readGPIOConfig();
 			shouldLoadData = false;
 		} else {
 			// set the switches
@@ -230,7 +234,7 @@ public class GPIOFragment extends Fragment implements OnRefreshListener, OnCheck
 	public void onRefreshStarted(View view) {
 		// TODO Auto-generated method stub
 		checking = true;
-		readGPIOConfig(false);
+		readGPIOConfig();
 	}
 
 	// inner class of your spiced Activity
@@ -238,9 +242,8 @@ public class GPIOFragment extends Fragment implements OnRefreshListener, OnCheck
 
 		@Override
 		public void onRequestFailure(SpiceException e) {
-			// update your UI
-			if (progressDialog != null) {
-				progressDialog.dismiss(); // update your UI
+			if (!isAdded()) {
+				return;
 			}
 			mPullToRefreshLayout.setRefreshComplete();
 			Log.i(CommandCenterActivity.TAG, "Failed to read GPIO!");
@@ -251,15 +254,16 @@ public class GPIOFragment extends Fragment implements OnRefreshListener, OnCheck
 
 		@Override
 		public void onRequestSuccess(Response response) {
-			GPIO gpio = (GPIO) response.getData();
-			// update your UI
-			if (progressDialog != null) {
-				progressDialog.dismiss(); // update your UI
+			if (!isAdded()) {
+				return;
 			}
+			GPIO gpio = (GPIO) response.getData();
 			if (response.getResponseInfo() != null) {
 				if (response.getResponseInfo().getSuccess()) {
 					setGPIO(gpio);
 					updateSwitches();
+					listState = Utility.CONTENT_LOADED;
+					updateVisibility(getView());
 				} else {
 					Toast.makeText(getActivity(), response.getResponseInfo().getReason(), Toast.LENGTH_LONG).show();
 				}
@@ -274,6 +278,32 @@ public class GPIOFragment extends Fragment implements OnRefreshListener, OnCheck
 
 	public void setGPIO(GPIO gpio) {
 		this.gpio = gpio;
+	}
+
+	public void updateVisibility(View v) {
+		// TODO Auto-generated method stub
+		LinearLayout loadingLayout = (LinearLayout) v.findViewById(R.id.gpio_loadinglayout);
+		TableLayout gpioLayout = (TableLayout) v.findViewById(R.id.gpio_table);
+
+		if (listState != Utility.CONTENT_LOADED) {
+			ProgressBar spinny = (ProgressBar) v.findViewById(R.id.gpio_loading_progressbar);
+			TextView status = (TextView) v.findViewById(R.id.gpio_loading_text);
+
+			loadingLayout.setVisibility(View.VISIBLE);
+			gpioLayout.setVisibility(View.GONE);
+
+			if (listState != Utility.CONTENT_LOADING) {
+				spinny.setVisibility(View.GONE);
+				status.setText(R.string.gpio_load_failed);
+			} else {
+				spinny.setVisibility(View.VISIBLE);
+				status.setText(R.string.gpio_loading);
+			}
+		} else {
+			// loaded, show the view
+			loadingLayout.setVisibility(View.GONE);
+			gpioLayout.setVisibility(View.VISIBLE);
+		}
 	}
 
 	public void updateSwitches() {
@@ -362,8 +392,8 @@ public class GPIOFragment extends Fragment implements OnRefreshListener, OnCheck
 		@Override
 		public void onRequestFailure(SpiceException e) {
 			// update your UI
-			if (!isAdded()){
-				return; //don't care
+			if (!isAdded()) {
+				return; // don't care
 			}
 			Log.i(CommandCenterActivity.TAG, "Command failure!");
 		}
@@ -371,10 +401,10 @@ public class GPIOFragment extends Fragment implements OnRefreshListener, OnCheck
 		@Override
 		public void onRequestSuccess(Response response) {
 			// update your UI. We don't have anything to update right now.
-			if (!isAdded()){
-				return; //don't care
+			if (!isAdded()) {
+				return; // don't care
 			}
-			
+
 			if (response.getResponseInfo().getSuccess()) {
 				// we don't really care...
 			} else {
@@ -464,8 +494,8 @@ public class GPIOFragment extends Fragment implements OnRefreshListener, OnCheck
 			default:
 				return;
 			}
-			
-			String subtree = "control/gpio/"+changedElem;
+
+			String subtree = "control/gpio/" + changedElem;
 
 			// perform the request.
 			PutRequest request = new PutRequest(getActivity(), Integer.valueOf((isChecked) ? 0 : 1), authInfo, subtree, Integer.class);

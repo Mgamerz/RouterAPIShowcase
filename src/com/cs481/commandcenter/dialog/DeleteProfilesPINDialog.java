@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.cs481.commandcenter.R;
 import com.cs481.commandcenter.Utility;
@@ -63,8 +64,9 @@ public class DeleteProfilesPINDialog extends DialogFragment {
 					cryptoremover.clear();
 					cryptoremover.commit();
 				}
+				Toast.makeText(getActivity(), R.string.prefs_wipe_restart, Toast.LENGTH_LONG).show();
 				dismiss();
-				//Utility.restartApp(getActivity());
+				//rebooting the app doesn't seem to work.
 			}
 		});
 		alertDialogBuilder.setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
