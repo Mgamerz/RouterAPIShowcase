@@ -31,6 +31,7 @@
         android:layout_centerVertical="true"
         android:checked="true"
         android:focusable="false"
+        android:switchTextAppearance="@style/SwitchTextAppearance"
         android:thumb="@drawable/blue_switch_inner_track_dark" />
 
 </RelativeLayout>

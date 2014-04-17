@@ -25,6 +25,7 @@ import android.net.DhcpInfo;
 import android.net.wifi.WifiManager;
 import android.os.Parcel;
 import android.preference.PreferenceManager;
+import android.support.v4.app.FragmentActivity;
 import android.text.format.Formatter;
 import android.util.Base64;
 import android.util.Log;
@@ -623,6 +624,20 @@ public class Utility {
 				return CIPHER_AES;
 			}
 		}
+		return null;
+	}
+
+	/**
+	 * Selects a single ECM profile from the database based on the ID of the router.
+	 * @param context Context to use for the database
+	 * @param id ID of the router to find
+	 * @return profile of the router if it exists, null if it doesn't.
+	 */
+	public static Object getECMProfile(Context context, String id) {
+		DatabaseAdapter dbAdapter = new DatabaseAdapter(context);
+		dbAdapter.open();
+		Profile profile = dbAdapter.getECMProfile(id);
+		dbAdapter.close();
 		return null;
 	}
 }

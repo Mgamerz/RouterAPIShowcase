@@ -2,7 +2,6 @@ package com.cs481.commandcenter.fragments;
 
 import java.util.ArrayList;
 
-import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.res.Resources;
@@ -18,7 +17,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.cs481.commandcenter.AuthInfo;
+import com.cs481.commandcenter.Profile;
 import com.cs481.commandcenter.R;
+import com.cs481.commandcenter.Utility;
 import com.cs481.commandcenter.activities.CommandCenterActivity;
 import com.cs481.commandcenter.activities.SpiceActivity;
 import com.cs481.commandcenter.dialog.RouterConfirmDialogFragment;
@@ -30,8 +31,7 @@ import com.cs481.commandcenter.responses.ecm.routers.Router;
  * @author Mike Perez
  */
 
-public class ECMRoutersFragment extends ListFragment implements
-		OnRefreshListener {
+public class ECMRoutersFragment extends ListFragment {
 	// private boolean checking = true;
 	//private PullToRefreshLayout mPullToRefreshLayout;
 	ProgressDialog progressDialog;
@@ -111,6 +111,7 @@ public class ECMRoutersFragment extends ListFragment implements
 	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
+		//removed as we don't have a need ye tto pull to refresh. Will in the future.
 		// This is the View which is created by ListFragment
 		//ViewGroup viewGroup = (ViewGroup) view;
 
@@ -131,12 +132,6 @@ public class ECMRoutersFragment extends ListFragment implements
 
 				// We can now complete the setup as desired
 				.listener(this).setup(mPullToRefreshLayout); */
-	}
-
-	@Override
-	public void onRefreshStarted(View view) {
-		// TODO Auto-generated method stub
-
 	}
 
 	// List adapter.
@@ -199,16 +194,13 @@ public class ECMRoutersFragment extends ListFragment implements
 		RouterListRow row = (RouterListRow) (l.getAdapter().getItem(position));
 		Log.w(CommandCenterActivity.TAG, "Router ID clicked: " + row.getId());
 
-		//LoginActivity activity = (LoginActivity) getActivity();
-
-		//authInfo = activity.getAuthInfo();
-		Log.i(CommandCenterActivity.TAG, "Authinfo: " + authInfo);
-		Log.i(CommandCenterActivity.TAG, "Router: " + row.getRouter());
-
 		authInfo.setRouterId(row.getRouter().getId());
+		
+		boolean profileExists = (Utility.getECMProfile(getActivity(), row.getRouter().getId()) != null);
+		
 		//activity.setAuthInfo(authInfo);
 		// activity.setRouter(row.getRouter());
-		RouterConfirmDialogFragment rcFragment = RouterConfirmDialogFragment.newInstance(row.getRouter(), authInfo);
+		RouterConfirmDialogFragment rcFragment = RouterConfirmDialogFragment.newInstance(row.getRouter(), authInfo, profileExists);
 		rcFragment.show(getActivity().getSupportFragmentManager(), "RouterConfirm");
 	}
 }

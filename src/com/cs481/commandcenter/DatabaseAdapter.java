@@ -256,6 +256,7 @@ public class DatabaseAdapter {
 				c.moveToNext();
 			}
 		}
+		c.close();
 		return profileArrayList;
 	}
 
@@ -293,7 +294,7 @@ public class DatabaseAdapter {
 				c.moveToNext();
 			}
 		}
-
+		c.close();
 		return profileArrayList;
 	}
 
@@ -311,5 +312,34 @@ public class DatabaseAdapter {
 		allProfiles.addAll(getEcmProfiles());
 
 		return allProfiles;
+	}
+
+	/**
+	 * Gets a single database profile from the ECM table.
+	 * @return profile if it exists.
+	 */
+	public Profile getECMProfile(String id) {
+		String select = "SELECT * FROM ECM WHERE ?=?";
+		Profile profile = null;
+		Cursor c = db.rawQuery(select, new String[]{TABLE_ECM_ROW_ROUTERID, id});
+		/*
+		 * ECM - TABLE_ECM_ROW_PROFILE_NAME, TABLE_ECM_ROW_USERNAME,
+		 * TABLE_ECM_ROW_PASSWORD, TABLE_ECM_ROW_ROUTERID
+		 */
+		if (c != null && c.moveToFirst()) {
+			while (c.isAfterLast() == false) {
+				profile = new Profile();
+				AuthInfo authInfo = new AuthInfo();
+
+				profile.setProfileName(c.getString(c.getColumnIndex(TABLE_ECM_ROW_PROFILE_NAME)));
+				authInfo.setUsername(c.getString(c.getColumnIndex(TABLE_ECM_ROW_USERNAME)));
+				authInfo.setPassword(c.getString(c.getColumnIndex(TABLE_ECM_ROW_PASSWORD)));
+				authInfo.setRouterId(c.getString(c.getColumnIndex(TABLE_ECM_ROW_ROUTERID)));
+				authInfo.setEcm(true);
+				profile.setAuthInfo(authInfo);
+			}
+		}
+		c.close();
+		return profile;
 	}
 }

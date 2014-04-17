@@ -35,6 +35,7 @@ import com.cs481.commandcenter.responses.ecm.routers.Router;
 public class RouterConfirmDialogFragment extends DialogFragment {
 	private Router router;
 	private AuthInfo authInfo;
+	private boolean profileExists;
 
 	// Context context;
 
@@ -52,6 +53,7 @@ public class RouterConfirmDialogFragment extends DialogFragment {
 		if (savedInstanceState != null) {
 			router = savedInstanceState.getParcelable("router");
 			authInfo = savedInstanceState.getParcelable("authInfo");
+			profileExists = savedInstanceState.getBoolean("profileExists");
 		}
 	}
 
@@ -75,6 +77,12 @@ public class RouterConfirmDialogFragment extends DialogFragment {
 		String text = tv.getText().toString();
 		text = String.format(text, router.getName());
 		tv.setText(text);
+		
+		if (profileExists){ 
+			//disable the checkbox
+			CheckBox saveProfileCheckbox = (CheckBox) v.findViewById(R.id.ecm_save_as_profile);
+			saveProfileCheckbox.setEnabled(false);
+		}
 
 		alertDialogBuilder.setCustomView(v);
 		alertDialogBuilder.setPositiveButton(android.R.string.yes, null);
@@ -166,6 +174,7 @@ public class RouterConfirmDialogFragment extends DialogFragment {
 		super.onSaveInstanceState(outState);
 		outState.putParcelable("router", router);
 		outState.putParcelable("authInfo", authInfo);
+		outState.putBoolean("profileExists", profileExists);
 	}
 
 	/**
@@ -189,13 +198,15 @@ public class RouterConfirmDialogFragment extends DialogFragment {
 	 * 
 	 * @param router Router that will be edited. Contains information about the router such as the ID. Obtained from ECM.
 	 * @param authInfo Authinfo to use when communicating to the router. Should be setup to use ECM.
+	 * @param profileExists boolean indicating if the profile already exists. If true, the checkbox will be disabled.
 	 * @return New RouterConfirmDialogFragment with the proper arguments set.
 	 */
-	public static RouterConfirmDialogFragment newInstance(Router router, AuthInfo authInfo) {
+	public static RouterConfirmDialogFragment newInstance(Router router, AuthInfo authInfo, boolean profileExists) {
 		// TODO Auto-generated method stub
 		RouterConfirmDialogFragment rcdf = new RouterConfirmDialogFragment();
 		rcdf.router = router;
 		rcdf.authInfo = authInfo;
+		rcdf.profileExists = profileExists;
 		return rcdf;
 	}
 }
