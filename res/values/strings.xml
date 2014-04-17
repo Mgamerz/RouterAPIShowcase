@@ -145,6 +145,7 @@
 
     <!-- Router save profile dialog -->
     <string name="save_profile">Save connection as profile</string>
+    <string name="profile_exists">Profile already exists</string>
 
     <!-- PIN -->
     <string name="pin_actionbar_title">UNLOCK</string>

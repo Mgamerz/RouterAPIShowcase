@@ -192,11 +192,12 @@ public class ECMRoutersFragment extends ListFragment {
 	@Override
 	public void onListItemClick(ListView l, View v, int position, long id) {
 		RouterListRow row = (RouterListRow) (l.getAdapter().getItem(position));
-		Log.w(CommandCenterActivity.TAG, "Router ID clicked: " + row.getId());
 
 		authInfo.setRouterId(row.getRouter().getId());
-		
-		boolean profileExists = (Utility.getECMProfile(getActivity(), row.getRouter().getId()) != null);
+		Profile prof = Utility.getECMProfile(getActivity(), row.getRouter().getId());
+		Log.w(CommandCenterActivity.TAG, "getECMProfile(): " + prof);
+
+		boolean profileExists = (prof != null);
 		
 		//activity.setAuthInfo(authInfo);
 		// activity.setRouter(row.getRouter());

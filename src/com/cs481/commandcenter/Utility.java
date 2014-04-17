@@ -633,11 +633,11 @@ public class Utility {
 	 * @param id ID of the router to find
 	 * @return profile of the router if it exists, null if it doesn't.
 	 */
-	public static Object getECMProfile(Context context, String id) {
+	public static Profile getECMProfile(Context context, String id) {
 		DatabaseAdapter dbAdapter = new DatabaseAdapter(context);
 		dbAdapter.open();
 		Profile profile = dbAdapter.getECMProfile(id);
 		dbAdapter.close();
-		return null;
+		return profile;
 	}
 }

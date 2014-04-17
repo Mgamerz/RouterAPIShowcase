@@ -63,12 +63,9 @@ public class DatabaseAdapter {
 		@Override
 		public void onCreate(SQLiteDatabase db) {
 
-			String ecmTableQueryString = "create table " + DATABASE_TABLE_ECM + " (" + TABLE_ECM_ROW_PROFILE_NAME + " text unique not null," + TABLE_ECM_ROW_USERNAME + " text,"
-					+ TABLE_ECM_ROW_PASSWORD + " text," + TABLE_ECM_ROW_ROUTERID + " text primary key not null" + ");";
+			String ecmTableQueryString = "create table " + DATABASE_TABLE_ECM + " (" + TABLE_ECM_ROW_PROFILE_NAME + " text unique not null," + TABLE_ECM_ROW_USERNAME + " text," + TABLE_ECM_ROW_PASSWORD + " text," + TABLE_ECM_ROW_ROUTERID + " text primary key not null" + ");";
 
-			String directTableQueryString = "create table " + DATABASE_TABLE_DIRECT + " (" + TABLE_DIRECT_ROW_PROFILE_NAME + " text unique not null," + TABLE_DIRECT_ROW_USERNAME + " text,"
-					+ TABLE_DIRECT_ROW_PASSWORD + " text," + TABLE_DIRECT_ROW_ROUTERIP + " text primary key not null," + TABLE_DIRECT_ROW_ROUTERPORT + " integer," + TABLE_DIRECT_ROW_HTTPS + " text"
-					+ ");";
+			String directTableQueryString = "create table " + DATABASE_TABLE_DIRECT + " (" + TABLE_DIRECT_ROW_PROFILE_NAME + " text unique not null," + TABLE_DIRECT_ROW_USERNAME + " text," + TABLE_DIRECT_ROW_PASSWORD + " text," + TABLE_DIRECT_ROW_ROUTERIP + " text primary key not null," + TABLE_DIRECT_ROW_ROUTERPORT + " integer," + TABLE_DIRECT_ROW_HTTPS + " text" + ");";
 
 			db.execSQL(ecmTableQueryString);
 			db.execSQL(directTableQueryString);
@@ -213,6 +210,7 @@ public class DatabaseAdapter {
 
 	/**
 	 * Deletes all ECM profiles
+	 * 
 	 * @return positive on success
 	 */
 	public long deleteAllEcmProfiles() {
@@ -221,6 +219,7 @@ public class DatabaseAdapter {
 
 	/**
 	 * Deletes all direct profiles
+	 * 
 	 * @return positive on success
 	 */
 	public long deleteAllDirectProfiles() {
@@ -316,28 +315,28 @@ public class DatabaseAdapter {
 
 	/**
 	 * Gets a single database profile from the ECM table.
+	 * 
 	 * @return profile if it exists.
 	 */
 	public Profile getECMProfile(String id) {
-		String select = "SELECT * FROM ECM WHERE ?=?";
+		String select = String.format("SELECT * FROM ECM WHERE %s=?", TABLE_ECM_ROW_ROUTERID);
 		Profile profile = null;
-		Cursor c = db.rawQuery(select, new String[]{TABLE_ECM_ROW_ROUTERID, id});
+		Cursor c = db.rawQuery(select, new String[] { id });
 		/*
 		 * ECM - TABLE_ECM_ROW_PROFILE_NAME, TABLE_ECM_ROW_USERNAME,
 		 * TABLE_ECM_ROW_PASSWORD, TABLE_ECM_ROW_ROUTERID
 		 */
 		if (c != null && c.moveToFirst()) {
-			while (c.isAfterLast() == false) {
-				profile = new Profile();
-				AuthInfo authInfo = new AuthInfo();
+			profile = new Profile();
+			AuthInfo authInfo = new AuthInfo();
 
-				profile.setProfileName(c.getString(c.getColumnIndex(TABLE_ECM_ROW_PROFILE_NAME)));
-				authInfo.setUsername(c.getString(c.getColumnIndex(TABLE_ECM_ROW_USERNAME)));
-				authInfo.setPassword(c.getString(c.getColumnIndex(TABLE_ECM_ROW_PASSWORD)));
-				authInfo.setRouterId(c.getString(c.getColumnIndex(TABLE_ECM_ROW_ROUTERID)));
-				authInfo.setEcm(true);
-				profile.setAuthInfo(authInfo);
-			}
+			profile.setProfileName(c.getString(c.getColumnIndex(TABLE_ECM_ROW_PROFILE_NAME)));
+			authInfo.setUsername(c.getString(c.getColumnIndex(TABLE_ECM_ROW_USERNAME)));
+			authInfo.setPassword(c.getString(c.getColumnIndex(TABLE_ECM_ROW_PASSWORD)));
+			authInfo.setRouterId(c.getString(c.getColumnIndex(TABLE_ECM_ROW_ROUTERID)));
+			authInfo.setEcm(true);
+			profile.setAuthInfo(authInfo);
+
 		}
 		c.close();
 		return profile;

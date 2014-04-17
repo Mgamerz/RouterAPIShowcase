@@ -16,7 +16,6 @@
         android:id="@+id/ecm_save_as_profile"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="#000000"
         android:text="@string/save_profile" />
 
 </LinearLayout>

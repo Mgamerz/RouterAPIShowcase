@@ -82,6 +82,7 @@ public class RouterConfirmDialogFragment extends DialogFragment {
 			//disable the checkbox
 			CheckBox saveProfileCheckbox = (CheckBox) v.findViewById(R.id.ecm_save_as_profile);
 			saveProfileCheckbox.setEnabled(false);
+			saveProfileCheckbox.setText(R.string.profile_exists);
 		}
 
 		alertDialogBuilder.setCustomView(v);
