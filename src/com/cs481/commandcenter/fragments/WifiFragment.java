@@ -445,7 +445,7 @@ public class WifiFragment extends ListFragment implements OnRefreshListener {
 	 *            through an adapter.
 	 */
 	private void updateWWAPList(ArrayList<Bss> wwaps) {
-		if (getActivity() == null) {
+		if (!isAdded()) {
 			return; // fragment has died
 		}
 		Log.i(CommandCenterActivity.TAG, "Updating adapter with new wwap information.");

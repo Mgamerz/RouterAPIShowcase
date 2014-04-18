@@ -275,7 +275,7 @@ public class LogSubfragment extends ListFragment implements OnRefreshListener {
 	}
 
 	private void updateLogsList(ArrayList<LogMessage> logs, boolean clearExisting) {
-		if (getActivity() == null) {
+		if (!isAdded()) {
 			return; // fragment has died
 		}
 		// TODO Auto-generated method stub
