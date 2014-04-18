@@ -57,7 +57,7 @@
     <string name="dashboard_title">Dashboard</string>
     <string name="wireless">Wireless</string>
     <string name="lan">LAN</string>
-    <string name="wan">WAN</string>
+    <string name="wan">WiFi as WAN/Bridge</string>
     <string name="gpio">LED Control</string>
     <string name="router_info">Router Information</string>
     <string name="wireless_desc">Configure access points</string>
@@ -69,16 +69,16 @@
     <!-- Wifi as WAN/Bridge Fragment -->
     <string name="wifiwan_title">WiFi as WAN</string>
     <string name="wifibridge_title">WiFi as Bridge</string>
-    <string name="wificlient_title">WiFi Client</string>
+    <string name="wificlient_title">Bridge/WWAN Disabled</string>
     <string name="wifimenu_sort_signal">Sort by signal</string>
     <string name="wifi_sort_alphabetically">Sort by name</string>
     <string name="wlan_reading">Reading WLAN Configuration</string>
     <string name="wlan_get_config_failure">Failed to read WLAN configuration</string>
     <string name="wlan_hidden_ssid">&lt;Hidden&gt;</string>
     <string name="wifi">WiFi</string>
-    <string name="warning_clientchange">Router Client Mode Change</string>
+    <string name="warning_clientchange">WiFi Client Mode Change</string>
     <string name="disabled">disabled</string>
-    <string name="confirm_client_change">Are you sure you want to change the Wireless Client mode to %s? This may affect network connectivity.</string>
+    <string name="confirm_client_change">Are you sure you want to change the wireless client mode to %s? This may affect network connectivity.</string>
     <string name="bridged">bridge</string>
     <string name="wwan">wwan</string>
     <string name="wificlient_no_access_points">No access points or wireless is off.</string>
@@ -239,10 +239,10 @@
     <string name="toggle_wap_confirm">Turn off the %s access point?</string>
 
     <string-array name="wifiap_encryptiontype_values">
-        <item>None</item>
-        <item>WEP AUTO</item>
-        <item>WEP OPEN</item>
-        <item>WEP SHARED</item>
+        <item>Open</item>
+        <item>WEP Auto</item>
+        <item>WEP Open</item>
+        <item>WEP Shared</item>
         <item>WPA1</item>
         <item>WPA1 Enterprise</item>
         <item>WPA2</item>

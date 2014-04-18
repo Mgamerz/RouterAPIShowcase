@@ -418,7 +418,7 @@ public class WifiAsWANFragment extends ListFragment implements OnRefreshListener
 			} else {
 				listState = Utility.CONTENT_LOAD_FAILED;
 				Toast.makeText(getActivity(), response.getResponseInfo().getReason(), Toast.LENGTH_LONG).show();
-				
+
 			}
 			mPullToRefreshLayout.setRefreshComplete();
 
@@ -432,9 +432,8 @@ public class WifiAsWANFragment extends ListFragment implements OnRefreshListener
 			if (!isAdded()) {
 				return;
 			}
-			Resources resources = getResources();
 			Log.i(CommandCenterActivity.TAG, "Failed to read the client wan mode!");
-			Toast.makeText(getActivity(), resources.getString(R.string.wlan_get_config_failure), Toast.LENGTH_SHORT).show();
+			Toast.makeText(getActivity(), R.string.wlan_get_config_failure, Toast.LENGTH_SHORT).show();
 			mPullToRefreshLayout.setRefreshComplete();
 		}
 
@@ -456,9 +455,8 @@ public class WifiAsWANFragment extends ListFragment implements OnRefreshListener
 				} else {
 					position = WIFICLIENT_DISABLED;
 				}
-
-				getActivity().getActionBar().setSelectedNavigationItem(position);
 				currentClientMode = position;
+				getActivity().getActionBar().setSelectedNavigationItem(position);
 				Log.i(CommandCenterActivity.TAG, "WWAN Mode get request successful");
 			} else {
 
@@ -495,7 +493,7 @@ public class WifiAsWANFragment extends ListFragment implements OnRefreshListener
 
 		Resources resources = getResources();
 		for (WAP wap : waps) {
-			String subtitle = wap.getType() + " - " + wap.getMode();
+			String subtitle = Utility.authToHumanString(getActivity(), wap.getSecurityType()) + " - " + wap.getBssid() + " - " + wap.getMode();
 			String ssid = wap.getSsid();
 			if (ssid.equals(""))
 				ssid = resources.getString(R.string.wlan_hidden_ssid);
@@ -554,9 +552,10 @@ public class WifiAsWANFragment extends ListFragment implements OnRefreshListener
 		// getActivity();
 
 		// authInfo = activity.getAuthInfo();
-		WifiWanDialogFragment wwFragment = WifiWanDialogFragment.newInstance(this);
-		wwFragment.setData(row.getWap(), authInfo);
-		wwFragment.show(getActivity().getSupportFragmentManager(), "WAPConfirm");
+		WifiWanDialogFragment wwFragment = WifiWanDialogFragment.newInstance(row.getWap(), authInfo);
+		wwFragment.setTargetFragment(this, WAN_CONNECT_FRAGMENT);
+
+		wwFragment.show(getActivity().getSupportFragmentManager(), WifiWanDialogFragment.class.getName());
 	}
 
 	/**
@@ -603,6 +602,9 @@ public class WifiAsWANFragment extends ListFragment implements OnRefreshListener
 		spiceManager.execute(request, lastRequestCacheKey, DurationInMillis.ALWAYS_EXPIRED, new WANProfilePostRequestListener());
 
 	}
+	
+
+
 
 	private class WANProfilesGetRequestListener implements RequestListener<Response> {
 
@@ -656,7 +658,7 @@ public class WifiAsWANFragment extends ListFragment implements OnRefreshListener
 		case WAN_CHANGE_FRAGMENT:
 			if (resultCode == Activity.RESULT_OK) {
 				// After Ok code.
-				Log.i(CommandCenterActivity.TAG, "user pressed ok");
+				Log.i(CommandCenterActivity.TAG, "user pressed ok at wan change");
 				currentClientMode = getActivity().getActionBar().getSelectedNavigationIndex();
 				temporaryClientMode = -1;
 
@@ -668,14 +670,24 @@ public class WifiAsWANFragment extends ListFragment implements OnRefreshListener
 
 			} else if (resultCode == Activity.RESULT_CANCELED) {
 				// After Cancel code.
-				Log.i(CommandCenterActivity.TAG, "user pressed cancel, mode now " + currentClientMode);
+				Log.i(CommandCenterActivity.TAG, "user pressed cancel, mode still is: " + currentClientMode);
 				// currentClientMode = temporaryClientMode;
+
+				getActivity().getActionBar().setSelectedNavigationItem(currentClientMode);
 				temporaryClientMode = -1;
 				Log.i(CommandCenterActivity.TAG, "reverted mode, mode now " + currentClientMode);
 
-				getActivity().getActionBar().setSelectedNavigationItem(currentClientMode);
+
 			}
 
+			break;
+		case WAN_CONNECT_FRAGMENT:
+			if (resultCode == Activity.RESULT_OK) {
+				//connect as WAN
+				Log.i(CommandCenterActivity.TAG, "user pressed ok to connect to wap");
+				WANProfile wanprofile = data.getExtras().getParcelable("wanprofile");
+				connectAsWAN(wanprofile);
+			}
 			break;
 		}
 	}
@@ -702,7 +714,7 @@ public class WifiAsWANFragment extends ListFragment implements OnRefreshListener
 
 	@Override
 	public boolean onNavigationItemSelected(int itemPosition, long itemId) {
-		if (itemPosition == currentClientMode) {
+		if (itemPosition == currentClientMode || temporaryClientMode > 0) {
 			return true; // nothing changed.
 		}
 
@@ -717,6 +729,7 @@ public class WifiAsWANFragment extends ListFragment implements OnRefreshListener
 
 		DialogFragment dialogFrag = WifiClientChangeDialog.newInstance(dropdownToString(itemPosition));
 		dialogFrag.setTargetFragment(this, WAN_CHANGE_FRAGMENT);
+
 		dialogFrag.show(ft, "dialog");
 
 		return true;

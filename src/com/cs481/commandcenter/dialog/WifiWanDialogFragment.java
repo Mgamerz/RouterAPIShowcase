@@ -1,7 +1,9 @@
 package com.cs481.commandcenter.dialog;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.res.Resources.Theme;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -31,16 +33,15 @@ import com.cs481.commandcenter.responses.config.wwan.WANProfile;
 import com.cs481.commandcenter.responses.status.wlan.WAP;
 
 /**
- * Dialog fragment that shows options for when the user
- * tries to connect to a wireless access point as the router
+ * Dialog fragment that shows options for when the user tries to connect to a
+ * wireless access point as the router
+ * 
  * @author Mike Perez
  */
 
 public class WifiWanDialogFragment extends DialogFragment {
 	private WAP wap;
 	private AuthInfo authInfo;
-	private WifiAsWANFragment hostingFragment;
-
 
 	/**
 	 * This constructor must be empty or the Fragment won't be able to start.
@@ -51,11 +52,13 @@ public class WifiWanDialogFragment extends DialogFragment {
 	}
 
 	/**
-	 * This creates a new instance of WifiWanDialogFragment with the given parameters.
+	 * This creates a new instance of WifiWanDialogFragment with the given
+	 * parameters set.
 	 */
-	public static WifiWanDialogFragment newInstance(WifiAsWANFragment wawf) {
+	public static WifiWanDialogFragment newInstance(WAP wap, AuthInfo authInfo) {
 		WifiWanDialogFragment wwdf = new WifiWanDialogFragment();
-		wwdf.hostingFragment = wawf;
+		wwdf.wap = wap;
+		wwdf.authInfo = authInfo;
 		return wwdf;
 	}
 
@@ -84,8 +87,7 @@ public class WifiWanDialogFragment extends DialogFragment {
 
 		Theme theme = getActivity().getTheme();
 		TypedValue typedValue = new TypedValue();
-		theme.resolveAttribute(android.R.attr.windowBackground, typedValue,
-				true);
+		theme.resolveAttribute(android.R.attr.windowBackground, typedValue, true);
 		// Color color = getResources().getColor(colorid);
 
 		dialogBuilder.setDividerColor(typedValue.resourceId);
@@ -107,145 +109,105 @@ public class WifiWanDialogFragment extends DialogFragment {
 
 		if (!hiddenSsid) {
 			Log.i(CommandCenterActivity.TAG, "Not a hidden SSID");
-			LinearLayout layout = (LinearLayout) dialogView
-					.findViewById(R.id.wapconnect_ssidlayout);
+			LinearLayout layout = (LinearLayout) dialogView.findViewById(R.id.wapconnect_ssidlayout);
 			layout.setVisibility(LinearLayout.GONE);
-			Log.i(CommandCenterActivity.TAG,
-					"Layout visibility: " + layout.getVisibility());
+			Log.i(CommandCenterActivity.TAG, "Layout visibility: " + layout.getVisibility());
 		}
 
 		if (wap.getAuthmode().equals("none")) {
-			RelativeLayout passwordLayout = (RelativeLayout) dialogView
-					.findViewById(R.id.wapconnect_passwordlayout);
+			RelativeLayout passwordLayout = (RelativeLayout) dialogView.findViewById(R.id.wapconnect_passwordlayout);
 			passwordLayout.setVisibility(RelativeLayout.GONE);
 		} else {
-			TextView warning = (TextView) dialogView
-					.findViewById(R.id.wapconnect_insecure_text);
+			TextView warning = (TextView) dialogView.findViewById(R.id.wapconnect_insecure_text);
 			warning.setVisibility(TextView.GONE);
-			
+
 			CheckBox showPass = (CheckBox) dialogView.findViewById(R.id.wapconnect_showpassword);
 			showPass.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-				
+
 				@Override
 				public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 					// TODO Auto-generated method stub
 					EditText password = (EditText) dialogView.findViewById(R.id.wapconnect_password_field);
-				       if(isChecked) {
-		                    password.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
-		                } else {
-		                    password.setInputType(129); //mask password. don't know why its a number
-		                }
-					
+					if (isChecked) {
+						password.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
+					} else {
+						password.setInputType(129); // mask password. don't know
+													// why its a number
+					}
+
 				}
 			});
 		}
 
 		// Get dynamic content, set font to BOLD
 		SpannableString securityString = new SpannableString(wap.getAuthmode());
-		securityString.setSpan(new StyleSpan(Typeface.BOLD), 0,
-				securityString.length(), 0);
+		securityString.setSpan(new StyleSpan(Typeface.BOLD), 0, securityString.length(), 0);
 
-		SpannableString signalString = new SpannableString(
-				Utility.rssiToSignalLiteral(wap.getRssi(), getResources()));
-		signalString.setSpan(new StyleSpan(Typeface.BOLD), 0,
-				signalString.length(), 0);
+		SpannableString signalString = new SpannableString(Utility.rssiToSignalLiteral(wap.getRssi(), getResources()));
+		signalString.setSpan(new StyleSpan(Typeface.BOLD), 0, signalString.length(), 0);
 
 		// Set the dynamic content
-		TextView securityType = (TextView) dialogView
-				.findViewById(R.id.wapconnect_securitytype_value);
+		TextView securityType = (TextView) dialogView.findViewById(R.id.wapconnect_securitytype_value);
 		securityType.setText(securityString);
 
-		TextView signalStrength = (TextView) dialogView
-				.findViewById(R.id.wapconnect_signalstrength_value);
+		TextView signalStrength = (TextView) dialogView.findViewById(R.id.wapconnect_signalstrength_value);
 		signalStrength.setText(signalString);
 		dialogBuilder.setCustomView(dialogView);
 
 		// setup buttons
-		dialogBuilder.setPositiveButton(R.string.connect,
-				new DialogInterface.OnClickListener() {
+		dialogBuilder.setPositiveButton(R.string.connect, new DialogInterface.OnClickListener() {
 
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						// TODO Auto-generated method stub
-						Toast.makeText(
-								getActivity(),
-								getResources().getString(
-										R.string.connecting_as_wan),
-								Toast.LENGTH_LONG).show();
-						connectAsWan(wap);
-					}
-				});
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				// TODO Auto-generated method stub
+				Toast.makeText(getActivity(), getResources().getString(R.string.connecting_as_wan), Toast.LENGTH_LONG).show();
+				
+				WANProfile wanprofile = new WANProfile();
+				wanprofile.setAuthmode(wap.getSecurityType());
 
-		dialogBuilder.setNegativeButton(android.R.string.no,
-				new DialogInterface.OnClickListener() {
+				CheckBox roaming = (CheckBox) dialogView.findViewById(R.id.wapconnect_roaming);
 
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						dialog.dismiss();
-					}
-				});
+				if (!roaming.isChecked()) {
+					wanprofile.setBssid(wap.getBssid());
+				}
+
+				String ssid = wap.getSsid();
+				if (ssid.equals("")) {
+					// the user has tried to connect to a blank SSID.
+					EditText ssidField = (EditText) dialogView.findViewById(R.id.wapconnect_ssidset_field);
+					ssid = ssidField.getText().toString();
+				}
+				wanprofile.setSsid(ssid);
+
+				// wanprofile.setBssid(wap.getBssid());
+
+				wanprofile.setUid(wap.getBssid());
+				wanprofile.setEnabled(true);
+
+				TextView tv = (TextView) dialogView.findViewById(R.id.wapconnect_password_field);
+				String pass = tv.getText().toString();
+
+				if (!wap.getAuthmode().equals("none")) {
+					wanprofile.setSerializePassword(pass);
+
+					// wanprofile.setWpapsk(pass);
+					wanprofile.setWpacipher(wap.getCipher());
+				}
+				Intent intent = new Intent();
+				intent.putExtra("wanprofile", wanprofile);
+				
+				getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, intent);
+			}
+		});
+
+		dialogBuilder.setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				dialog.dismiss();
+			}
+		});
 
 		return dialogBuilder.create();
 	}
-
-	/**
-	 * Sets the authorization information and the router information, allowing
-	 * this dialog to navigate to the CommandCenter activity with all required
-	 * information.
-	 * 
-	 * @param router
-	 *            Router object containing this router information
-	 * @param authInfo
-	 *            Auth information allowing the user to edit this router
-	 */
-	public void setData(WAP wap, AuthInfo authInfo) {
-		this.wap = wap;
-		this.authInfo = authInfo;
-	}
-
-	/**
-	 * This method sends a PUT request to the router, telling it to connect to a
-	 * new AP as WAN.
-	 * 
-	 * @param wap
-	 */
-	public void connectAsWan(WAP wap) {
-		// Construct a router WANProfile object
-		Dialog v = getDialog();
-
-		WANProfile wanprofile = new WANProfile();
-		wanprofile.setAuthmode(wap.getSecurityType());
-
-		CheckBox roaming = (CheckBox) v.findViewById(R.id.wapconnect_roaming);
-
-		if (roaming.isChecked()) {
-			wanprofile.setBssid(wap.getBssid());
-		}
-
-		String ssid = wap.getSsid();
-		if (ssid.equals("")) {
-			// the user has tried to connect to a blank SSID.
-			EditText ssidField = (EditText) v
-					.findViewById(R.id.wapconnect_ssidset_field);
-			ssid = ssidField.getText().toString();
-		}
-		wanprofile.setSsid(ssid);
-		
-		//wanprofile.setBssid(wap.getBssid());
-
-		wanprofile.setUid(wap.getBssid());
-		wanprofile.setEnabled(true);
-
-		TextView tv = (TextView) v.findViewById(R.id.wapconnect_password_field);
-		String pass = tv.getText().toString();
-
-		if (!wap.getAuthmode().equals("none")) {
-			wanprofile.setSerializePassword(pass);
-
-			//wanprofile.setWpapsk(pass);
-			wanprofile.setWpacipher(wap.getCipher());
-		}
-		hostingFragment.connectAsWAN(wanprofile);
-	}
-
 }
