@@ -64,6 +64,10 @@ public class CommandCenterActivity extends SpiceActivity implements OnBackStackC
 
 	}
 
+	/**
+	 * Get's the main authInfo that controls all network activity for this session.
+	 * @return main authinfo for this session
+	 */
 	public AuthInfo getAuthInfo() {
 		return authInfo;
 	}
@@ -101,10 +105,18 @@ public class CommandCenterActivity extends SpiceActivity implements OnBackStackC
 		}
 	}
 
+	/**
+	 * Indicates if this activity is running in dual pane mode (tablets) or single pan (phones).
+	 * @return True if using a dual pane interface, false otherwise.
+	 */
 	public boolean isDualPane() {
 		return isDualPane;
 	}
 
+	/**
+	 * Sets the boolean for dual pane interface.
+	 * @param isDualPane boolean for dual pane to set.
+	 */
 	public void setDualPane(boolean isDualPane) {
 		this.isDualPane = isDualPane;
 	}
@@ -116,6 +128,9 @@ public class CommandCenterActivity extends SpiceActivity implements OnBackStackC
 
 		int backStackEntryCount = getSupportFragmentManager().getBackStackEntryCount();
 		if (backStackEntryCount > 0) {
+			//we can pop something off thes stack
+			
+			// we are checking for wifi client fragment (wifi as wan) as it uses a special titlebar and hides the normal title
 			FragmentManager fm = getSupportFragmentManager();
 			Fragment wcf = fm.findFragmentByTag(WifiAsWANFragment.class.getName());
 
@@ -124,6 +139,7 @@ public class CommandCenterActivity extends SpiceActivity implements OnBackStackC
 				Log.i(TAG, "wificlient fragment is not showing - show the title bar.");
 				getActionBar().setDisplayShowTitleEnabled(true);
 			} else {
+				// it is on the right side... but may not be showing
 				if (wcf.isVisible()){
 					getActionBar().setDisplayShowTitleEnabled(false);
 				} else {
@@ -131,14 +147,16 @@ public class CommandCenterActivity extends SpiceActivity implements OnBackStackC
 				}
 			}
 			if (!isDualPane) {
+				// backstack is bigger than 1, and we aren't a tablet (single pane interface). We can go up a level.
 				getActionBar().setDisplayHomeAsUpEnabled(true);
 			}
 		} else {
+			// The backstack is empty.
 			Log.i(TAG, "Backstack is empty - making the title appear");
-			DashboardFragment db = (DashboardFragment) getSupportFragmentManager().findFragmentByTag(DashboardFragment.class.getName());
+			/*DashboardFragment db = (DashboardFragment) getSupportFragmentManager().findFragmentByTag(DashboardFragment.class.getName());
 			// this shouldn't be null... hopefully
-			db.setCurrentSelection(-1);
-			db.getListView().invalidateViews(); // redraw
+			 db.setCurrentSelection(-1);
+			db.getListView().invalidateViews(); */
 			getActionBar().setDisplayHomeAsUpEnabled(false);
 			getActionBar().setDisplayShowTitleEnabled(true);
 			getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);

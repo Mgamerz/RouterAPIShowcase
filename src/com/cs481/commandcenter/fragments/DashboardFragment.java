@@ -31,11 +31,11 @@ import com.cs481.commandcenter.listrows.DashboardListRow;
  * @author Mike Perez
  */
 public class DashboardFragment extends ListFragment {
-	private final int lWLAN = 0;
-	private final int lLAN = 1;
-	private final int lWAN = 2;
-	private final int lGPIO = 3;
-	private final int lABOUT = 4;
+	public static final int lWLAN = 0;
+	public static final int lLAN = 1;
+	public static final int lWAN = 2;
+	public static final int lGPIO = 3;
+	public static final int lABOUT = 4;
 	private final int lPRINTSTACK = 5; // debug item
 
 	private AuthInfo authInfo;
