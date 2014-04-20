@@ -87,7 +87,7 @@ public class DirectLoginFragment extends Fragment {
 		View rootView = inflater.inflate(R.layout.fragment_directlogin, container, false);
 
 		if (showingAdvanced) {
-			rootView.findViewById(R.id.use_ssl).setVisibility(View.VISIBLE);
+			//rootView.findViewById(R.id.use_ssl).setVisibility(View.VISIBLE); //DISABLED - SSL doesn't work, no point in showing it right now.
 			rootView.findViewById(R.id.router_username).setVisibility(View.VISIBLE);
 			Button advanced = (Button) rootView.findViewById(R.id.show_direct_advanced_button);
 			advanced.setText(getResources().getString(R.string.hide_direct_advanced));
@@ -180,8 +180,8 @@ public class DirectLoginFragment extends Fragment {
 				showingAdvanced = !showingAdvanced; // toggle
 				int visibility = (showingAdvanced) ? View.VISIBLE : View.GONE;
 
-				CheckBox ssl = (CheckBox) getView().findViewById(R.id.use_ssl);
-				ssl.setVisibility(visibility);
+				/*CheckBox ssl = (CheckBox) getView().findViewById(R.id.use_ssl);
+				ssl.setVisibility(visibility); // DISABLED - SSL DOESNT WORK - if enabling check the onCreateView() for the restoration as well */
 
 				EditText username = (EditText) getView().findViewById(R.id.router_username);
 				username.setVisibility(visibility);
