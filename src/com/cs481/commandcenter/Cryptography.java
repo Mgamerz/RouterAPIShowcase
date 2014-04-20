@@ -54,8 +54,7 @@ public class Cryptography {
 		/* Encrypt the message. */
 		//Log.i(CommandCenterActivity.TAG, "Encrypting "+message);
 
-		Cipher cipher = null;
-		cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
+		Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
 		cipher.init(Cipher.ENCRYPT_MODE, secret);
 		byte[] cipherText = cipher.doFinal(message.getBytes("UTF-8"));
 		//Log.i(CommandCenterActivity.TAG, "Encrypted ciphertext to"+ Base64.decode(cipherText, Base64.DEFAULT));

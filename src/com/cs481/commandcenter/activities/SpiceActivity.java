@@ -16,7 +16,7 @@ import com.octo.android.robospice.SpiceManager;
  * 
  * @author Mike Perez
  */
-public class SpiceActivity extends FragmentActivity {
+public abstract class SpiceActivity extends FragmentActivity {
 	// use JacksonSpringAndroidSpiceService.class instead of
 	// JsonSpiceService.class
 	protected SpiceManager spiceManager = new SpiceManager(CCSpiceService.class);
