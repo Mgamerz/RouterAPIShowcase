@@ -3,20 +3,41 @@
     xmlns:ptr="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/ptr_layout"
-    android:padding="20dp"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent"
+    android:padding="@dimen/fragment_padding" >
+
+    <LinearLayout
+        android:id="@+id/gpio_loadinglayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="horizontal" >
+
+        <ProgressBar
+            android:id="@+id/gpio_loading_progressbar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/gpio_loading_text"
+            style="@style/TextTheme"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/wificlient_loading" />
+    </LinearLayout>
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
 
         <TableLayout
-            android:id="@+id/tableLayout1"
+            android:id="@+id/gpio_table"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:shrinkColumns="*"
-            android:stretchColumns="*" >
+            android:stretchColumns="*"
+            android:visibility="gone" >
 
             <TableRow
                 android:layout_width="wrap_content"
@@ -35,6 +56,7 @@
                     android:id="@+id/powerled_state"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:switchTextAppearance="@style/SwitchTextAppearance"
                     android:thumb="@drawable/green_switch_inner_track_light" />
             </TableRow>
 
@@ -60,6 +82,7 @@
                     android:id="@+id/wifiledr_state"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:switchTextAppearance="@style/SwitchTextAppearance"
                     android:thumb="@drawable/red_switch_inner_track_dark" />
             </TableRow>
 
@@ -80,6 +103,7 @@
                     android:id="@+id/wifiledg_state"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:switchTextAppearance="@style/SwitchTextAppearance"
                     android:thumb="@drawable/green_switch_inner_track_light" />
             </TableRow>
 
@@ -99,7 +123,8 @@
                 <Switch
                     android:id="@+id/wifiledb_state"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:switchTextAppearance="@style/SwitchTextAppearance" />
             </TableRow>
 
             <View
@@ -123,7 +148,8 @@
                 <Switch
                     android:id="@+id/ss0_state"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:switchTextAppearance="@style/SwitchTextAppearance" />
             </TableRow>
 
             <TableRow
@@ -142,7 +168,8 @@
                 <Switch
                     android:id="@+id/ss1_state"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:switchTextAppearance="@style/SwitchTextAppearance" />
             </TableRow>
 
             <TableRow
@@ -161,7 +188,8 @@
                 <Switch
                     android:id="@+id/ss2_state"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:switchTextAppearance="@style/SwitchTextAppearance" />
             </TableRow>
 
             <TableRow
@@ -180,7 +208,8 @@
                 <Switch
                     android:id="@+id/ss3_state"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:switchTextAppearance="@style/SwitchTextAppearance" />
             </TableRow>
 
             <View
@@ -205,6 +234,7 @@
                     android:id="@+id/usb1ledr_state"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:switchTextAppearance="@style/SwitchTextAppearance"
                     android:thumb="@drawable/red_switch_inner_track_dark" />
             </TableRow>
 
@@ -225,6 +255,7 @@
                     android:id="@+id/usb1ledg_state"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:switchTextAppearance="@style/SwitchTextAppearance"
                     android:thumb="@drawable/green_switch_inner_track_light" />
             </TableRow>
 
@@ -250,6 +281,7 @@
                     android:id="@+id/usb2ledr_state"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:switchTextAppearance="@style/SwitchTextAppearance"
                     android:thumb="@drawable/red_switch_inner_track_dark" />
             </TableRow>
 
@@ -270,6 +302,7 @@
                     android:id="@+id/usb2ledg_state"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:switchTextAppearance="@style/SwitchTextAppearance"
                     android:thumb="@drawable/green_switch_inner_track_light" />
             </TableRow>
 
@@ -295,6 +328,7 @@
                     android:id="@+id/usb3ledr_state"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:switchTextAppearance="@style/SwitchTextAppearance"
                     android:thumb="@drawable/red_switch_inner_track_dark" />
             </TableRow>
 
@@ -315,6 +349,7 @@
                     android:id="@+id/usb3ledg_state"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:switchTextAppearance="@style/SwitchTextAppearance"
                     android:thumb="@drawable/green_switch_inner_track_light" />
             </TableRow>
 
@@ -340,6 +375,7 @@
                     android:id="@+id/expansionbay1ledr_state"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:switchTextAppearance="@style/SwitchTextAppearance"
                     android:thumb="@drawable/red_switch_inner_track_dark" />
             </TableRow>
 
@@ -360,6 +396,7 @@
                     android:id="@+id/expansionbay1ledg_state"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:switchTextAppearance="@style/SwitchTextAppearance"
                     android:thumb="@drawable/green_switch_inner_track_light" />
             </TableRow>
 
@@ -385,6 +422,7 @@
                     android:id="@+id/expansionbay2ledr_state"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:switchTextAppearance="@style/SwitchTextAppearance"
                     android:thumb="@drawable/red_switch_inner_track_dark" />
             </TableRow>
 
@@ -405,6 +443,7 @@
                     android:id="@+id/expansionbay2ledg_state"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:switchTextAppearance="@style/SwitchTextAppearance"
                     android:thumb="@drawable/green_switch_inner_track_light" />
             </TableRow>
         </TableLayout>

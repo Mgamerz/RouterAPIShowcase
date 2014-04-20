@@ -138,6 +138,7 @@ public class GPIOFragment extends Fragment implements OnRefreshListener, OnCheck
 	
 	@Override
 	public void onResume(){
+		super.onResume();
 		// Check for dualpane - if we are dual pane, make sure we are the selected one in DashboardFragment
 		if (isAdded()){
 			// ^ Check to make sure we are actually in ready to check. Only happens when input is fast.
