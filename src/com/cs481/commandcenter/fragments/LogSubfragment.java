@@ -10,7 +10,6 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.res.Resources;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.v4.app.ListFragment;
 import android.util.Log;
 import android.view.ContextMenu;
@@ -41,6 +40,7 @@ import com.octo.android.robospice.request.listener.RequestListener;
 
 /**
  * Fragment that lists log information from the router
+ * 
  * @author Mike Perez
  */
 
@@ -54,7 +54,7 @@ public class LogSubfragment extends ListFragment implements OnRefreshListener {
 	private SpiceManager spiceManager;
 	private AuthInfo authInfo;
 	private LogAdapter adapter;
-	private Parcelable listState;
+	private int listIndex;
 	private ArrayList<LogMessage> logs;
 	private boolean shouldLoadData = true;
 	private int logState = LOG_LOADING;
@@ -70,7 +70,7 @@ public class LogSubfragment extends ListFragment implements OnRefreshListener {
 			shouldLoadData = savedInstanceState.getBoolean("shouldLoadData");
 			authInfo = savedInstanceState.getParcelable("authInfo");
 			logState = savedInstanceState.getInt("logState", LOG_LOADING);
-			listState = savedInstanceState.getParcelable("listState");
+			listIndex = savedInstanceState.getInt("listIndex");
 		} else {
 			Bundle passedArgs = getArguments();
 			if (passedArgs != null) {
@@ -113,9 +113,13 @@ public class LogSubfragment extends ListFragment implements OnRefreshListener {
 														// must be parcelable
 		outState.putParcelable("authInfo", authInfo);
 		outState.putInt("logState", logState);
-		if (isAdded() && getListAdapter() != null){
-			outState.putParcelable("listState", getListView().onSaveInstanceState());
-		}
+		outState.putInt("listIndex", listIndex);
+	}
+
+	@Override
+	public void onPause() {
+		listIndex = getListView().getFirstVisiblePosition();
+		super.onPause();
 	}
 
 	@Override
@@ -210,12 +214,11 @@ public class LogSubfragment extends ListFragment implements OnRefreshListener {
 			TextView severityView = (TextView) rowView.findViewById(R.id.log_severity);
 			TextView timeView = (TextView) rowView.findViewById(R.id.log_time);
 
-
 			messageView.setText(log.getMessage());
 			tagView.setText(log.getTag());
 			severityView.setText(log.getSeverity());
 			timeView.setText(log.getDateString());
-			if (log.getTrace()!=null){
+			if (log.getTrace() != null) {
 				TextView traceView = (TextView) rowView.findViewById(R.id.log_trace);
 				traceView.setVisibility(View.VISIBLE);
 				traceView.setText(log.getTrace());
@@ -281,7 +284,7 @@ public class LogSubfragment extends ListFragment implements OnRefreshListener {
 		// TODO Auto-generated method stub
 		Log.i(CommandCenterActivity.TAG, "Updating adapter with new log information.");
 
-		adapter = new LogAdapter(getActivity(), logs); //make a new adapter, as adapters can edit the existing dataset
+		adapter = new LogAdapter(getActivity(), logs); // make a new adapter, as adapters can edit the existing dataset
 		Log.i(CommandCenterActivity.TAG, "created new log adapter :" + adapter);
 
 		setListAdapter(adapter);
@@ -294,13 +297,12 @@ public class LogSubfragment extends ListFragment implements OnRefreshListener {
 		Log.i(CommandCenterActivity.TAG, "notifying adapter of new dataset");
 		adapter.notifyDataSetChanged();
 
-		if (logState == LOG_LOADED && listState != null) {
+		if (logState == LOG_LOADED) {
 			// it's already been loaded (if it hasn't yet, it will be set after
 			// this call.)
-			Log.i(CommandCenterActivity.TAG, "Restoring listview position with state " + listState);
-			if (listState != null) {
-				getListView().onRestoreInstanceState(listState);
-			}
+			Log.i(CommandCenterActivity.TAG, "Restoring listview position to: " + listIndex);
+			getListView().setSelectionFromTop(listIndex, 0);
+
 		}
 	}
 
