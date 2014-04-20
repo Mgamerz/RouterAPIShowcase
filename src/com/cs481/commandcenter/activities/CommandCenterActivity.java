@@ -153,10 +153,11 @@ public class CommandCenterActivity extends SpiceActivity implements OnBackStackC
 		} else {
 			// The backstack is empty.
 			Log.i(TAG, "Backstack is empty - making the title appear");
-			/*DashboardFragment db = (DashboardFragment) getSupportFragmentManager().findFragmentByTag(DashboardFragment.class.getName());
+			DashboardFragment db = (DashboardFragment) getSupportFragmentManager().findFragmentByTag(DashboardFragment.class.getName());
 			// this shouldn't be null... hopefully
-			 db.setCurrentSelection(-1);
-			db.getListView().invalidateViews(); */
+			db.getListView().clearChoices();
+			db.getListView().requestLayout();
+			//db.getListView().setItemChecked(DashboardFragment.lGPIO, true);
 			getActionBar().setDisplayHomeAsUpEnabled(false);
 			getActionBar().setDisplayShowTitleEnabled(true);
 			getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
