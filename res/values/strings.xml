@@ -319,9 +319,11 @@
     <string name="prefs_header_abouttitle">About&#8230;</string>
     <string name="prefs_googleplus_group">Google+ Community</string>
     <string name="prefs_googleplus_group_summary">Give app feedback directly to developers</string>
+    <string name="open_source_title">Open Source License</string>
     <string name="prefs_open_robospice">Robospice</string>
     <string name="prefs_open_pulltorefresh">Android - Pull to Refresh</string>
     <string name="prefs_open_smoothprogressbar">Smooth Progress Bar</string>
+    <string name="prefs_open_logthislib">LogThisLib</string>
     <string name="prefs_androidlicensespage">Android Licenses Page</string>
     <string name="prefs_manage_profiles">Manage Profiles</string>
     <string name="prefs_manage_profiles_summary">View and remove specific profiles</string>
@@ -353,6 +355,6 @@
 
     <!-- Whats new - keep this at the bottom -->
     <string name="whats_new_title">What\'s new</string>
-    <string name="whats_new">What\'s new in Alpha 1.05:\n\n - Implemented WAP Editor</string>
+    <string name="whats_new">What\'s new in Release Candidate 1:\n\n - Various bug + crash fixes\nUpdated open-source licenses\nVarious wording changes</string>
 
 </resources>

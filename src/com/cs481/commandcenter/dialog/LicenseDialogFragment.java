@@ -98,7 +98,7 @@ public class LicenseDialogFragment extends DialogFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // TODO Extract this title out into your strings resource file.
-        getDialog().setTitle("Open Source licenses");
+        getDialog().setTitle(R.string.open_source_title);
         View view = inflater.inflate(R.layout.licenses_fragment, container, false);
         mIndeterminateProgress = (ProgressBar)view.findViewById(R.id.licensesFragmentIndeterminateProgress);
         mWebView = (WebView)view.findViewById(R.id.licensesFragmentWebView);

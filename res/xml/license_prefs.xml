@@ -15,6 +15,10 @@
         android:title="@string/prefs_open_smoothprogressbar" />
     <Preference
         android:enabled="true"
+        android:key="@string/prefs_open_logthislib"
+        android:title="@string/prefs_open_logthislib" />
+    <Preference
+        android:enabled="true"
         android:key="@string/prefs_androidlicensespage"
         android:title="@string/prefs_androidlicensespage" />
 

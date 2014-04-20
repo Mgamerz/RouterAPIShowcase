@@ -51,6 +51,16 @@ public class LicensesFragment extends PreferenceFragment {
 			}
 		});
 		
+		Preference logthislib = findPreference(getResources().getString(R.string.prefs_open_logthislib));
+		logthislib.setOnPreferenceClickListener(new OnPreferenceClickListener() {
+			
+			@Override
+			public boolean onPreferenceClick(Preference preference) {
+				LicenseDialogFragment.displayLicenseDialogFragment(getActivity().getFragmentManager(), R.raw.license_logthislib);
+				return true;
+			}
+		});
+		
 		Preference licensesdisplayer = findPreference(getResources().getString(R.string.prefs_androidlicensespage));
 		licensesdisplayer.setOnPreferenceClickListener(new OnPreferenceClickListener() {
 			
