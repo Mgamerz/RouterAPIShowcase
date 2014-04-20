@@ -154,6 +154,7 @@ public class CommandCenterActivity extends SpiceActivity implements OnBackStackC
 			// The backstack is empty.
 			Log.i(TAG, "Backstack is empty - making the title appear");
 			DashboardFragment db = (DashboardFragment) getSupportFragmentManager().findFragmentByTag(DashboardFragment.class.getName());
+			db.setCurrentSelection(-1);
 			// this shouldn't be null... hopefully
 			db.getListView().clearChoices();
 			db.getListView().requestLayout();

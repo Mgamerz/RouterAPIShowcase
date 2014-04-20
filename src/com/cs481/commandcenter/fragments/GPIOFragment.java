@@ -148,7 +148,7 @@ public class GPIOFragment extends Fragment implements OnRefreshListener, OnCheck
 				DashboardFragment df = (DashboardFragment) activity.getSupportFragmentManager().findFragmentByTag(DashboardFragment.class.getName());
 				if (df != null){
 					//we have a reference to the left hand side of the tablet interface (dashboard fragment)
-					df.getListView().setItemChecked(DashboardFragment.lGPIO, true);
+					df.setCurrentSelection(DashboardFragment.lGPIO);
 				}
 			}
 		}

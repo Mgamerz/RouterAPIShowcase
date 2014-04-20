@@ -193,6 +193,20 @@ public class WifiFragment extends ListFragment implements OnRefreshListener {
 		sa.getActionBar().setTitle(R.string.wifi_title);
 		sa.getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
 		sa.getActionBar().setDisplayHomeAsUpEnabled(true);
+		
+		// Check for dualpane - if we are dual pane, make sure we are the selected one in DashboardFragment
+		if (isAdded()){
+			// ^ Check to make sure we are actually in ready to check. Only happens when input is fast.
+			CommandCenterActivity activity = (CommandCenterActivity) getActivity();
+			if (activity.isDualPane()){
+				//we only care in dual pane really
+				DashboardFragment df = (DashboardFragment) activity.getSupportFragmentManager().findFragmentByTag(DashboardFragment.class.getName());
+				if (df != null){
+					//we have a reference to the left hand side of the tablet interface (dashboard fragment)
+					df.setCurrentSelection(DashboardFragment.lWLAN);
+				}
+			}
+		}
 	}
 
 	/**

@@ -35,8 +35,8 @@ public class DashboardFragment extends ListFragment {
 	public static final int lLAN = 1;
 	public static final int lWAN = 2;
 	public static final int lGPIO = 3;
-	public static final int lABOUT = 4;
-	private final int lPRINTSTACK = 5; // debug item
+	public static final int lINFO = 4;
+	//private final int lPRINTSTACK = 5; // debug item
 
 	private AuthInfo authInfo;
 	private int currentSelection = -1;
@@ -106,7 +106,7 @@ public class DashboardFragment extends ListFragment {
 		rows.add(new DashboardListRow(lLAN, resources.getString(R.string.lan), resources.getString(R.string.lan_desc)));
 		rows.add(new DashboardListRow(lWAN, resources.getString(R.string.wan), resources.getString(R.string.wan_desc)));
 		rows.add(new DashboardListRow(lGPIO, resources.getString(R.string.gpio), resources.getString(R.string.gpio_desc)));
-		rows.add(new DashboardListRow(lABOUT, resources.getString(R.string.router_info), resources.getString(R.string.router_info_desc)));
+		rows.add(new DashboardListRow(lINFO, resources.getString(R.string.router_info), resources.getString(R.string.router_info_desc)));
 		/*
 		 * rows.add(new DashboardListRow(lPRINTSTACK,
 		 * "Print Fragment backstack", "Debug Option"));
@@ -237,7 +237,7 @@ public class DashboardFragment extends ListFragment {
 			}
 		}
 			break;
-		case lABOUT: {
+		case lINFO: {
 			String infoTag = RouterInfoFragment.class.getName();
 			Log.i(CommandCenterActivity.TAG, "ABOUT WAS CLICKED");
 
@@ -357,8 +357,15 @@ public class DashboardFragment extends ListFragment {
 		}
 	}
 
+	/**
+	 * Sets the currently highlighted item for this listview.
+	 * @param i index to highlight
+	 */
 	public void setCurrentSelection(int i) {
-		// TODO Auto-generated method stub
+		if (isAdded()){ 
+			//clear the current selection
+			getListView().setItemChecked(currentSelection, false);
+		}
 		currentSelection = i;
 	}
 }
