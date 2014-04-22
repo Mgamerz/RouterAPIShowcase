@@ -3,8 +3,8 @@
 
     <!-- Xml Comment -->
     <string name="app_name">Command Center</string>
-    <string name="app_version">1.0 RC</string>
-    <string name="app_version_code">12</string>
+    <string name="app_version">1.0 RC1.1</string>
+    <string name="app_version_code">13</string>
     <!-- General strings -->
     <string name="debug_title">CC Debugging</string>
     <string name="server_exception">Server returned exception</string>
