@@ -103,6 +103,11 @@ public class WifiWAPFragment extends Fragment {
 	@Override
 	public void onResume(){
 		super.onResume();
+		
+		SpiceActivity sa = (SpiceActivity) getActivity();
+		sa.getActionBar().setTitle(R.string.wap_editor_title);
+		sa.getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+		sa.getActionBar().setDisplayHomeAsUpEnabled(true);
 		// Check for dualpane - if we are dual pane, make sure we are the selected one in DashboardFragment
 		if (isAdded()){
 			// ^ Check to make sure we are actually in ready to check. Only happens when input is fast.
