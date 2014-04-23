@@ -81,7 +81,7 @@
     <string name="confirm_client_change">Are you sure you want to change the wireless client mode to %s? This may affect network connectivity.</string>
     <string name="bridged">bridge</string>
     <string name="wwan">wwan</string>
-    <string name="wificlient_no_access_points">No access points or wireless is off.</string>
+    <string name="wificlient_no_access_points">No nearby access points or wireless is off.</string>
     <string name="wificlient_loading">Retreiving list of nearby access points</string>
     <string name="wificlient_failed_to_load">Failed to retrieve list of nearby access points</string>
 

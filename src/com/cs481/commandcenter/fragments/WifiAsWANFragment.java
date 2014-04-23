@@ -29,6 +29,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -422,6 +423,8 @@ public class WifiAsWANFragment extends ListFragment implements OnRefreshListener
 			Resources resources = getResources();
 			Log.i(CommandCenterActivity.TAG, "Failed to read WLAN!");
 			Toast.makeText(getActivity(), resources.getString(R.string.wlan_get_config_failure), Toast.LENGTH_SHORT).show();
+			listState = Utility.CONTENT_LOAD_FAILED;
+			updateStatus(listState);
 			mPullToRefreshLayout.setRefreshComplete();
 		}
 
@@ -503,7 +506,10 @@ public class WifiAsWANFragment extends ListFragment implements OnRefreshListener
 	}
 
 	public void updateWapList(ArrayList<WAP> waps) {
-		if (waps == null) {
+		if (waps == null || waps.size() <= 0) {
+			listState = Utility.CONTENT_EMPTY;
+			View v = getView();
+			updateStatus(listState);
 			return;
 		}
 
@@ -523,6 +529,26 @@ public class WifiAsWANFragment extends ListFragment implements OnRefreshListener
 		listState = Utility.CONTENT_LOADED;
 
 		adapter.notifyDataSetChanged();
+	}
+
+	private void updateStatus(int listState) {
+		if (!isAdded()){
+			return;
+		}
+		View v = getView();
+		TextView text = (TextView) v.findViewById(R.id.wificlient_loading_text);
+		ProgressBar pb = (ProgressBar) v.findViewById(R.id.wificlient_loading_progressbar);
+		
+		switch(listState){
+		case Utility.CONTENT_EMPTY:
+			text.setText(R.string.wificlient_no_access_points);
+			pb.setVisibility(View.GONE);
+			return;
+		case Utility.CONTENT_LOAD_FAILED:
+			text.setText(R.string.wificlient_failed_to_load);
+			pb.setVisibility(View.GONE);
+			return;	
+		}
 	}
 
 	@Override
