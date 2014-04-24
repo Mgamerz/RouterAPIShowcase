@@ -111,7 +111,7 @@ public class ECMRoutersFragment extends ListFragment {
 	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
-		//removed as we don't have a need ye tto pull to refresh. Will in the future.
+		//removed as we don't have a need yet to pull to refresh. Will in the future.
 		// This is the View which is created by ListFragment
 		//ViewGroup viewGroup = (ViewGroup) view;
 

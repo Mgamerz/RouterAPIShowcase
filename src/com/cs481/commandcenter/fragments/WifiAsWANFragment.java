@@ -228,7 +228,6 @@ public class WifiAsWANFragment extends ListFragment implements OnRefreshListener
 	 * Wifi as WAN or Wifi as Bridge.
 	 */
 	private void readClientMode() {
-		// TODO Auto-generated method stub
 		GetRequest clientModeReq = new GetRequest(getActivity(), authInfo, "config/wwan/radio/0/mode", String.class, "ConfigClientGet");
 		String lastRequestCacheKey = clientModeReq.createCacheKey();
 		spiceManager.execute(clientModeReq, lastRequestCacheKey, DurationInMillis.ALWAYS_EXPIRED, new WIFIClientModeGetRequestListener());
@@ -635,15 +634,7 @@ public class WifiAsWANFragment extends ListFragment implements OnRefreshListener
 
 		// Profile is not yet defined. Do a POST to the router.
 		Log.i(CommandCenterActivity.TAG, "Performing put request to enabled wlan");
-		PostRequest request = new PostRequest(getActivity(), wanprofile, authInfo, "config/wwan/radio/0/profiles", WANProfile.class); // TODO
-																																		// will
-																																		// have
-																																		// to
-																																		// deal
-																																		// with
-																																		// dual
-																																		// band
-																																		// again.
+		PostRequest request = new PostRequest(getActivity(), wanprofile, authInfo, "config/wwan/radio/0/profiles", WANProfile.class); 
 		String lastRequestCacheKey = request.createCacheKey();
 		spiceManager.execute(request, lastRequestCacheKey, DurationInMillis.ALWAYS_EXPIRED, new WANProfilePostRequestListener());
 
@@ -745,7 +736,6 @@ public class WifiAsWANFragment extends ListFragment implements OnRefreshListener
 	 * @return name of string to put to the router to set that mode.
 	 */
 	private String getClientMode() {
-		// TODO Auto-generated method stub
 		int selected = getActivity().getActionBar().getSelectedNavigationIndex();
 		Resources resources = getResources();
 		switch (selected) {

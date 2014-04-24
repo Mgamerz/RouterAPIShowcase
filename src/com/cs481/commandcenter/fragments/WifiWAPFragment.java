@@ -228,7 +228,6 @@ public class WifiWAPFragment extends Fragment {
 	}
 
 	private void parseSecurity(View v) {
-		// TODO Auto-generated method stub
 		Log.i(CommandCenterActivity.TAG, "WAP security: " + wapinfo.getAuthmode());
 		Spinner cipher_spinner = (Spinner) v.findViewById(R.id.wap_ciphertype_spinner);
 		Spinner encryption_spinner = (Spinner) v.findViewById(R.id.wap_encryptiontype_spinner);
@@ -311,7 +310,6 @@ public class WifiWAPFragment extends Fragment {
 
 			@Override
 			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-				// TODO Auto-generated method stub
 				if (isChecked) {
 					password_field.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
 					unmaskPassword = true;

@@ -92,6 +92,9 @@ public class ECMLoginFragment extends Fragment {
 
 	}
 
+	/**
+	 * Reads the list of ECM routers.
+	 */
 	private void readECMRouters() {
 		Log.i(CommandCenterActivity.TAG, "Reading ECM Routers as login");
 		AuthInfo authInfo = new AuthInfo();

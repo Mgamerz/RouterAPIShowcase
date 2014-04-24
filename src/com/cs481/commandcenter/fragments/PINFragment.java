@@ -150,6 +150,9 @@ public class PINFragment extends Fragment implements OnClickListener {
 		return rootView;
 	}
 
+	/**
+	 * If the PIN is incorrectly input, the screen shakes and the pad remains locked.
+	 */
 	public void wrongPIN() {
 		Vibrator vibr = (Vibrator) getActivity().getSystemService(Context.VIBRATOR_SERVICE);
 		vibr.vibrate(150);

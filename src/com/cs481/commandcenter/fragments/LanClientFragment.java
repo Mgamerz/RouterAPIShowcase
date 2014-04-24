@@ -178,7 +178,7 @@ public class LanClientFragment extends Fragment implements OnRefreshListener {
 	 * Adapter that maps client objects to the user interface, including the
 	 * drop objects.
 	 * 
-	 * @author Mgamerz
+	 * @author Mike Perez
 	 * 
 	 */
 	public class ClientAdapter extends BaseExpandableListAdapter {
@@ -297,7 +297,7 @@ public class LanClientFragment extends Fragment implements OnRefreshListener {
 	/**
 	 * Listener for the get request for the clients.
 	 * 
-	 * @author Mgamerz
+	 * @author Mike Perez
 	 * 
 	 */
 	private class ClientsGetRequestListener implements RequestListener<Response> {
