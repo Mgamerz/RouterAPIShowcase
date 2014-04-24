@@ -508,6 +508,10 @@ public class LoginActivity extends SpiceActivity {
 
 	}
 
+	/**
+	 * Checks if the current version is new.
+	 * If so, the What's New dialog box is displayed.
+	 */
 	private void checkIfNewVersion() {
 		Log.i(CommandCenterActivity.TAG, "Checking if new version");
 		PackageInfo pInfo = null;
