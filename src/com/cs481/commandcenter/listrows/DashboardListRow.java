@@ -1,5 +1,10 @@
 package com.cs481.commandcenter.listrows;
 
+/**
+ * Defines the data that is used to create a list element in 
+ * the dashboard list rows. 
+ * @author Mike Perez
+ */
 public class DashboardListRow {
 	private String title = "";
 	private String subtitle = "";

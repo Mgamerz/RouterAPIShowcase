@@ -10,8 +10,7 @@ import com.cs481.commandcenter.Profile;
  * list. Also defines data that is relevant when clicked between the user and
  * the apps next tasks (navigating to the management interface).
  * 
- * @author Mgamerz
- * 
+ * @author Mike Perez
  */
 public class ProfileListRow implements Parcelable {
 	private String title = "";

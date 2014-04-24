@@ -7,7 +7,6 @@ import com.cs481.commandcenter.responses.status.lan.Client;
  * used as a row for listing
  * @author Mike Perez
  */
-
 public class ClientListRow {
 	private String title = "";
 	private String subtitle = "";

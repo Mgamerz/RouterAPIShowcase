@@ -2,6 +2,11 @@ package com.cs481.commandcenter.listrows;
 
 import com.cs481.commandcenter.responses.status.wlan.WAP;
 
+/**
+ * Defines the data that is used to create a list element in 
+ * the wireless local area network rows.
+ * @author Mike Perez
+ */
 public class WlanListRow {
 	private String title = "";
 	private String subtitle = "";
