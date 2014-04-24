@@ -33,19 +33,6 @@ public class AboutPrefsFragment extends PreferenceFragment {
 		Preference build = findPreference(getResources().getString(R.string.prefs_app_version));
 		build.setSummary(versionName);
 		
-		/* Preference openSource = findPreference(getResources().getString(R.string.prefs_open_source));
-		openSource.setOnPreferenceClickListener(new OnPreferenceClickListener() {
-
-			@Override
-			public boolean onPreferenceClick(Preference preference) {
-				String url = getResources().getString(R.string.googlePlusURL);
-				Intent i = new Intent(Intent.ACTION_VIEW);
-				i.setData(Uri.parse(url));
-				startActivity(i);
-				return true;
-			}
-		}); */
-
 		Preference googlePlusGroup = findPreference(getResources().getString(R.string.prefs_googleplus_group));
 		googlePlusGroup.setOnPreferenceClickListener(new OnPreferenceClickListener() {
 
