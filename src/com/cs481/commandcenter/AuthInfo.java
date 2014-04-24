@@ -22,66 +22,130 @@ public class AuthInfo implements Parcelable {
 	private String routerId; //ecm only
 	private boolean https;
 
+	/**
+	 * Returns if this connection uses HTTPS. Only applies to direct connections.
+	 * @return Connection uses HTTPS instead HTTP
+	 */
 	public boolean isHttps() {
 		return https;
 	}
 
+	/**
+	 * Sets this authinfo to use HTTPS. Only applies to direct connections.
+	 * @param https true to use https, false to use http
+	 */
 	public void setHttps(boolean https) {
 		this.https = https;
 	}
 
+	/**
+	 * Sets the router port to use for connecting. Only applies to direct connections.
+	 * @param routerport Router port to connect to
+	 */
 	public void setRouterport(int routerport) {
 		this.routerport = routerport;
 	}
 
+	/**
+	 * Gets the ECM router ID. These are globally unique. Only applies to ECM connections.
+	 * @return ECM router ID. Only applies to ECM.
+	 */
 	public String getRouterId() {
 		return routerId;
 	}
 
+	/**
+	 * Sets teh ECM router ID. Only applies to ECM connections.
+	 * @param routerId ECM router id
+	 */
 	public void setRouterId(String routerId) {
 		this.routerId = routerId;
 	}
 
+	/**
+	 * Returns if this authinfo uses ECM or direct connections
+	 * @return true if ECM, false for direct
+	 */
 	public boolean isEcm() {
 		return ecm;
 	}
 
+	/**
+	 * Sets the authinfo connection type, ECM or direct.
+	 * @param ecm true to set this as 
+	 */
 	public void setEcm(boolean ecm) {
 		this.ecm = ecm;
 	}
 
+	/**
+	 * Gets the router IP that will be used when performing a direct connection.
+	 * @return
+	 */
 	public String getRouterip() {
 		return routerip;
 	}
 
+	/**
+	 * Sets the router IP for direct connections. Only applies to direct connections.
+	 * @param routerip Router IP to connect to
+	 */
 	public void setRouterip(String routerip) {
 		this.routerip = routerip;
 	}
 
+	/**
+	 * Gets the username to log in as. Applies to both ECM and direct connections.
+	 * @return login username
+	 */
 	public String getUsername() {
 		return username;
 	}
 
+	/**
+	 * Sets the login username. Applies to both ECM and direct connections.
+	 * @param username Username to login with
+	 */
 	public void setUsername(String username) {
 		this.username = username;
 	}
 
+	/**
+	 * Gets the password used to login
+	 * @return password used for credentials
+	 */
 	public String getPassword() {
 		return password;
 	}
 
+	/**
+	 * Set's the login password. Applies to both ECM and direct connections
+	 * @param password Password to login with
+	 */
 	public void setPassword(String password) {
 		this.password = password;
 	}
 
+	/**
+	 * Gets the router port used when connecting. Only applies to direct connections.
+	 * @return Router port
+	 */
 	public int getRouterport() {
 		return routerport;
 	}
 
+	/**
+	 * Sets the port used for connecting to a router. Only applies to direct connections.
+	 * @param routerport Router port to connect to
+	 */
 	public void setPort(int routerport) {
 		this.routerport = routerport;
 	}
 
+	
+	/**
+	 * Empty constructor is required for parcel building. The following code is parcel generator code and is generic (hence not documented)
+	 */
 	public AuthInfo(){
 		//empty constructor
 	}

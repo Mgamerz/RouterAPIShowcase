@@ -49,11 +49,20 @@ public class DatabaseAdapter {
 	private DatabaseHelper DBHelper;
 	private SQLiteDatabase db;
 
+	/**
+	 * Creates a new database adapter.
+	 * @param ctx Context to use when interacting with the database
+	 */
 	public DatabaseAdapter(Context ctx) {
 		this.context = ctx;
 		DBHelper = new DatabaseHelper(context);
 	}
 
+	/**
+	 * Database helper class that is used for opening/closing the profile database.
+	 * @author Melissa Neibaur
+	 *
+	 */
 	private static class DatabaseHelper extends SQLiteOpenHelper {
 
 		public DatabaseHelper(Context context) {
@@ -120,6 +129,7 @@ public class DatabaseAdapter {
 	 * Inserts a profile into the ECM table in the database
 	 * 
 	 * @param profile
+	 *            Profile to insert
 	 * @return positive on success
 	 */
 	public long insertProfileEcm(Profile profile) {
@@ -139,6 +149,7 @@ public class DatabaseAdapter {
 	 * Inserts a profile into the Direct table in the database
 	 * 
 	 * @param profile
+	 *            Profile to insert
 	 * @return positive on success
 	 */
 	public long insertProfileDirect(Profile profile) {
@@ -189,7 +200,7 @@ public class DatabaseAdapter {
 	/**
 	 * Deletes a profile from the Direct table in the database
 	 * 
-	 * @param profile
+	 * @param profile Profile to delete
 	 * @return positive on success
 	 */
 	public long deleteProfileDirect(Profile profile) {

@@ -12,22 +12,41 @@ public class Profile implements Parcelable {
 	private String profileName; // e.g. "Cloud Router"
 	private AuthInfo authInfo; // Authentication information:
 	
+	/**
+	 * Gets the profile name.
+	 * @return Profile name
+	 */
 	public String getProfileName() {
 		return profileName;
 	}
 
+	/**
+	 * Sets the profile name.
+	 * @param profileName Profile name to set
+	 */
 	public void setProfileName(String profileName) {
 		this.profileName = profileName;
 	}
 
+	/**
+	 * Gets this profiles authinfo for connecting.
+	 * @return authinfo for connecting
+	 */
 	public AuthInfo getAuthInfo() {
 		return authInfo;
 	}
 
+	/**
+	 * Sets the authinfo this profile is associated with.
+	 * @param authInfo Authinfo to set to this profile
+	 */
 	public void setAuthInfo(AuthInfo authInfo) {
 		this.authInfo = authInfo;
 	}
 
+	/**
+	 * Empty constructor. Required for parcel building.
+	 */
 	public Profile(){
 		//empty constructor
 	}
