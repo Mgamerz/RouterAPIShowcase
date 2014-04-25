@@ -26,7 +26,7 @@ public class AboutPrefsFragment extends PreferenceFragment {
 		try {
 			versionName = getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0).versionName;
 		} catch (NameNotFoundException e) {
-			// TODO Auto-generated catch block
+			// TODOw Auto-generated catch block
 			e.printStackTrace();
 		}
 

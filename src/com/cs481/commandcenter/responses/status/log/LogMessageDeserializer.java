@@ -48,6 +48,11 @@ public final class LogMessageDeserializer extends JsonDeserializer<LogMessage> {
 		return logMessage;
 	}
 	
+	/**
+	 * Removes quotes from the JSON parsed string, as jackson does not remove them from the log messages it seems.
+ 	 * @param str String (with or without quotes)
+	 * @return String without quotes
+	 */
 	private String removeQuotes(String str){
 		return str.replaceAll("(^\")|(\"$)","");
 	}

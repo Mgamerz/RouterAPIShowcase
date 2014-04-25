@@ -32,6 +32,11 @@ public class GetRequest extends SpiceRequest<Routers> {
 	private AuthInfo authInfo;
 	private Context context;
 
+	/**
+	 * Creates a special get request for talking to ECM.
+	 * @param authInfo Authinfo for talking to ECM.
+	 * @param context Context to use for the connection.
+	 */
 	public GetRequest(AuthInfo authInfo, Context context) {
 		super(Routers.class);
 		this.authInfo = authInfo;
